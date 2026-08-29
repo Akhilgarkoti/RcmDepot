@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RCM Depot Management Portal</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0f172a; color: #f8fafc; }
-        .login-card { background: #1e293b; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 100%; max-width: 400px; }
-        .login-card h2 { margin-bottom: 1.5rem; text-align: center; color: #38bdf8; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0b132b; color: #f8fafc; }
+        .login-card { background: #1c2541; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 400px; }
+        .login-card h2 { margin-bottom: 1.5rem; text-align: center; color: #38bdf8; font-size: 1.6rem; }
         .input-group { margin-bottom: 1.2rem; }
-        .input-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; }
-        .input-group input, .input-group select { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; outline: none; }
+        .input-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: #94a3b8; }
+        .input-group input, .input-group select { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #334155; background: #0b132b; color: #fff; outline: none; }
         .input-group input:focus, .input-group select:focus { border-color: #38bdf8; }
-        .btn { width: 100%; padding: 0.75rem; background: #0284c7; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 0.5rem; }
+        .btn { width: 100%; padding: 0.8rem; background: #0284c7; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 0.5rem; }
         .btn:hover { background: #0369a1; }
-        .error { color: #f87171; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
+        .error { color: #f87171; font-size: 0.85rem; margin-top: 1rem; text-align: center; min-height: 1.2rem; }
     </style>
 </head>
 <body>
@@ -31,26 +31,50 @@
                 </select>
             </div>
             <div class="input-group">
-                <label>Username</label>
-                <input type="text" id="username" required autocomplete="off">
+                <label>Username / Login ID</label>
+                <input type="text" id="username" required autocomplete="off" placeholder="Enter Login ID">
             </div>
             <div class="input-group">
                 <label>Password</label>
-                <input type="password" id="password" required>
+                <input type="password" id="password" required placeholder="Enter Password">
             </div>
-            <button type="submit" class="btn">Login</button>
+            <button type="submit" class="btn" id="loginBtn">Login</button>
             <p id="errorMsg" class="error"></p>
         </form>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const role = document.getElementById('role').value;
-            // रीडायरेक्ट लॉजिक
-            if (role === 'admin') window.location.href = '/admin';
-            else if (role === 'depot') window.location.href = '/depot';
-            else window.location.href = '/staff';
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const loginBtn = document.getElementById('loginBtn');
+
+            errorMsg.textContent = "";
+            loginBtn.textContent = "Verifying...";
+            loginBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role, username, password })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    errorMsg.textContent = data.message || "Invalid credentials.";
+                }
+            } catch (err) {
+                errorMsg.textContent = "Server connection error. Please try again.";
+            } finally {
+                loginBtn.textContent = "Login";
+                loginBtn.disabled = false;
+            }
         });
     </script>
 </body>

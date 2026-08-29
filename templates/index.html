@@ -74,7 +74,7 @@
             const loginBtn = document.getElementById('loginBtn');
 
             errorMsg.textContent = "";
-            loginBtn.textContent = "Verifying...";
+            loginBtn.textContent = "Verifying with Google Sheets...";
             loginBtn.disabled = true;
 
             try {
@@ -90,7 +90,7 @@
                     errorMsg.textContent = data.message || "Invalid credentials.";
                 }
             } catch (err) {
-                errorMsg.textContent = "Unable to connect to Google Sheets.";
+                errorMsg.textContent = "Connection error. Please try again.";
             } finally {
                 loginBtn.textContent = "Login";
                 loginBtn.disabled = false;

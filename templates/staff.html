@@ -7,10 +7,20 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: #0b132b; color: #f8fafc; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 1.5rem; }
         .header h1 { color: #38bdf8; font-size: 1.5rem; }
+        .header-actions { display: flex; gap: 0.8rem; align-items: center; }
+        
+        .btn-print { background: #0284c7; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+        .btn-print:hover { background: #0369a1; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
-        .grid-layout { display: grid; grid-template-columns: 360px 1fr; gap: 2rem; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: #1c2541; padding: 1.2rem; border-radius: 8px; border: 1px solid #334155; }
+        .stat-card h3 { color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.3rem; }
+        .stat-card p { font-size: 1.5rem; font-weight: bold; }
+        
+        .grid-layout { display: grid; grid-template-columns: 340px 1fr; gap: 1.5rem; }
         .form-card, .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; }
         .form-card h2, .table-card h2 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 1.2rem; }
         .form-group { margin-bottom: 1rem; }
@@ -23,6 +33,28 @@
         th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #334155; font-size: 0.85rem; white-space: nowrap; }
         th { color: #94a3b8; background: #131c31; }
         .status-msg { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
+
+        /* Modal Styles for Print Preview */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
+        .modal-content { background: #ffffff; color: #1e293b; margin: 2rem auto; padding: 2.5rem; max-width: 850px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .modal-header h2 { color: #0f172a; font-size: 1.4rem; }
+        .modal-actions { display: flex; gap: 0.8rem; }
+        .modal-close { background: #64748b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+        .modal-print-btn { background: #0284c7; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        
+        .print-statement table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .print-statement th, .print-statement td { border: 1px solid #cbd5e1; padding: 0.6rem 0.8rem; text-align: left; font-size: 0.85rem; color: #1e293b; }
+        .print-statement th { background: #f1f5f9; color: #0f172a; font-weight: 600; }
+        
+        /* Print Media Query */
+        @media print {
+            body * { visibility: hidden; }
+            #printableArea, #printableArea * { visibility: visible; }
+            #printableArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0; color: #000; background: #fff; }
+            .modal-actions, .modal-close { display: none !important; }
+        }
+
         @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -32,7 +64,26 @@
             <h1>RCM Staff Member Portal</h1>
             <p id="staffInfo" style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem;"></p>
         </div>
-        <a href="/" onclick="sessionStorage.clear()" class="logout-btn">Logout</a>
+        <div class="header-actions">
+            <button class="btn-print" onclick="openPrintPreview()">🖨️ Print Preview</button>
+            <a href="/" onclick="sessionStorage.clear()" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Debit (Advance)</h3>
+            <p id="totalDebit" style="color: #f87171;">₹0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Credit (Earnings)</h3>
+            <p id="totalCredit" style="color: #4ade80;">₹0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Net Balance</h3>
+            <p id="netBalance" style="color: #38bdf8;">₹0</p>
+        </div>
     </div>
 
     <div class="grid-layout">
@@ -42,7 +93,7 @@
             <form id="ledgerForm">
                 <div class="form-group">
                     <label>Particular / Purpose</label>
-                    <input type="text" id="particular" required placeholder="e.g., Advance, Truck Unloading">
+                    <input type="text" id="particular" required placeholder="e.g., Advance, Loading Work">
                 </div>
                 <div class="form-group">
                     <label>Payment Mode</label>
@@ -68,9 +119,39 @@
 
         <!-- Staff Ledger Transactions Table -->
         <div class="table-card">
-            <h2>Your Ledger Transactions</h2>
+            <h2>Your Personal Ledger Transactions</h2>
             <div id="tableContainer">
-                <p style="color: #94a3b8;">Loading transactions...</p>
+                <p style="color: #94a3b8;">Loading your records...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Preview Modal -->
+    <div id="printModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Ledger Statement Preview</h2>
+                <div class="modal-actions">
+                    <button class="modal-print-btn" onclick="window.print()">Print / Save PDF</button>
+                    <button class="modal-close" onclick="closePrintPreview()">Close</button>
+                </div>
+            </div>
+            <div id="printableArea" class="print-statement">
+                <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid #0284c7; padding-bottom: 0.8rem;">
+                    <h1 style="font-size: 1.6rem; color: #0284c7; margin-bottom: 0.2rem;">RCM DEPOT MANAGEMENT</h1>
+                    <p style="font-size: 1rem; font-weight: bold; color: #334155;">Staff Ledger Statement</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.9rem;">
+                    <div>
+                        <p><strong>Staff Name:</strong> <span id="printStaffName">-</span></p>
+                        <p><strong>Staff Code:</strong> <span id="printStaffCode">-</span></p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p><strong>Date Generated:</strong> <span id="printDate">-</span></p>
+                        <p><strong>Net Balance:</strong> <span id="printNetBalance" style="font-weight:bold;">-</span></p>
+                    </div>
+                </div>
+                <div id="printTableContainer"></div>
             </div>
         </div>
     </div>
@@ -78,9 +159,11 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
         const staffName = sessionStorage.getItem("name") || "Staff Member";
-        const staffCode = sessionStorage.getItem("user") || "EMP000";
+        const staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
 
-        document.getElementById('staffInfo').textContent = `Logged in: ${staffName} (${staffCode})`;
+        document.getElementById('staffInfo').textContent = `Logged in: ${staffName} (${staffCode.toUpperCase()})`;
+
+        let globalStaffRecords = [];
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
@@ -101,6 +184,13 @@
             });
         }
 
+        function formatDate(dStr) {
+            if (!dStr) return '-';
+            const s = String(dStr);
+            if (s.includes('T')) return s.split('T')[0];
+            return s;
+        }
+
         async function loadLedger() {
             const container = document.getElementById('tableContainer');
             try {
@@ -109,23 +199,94 @@
                     container.innerHTML = `<p style="color: #94a3b8;">No ledger entries found.</p>`;
                     return;
                 }
-                const filtered = data.filter(row => String(row['Staff Code']).toLowerCase() === staffCode.toLowerCase());
+
+                // STRICT FILTER: Only show logged-in staff member's entries
+                globalStaffRecords = data.filter(row => {
+                    const code = String(row['Staff Code'] || '').trim().toLowerCase();
+                    return code === staffCode.toLowerCase();
+                });
+
+                if (globalStaffRecords.length === 0) {
+                    container.innerHTML = `<p style="color: #94a3b8;">No ledger records found for ${staffCode}.</p>`;
+                    document.getElementById('totalDebit').textContent = '₹0';
+                    document.getElementById('totalCredit').textContent = '₹0';
+                    document.getElementById('netBalance').textContent = '₹0';
+                    return;
+                }
+
+                let sumDebit = 0;
+                let sumCredit = 0;
+                globalStaffRecords.forEach(row => {
+                    sumDebit += Number(row['Debit'] || 0);
+                    sumCredit += Number(row['Credit'] || 0);
+                });
+
+                document.getElementById('totalDebit').textContent = `₹${sumDebit.toLocaleString('en-IN')}`;
+                document.getElementById('totalCredit').textContent = `₹${sumCredit.toLocaleString('en-IN')}`;
+                const net = sumCredit - sumDebit;
+                document.getElementById('netBalance').textContent = `₹${net.toLocaleString('en-IN')}`;
+                document.getElementById('netBalance').style.color = net >= 0 ? '#4ade80' : '#f87171';
+
                 const headers = ['ID', 'Transaction Date', 'Particular', 'Payment Mode', 'Debit', 'Credit', 'Entry Approvel Status (Admin)'];
-                
                 let html = `<table><thead><tr>`;
                 headers.forEach(h => html += `<th>${h}</th>`);
                 html += `</tr></thead><tbody>`;
 
-                (filtered.length > 0 ? filtered : data).slice(-15).reverse().forEach(row => {
+                globalStaffRecords.slice().reverse().forEach(row => {
                     html += `<tr>`;
-                    headers.forEach(h => html += `<td>${row[h] !== undefined ? row[h] : '-'}</td>`);
+                    headers.forEach(h => {
+                        let val = row[h] !== undefined ? row[h] : '-';
+                        if (h === 'Transaction Date') val = formatDate(val);
+                        if (h === 'Debit' && Number(val) > 0) val = `<span style="color:#f87171; font-weight:600;">₹${val}</span>`;
+                        if (h === 'Credit' && Number(val) > 0) val = `<span style="color:#4ade80; font-weight:600;">₹${val}</span>`;
+                        if (h === 'Entry Approvel Status (Admin)') {
+                            val = val === 'Approved' ? `<span style="color:#4ade80; font-weight:600;">Approved</span>` : `<span style="color:#facc15;">${val}</span>`;
+                        }
+                        html += `<td>${val}</td>`;
+                    });
                     html += `</tr>`;
                 });
                 html += `</tbody></table>`;
                 container.innerHTML = html;
             } catch (err) {
-                container.innerHTML = `<p style="color: #f87171;">Failed to load transactions.</p>`;
+                container.innerHTML = `<p style="color: #f87171;">Failed to load transactions: ${err.message}</p>`;
             }
+        }
+
+        function openPrintPreview() {
+            document.getElementById('printStaffName').textContent = staffName;
+            document.getElementById('printStaffCode').textContent = staffCode.toUpperCase();
+            document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-GB');
+            document.getElementById('printNetBalance').textContent = document.getElementById('netBalance').textContent;
+
+            const printContainer = document.getElementById('printTableContainer');
+            if (globalStaffRecords.length === 0) {
+                printContainer.innerHTML = "<p>No ledger transactions to print.</p>";
+            } else {
+                let html = `<table><thead><tr>
+                    <th>ID</th><th>Date</th><th>Particular</th><th>Payment Mode</th><th>Debit (₹)</th><th>Credit (₹)</th><th>Status</th>
+                </tr></thead><tbody>`;
+
+                globalStaffRecords.forEach(row => {
+                    html += `<tr>
+                        <td>${row['ID'] || '-'}</td>
+                        <td>${formatDate(row['Transaction Date'])}</td>
+                        <td>${row['Particular'] || '-'}</td>
+                        <td>${row['Payment Mode'] || '-'}</td>
+                        <td style="color:#dc2626; font-weight:bold;">${row['Debit'] || '0'}</td>
+                        <td style="color:#16a34a; font-weight:bold;">${row['Credit'] || '0'}</td>
+                        <td>${row['Entry Approvel Status (Admin)'] || '-'}</td>
+                    </tr>`;
+                });
+
+                html += `</tbody></table>`;
+                printContainer.innerHTML = html;
+            }
+            document.getElementById('printModal').style.display = 'block';
+        }
+
+        function closePrintPreview() {
+            document.getElementById('printModal').style.display = 'none';
         }
 
         document.getElementById('ledgerForm').addEventListener('submit', async function(e) {

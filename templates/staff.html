@@ -3,98 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Portal - RCM</title>
+    <title>Staff Portal - RCM Depot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-        body { background: #080d1a; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
+        :root {
+            --bg-main: #0a0f1d;
+            --bg-card: #111827;
+            --bg-card-hover: #172033;
+            --border-color: #1f293d;
+            --border-highlight: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-amber: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #f43f5e;
+            --nav-bg: #0d1527;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Top Navigation Bar */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; background: #0c1322; border-bottom: 1px solid #1e293b; }
-        .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 1.05rem; color: #f8fafc; }
-        .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
-        .btn-pwd { background: #eab308; color: #000; border: none; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
-        .btn-pwd:hover { background: #ca8a04; }
-        .btn-logout { background: #e11d48; color: #fff; border: none; padding: 0.45rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+        /* Corporate Top Navbar */
+        .navbar {
+            background: linear-gradient(180deg, #0f1a30 0%, #0b1324 100%);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45);
+            padding: 0.9rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
 
-        /* Main Container */
-        .main-container { width: 100%; max-width: 950px; margin: 2rem auto; padding: 0 1.5rem; }
+        /* Company Logo + Branding */
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 170px;
+        }
+        .logo-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+            overflow: hidden;
+        }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
+        .logo-text-box span { font-size: 0.7rem; color: var(--accent-blue); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* User Profile Card */
-        .profile-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        /* Header Center Depot Info */
+        .depot-header-info {
+            text-align: center;
+            flex: 1;
+        }
+        .depot-header-info h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.2rem;
+        }
+        .depot-header-info h1 span {
+            color: var(--accent-amber);
+        }
+        .depot-header-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .depot-badges {
+            display: inline-flex;
+            gap: 0.6rem;
+            margin-top: 0.3rem;
+        }
+        .tag-pill {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+        .tag-pill strong { color: var(--accent-blue); }
+
+        /* Nav Actions */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            min-width: 170px;
+            justify-content: flex-end;
+        }
+        .btn-pwd {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 0.5rem 0.95rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s;
+        }
+        .btn-pwd:hover {
+            background: var(--accent-amber);
+            color: #000;
+        }
+        .btn-logout {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            padding: 0.5rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover {
+            background: var(--accent-red);
+            color: #fff;
+        }
+
+        /* Container */
+        .main-container { width: 100%; max-width: 980px; margin: 1.8rem auto; padding: 0 1.5rem; }
+
+        /* Profile Card */
+        .profile-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.3rem 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.4rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
         .profile-left { display: flex; align-items: center; gap: 1.2rem; }
-        
-        .avatar-container { width: 62px; height: 62px; border-radius: 50%; overflow: hidden; border: 2px solid #38bdf8; background: #1e293b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+        .avatar-container {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--accent-blue);
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
+        }
         .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-container span { font-weight: bold; font-size: 1.5rem; color: #38bdf8; }
+        .avatar-container span { font-weight: 800; font-size: 1.4rem; color: var(--accent-blue); }
 
-        .profile-details h2 { font-size: 1.4rem; color: #ffffff; margin-bottom: 0.3rem; }
-        .profile-details p { color: #94a3b8; font-size: 0.9rem; }
-        .profile-details span.tag-code { color: #38bdf8; font-weight: 600; }
-        .profile-details span.tag-depot { color: #cbd5e1; font-weight: 600; }
-        .btn-view-statement { background: #facc15; color: #000; border: none; padding: 0.65rem 1.3rem; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: 0.2s; }
-        .btn-view-statement:hover { background: #eab308; }
+        .profile-details h2 { font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 0.2rem; }
+        .profile-details p { color: var(--text-secondary); font-size: 0.85rem; }
+        .profile-details span.tag-code { color: var(--accent-blue); font-weight: 700; }
+        .profile-details span.tag-depot { color: #f1f5f9; font-weight: 600; }
 
-        /* Stats Cards */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
-        .stat-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.4rem; text-align: center; }
-        .stat-box h4 { font-size: 0.8rem; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 0.6rem; text-transform: uppercase; font-weight: 600; }
-        .stat-box p { font-size: 1.55rem; font-weight: 800; }
-        .stat-credit { color: #22c55e; }
-        .stat-debit { color: #f43f5e; }
-        .stat-bal { color: #22c55e; }
+        .btn-view-statement {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #050811;
+            border: none;
+            padding: 0.65rem 1.3rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+        .btn-view-statement:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+        }
+
+        /* 3 Live Stats Cards */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
+        .stat-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.2rem 1.4rem;
+            text-align: center;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+        }
+        .stat-box-credit::after { background: var(--accent-green); }
+        .stat-box-debit::after { background: var(--accent-red); }
+        .stat-box-bal::after { background: var(--accent-blue); }
+
+        .stat-box h4 {
+            font-size: 0.74rem;
+            letter-spacing: 0.6px;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .stat-box p { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.5px; }
+        .stat-credit { color: var(--accent-green); }
+        .stat-debit { color: var(--accent-red); }
+        .stat-bal { color: var(--accent-blue); }
 
         /* Filter Controls */
         .filter-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.8rem; }
         .filter-group { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-        .filter-group label { font-size: 0.85rem; font-weight: 600; color: #94a3b8; }
-        .filter-select { padding: 0.45rem 0.8rem; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #38bdf8; font-weight: 600; outline: none; font-size: 0.85rem; cursor: pointer; }
-        .filter-select:focus { border-color: #38bdf8; }
+        .filter-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
+        .filter-select {
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--accent-blue);
+            font-weight: 600;
+            outline: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-select:focus { border-color: var(--accent-blue); }
 
         /* Ledger Table Card */
-        .ledger-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .ledger-card-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.8rem; border-bottom: 1px solid #1e293b; }
-        .ledger-card-header h3 { font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; }
-        .badge-live { color: #38bdf8; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.3rem; }
+        .ledger-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .ledger-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.1rem 1.6rem;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.4);
+        }
+        .ledger-card-header h3 { font-size: 1.05rem; color: #ffffff; font-weight: 700; }
+        .badge-live {
+            color: var(--accent-blue);
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
 
         .table-responsive { width: 100%; overflow-x: auto; }
         table.ledger-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.ledger-table th { padding: 1rem 1.5rem; color: #94a3b8; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #1e293b; }
-        table.ledger-table td { padding: 1rem 1.5rem; font-size: 0.9rem; border-bottom: 1px solid #131d33; }
+        table.ledger-table th {
+            padding: 0.9rem 1.4rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+        }
+        table.ledger-table td {
+            padding: 0.95rem 1.4rem;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #141e33;
+        }
+        table.ledger-table tr:hover td {
+            background: var(--bg-card-hover);
+        }
         table.ledger-table tr:last-child td { border-bottom: none; }
 
-        .text-debit { color: #f43f5e; font-weight: 600; }
-        .text-credit { color: #22c55e; font-weight: 600; }
-        .text-balance { color: #22c55e; font-weight: 600; }
-        .text-gray { color: #475569; }
+        .text-debit { color: var(--accent-red); font-weight: 600; }
+        .text-credit { color: var(--accent-green); font-weight: 600; }
+        .text-balance { color: var(--accent-blue); font-weight: 600; }
+        .text-gray { color: #64748b; }
 
-        /* Load More Container */
-        .load-more-container { padding: 1.2rem; text-align: center; border-top: 1px solid #1e293b; background: #0b1120; }
-        .btn-load-more { background: #1e293b; color: #38bdf8; border: 1px solid #334155; padding: 0.6rem 1.5rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .btn-load-more:hover { background: #334155; color: #ffffff; }
+        /* Load More */
+        .load-more-container { padding: 1.1rem; text-align: center; border-top: 1px solid var(--border-color); background: #0c1220; }
+        .btn-load-more {
+            background: #17233a;
+            color: var(--accent-blue);
+            border: 1px solid var(--border-color);
+            padding: 0.55rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-load-more:hover { background: #1e2e4d; color: #fff; }
 
         /* Password Modal */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(5px); overflow-y: auto; }
-        .modal-box { background: #0f172a; margin: 2rem auto; max-width: 410px; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #0b1120; border-bottom: 1px solid #1e293b; }
-        .modal-top-bar span { color: #f8fafc; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
-        .modal-close-btn { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; line-height: 1; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(6px); overflow-y: auto; }
+        .modal-box { background: var(--bg-card); margin: 3rem auto; max-width: 410px; border-radius: 14px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: #0c1322; border-bottom: 1px solid var(--border-color); }
+        .modal-top-bar span { color: #f8fafc; font-size: 0.95rem; font-weight: 700; }
+        .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; line-height: 1; }
         .modal-close-btn:hover { color: #fff; }
 
-        .pwd-modal-body { padding: 1.5rem; background: #0f172a; }
+        .pwd-modal-body { padding: 1.5rem; }
         .pwd-group { margin-bottom: 1.1rem; }
-        .pwd-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.4rem; }
-        .pwd-group input { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #334155; background: #080d1a; color: #fff; outline: none; font-size: 0.9rem; }
-        .pwd-group input:focus { border-color: #38bdf8; }
-        .btn-update-pwd { width: 100%; background: #eab308; color: #000; font-weight: bold; border: none; padding: 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; margin-top: 0.5rem; }
-        .btn-update-pwd:hover { background: #ca8a04; }
+        .pwd-group label { display: block; font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.4rem; font-weight: 600; }
+        .pwd-group input { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: #0a0f1d; color: #fff; outline: none; font-size: 0.9rem; }
+        .pwd-group input:focus { border-color: var(--accent-blue); }
+        .btn-update-pwd { width: 100%; background: var(--accent-amber); color: #000; font-weight: 700; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 0.4rem; }
+        .btn-update-pwd:hover { background: #d97706; }
         .pwd-status { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
 
-        /* Thermal White Statement */
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
+        /* Statement Print Modal */
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.3rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
         .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
-        .receipt-header h2 { font-size: 0.88rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .receipt-header h2 { font-size: 0.9rem; font-weight: 800; margin-bottom: 0.2rem; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
         .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
-        .receipt-title { font-weight: bold; margin-top: 0.3rem; display: block; font-size: 0.8rem; letter-spacing: 0.5px; }
+        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.82rem; }
 
         .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
         .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
@@ -107,8 +356,8 @@
         .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
 
-        .receipt-actions { padding: 0.9rem 1.2rem; background: #0b1120; }
-        .print-green-btn { width: 100%; background: #10b981; color: white; border: none; padding: 0.7rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .receipt-actions { padding: 0.9rem 1.2rem; background: #0c1322; }
+        .print-green-btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .print-green-btn:hover { background: #059669; }
 
         @media print {
@@ -118,8 +367,9 @@
             .modal-top-bar, .receipt-actions { display: none !important; }
         }
 
-        @media (max-width: 768px) {
-            .navbar { padding: 0.8rem 1rem; }
+        @media (max-width: 820px) {
+            .navbar { flex-direction: column; text-align: center; gap: 0.8rem; padding: 1rem; }
+            .brand-section, .nav-actions { justify-content: center; width: 100%; }
             .profile-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .btn-view-statement { width: 100%; justify-content: center; }
             .stats-row { grid-template-columns: 1fr; }
@@ -128,9 +378,26 @@
 </head>
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
-        <div class="nav-brand">👤 Staff Portal</div>
+        <div class="brand-section">
+            <div class="logo-box" id="companyLogoBox">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+            </div>
+            <div class="logo-text-box">
+                <h3>RCM DEPOT</h3>
+                <span>Staff Portal</span>
+            </div>
+        </div>
+
+        <div class="depot-header-info">
+            <h1>RCM Depot <span>Staff Portal</span></h1>
+            <p id="topDepotAddress">Near Lahra chowk, Chakla Road, Kishanganj, Bihar - 855107</p>
+            <div class="depot-badges">
+                <span class="tag-pill"><strong>FSSAI:</strong> <span id="topDepotFssai">10424370000018</span></span>
+                <span class="tag-pill"><strong>GSTIN:</strong> <span id="topDepotGstin">10AAMCR5143C1ZU</span></span>
+            </div>
+        </div>
+
         <div class="nav-actions">
             <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
@@ -139,7 +406,6 @@
 
     <div class="main-container">
 
-        <!-- Profile Header Card -->
         <div class="profile-card">
             <div class="profile-left">
                 <div class="avatar-container" id="avatarBox">
@@ -147,32 +413,30 @@
                 </div>
                 <div class="profile-details">
                     <h2 id="dispStaffName">Staff Member</h2>
-                    <p>Code: <span class="tag-code" id="dispStaffCode">EMP001</span> | Depot: <span class="tag-depot" id="dispDepotName">Loading...</span></p>
+                    <p>Employee ID: <span class="tag-code" id="dispStaffCode">EMP001</span> | Assigned Depot: <span class="tag-depot" id="dispDepotName">Loading...</span></p>
                 </div>
             </div>
             <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
         </div>
 
-        <!-- 3 Stats Cards (Live Filter Summary) -->
         <div class="stats-row">
-            <div class="stat-box">
-                <h4>TOTAL CREDIT (₹)</h4>
+            <div class="stat-box stat-box-credit">
+                <h4>Total Credit (₹)</h4>
                 <p class="stat-credit" id="totalCredit">₹0</p>
             </div>
-            <div class="stat-box">
-                <h4>TOTAL DEBIT (₹)</h4>
+            <div class="stat-box stat-box-debit">
+                <h4>Total Debit (₹)</h4>
                 <p class="stat-debit" id="totalDebit">₹0</p>
             </div>
-            <div class="stat-box">
-                <h4>NET BALANCE</h4>
+            <div class="stat-box stat-box-bal">
+                <h4>Net Balance</h4>
                 <p class="stat-bal" id="netBalance">₹0 (Cr)</p>
             </div>
         </div>
 
-        <!-- Separate Year & Month Filter -->
         <div class="filter-bar">
             <div class="filter-group">
-                <label>Filter:</label>
+                <label>Filter Statement:</label>
                 <select id="yearFilter" class="filter-select" onchange="onYearChange()">
                     <option value="ALL">All Years</option>
                 </select>
@@ -180,14 +444,13 @@
                     <option value="ALL">All Months</option>
                 </select>
             </div>
-            <span class="badge-live">Live Synced ⚡</span>
+            <span class="badge-live">⚡ Real-time Synced</span>
         </div>
 
-        <!-- Ledger Table Card -->
         <div class="ledger-card">
             <div class="ledger-card-header">
-                <h3>📑 My Ledger Statement</h3>
-                <span id="showingCount" style="font-size:0.85rem; color:#94a3b8; font-weight:600;">Showing 5 entries</span>
+                <h3>📑 Ledger Transactions</h3>
+                <span id="showingCount" style="font-size:0.85rem; color:var(--text-secondary); font-weight:600;">Showing 5 entries</span>
             </div>
             <div class="table-responsive">
                 <table class="ledger-table">
@@ -201,11 +464,10 @@
                         </tr>
                     </thead>
                     <tbody id="ledgerTableBody">
-                        <tr><td colspan="5" class="text-center" style="color: #94a3b8; padding: 2.5rem;">Loading live statement...</td></tr>
+                        <tr><td colspan="5" class="text-center" style="color: var(--text-secondary); padding: 2.5rem;">Loading live statement...</td></tr>
                     </tbody>
                 </table>
             </div>
-            <!-- Load More Option -->
             <div class="load-more-container" id="loadMoreBox" style="display: none;">
                 <button class="btn-load-more" id="loadMoreBtn" onclick="loadMoreEntries()">⬇️ Load More Entries</button>
             </div>
@@ -213,7 +475,6 @@
 
     </div>
 
-    <!-- Password Modal -->
     <div id="passwordModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -221,458 +482,4 @@
                 <button class="modal-close-btn" onclick="closePasswordModal()">&times;</button>
             </div>
             <div class="pwd-modal-body">
-                <form id="changePasswordForm">
-                    <div class="pwd-group">
-                        <label>Current Password</label>
-                        <input type="password" id="oldPass" required placeholder="Enter Current Password">
-                    </div>
-                    <div class="pwd-group">
-                        <label>New Password</label>
-                        <input type="password" id="newPass" required placeholder="Enter New Password">
-                    </div>
-                    <div class="pwd-group">
-                        <label>Confirm New Password</label>
-                        <input type="password" id="confirmPass" required placeholder="Confirm New Password">
-                    </div>
-                    <button type="submit" class="btn-update-pwd" id="pwdSubmitBtn">Update Password</button>
-                    <p id="pwdStatusMsg" class="pwd-status"></p>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Statement Receipt Modal -->
-    <div id="printModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>📄 Full Account Statement</span>
-                <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
-            </div>
-            
-            <div id="printableReceipt" class="receipt-container">
-                <div class="receipt-header">
-                    <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
-                    <p id="depotFullAddress">Depot Address</p>
-                    <p id="depotContact">Mob: -</p>
-                    <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
-                    <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
-                </div>
-
-                <div class="receipt-meta">
-                    <div>
-                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
-                        <p><strong>Joined:</strong> <span id="rcptJoinedDate">-</span></p>
-                    </div>
-                    <div class="text-right">
-                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
-                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
-                    </div>
-                </div>
-
-                <table class="receipt-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 48%;">Date/Desc</th>
-                            <th class="text-right" style="width: 17%;">Dr</th>
-                            <th class="text-right" style="width: 17%;">Cr</th>
-                            <th class="text-right" style="width: 18%;">Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rcptTableBody">
-                        <tr><td colspan="4" class="text-center">Loading transactions...</td></tr>
-                    </tbody>
-                </table>
-
-                <div class="receipt-summary">
-                    <div class="sum-row">
-                        <span>TOTAL DEBIT:</span>
-                        <span id="rcptTotalDebit">Rs.0.00</span>
-                    </div>
-                    <div class="sum-row">
-                        <span>TOTAL CREDIT:</span>
-                        <span id="rcptTotalCredit">Rs.0.00</span>
-                    </div>
-                    <div class="sum-row" style="margin-top: 4px; font-size: 0.82rem;">
-                        <span>NET BALANCE:</span>
-                        <span id="rcptNetBalance">Rs.0.00</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="receipt-actions">
-                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
-        
-        let staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
-        let staffNameStored = sessionStorage.getItem("name") || "Staff Member";
-
-        let bundleData = { staff: {}, depot: {}, ledger: [] };
-        let allProcessedRecords = [];
-        let currentFilteredList = [];
-        let displayedLimit = 5;
-
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        function jsonp(url) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
-                const script = document.createElement('script');
-                
-                const timer = setTimeout(() => {
-                    delete window[callbackName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    reject(new Error("Request Timeout"));
-                }, 12000);
-
-                window[callbackName] = function(data) {
-                    clearTimeout(timer);
-                    delete window[callbackName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    resolve(data);
-                };
-
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-                script.onerror = () => {
-                    clearTimeout(timer);
-                    delete window[callbackName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    reject(new Error("Network Error"));
-                };
-                document.body.appendChild(script);
-            });
-        }
-
-        // Clean Date Formatter: Strips out any time components like 05:30:00 GM
-        function parseCleanDate(raw) {
-            if (!raw) return { formatted: '-', year: '', month: '' };
-            
-            let d = new Date(raw);
-            if (isNaN(d.getTime())) {
-                const str = String(raw).split('T')[0].split(' ')[0];
-                const parts = str.split('-');
-                if (parts.length === 3) {
-                    d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
-                }
-            }
-
-            if (isNaN(d.getTime())) {
-                return { formatted: String(raw).split('T')[0].split(' ')[0], year: '', month: '' };
-            }
-
-            const day = String(d.getDate()).padStart(2, '0');
-            const mName = monthNames[d.getMonth()];
-            const yFull = String(d.getFullYear());
-            const yShort = yFull.slice(2);
-
-            return {
-                formatted: `${day}-${mName}-${yShort}`,
-                year: yFull,
-                month: mName
-            };
-        }
-
-        function getField(obj, ...keys) {
-            if (!obj) return '';
-            for (let k of keys) {
-                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
-                    return String(obj[k]).trim();
-                }
-            }
-            const objKeys = Object.keys(obj);
-            for (let k of keys) {
-                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
-                if (found && obj[found]) return String(obj[found]).trim();
-            }
-            return '';
-        }
-
-        async function loadFastBundle() {
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getStaffBundle&staffCode=${encodeURIComponent(staffCode)}`);
-                if (!res || !res.success) throw new Error("Failed to load staff bundle");
-
-                bundleData = res;
-                const staffInfo = res.staff || {};
-                const depotInfo = res.depot || {};
-                const ledgerRows = res.ledger || [];
-
-                // 1. Render Profile Card
-                const finalName = getField(staffInfo, 'Staff Name') || staffNameStored;
-                const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
-                const staffPhoto = getField(staffInfo, 'Staff Photo', 'Photo', 'Image');
-
-                document.getElementById('dispStaffName').textContent = finalName;
-                document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
-                document.getElementById('dispDepotName').textContent = finalDepot;
-
-                const avatarBox = document.getElementById('avatarBox');
-                if (staffPhoto && staffPhoto.startsWith('data:image')) {
-                    avatarBox.innerHTML = `<img src="${staffPhoto}" alt="${finalName}">`;
-                } else {
-                    avatarBox.innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
-                }
-
-                // 2. Process Ledger Records
-                if (ledgerRows.length === 0) {
-                    document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2.5rem;">No ledger transactions found for ${staffCode}.</td></tr>`;
-                    document.getElementById('totalCredit').textContent = '₹0';
-                    document.getElementById('totalDebit').textContent = '₹0';
-                    document.getElementById('netBalance').textContent = '₹0 (Cr)';
-                    return;
-                }
-
-                let runningBal = 0;
-                allProcessedRecords = [];
-                const yearSet = new Set();
-
-                ledgerRows.forEach(row => {
-                    const rawDate = getField(row, 'Transaction Date');
-                    const parsed = parseCleanDate(rawDate);
-                    
-                    const dr = Number(getField(row, 'Debit') || 0);
-                    const cr = Number(getField(row, 'Credit') || 0);
-                    runningBal += (cr - dr);
-
-                    if (parsed.year) yearSet.add(parsed.year);
-
-                    allProcessedRecords.push({
-                        year: parsed.year,
-                        month: parsed.month,
-                        customDate: parsed.formatted,
-                        particular: getField(row, 'Particular') || '-',
-                        dr: dr,
-                        cr: cr,
-                        bal: runningBal
-                    });
-                });
-
-                // Populate Year Dropdown
-                const yearSel = document.getElementById('yearFilter');
-                yearSel.innerHTML = `<option value="ALL">All Years</option>`;
-                Array.from(yearSet).sort().reverse().forEach(yr => {
-                    yearSel.innerHTML += `<option value="${yr}">${yr}</option>`;
-                });
-
-                onYearChange();
-
-            } catch (err) {
-                document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#f43f5e; padding:2.5rem;">Failed to load data: ${err.message}</td></tr>`;
-            }
-        }
-
-        function onYearChange() {
-            const selYear = document.getElementById('yearFilter').value;
-            const monthSel = document.getElementById('monthFilter');
-            monthSel.innerHTML = `<option value="ALL">All Months</option>`;
-
-            const monthsAvailable = new Set();
-            allProcessedRecords.forEach(r => {
-                if (selYear === 'ALL' || r.year === selYear) {
-                    if (r.month) monthsAvailable.add(r.month);
-                }
-            });
-
-            monthNames.forEach(m => {
-                if (monthsAvailable.has(m)) {
-                    monthSel.innerHTML += `<option value="${m}">${m}</option>`;
-                }
-            });
-
-            displayedLimit = 5;
-            applyFilters();
-        }
-
-        // Filter Function: Computes Sum dynamically for Selected Filter
-        function applyFilters() {
-            const selYear = document.getElementById('yearFilter').value;
-            const selMonth = document.getElementById('monthFilter').value;
-
-            // Filter entries matching selected Year & Month
-            currentFilteredList = allProcessedRecords.filter(r => {
-                const matchYear = (selYear === 'ALL' || r.year === selYear);
-                const matchMonth = (selMonth === 'ALL' || r.month === selMonth);
-                return matchYear && matchMonth;
-            });
-
-            // Calculate Dynamic Sum for the filtered list
-            let filterDebitSum = 0;
-            let filterCreditSum = 0;
-
-            currentFilteredList.forEach(r => {
-                filterDebitSum += r.dr;
-                filterCreditSum += r.cr;
-            });
-
-            // Update Top 3 Stats Cards with Filtered Totals
-            document.getElementById('totalCredit').textContent = `₹${filterCreditSum.toLocaleString('en-IN')}`;
-            document.getElementById('totalDebit').textContent = `₹${filterDebitSum.toLocaleString('en-IN')}`;
-            
-            const filterNet = filterCreditSum - filterDebitSum;
-            const balType = filterNet >= 0 ? '(Cr)' : '(Dr)';
-            const balEl = document.getElementById('netBalance');
-            balEl.textContent = `₹${Math.abs(filterNet).toLocaleString('en-IN')} ${balType}`;
-            balEl.style.color = filterNet >= 0 ? '#22c55e' : '#f43f5e';
-
-            renderTableRows();
-        }
-
-        function renderTableRows() {
-            const tbody = document.getElementById('ledgerTableBody');
-            const loadMoreBox = document.getElementById('loadMoreBox');
-
-            if (currentFilteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2rem;">No entries found for selected filter.</td></tr>`;
-                document.getElementById('showingCount').textContent = `0 entries`;
-                loadMoreBox.style.display = 'none';
-                return;
-            }
-
-            // Display newest first from the filtered list
-            const reversedList = currentFilteredList.slice().reverse();
-            const visibleEntries = reversedList.slice(0, displayedLimit);
-
-            let tableHtml = '';
-            visibleEntries.forEach(r => {
-                tableHtml += `<tr>
-                    <td><strong>${r.customDate}</strong></td>
-                    <td>${r.particular}</td>
-                    <td class="${r.dr > 0 ? 'text-debit' : 'text-gray'}">${r.dr > 0 ? '₹' + r.dr.toLocaleString('en-IN') : '-'}</td>
-                    <td class="${r.cr > 0 ? 'text-credit' : 'text-gray'}">${r.cr > 0 ? '₹' + r.cr.toLocaleString('en-IN') : '-'}</td>
-                    <td class="text-balance">₹${r.bal.toLocaleString('en-IN')} ${r.bal >= 0 ? '(Cr)' : '(Dr)'}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = tableHtml;
-
-            document.getElementById('showingCount').textContent = `Showing ${visibleEntries.length} of ${currentFilteredList.length} entries`;
-
-            if (currentFilteredList.length > displayedLimit) {
-                loadMoreBox.style.display = 'block';
-            } else {
-                loadMoreBox.style.display = 'none';
-            }
-        }
-
-        function loadMoreEntries() {
-            displayedLimit += 5;
-            renderTableRows();
-        }
-
-        function openPasswordModal() {
-            document.getElementById('passwordModal').style.display = 'block';
-            document.getElementById('changePasswordForm').reset();
-            document.getElementById('pwdStatusMsg').textContent = '';
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'none';
-        }
-
-        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const oldPass = document.getElementById('oldPass').value.trim();
-            const newPass = document.getElementById('newPass').value.trim();
-            const confirmPass = document.getElementById('confirmPass').value.trim();
-            const msg = document.getElementById('pwdStatusMsg');
-            const btn = document.getElementById('pwdSubmitBtn');
-
-            if (newPass !== confirmPass) {
-                msg.style.color = "#f43f5e";
-                msg.textContent = "New passwords do not match!";
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = "Updating Google Sheet...";
-            msg.textContent = "";
-
-            try {
-                const url = `${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
-                const res = await jsonp(url);
-
-                if (res.success) {
-                    msg.style.color = "#22c55e";
-                    msg.textContent = "Password changed successfully in Google Sheet!";
-                    setTimeout(() => { closePasswordModal(); }, 1800);
-                } else {
-                    msg.style.color = "#f43f5e";
-                    msg.textContent = res.message || "Failed to update password.";
-                }
-            } catch (err) {
-                msg.style.color = "#f43f5e";
-                msg.textContent = "Error updating password.";
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Update Password";
-            }
-        });
-
-        function openPrintPreview() {
-            const depotInfo = bundleData.depot || {};
-            const staffInfo = bundleData.staff || {};
-
-            const compName = getField(depotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
-            const addr = getField(depotInfo, 'Depot Address');
-            const dist = getField(depotInfo, 'Dristric', 'District');
-            const pin = getField(depotInfo, 'Pin Code', 'Pincode');
-            const mob = getField(depotInfo, 'Mob. No.', 'Mobile Number', 'Mob No');
-            const stateCode = getField(depotInfo, 'State Code');
-            const stateName = getField(depotInfo, 'State Name');
-            const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
-
-            document.getElementById('depotCompanyName').textContent = compName;
-            document.getElementById('depotFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
-            document.getElementById('depotContact').textContent = `Mob: ${mob || '-'}`;
-            document.getElementById('depotStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
-            document.getElementById('depotGstin').textContent = `GSTIN: ${gstin || '-'}`;
-
-            document.getElementById('rcptStaffName').textContent = getField(staffInfo, 'Staff Name') || staffNameStored;
-            document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
-            
-            const joinParsed = parseCleanDate(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
-            document.getElementById('rcptJoinedDate').textContent = joinParsed.formatted;
-            document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
-
-            const tbody = document.getElementById('rcptTableBody');
-            if (allProcessedRecords.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            let totalDr = 0;
-            let totalCr = 0;
-
-            allProcessedRecords.forEach(r => {
-                totalDr += r.dr;
-                totalCr += r.cr;
-
-                html += `<tr>
-                    <td><strong>${r.customDate}</strong><span class="desc-sub">${r.particular}</span></td>
-                    <td class="text-right">${r.dr > 0 ? r.dr : '-'}</td>
-                    <td class="text-right">${r.cr > 0 ? r.cr : '-'}</td>
-                    <td class="text-right"><strong>${r.bal}</strong></td>
-                </tr>`;
-            });
-
-            tbody.innerHTML = html;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
-            const finalNet = totalCr - totalDr;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${finalNet.toFixed(2)}`;
-
-            document.getElementById('printModal').style.display = 'block';
-        }
-
-        function closePrintPreview() {
-            document.getElementById('printModal').style.display = 'none';
-        }
-
-        window.onload = loadFastBundle;
-    </script>
-</body>
-</html>
+                <form id="changePassword

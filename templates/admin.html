@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RCM Depot</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #0f172a; color: #f8fafc; padding: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .header h1 { color: #38bdf8; font-size: 1.5rem; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .card { background: #1e293b; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; }
+        .card h3 { color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .card p { font-size: 1.8rem; font-weight: bold; color: #38bdf8; }
+        .table-card { background: #1e293b; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; }
+        .table-card h2 { margin-bottom: 1rem; font-size: 1.2rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #334155; }
+        th { color: #94a3b8; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>RCM Depot - Admin Control Panel</h1>
+        <a href="/" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Total Depots</h3>
+            <p>12</p>
+        </div>
+        <div class="card">
+            <h3>Total Stock Items</h3>
+            <p>1,450</p>
+        </div>
+        <div class="card">
+            <h3>Pending Orders</h3>
+            <p>28</p>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <h2>Recent Activity & Sheet Status</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Depot Name</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Main Depot (Bhilwara)</td>
+                    <td style="color: #4ade80;">Connected</td>
+                    <td>Just now</td>
+                </tr>
+                <tr>
+                    <td>Kishanganj Depot</td>
+                    <td style="color: #4ade80;">Connected</td>
+                    <td>10 mins ago</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

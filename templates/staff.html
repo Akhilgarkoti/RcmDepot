@@ -8,16 +8,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
         body { background: #080d1a; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Top Navigation Bar */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; background: #0c1322; border-bottom: 1px solid #1e293b; }
-        .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 1.05rem; color: #f8fafc; }
+        /* Top Navigation Bar with Yellow Banner */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 2rem; background: #eab308; border-bottom: 2px solid #ca8a04; box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3); }
+        
+        /* Yellow Background & Bold Red Text Header */
+        .nav-center-banner { text-align: center; flex: 1; margin: 0 1rem; }
+        .nav-center-banner h1 { font-size: 1.35rem; font-weight: 900; color: #dc2626; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 0.2rem; }
+        .nav-center-banner p { font-size: 0.82rem; font-weight: 800; color: #b91c1c; line-height: 1.3; }
+        .nav-center-banner .depot-fssai { font-size: 0.78rem; font-weight: 800; color: #7f1d1d; margin-top: 0.1rem; }
+
         .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
-        .btn-pwd { background: #eab308; color: #000; border: none; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
-        .btn-pwd:hover { background: #ca8a04; }
-        .btn-logout { background: #e11d48; color: #fff; border: none; padding: 0.45rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+        .btn-pwd { background: #0f172a; color: #facc15; border: 1px solid #334155; padding: 0.5rem 1rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; transition: 0.2s; }
+        .btn-pwd:hover { background: #1e293b; color: #fff; }
+        .btn-logout { background: #dc2626; color: #fff; border: 1px solid #991b1b; padding: 0.5rem 1.2rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .btn-logout:hover { background: #b91c1c; }
 
         /* Main Container */
-        .main-container { width: 100%; max-width: 950px; margin: 2rem auto; padding: 0 1.5rem; }
+        .main-container { width: 100%; max-width: 950px; margin: 1.8rem auto; padding: 0 1.5rem; }
 
         /* User Profile Card */
         .profile-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
@@ -119,7 +126,8 @@
         }
 
         @media (max-width: 768px) {
-            .navbar { padding: 0.8rem 1rem; }
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-center-banner { margin: 0.3rem 0; }
             .profile-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .btn-view-statement { width: 100%; justify-content: center; }
             .stats-row { grid-template-columns: 1fr; }
@@ -128,9 +136,12 @@
 </head>
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
-        <div class="nav-brand">👤 Staff Portal</div>
+        <div class="nav-center-banner">
+            <h1>RCM Depot Staff Portal</h1>
+            <p id="topDepotAddress">Near Lahra chowk, Chakla Road, Kishanganj, Bihar - 855107</p>
+            <p class="depot-fssai"><span id="topDepotFssai">FSSAI: 10424370000018</span> | <span id="topDepotGstin">GSTIN: 10AAMCR5143C1ZU</span></p>
+        </div>
         <div class="nav-actions">
             <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
@@ -139,7 +150,6 @@
 
     <div class="main-container">
 
-        <!-- Profile Header Card -->
         <div class="profile-card">
             <div class="profile-left">
                 <div class="avatar-container" id="avatarBox">
@@ -153,7 +163,6 @@
             <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
         </div>
 
-        <!-- 3 Stats Cards -->
         <div class="stats-row">
             <div class="stat-box">
                 <h4>TOTAL CREDIT (₹)</h4>
@@ -169,7 +178,6 @@
             </div>
         </div>
 
-        <!-- Separate Year & Month Filter -->
         <div class="filter-bar">
             <div class="filter-group">
                 <label>Filter:</label>
@@ -183,7 +191,6 @@
             <span class="badge-live">Live Synced ⚡</span>
         </div>
 
-        <!-- Ledger Table Card -->
         <div class="ledger-card">
             <div class="ledger-card-header">
                 <h3>📑 My Ledger Statement</h3>
@@ -205,7 +212,6 @@
                     </tbody>
                 </table>
             </div>
-            <!-- Load More Option -->
             <div class="load-more-container" id="loadMoreBox" style="display: none;">
                 <button class="btn-load-more" id="loadMoreBtn" onclick="loadMoreEntries()">⬇️ Load More Entries</button>
             </div>
@@ -213,7 +219,6 @@
 
     </div>
 
-    <!-- Password Modal -->
     <div id="passwordModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -241,7 +246,6 @@
         </div>
     </div>
 
-    <!-- Statement Receipt Modal -->
     <div id="printModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -347,14 +351,13 @@
             });
         }
 
-        // Robust Date Parser to strip all time & format clean: 14-Sep-26
+        // Clean Date Formatter: Strips out any time components like 05:30:00 GM
         function parseCleanDate(raw) {
             if (!raw) return { formatted: '-', year: '', month: '' };
             
             let d = new Date(raw);
             if (isNaN(d.getTime())) {
-                // If it's a raw string like 2026-08-25
-                const str = String(raw).split('T')[0];
+                const str = String(raw).split('T')[0].split(' ')[0];
                 const parts = str.split('-');
                 if (parts.length === 3) {
                     d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
@@ -362,7 +365,7 @@
             }
 
             if (isNaN(d.getTime())) {
-                return { formatted: String(raw).split(' ')[0], year: '', month: '' };
+                return { formatted: String(raw).split('T')[0].split(' ')[0], year: '', month: '' };
             }
 
             const day = String(d.getDate()).padStart(2, '0');
@@ -402,7 +405,27 @@
                 const depotInfo = res.depot || {};
                 const ledgerRows = res.ledger || [];
 
-                // 1. Render Profile
+                // 1. Render Top Header Banner (Yellow Background details)
+                if (depotInfo) {
+                    const addr = getField(depotInfo, 'Depot Address');
+                    const dist = getField(depotInfo, 'Dristric', 'District');
+                    const stateName = getField(depotInfo, 'State Name');
+                    const pin = getField(depotInfo, 'Pin Code', 'Pincode');
+                    const fssai = getField(depotInfo, 'FSSAI', 'FSSAI No.');
+                    const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
+
+                    if (addr) {
+                        document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
+                    }
+                    if (fssai) {
+                        document.getElementById('topDepotFssai').textContent = `FSSAI: ${fssai}`;
+                    }
+                    if (gstin) {
+                        document.getElementById('topDepotGstin').textContent = `GSTIN: ${gstin}`;
+                    }
+                }
+
+                // 2. Render Profile Card
                 const finalName = getField(staffInfo, 'Staff Name') || staffNameStored;
                 const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
                 const staffPhoto = getField(staffInfo, 'Staff Photo', 'Photo', 'Image');
@@ -418,7 +441,7 @@
                     avatarBox.innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
                 }
 
-                // 2. Process Ledger
+                // 3. Process Ledger Records
                 if (ledgerRows.length === 0) {
                     document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2.5rem;">No ledger transactions found for ${staffCode}.</td></tr>`;
                     document.getElementById('totalCredit').textContent = '₹0';
@@ -480,7 +503,6 @@
             }
         }
 
-        // When Year changes, populate matching Months
         function onYearChange() {
             const selYear = document.getElementById('yearFilter').value;
             const monthSel = document.getElementById('monthFilter');
@@ -503,7 +525,6 @@
             applyFilters();
         }
 
-        // Filter and Render Table
         function applyFilters() {
             const selYear = document.getElementById('yearFilter').value;
             const selMonth = document.getElementById('monthFilter').value;

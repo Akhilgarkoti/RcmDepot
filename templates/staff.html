@@ -13,14 +13,12 @@
             --bg-card: #111827;
             --bg-card-hover: #172033;
             --border-color: #1f293d;
-            --border-highlight: #334155;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --accent-blue: #38bdf8;
             --accent-amber: #f59e0b;
             --accent-green: #10b981;
             --accent-red: #f43f5e;
-            --nav-bg: #0d1527;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -43,19 +41,20 @@
             display: flex;
             align-items: center;
             gap: 0.85rem;
-            min-width: 170px;
+            min-width: 180px;
         }
         .logo-box {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 10px;
-            background: linear-gradient(135deg, #1e293b, #0f172a);
+            background: #ffffff;
             border: 1px solid #38bdf8;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
             overflow: hidden;
+            padding: 2px;
         }
         .logo-box img { width: 100%; height: 100%; object-fit: contain; }
         .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
@@ -73,9 +72,7 @@
             letter-spacing: 0.3px;
             margin-bottom: 0.2rem;
         }
-        .depot-header-info h1 span {
-            color: var(--accent-amber);
-        }
+        .depot-header-info h1 span { color: var(--accent-amber); }
         .depot-header-info p {
             font-size: 0.8rem;
             color: var(--text-secondary);
@@ -85,6 +82,8 @@
             display: inline-flex;
             gap: 0.6rem;
             margin-top: 0.3rem;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .tag-pill {
             background: rgba(30, 41, 59, 0.7);
@@ -102,7 +101,7 @@
             display: flex;
             align-items: center;
             gap: 0.7rem;
-            min-width: 170px;
+            min-width: 180px;
             justify-content: flex-end;
         }
         .btn-pwd {
@@ -119,10 +118,7 @@
             gap: 0.35rem;
             transition: all 0.2s;
         }
-        .btn-pwd:hover {
-            background: var(--accent-amber);
-            color: #000;
-        }
+        .btn-pwd:hover { background: var(--accent-amber); color: #000; }
         .btn-logout {
             background: rgba(244, 63, 94, 0.12);
             color: #fb7185;
@@ -135,12 +131,9 @@
             text-decoration: none;
             transition: all 0.2s;
         }
-        .btn-logout:hover {
-            background: var(--accent-red);
-            color: #fff;
-        }
+        .btn-logout:hover { background: var(--accent-red); color: #fff; }
 
-        /* Container */
+        /* Main Container */
         .main-container { width: 100%; max-width: 980px; margin: 1.8rem auto; padding: 0 1.5rem; }
 
         /* Profile Card */
@@ -197,7 +190,7 @@
             box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
         }
 
-        /* 3 Live Stats Cards */
+        /* 3 Dynamic Stats Cards */
         .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
         .stat-box {
             background: var(--bg-card);
@@ -205,15 +198,10 @@
             border-radius: 12px;
             padding: 1.2rem 1.4rem;
             text-align: center;
-            transition: 0.2s;
             position: relative;
             overflow: hidden;
         }
-        .stat-box::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-        }
+        .stat-box::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
         .stat-box-credit::after { background: var(--accent-green); }
         .stat-box-debit::after { background: var(--accent-red); }
         .stat-box-bal::after { background: var(--accent-blue); }
@@ -245,7 +233,6 @@
             outline: none;
             font-size: 0.85rem;
             cursor: pointer;
-            transition: 0.2s;
         }
         .filter-select:focus { border-color: var(--accent-blue); }
 
@@ -296,9 +283,7 @@
             font-size: 0.88rem;
             border-bottom: 1px solid #141e33;
         }
-        table.ledger-table tr:hover td {
-            background: var(--bg-card-hover);
-        }
+        table.ledger-table tr:hover td { background: var(--bg-card-hover); }
         table.ledger-table tr:last-child td { border-bottom: none; }
 
         .text-debit { color: var(--accent-red); font-weight: 600; }
@@ -306,7 +291,6 @@
         .text-balance { color: var(--accent-blue); font-weight: 600; }
         .text-gray { color: #64748b; }
 
-        /* Load More */
         .load-more-container { padding: 1.1rem; text-align: center; border-top: 1px solid var(--border-color); background: #0c1220; }
         .btn-load-more {
             background: #17233a;
@@ -338,7 +322,7 @@
         .btn-update-pwd:hover { background: #d97706; }
         .pwd-status { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
 
-        /* Statement Print Modal */
+        /* Statement Receipt Modal */
         .receipt-container { background: #ffffff; color: #000000; padding: 1.3rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
         .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
         .receipt-header h2 { font-size: 0.9rem; font-weight: 800; margin-bottom: 0.2rem; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -378,10 +362,11 @@
 </head>
 <body>
 
+    <!-- Corporate Navbar with Dynamic Logo & Depot Header -->
     <div class="navbar">
         <div class="brand-section">
             <div class="logo-box" id="companyLogoBox">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
             </div>
             <div class="logo-text-box">
                 <h3>RCM DEPOT</h3>
@@ -406,6 +391,7 @@
 
     <div class="main-container">
 
+        <!-- Profile Header Card -->
         <div class="profile-card">
             <div class="profile-left">
                 <div class="avatar-container" id="avatarBox">
@@ -419,6 +405,7 @@
             <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
         </div>
 
+        <!-- 3 Dynamic Sum Stats Cards -->
         <div class="stats-row">
             <div class="stat-box stat-box-credit">
                 <h4>Total Credit (₹)</h4>
@@ -434,6 +421,7 @@
             </div>
         </div>
 
+        <!-- Separate Year & Month Filters -->
         <div class="filter-bar">
             <div class="filter-group">
                 <label>Filter Statement:</label>
@@ -447,6 +435,7 @@
             <span class="badge-live">⚡ Real-time Synced</span>
         </div>
 
+        <!-- Ledger Table Card -->
         <div class="ledger-card">
             <div class="ledger-card-header">
                 <h3>📑 Ledger Transactions</h3>
@@ -468,6 +457,7 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Load More Option -->
             <div class="load-more-container" id="loadMoreBox" style="display: none;">
                 <button class="btn-load-more" id="loadMoreBtn" onclick="loadMoreEntries()">⬇️ Load More Entries</button>
             </div>
@@ -475,6 +465,7 @@
 
     </div>
 
+    <!-- Password Modal -->
     <div id="passwordModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -482,4 +473,473 @@
                 <button class="modal-close-btn" onclick="closePasswordModal()">&times;</button>
             </div>
             <div class="pwd-modal-body">
-                <form id="changePassword
+                <form id="changePasswordForm">
+                    <div class="pwd-group">
+                        <label>Current Password</label>
+                        <input type="password" id="oldPass" required placeholder="Enter Current Password">
+                    </div>
+                    <div class="pwd-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPass" required placeholder="Enter New Password">
+                    </div>
+                    <div class="pwd-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPass" required placeholder="Confirm New Password">
+                    </div>
+                    <button type="submit" class="btn-update-pwd" id="pwdSubmitBtn">Update Password</button>
+                    <p id="pwdStatusMsg" class="pwd-status"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statement Receipt Modal -->
+    <div id="printModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>📄 Full Account Statement</span>
+                <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
+            </div>
+            
+            <div id="printableReceipt" class="receipt-container">
+                <div class="receipt-header">
+                    <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
+                    <p id="depotFullAddress">Depot Address</p>
+                    <p id="depotContact">Mob: -</p>
+                    <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
+                    <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
+                </div>
+
+                <div class="receipt-meta">
+                    <div>
+                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                        <p><strong>Joined:</strong> <span id="rcptJoinedDate">-</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
+                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                    </div>
+                </div>
+
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 48%;">Date/Desc</th>
+                            <th class="text-right" style="width: 17%;">Dr</th>
+                            <th class="text-right" style="width: 17%;">Cr</th>
+                            <th class="text-right" style="width: 18%;">Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcptTableBody">
+                        <tr><td colspan="4" class="text-center">Loading transactions...</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="receipt-summary">
+                    <div class="sum-row">
+                        <span>TOTAL DEBIT:</span>
+                        <span id="rcptTotalDebit">Rs.0.00</span>
+                    </div>
+                    <div class="sum-row">
+                        <span>TOTAL CREDIT:</span>
+                        <span id="rcptTotalCredit">Rs.0.00</span>
+                    </div>
+                    <div class="sum-row" style="margin-top: 4px; font-size: 0.82rem;">
+                        <span>NET BALANCE:</span>
+                        <span id="rcptNetBalance">Rs.0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="receipt-actions">
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+        
+        let staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
+        let staffNameStored = sessionStorage.getItem("name") || "Staff Member";
+
+        let bundleData = { staff: {}, depot: {}, ledger: [], logo: "" };
+        let allProcessedRecords = [];
+        let currentFilteredList = [];
+        let displayedLimit = 5;
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
+                
+                const timer = setTimeout(() => {
+                    delete window[callbackName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    reject(new Error("Request Timeout"));
+                }, 12000);
+
+                window[callbackName] = function(data) {
+                    clearTimeout(timer);
+                    delete window[callbackName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    resolve(data);
+                };
+
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => {
+                    clearTimeout(timer);
+                    delete window[callbackName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    reject(new Error("Network Error"));
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        // Clean Date Formatter: Strips 05:30:00 GM
+        function parseCleanDate(raw) {
+            if (!raw) return { formatted: '-', year: '', month: '' };
+            
+            let d = new Date(raw);
+            if (isNaN(d.getTime())) {
+                const str = String(raw).split('T')[0].split(' ')[0];
+                const parts = str.split('-');
+                if (parts.length === 3) {
+                    d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+                }
+            }
+
+            if (isNaN(d.getTime())) {
+                return { formatted: String(raw).split('T')[0].split(' ')[0], year: '', month: '' };
+            }
+
+            const day = String(d.getDate()).padStart(2, '0');
+            const mName = monthNames[d.getMonth()];
+            const yFull = String(d.getFullYear());
+            const yShort = yFull.slice(2);
+
+            return {
+                formatted: `${day}-${mName}-${yShort}`,
+                year: yFull,
+                month: mName
+            };
+        }
+
+        function getField(obj, ...keys) {
+            if (!obj) return '';
+            for (let k of keys) {
+                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
+                    return String(obj[k]).trim();
+                }
+            }
+            const objKeys = Object.keys(obj);
+            for (let k of keys) {
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                if (found && obj[found]) return String(obj[found]).trim();
+            }
+            return '';
+        }
+
+        async function loadFastBundle() {
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=getStaffBundle&staffCode=${encodeURIComponent(staffCode)}`);
+                if (!res || !res.success) throw new Error("Failed to load staff bundle");
+
+                bundleData = res;
+                const staffInfo = res.staff || {};
+                const depotInfo = res.depot || {};
+                const ledgerRows = res.ledger || [];
+                const logoUrl = res.logo || "";
+
+                // 1. Render Logo
+                if (logoUrl && (logoUrl.startsWith('http') || logoUrl.startsWith('data:image'))) {
+                    document.getElementById('companyLogoBox').innerHTML = `<img src="${logoUrl}" alt="RCM Logo">`;
+                }
+
+                // 2. Render Header
+                if (depotInfo) {
+                    const addr = getField(depotInfo, 'Depot Address');
+                    const dist = getField(depotInfo, 'Dristric', 'District');
+                    const stateName = getField(depotInfo, 'State Name');
+                    const pin = getField(depotInfo, 'Pin Code', 'Pincode');
+                    const fssai = getField(depotInfo, 'FSSAI', 'FSSAI No.');
+                    const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
+
+                    if (addr) document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
+                    if (fssai) document.getElementById('topDepotFssai').textContent = fssai;
+                    if (gstin) document.getElementById('topDepotGstin').textContent = gstin;
+                }
+
+                // 3. Render Profile Card
+                const finalName = getField(staffInfo, 'Staff Name') || staffNameStored;
+                const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
+                const staffPhoto = getField(staffInfo, 'Staff Photo', 'Photo', 'Image');
+
+                document.getElementById('dispStaffName').textContent = finalName;
+                document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
+                document.getElementById('dispDepotName').textContent = finalDepot;
+
+                const avatarBox = document.getElementById('avatarBox');
+                if (staffPhoto && (staffPhoto.startsWith('data:image') || staffPhoto.startsWith('http'))) {
+                    avatarBox.innerHTML = `<img src="${staffPhoto}" alt="${finalName}">`;
+                } else {
+                    avatarBox.innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
+                }
+
+                // 4. Process Ledger
+                if (ledgerRows.length === 0) {
+                    document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--text-secondary); padding:2.5rem;">No ledger transactions found for ${staffCode}.</td></tr>`;
+                    document.getElementById('totalCredit').textContent = '₹0';
+                    document.getElementById('totalDebit').textContent = '₹0';
+                    document.getElementById('netBalance').textContent = '₹0 (Cr)';
+                    return;
+                }
+
+                let runningBal = 0;
+                allProcessedRecords = [];
+                const yearSet = new Set();
+
+                ledgerRows.forEach(row => {
+                    const rawDate = getField(row, 'Transaction Date');
+                    const parsed = parseCleanDate(rawDate);
+                    
+                    const dr = Number(getField(row, 'Debit') || 0);
+                    const cr = Number(getField(row, 'Credit') || 0);
+                    runningBal += (cr - dr);
+
+                    if (parsed.year) yearSet.add(parsed.year);
+
+                    allProcessedRecords.push({
+                        year: parsed.year,
+                        month: parsed.month,
+                        customDate: parsed.formatted,
+                        particular: getField(row, 'Particular') || '-',
+                        dr: dr,
+                        cr: cr,
+                        bal: runningBal
+                    });
+                });
+
+                // Populate Year Filter
+                const yearSel = document.getElementById('yearFilter');
+                yearSel.innerHTML = `<option value="ALL">All Years</option>`;
+                Array.from(yearSet).sort().reverse().forEach(yr => {
+                    yearSel.innerHTML += `<option value="${yr}">${yr}</option>`;
+                });
+
+                onYearChange();
+
+            } catch (err) {
+                document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#f43f5e; padding:2.5rem;">Failed to load data: ${err.message}</td></tr>`;
+            }
+        }
+
+        function onYearChange() {
+            const selYear = document.getElementById('yearFilter').value;
+            const monthSel = document.getElementById('monthFilter');
+            monthSel.innerHTML = `<option value="ALL">All Months</option>`;
+
+            const monthsAvailable = new Set();
+            allProcessedRecords.forEach(r => {
+                if (selYear === 'ALL' || r.year === selYear) {
+                    if (r.month) monthsAvailable.add(r.month);
+                }
+            });
+
+            monthNames.forEach(m => {
+                if (monthsAvailable.has(m)) {
+                    monthSel.innerHTML += `<option value="${m}">${m}</option>`;
+                }
+            });
+
+            displayedLimit = 5;
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const selYear = document.getElementById('yearFilter').value;
+            const selMonth = document.getElementById('monthFilter').value;
+
+            currentFilteredList = allProcessedRecords.filter(r => {
+                const matchYear = (selYear === 'ALL' || r.year === selYear);
+                const matchMonth = (selMonth === 'ALL' || r.month === selMonth);
+                return matchYear && matchMonth;
+            });
+
+            let filterDebitSum = 0;
+            let filterCreditSum = 0;
+
+            currentFilteredList.forEach(r => {
+                filterDebitSum += r.dr;
+                filterCreditSum += r.cr;
+            });
+
+            document.getElementById('totalCredit').textContent = `₹${filterCreditSum.toLocaleString('en-IN')}`;
+            document.getElementById('totalDebit').textContent = `₹${filterDebitSum.toLocaleString('en-IN')}`;
+            
+            const filterNet = filterCreditSum - filterDebitSum;
+            const balType = filterNet >= 0 ? '(Cr)' : '(Dr)';
+            const balEl = document.getElementById('netBalance');
+            balEl.textContent = `₹${Math.abs(filterNet).toLocaleString('en-IN')} ${balType}`;
+            balEl.style.color = filterNet >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+            renderTableRows();
+        }
+
+        function renderTableRows() {
+            const tbody = document.getElementById('ledgerTableBody');
+            const loadMoreBox = document.getElementById('loadMoreBox');
+
+            if (currentFilteredList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--text-secondary); padding:2rem;">No entries found for selected filter.</td></tr>`;
+                document.getElementById('showingCount').textContent = `0 entries`;
+                loadMoreBox.style.display = 'none';
+                return;
+            }
+
+            const reversedList = currentFilteredList.slice().reverse();
+            const visibleEntries = reversedList.slice(0, displayedLimit);
+
+            let tableHtml = '';
+            visibleEntries.forEach(r => {
+                tableHtml += `<tr>
+                    <td><strong>${r.customDate}</strong></td>
+                    <td>${r.particular}</td>
+                    <td class="${r.dr > 0 ? 'text-debit' : 'text-gray'}">${r.dr > 0 ? '₹' + r.dr.toLocaleString('en-IN') : '-'}</td>
+                    <td class="${r.cr > 0 ? 'text-credit' : 'text-gray'}">${r.cr > 0 ? '₹' + r.cr.toLocaleString('en-IN') : '-'}</td>
+                    <td class="text-balance">₹${r.bal.toLocaleString('en-IN')} ${r.bal >= 0 ? '(Cr)' : '(Dr)'}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = tableHtml;
+
+            document.getElementById('showingCount').textContent = `Showing ${visibleEntries.length} of ${currentFilteredList.length} entries`;
+
+            if (currentFilteredList.length > displayedLimit) {
+                loadMoreBox.style.display = 'block';
+            } else {
+                loadMoreBox.style.display = 'none';
+            }
+        }
+
+        function loadMoreEntries() {
+            displayedLimit += 5;
+            renderTableRows();
+        }
+
+        function openPasswordModal() {
+            document.getElementById('passwordModal').style.display = 'block';
+            document.getElementById('changePasswordForm').reset();
+            document.getElementById('pwdStatusMsg').textContent = '';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('oldPass').value.trim();
+            const newPass = document.getElementById('newPass').value.trim();
+            const confirmPass = document.getElementById('confirmPass').value.trim();
+            const msg = document.getElementById('pwdStatusMsg');
+            const btn = document.getElementById('pwdSubmitBtn');
+
+            if (newPass !== confirmPass) {
+                msg.style.color = "var(--accent-red)";
+                msg.textContent = "New passwords do not match!";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = "Updating...";
+            msg.textContent = "";
+
+            try {
+                const url = `${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
+                const res = await jsonp(url);
+
+                if (res.success) {
+                    msg.style.color = "var(--accent-green)";
+                    msg.textContent = "Password changed successfully!";
+                    setTimeout(() => { closePasswordModal(); }, 1800);
+                } else {
+                    msg.style.color = "var(--accent-red)";
+                    msg.textContent = res.message || "Failed to update password.";
+                }
+            } catch (err) {
+                msg.style.color = "var(--accent-red)";
+                msg.textContent = "Error updating password.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Update Password";
+            }
+        });
+
+        function openPrintPreview() {
+            const depotInfo = bundleData.depot || {};
+            const staffInfo = bundleData.staff || {};
+
+            const compName = getField(depotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
+            const addr = getField(depotInfo, 'Depot Address');
+            const dist = getField(depotInfo, 'Dristric', 'District');
+            const pin = getField(depotInfo, 'Pin Code', 'Pincode');
+            const mob = getField(depotInfo, 'Mob. No.', 'Mobile Number', 'Mob No');
+            const stateCode = getField(depotInfo, 'State Code');
+            const stateName = getField(depotInfo, 'State Name');
+            const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
+
+            document.getElementById('depotCompanyName').textContent = compName;
+            document.getElementById('depotFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
+            document.getElementById('depotContact').textContent = `Mob: ${mob || '-'}`;
+            document.getElementById('depotStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
+            document.getElementById('depotGstin').textContent = `GSTIN: ${gstin || '-'}`;
+
+            document.getElementById('rcptStaffName').textContent = getField(staffInfo, 'Staff Name') || staffNameStored;
+            document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
+            
+            const joinParsed = parseCleanDate(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
+            document.getElementById('rcptJoinedDate').textContent = joinParsed.formatted;
+            document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
+
+            const tbody = document.getElementById('rcptTableBody');
+            if (allProcessedRecords.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            let totalDr = 0;
+            let totalCr = 0;
+
+            allProcessedRecords.forEach(r => {
+                totalDr += r.dr;
+                totalCr += r.cr;
+
+                html += `<tr>
+                    <td><strong>${r.customDate}</strong><span class="desc-sub">${r.particular}</span></td>
+                    <td class="text-right">${r.dr > 0 ? r.dr : '-'}</td>
+                    <td class="text-right">${r.cr > 0 ? r.cr : '-'}</td>
+                    <td class="text-right"><strong>${r.bal}</strong></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
+            const finalNet = totalCr - totalDr;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${finalNet.toFixed(2)}`;
+
+            document.getElementById('printModal').style.display = 'block';
+        }
+
+        function closePrintPreview() {
+            document.getElementById('printModal').style.display = 'none';
+        }
+
+        window.onload = loadFastBundle;
+    </script>
+</body>
+</html>

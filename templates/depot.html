@@ -147,25 +147,6 @@
         /* Main Workspace Container */
         .main-container { width: 100%; max-width: 1100px; margin: 1.8rem auto; padding: 0 1.5rem; }
 
-        /* Stats Strip */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.6rem;
-        }
-        .glass-stat-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 1.1rem 1.2rem;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        .glass-stat-card h4 { font-size: 0.74rem; letter-spacing: 0.6px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
-        .glass-stat-card p { font-size: 1.45rem; font-weight: 800; color: #ffffff; }
-
         /* Modern Nav Tabs */
         .depot-nav-tabs {
             display: flex;
@@ -254,18 +235,46 @@
         }
         .btn-submit-dispatch:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45); }
 
-        /* History Table Toolbar */
+        /* History Table Toolbar with Search Bar */
         .table-toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
+            gap: 1rem;
+            margin-bottom: 1.1rem;
             flex-wrap: wrap;
         }
-        .toolbar-left { display: flex; align-items: center; gap: 0.6rem; }
+        .toolbar-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex: 1; }
+        .search-box-wrap {
+            position: relative;
+            min-width: 260px;
+            max-width: 380px;
+            flex: 1;
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.55rem 1rem 0.55rem 2.2rem;
+            background: rgba(10, 15, 29, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.88rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .search-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 12px rgba(56, 189, 248, 0.2); }
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
         .btn-tool {
-            padding: 0.5rem 0.95rem;
+            padding: 0.55rem 0.95rem;
             border-radius: 8px;
             font-weight: 700;
             font-size: 0.82rem;
@@ -275,6 +284,7 @@
             gap: 0.35rem;
             border: 1px solid var(--border-color);
             transition: all 0.2s;
+            white-space: nowrap;
         }
         .btn-excel { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.35); }
         .btn-excel:hover { background: var(--accent-green); color: #fff; }
@@ -383,26 +393,6 @@
 
     <div class="main-container">
 
-        <!-- Stats Overview Cards -->
-        <div class="stats-grid">
-            <div class="glass-stat-card">
-                <h4>Invoice Series Prefix</h4>
-                <p id="statInvPrefix" style="color:var(--accent-amber);">-</p>
-            </div>
-            <div class="glass-stat-card">
-                <h4>Total Dispatched Entries</h4>
-                <p id="statTotalDispatch">0</p>
-            </div>
-            <div class="glass-stat-card">
-                <h4>Duplicate Entries Detected</h4>
-                <p id="statTotalDuplicates" style="color:var(--accent-red);">0</p>
-            </div>
-            <div class="glass-stat-card">
-                <h4>Active Staff Members</h4>
-                <p id="statTotalStaff">0</p>
-            </div>
-        </div>
-
         <!-- Navigation Tabs -->
         <div class="depot-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
@@ -434,13 +424,13 @@
                         <input type="text" id="dispTime" class="form-control" readonly style="color:var(--accent-amber); font-weight:700;">
                     </div>
 
-                    <!-- 3. Depot Invoice Series Prefix (Auto from Depot Master) -->
+                    <!-- 3. Depot Invoice Series Prefix -->
                     <div class="form-group">
                         <label>Depot Invoice Series (Prefix)</label>
                         <input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:var(--accent-amber); font-weight:800; font-size:1.05rem;">
                     </div>
 
-                    <!-- 4. Vehicle Type (Default: Auto) -->
+                    <!-- 4. Vehicle Type -->
                     <div class="form-group">
                         <label>Vehicle Type</label>
                         <select id="dispVehicleType" class="form-control" required>
@@ -463,19 +453,19 @@
                         <input type="text" id="dispThrough" class="form-control" required placeholder="e.g. Singh PUC Auto, Monir Auto, Self">
                     </div>
 
-                    <!-- 7. Due-Excess (Default: No Due/excess) -->
+                    <!-- 7. Due-Excess -->
                     <div class="form-group">
                         <label>Due- Excess Matter If Any</label>
                         <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
                     </div>
 
-                    <!-- 8. Remark If Any (Default: -) -->
+                    <!-- 8. Remark If Any -->
                     <div class="form-group">
                         <label>Remark If Any</label>
                         <input type="text" id="dispRemarks" class="form-control" value="-">
                     </div>
 
-                    <!-- 9. Invoice Last 5 Digits (Can enter up to 50 numbers separated by comma or Enter) -->
+                    <!-- 9. Invoice Last 5 Digits -->
                     <div class="form-group-full">
                         <label>Invoice No. Last 5 Digits <span style="color:var(--accent-cyan); font-weight:normal;">(Enter 1 to 50 invoices separated by comma <code>,</code> or New Line <code>Enter</code>. Exactly 5 digits each)</span></label>
                         <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667, 25678... (Prefix will be auto-attached)"></textarea>
@@ -487,7 +477,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History Panel (No ID Column + Duplicate Top Highlight + Delete + Bulk Delete + Excel Download) -->
+        <!-- 2. Records History Panel with Search Bar -->
         <div id="recordsTab" class="glass-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatched Trucks & Invoices History</h3>
@@ -496,6 +486,10 @@
 
             <div class="table-toolbar">
                 <div class="toolbar-left">
+                    <div class="search-box-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="historySearchInput" class="search-input" placeholder="Search invoice, vehicle, through, date..." oninput="filterHistoryTable()">
+                    </div>
                     <button class="btn-tool btn-bulk-del" onclick="deleteSelectedRows()">🗑️ Delete Selected</button>
                     <span id="selectedCountText" style="font-size:0.82rem; color:var(--text-secondary);">0 selected</span>
                 </div>
@@ -710,10 +704,6 @@
                 document.getElementById('hiddenDepotCode').value = dCode;
                 document.getElementById('hiddenDepotName').value = dName;
                 document.getElementById('dispPrefixSeries').value = depotPrefix;
-                document.getElementById('statInvPrefix').textContent = depotPrefix;
-
-                document.getElementById('statTotalDispatch').textContent = dispatches.length;
-                document.getElementById('statTotalStaff').textContent = staff.length;
 
                 renderDispatchTable(dispatches);
                 renderStaffTable(staff);
@@ -729,8 +719,7 @@
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches recorded yet.</td></tr>`;
-                document.getElementById('statTotalDuplicates').textContent = '0';
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches found.</td></tr>`;
                 return;
             }
 
@@ -741,22 +730,17 @@
                 if (inv) invCounts[inv] = (invCounts[inv] || 0) + 1;
             });
 
-            // Split into duplicates (shown first) and uniques
             const dupList = [];
             const normalList = [];
-            let totalDupCount = 0;
 
             list.slice().reverse().forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
                 if (invCounts[inv] > 1) {
                     dupList.push(r);
-                    totalDupCount++;
                 } else {
                     normalList.push(r);
                 }
             });
-
-            document.getElementById('statTotalDuplicates').textContent = totalDupCount;
 
             const finalSortedList = dupList.concat(normalList);
 
@@ -785,6 +769,28 @@
             });
             tbody.innerHTML = html;
             updateSelectedCount();
+        }
+
+        // Live Search Filter for History
+        function filterHistoryTable() {
+            const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
+            if (!query) {
+                renderDispatchTable(loadedDispatches);
+                return;
+            }
+
+            const filtered = loadedDispatches.filter(r => {
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
+                const vType = getField(r, 'Vehicle Type').toLowerCase();
+                const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
+                const vNo = getField(r, 'Vehicle No').toLowerCase();
+                const date = getField(r, 'Invoice Dispatch Date', 'Date').toLowerCase();
+                const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
+
+                return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || date.includes(query) || remark.includes(query);
+            });
+
+            renderDispatchTable(filtered);
         }
 
         function renderStaffTable(list) {
@@ -821,7 +827,7 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
         }
 
-        // Handle Multi-Invoice Form Submission with Strict 5-Digit Validation
+        // Multi-Invoice Form Submission with Strict 5-Digit Check
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -835,7 +841,6 @@
                 return;
             }
 
-            // Split by comma or new lines and remove extra spaces
             const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
 
             if (rawList.length === 0) {
@@ -850,15 +855,13 @@
                 return;
             }
 
-            // Validate exactly 5 digits for each invoice number
             const invalidNumbers = rawList.filter(num => num.length !== 5);
             if (invalidNumbers.length > 0) {
                 statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = `⚠️ Invalid digits: (${invalidNumbers.join(', ')}). Each invoice number MUST be exactly 5 digits (not more, not less).`;
+                statusMsg.textContent = `⚠️ Invalid digits: (${invalidNumbers.join(', ')}). Each invoice number MUST be exactly 5 digits.`;
                 return;
             }
 
-            // Attach Depot Prefix Series to each 5-digit number
             const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
 
             const payload = {
@@ -959,7 +962,7 @@
             }
         }
 
-        // Download History as Excel (CSV format)
+        // Download History as Excel
         function downloadExcel() {
             if (!loadedDispatches || loadedDispatches.length === 0) {
                 alert('No dispatch records to download.');
@@ -991,7 +994,6 @@
             document.body.removeChild(link);
         }
 
-        // Password Modal Handlers
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
         function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 

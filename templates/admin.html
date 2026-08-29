@@ -57,7 +57,7 @@
         .tab-btn:hover { background: #1a2744; color: #fff; }
         .tab-btn.active { background: linear-gradient(135deg, #a855f7, #7c3aed); color: #ffffff; border-color: #c084fc; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.3); }
 
-        .badge-count { background: #f43f5e; color: #fff; font-size: 0.72rem; padding: 0.15rem 0.45rem; border-radius: 12px; font-weight: 800; }
+        .badge-count { background: #f43f5e; color: #fff; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 12px; font-weight: 800; }
 
         .panel-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.6rem; margin-bottom: 1.5rem; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.7rem; }
@@ -357,6 +357,7 @@
             });
         }
 
+        // Deep Property Finder (Works on any column name variations)
         function getField(obj, ...keys) {
             if (!obj) return '';
             for (let k of keys) {
@@ -364,10 +365,17 @@
             }
             const objKeys = Object.keys(obj);
             for (let k of keys) {
-                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '').includes(cleanK) || cleanK.includes(ok.toLowerCase().replace(/[^a-z0-9]/g, '')));
                 if (found && obj[found]) return String(obj[found]).trim();
             }
             return '';
+        }
+
+        function isPendingVal(v) {
+            if (!v) return false;
+            var s = v.toString().trim().toLowerCase();
+            return (s === 'pending' || s.indexOf('pend') !== -1);
         }
 
         async function loadAdminData() {
@@ -386,19 +394,22 @@
             }
         }
 
-        function isPendingVal(v) {
-            if (!v) return false;
-            var s = v.toString().trim().toLowerCase();
-            return (s === 'pending' || s.indexOf('pend') !== -1);
-        }
-
         function renderPendingApprovals() {
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
 
-            // Case-insensitive flexible check for pending staff and transactions
-            const pStaff = staffList.filter(s => isPendingVal(getField(s, 'Approval Status', 'Approval', 'Status')));
-            const pTrx = trxList.filter(t => isPendingVal(getField(t, 'approvalStatus', 'Approval Status', 'Status')));
+            // 1. Pending Staff Filter (Matches 'Pending' in Approval / Aproovel Column or 'Inactive' in Status)
+            const pStaff = staffList.filter(s => {
+                const appVal = getField(s, 'Aproovel Status (ADMIN)', 'Approval Status', 'Approval', 'Aproovel');
+                const stVal = getField(s, 'Status');
+                return isPendingVal(appVal) || (stVal.toLowerCase() === 'inactive' && isPendingVal(appVal));
+            });
+
+            // 2. Pending Transactions Filter (Matches 'Pending' in Entry Approvel Status)
+            const pTrx = trxList.filter(t => {
+                const appVal = getField(t, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Approval Status', 'Status');
+                return isPendingVal(appVal);
+            });
 
             const totalPending = pStaff.length + pTrx.length;
             const badge = document.getElementById('pendingBadge');
@@ -417,12 +428,16 @@
                 let html = '';
                 pStaff.forEach(s => {
                     const code = getField(s, 'Staff Code');
+                    const name = getField(s, 'Staff Name');
+                    const mob = getField(s, 'Staff Mob.');
+                    const depot = getField(s, 'Staff Working Depot Name', 'Depot');
+                    const date = getField(s, 'Staff Joining Date');
                     html += `<tr>
                         <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
-                        <td><strong>${getField(s, 'Staff Name')}</strong></td>
-                        <td>${getField(s, 'Staff Mob.')}</td>
-                        <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
-                        <td>${getField(s, 'Staff Joining Date')}</td>
+                        <td><strong>${name}</strong></td>
+                        <td>${mob}</td>
+                        <td>${depot}</td>
+                        <td>${date}</td>
                         <td style="color:var(--accent-amber); font-weight:700;">Pending</td>
                         <td>
                             <button class="btn-approve" onclick="approveStaff('${code}', 'Active', 'Approved')">✅ Approve</button>
@@ -441,15 +456,22 @@
             } else {
                 let html = '';
                 pTrx.forEach(t => {
-                    const trxId = getField(t, 'id', 'Trx ID');
-                    const dr = Number(getField(t, 'debit') || 0);
-                    const cr = Number(getField(t, 'credit') || 0);
+                    const trxId = getField(t, 'ID', 'id', 'Trx ID');
+                    const dt = getField(t, 'Transaction Date', 'date');
+                    const name = getField(t, 'Staff Name', 'name');
+                    const code = getField(t, 'Staff Code', 'code');
+                    const depot = getField(t, 'Satff Depot Name', 'Staff Depot Name', 'depotName');
+                    const part = getField(t, 'Particular', 'particular');
+                    const mode = getField(t, 'Payment Mode', 'mode');
+                    const dr = Number(getField(t, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(t, 'Credit', 'credit') || 0);
+
                     html += `<tr>
-                        <td>${getField(t, 'date')}</td>
-                        <td><strong>${getField(t, 'name')}</strong> (${getField(t, 'code')})</td>
-                        <td>${getField(t, 'depotName', 'Depot')}</td>
-                        <td>${getField(t, 'particular')}</td>
-                        <td>${getField(t, 'mode')}</td>
+                        <td>${dt}</td>
+                        <td><strong>${name}</strong> (${code})</td>
+                        <td>${depot}</td>
+                        <td>${part}</td>
+                        <td>${mode}</td>
                         <td style="color:var(--accent-red); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
                         <td style="color:var(--accent-green); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
                         <td>
@@ -480,7 +502,7 @@
         }
 
         async function deleteRow(sheetName, colIndex, matchValue) {
-            if (!confirm(`Are you sure you want to delete this record (${matchValue}) from ${sheetName}?`)) return;
+            if (!confirm(`Are you sure you want to delete record (${matchValue}) from ${sheetName}?`)) return;
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteAdminRow&sheetName=${encodeURIComponent(sheetName)}&colIndex=${colIndex}&matchValue=${encodeURIComponent(matchValue)}`);
                 showToast(res.message || "Deleted");
@@ -554,7 +576,7 @@
                 const mob = getField(s, 'Staff Mob.');
                 const depot = getField(s, 'Staff Working Depot Name', 'Depot');
                 const st = getField(s, 'Status') || 'Active';
-                const app = getField(s, 'Approval Status', 'Approval') || 'Approved';
+                const app = getField(s, 'Aproovel Status (ADMIN)', 'Approval Status', 'Approval') || 'Approved';
                 html += `<tr>
                     <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
                     <td><strong>${name}</strong></td>
@@ -576,19 +598,19 @@
             document.getElementById('ledgerCount').textContent = `${list.length} entries`;
             let html = '';
             list.slice().reverse().forEach(l => {
-                const trxId = getField(l, 'id', 'Trx ID');
-                const dr = Number(getField(l, 'debit') || 0);
-                const cr = Number(getField(l, 'credit') || 0);
+                const trxId = getField(l, 'ID', 'id', 'Trx ID');
+                const dr = Number(getField(l, 'Debit', 'debit') || 0);
+                const cr = Number(getField(l, 'Credit', 'credit') || 0);
                 html += `<tr>
-                    <td>${getField(l, 'date')}</td>
-                    <td style="color:var(--accent-blue);">${getField(l, 'code')}</td>
-                    <td><strong>${getField(l, 'name')}</strong></td>
-                    <td>${getField(l, 'particular')}</td>
-                    <td>${getField(l, 'mode')}</td>
+                    <td>${getField(l, 'Transaction Date', 'date')}</td>
+                    <td style="color:var(--accent-blue);">${getField(l, 'Staff Code', 'code')}</td>
+                    <td><strong>${getField(l, 'Staff Name', 'name')}</strong></td>
+                    <td>${getField(l, 'Particular', 'particular')}</td>
+                    <td>${getField(l, 'Payment Mode', 'mode')}</td>
                     <td style="color:var(--accent-red); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
                     <td style="color:var(--accent-green); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
-                    <td>${getField(l, 'depotName', 'Depot')}</td>
-                    <td>${getField(l, 'approvalStatus', 'Status')}</td>
+                    <td>${getField(l, 'Satff Depot Name', 'Staff Depot Name', 'depotName')}</td>
+                    <td>${getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status')}</td>
                     <td>
                         <button class="btn-action-delete" onclick="deleteRow('Staff Ledger Entry', 0, '${trxId}')">🗑️ Delete</button>
                     </td>

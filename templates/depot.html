@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depot Portal - RCM Depot</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #0b132b; color: #f8fafc; padding: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 2rem; }
+        .header h1 { color: #38bdf8; font-size: 1.5rem; }
+        .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
+        .grid-layout { display: grid; grid-template-columns: 360px 1fr; gap: 2rem; }
+        .form-card, .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; }
+        .form-card h2, .table-card h2 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 1.2rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #94a3b8; }
+        .form-group input, .form-group select { width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid #334155; background: #0b132b; color: #fff; outline: none; }
+        .submit-btn { width: 100%; padding: 0.75rem; background: #0284c7; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+        .submit-btn:hover { background: #0369a1; }
+        .table-card { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #334155; font-size: 0.85rem; white-space: nowrap; }
+        th { color: #94a3b8; background: #131c31; }
+        .status-msg { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
+        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>RCM Depot Manager Portal</h1>
+            <p id="depotInfo" style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem;"></p>
+        </div>
+        <a href="/" onclick="sessionStorage.clear()" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="grid-layout">
+        <!-- New Dispatch Form -->
+        <div class="form-card">
+            <h2>New Invoice Dispatch Entry</h2>
+            <form id="dispatchForm">
+                <div class="form-group">
+                    <label>Invoice Number</label>
+                    <input type="text" id="invoiceNo" required placeholder="e.g., 25640">
+                </div>
+                <div class="form-group">
+                    <label>Vehicle Number</label>
+                    <input type="text" id="vehicleNo" placeholder="e.g., BR01-1234">
+                </div>
+                <div class="form-group">
+                    <label>Dispatch Through (Transport / Party)</label>
+                    <input type="text" id="dispatchThrough" required placeholder="e.g., Singh PUC Auto">
+                </div>
+                <div class="form-group">
+                    <label>Due / Excess Status</label>
+                    <select id="dueExcess">
+                        <option value="No Due/excess">No Due/excess</option>
+                        <option value="Due">Due</option>
+                        <option value="Excess">Excess</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Remark (If Any)</label>
+                    <input type="text" id="remark" placeholder="-">
+                </div>
+                <button type="submit" class="submit-btn" id="saveBtn">Submit Dispatch</button>
+                <p id="statusMsg" class="status-msg"></p>
+            </form>
+        </div>
+
+        <!-- Recent Dispatches Table -->
+        <div class="table-card">
+            <h2>Recent Dispatch Reports</h2>
+            <div id="tableContainer">
+                <p style="color: #94a3b8;">Loading records...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+        const depotName = sessionStorage.getItem("name") || "Depot";
+        const depotCode = sessionStorage.getItem("user") || "D000";
+
+        document.getElementById('depotInfo').textContent = `Logged in: ${depotName} (${depotCode.toUpperCase()})`;
+
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error("Network Error"));
+                };
+                document.body.appendChild(script);
+            });
+        }
+
+        async function loadDispatches() {
+            const container = document.getElementById('tableContainer');
+            try {
+                const data = await jsonp(`${SCRIPT_URL}?action=getData&sheet=Invoice+Dispatch+Report`);
+                if (!Array.isArray(data) || data.length === 0) {
+                    container.innerHTML = `<p style="color: #94a3b8;">No dispatch entries found.</p>`;
+                    return;
+                }
+                const headers = ['ID', 'InvoIce Dispatch Date', 'Inoice No.  Last  Digit', 'Dispatch Throuch', 'Vehicle No', 'Due- Excexx Any Matter', 'Remark If Any'];
+                let html = `<table><thead><tr>`;
+                headers.forEach(h => html += `<th>${h}</th>`);
+                html += `</tr></thead><tbody>`;
+
+                data.slice(-15).reverse().forEach(row => {
+                    html += `<tr>`;
+                    headers.forEach(h => html += `<td>${row[h] !== undefined ? row[h] : '-'}</td>`);
+                    html += `</tr>`;
+                });
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            } catch (err) {
+                container.innerHTML = `<p style="color: #f87171;">Failed to load dispatches.</p>`;
+            }
+        }
+
+        document.getElementById('dispatchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveBtn');
+            const msg = document.getElementById('statusMsg');
+            btn.disabled = true;
+            btn.textContent = "Saving to Google Sheets...";
+            msg.textContent = "";
+
+            const invoiceNo = document.getElementById('invoiceNo').value;
+            const vehicleNo = document.getElementById('vehicleNo').value;
+            const dispatchThrough = document.getElementById('dispatchThrough').value;
+            const dueExcess = document.getElementById('dueExcess').value;
+            const remark = document.getElementById('remark').value;
+
+            const url = `${SCRIPT_URL}?action=addDispatch&depotCode=${encodeURIComponent(depotCode)}&depotName=${encodeURIComponent(depotName)}&invoiceNo=${encodeURIComponent(invoiceNo)}&vehicleNo=${encodeURIComponent(vehicleNo)}&dispatchThrough=${encodeURIComponent(dispatchThrough)}&dueExcess=${encodeURIComponent(dueExcess)}&remark=${encodeURIComponent(remark)}`;
+
+            try {
+                const res = await jsonp(url);
+                if (res.success) {
+                    msg.style.color = "#4ade80";
+                    msg.textContent = "Entry added to Google Sheet!";
+                    document.getElementById('dispatchForm').reset();
+                    loadDispatches();
+                } else {
+                    msg.style.color = "#f87171";
+                    msg.textContent = res.message || "Failed to save.";
+                }
+            } catch (err) {
+                msg.style.color = "#f87171";
+                msg.textContent = "Error saving data.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Submit Dispatch";
+            }
+        });
+
+        window.onload = loadDispatches;
+    </script>
+</body>
+</html>

@@ -3,46 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Portal - RCM Depot</title>
+    <title>Employee Portal - RCM</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0b132b; color: #f8fafc; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .header h1 { color: #38bdf8; font-size: 1.5rem; }
-        .header-actions { display: flex; gap: 0.8rem; align-items: center; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
+        body { background: #080d1a; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
         
-        .btn-print { background: #0284c7; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
-        .btn-print:hover { background: #0369a1; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
-        .stat-card { background: #1c2541; padding: 1.2rem; border-radius: 8px; border: 1px solid #334155; }
-        .stat-card h3 { color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.3rem; }
-        .stat-card p { font-size: 1.6rem; font-weight: bold; }
-        
-        .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; }
-        .table-card h2 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 1.2rem; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 0.85rem 1rem; border-bottom: 1px solid #334155; font-size: 0.9rem; white-space: nowrap; }
-        th { color: #94a3b8; background: #131c31; font-weight: 600; }
+        /* Top Navigation Bar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; background: #0c1322; border-bottom: 1px solid #1e293b; }
+        .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 1.05rem; color: #f8fafc; }
+        .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
+        .btn-pwd { background: #eab308; color: #000; border: none; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+        .btn-logout { background: #e11d48; color: #fff; border: none; padding: 0.45rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
 
-        /* Modal Overlay */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(4px); overflow-y: auto; }
-        .modal-box { background: #1c2541; margin: 2rem auto; max-width: 500px; border-radius: 12px; border: 1px solid #334155; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #131c31; border-bottom: 1px solid #334155; }
+        /* Main Container */
+        .main-container { width: 100%; max-width: 950px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        /* User Profile Card */
+        .profile-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .profile-left { display: flex; align-items: center; gap: 1.2rem; }
+        
+        /* Staff Photo & Fallback */
+        .avatar-container { width: 62px; height: 62px; border-radius: 50%; overflow: hidden; border: 2px solid #38bdf8; background: #1e293b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-container span { font-weight: bold; font-size: 1.5rem; color: #38bdf8; }
+
+        .profile-details h2 { font-size: 1.4rem; color: #ffffff; margin-bottom: 0.3rem; }
+        .profile-details p { color: #94a3b8; font-size: 0.9rem; }
+        .profile-details span.tag-code { color: #38bdf8; font-weight: 600; }
+        .profile-details span.tag-depot { color: #cbd5e1; font-weight: 600; }
+        .btn-view-statement { background: #facc15; color: #000; border: none; padding: 0.65rem 1.3rem; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: 0.2s; }
+        .btn-view-statement:hover { background: #eab308; }
+
+        /* Stats Cards */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
+        .stat-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.4rem; text-align: center; }
+        .stat-box h4 { font-size: 0.8rem; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 0.6rem; text-transform: uppercase; font-weight: 600; }
+        .stat-box p { font-size: 1.55rem; font-weight: 800; }
+        .stat-credit { color: #22c55e; }
+        .stat-debit { color: #f43f5e; }
+        .stat-bal { color: #22c55e; }
+
+        /* Ledger Table Card */
+        .ledger-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .ledger-card-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.8rem; border-bottom: 1px solid #1e293b; }
+        .ledger-card-header h3 { font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; }
+        .badge-live { color: #38bdf8; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.3rem; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table.ledger-table { width: 100%; border-collapse: collapse; text-align: left; }
+        table.ledger-table th { padding: 1rem 1.5rem; color: #94a3b8; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #1e293b; }
+        table.ledger-table td { padding: 1rem 1.5rem; font-size: 0.9rem; border-bottom: 1px solid #131d33; }
+        table.ledger-table tr:last-child td { border-bottom: none; }
+
+        .text-debit { color: #f43f5e; font-weight: 600; }
+        .text-credit { color: #22c55e; font-weight: 600; }
+        .text-balance { color: #22c55e; font-weight: 600; }
+        .text-gray { color: #475569; }
+
+        /* Receipt Print Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(5px); overflow-y: auto; }
+        .modal-box { background: #0f172a; margin: 2rem auto; max-width: 500px; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #0b1120; border-bottom: 1px solid #1e293b; }
         .modal-top-bar span { color: #f8fafc; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
         .modal-close-btn { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; line-height: 1; }
         .modal-close-btn:hover { color: #fff; }
 
-        /* White Paper Statement (Exact Receipt Style) */
+        /* Thermal White Statement */
         .receipt-container { background: #ffffff; color: #000000; padding: 1.5rem; font-family: 'Courier New', Courier, monospace; font-size: 0.82rem; }
         .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-header h2 { font-size: 0.95rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .receipt-header h2 { font-size: 0.95rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .receipt-header p { font-size: 0.75rem; line-height: 1.3; color: #222; }
         .receipt-title { font-weight: bold; margin-top: 0.3rem; display: block; font-size: 0.85rem; letter-spacing: 1px; }
 
         .receipt-meta { display: flex; justify-content: space-between; font-size: 0.78rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
-
         .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.6rem; }
         .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.78rem; }
         .receipt-table td { padding: 4px 2px; font-size: 0.78rem; border: none; color: #000; vertical-align: top; }
@@ -53,7 +86,7 @@
         .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.5rem 0; font-size: 0.8rem; line-height: 1.5; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
 
-        .receipt-actions { padding: 1rem 1.2rem; background: #131c31; }
+        .receipt-actions { padding: 1rem 1.2rem; background: #0b1120; }
         .print-green-btn { width: 100%; background: #10b981; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .print-green-btn:hover { background: #059669; }
 
@@ -63,45 +96,88 @@
             #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 480px; margin: 0 auto; padding: 10px; background: #fff; color: #000; }
             .modal-top-bar, .receipt-actions { display: none !important; }
         }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0.8rem 1rem; }
+            .profile-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-view-statement { width: 100%; justify-content: center; }
+            .stats-row { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <h1>RCM Staff Member Portal</h1>
-            <p id="staffInfo" style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem;"></p>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="nav-brand">
+            👤 Staff Portal
         </div>
-        <div class="header-actions">
-            <button class="btn-print" onclick="openPrintPreview()">🖨️ Print Preview</button>
-            <a href="/" onclick="sessionStorage.clear()" class="logout-btn">Logout</a>
+        <div class="nav-actions">
+            <button class="btn-pwd" onclick="alert('Contact Admin to update password.')">🔑 Password</button>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
         </div>
     </div>
 
-    <!-- Summary Stats -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <h3>Total Debit (Advance)</h3>
-            <p id="totalDebit" style="color: #f87171;">₹0</p>
+    <div class="main-container">
+
+        <!-- Profile Header Card -->
+        <div class="profile-card">
+            <div class="profile-left">
+                <!-- Staff Image Container -->
+                <div class="avatar-container" id="avatarBox">
+                    <span id="avatarFallback">U</span>
+                </div>
+                <div class="profile-details">
+                    <h2 id="dispStaffName">Staff Member</h2>
+                    <p>Code: <span class="tag-code" id="dispStaffCode">EMP000</span> | Depot: <span class="tag-depot" id="dispDepotName">Kishanganj</span></p>
+                </div>
+            </div>
+            <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
         </div>
-        <div class="stat-card">
-            <h3>Total Credit (Earnings)</h3>
-            <p id="totalCredit" style="color: #4ade80;">₹0</p>
+
+        <!-- 3 Stats Cards -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <h4>TOTAL CREDIT (₹)</h4>
+                <p class="stat-credit" id="totalCredit">₹0</p>
+            </div>
+            <div class="stat-box">
+                <h4>TOTAL DEBIT (₹)</h4>
+                <p class="stat-debit" id="totalDebit">₹0</p>
+            </div>
+            <div class="stat-box">
+                <h4>NET BALANCE</h4>
+                <p class="stat-bal" id="netBalance">₹0 (Cr)</p>
+            </div>
         </div>
-        <div class="stat-card">
-            <h3>Net Balance</h3>
-            <p id="netBalance" style="color: #38bdf8;">₹0</p>
+
+        <!-- Ledger Table Card -->
+        <div class="ledger-card">
+            <div class="ledger-card-header">
+                <h3>📑 My Ledger Statement</h3>
+                <span class="badge-live">Live Synced ⚡</span>
+            </div>
+            <div class="table-responsive">
+                <table class="ledger-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Particular</th>
+                            <th>Debit (₹)</th>
+                            <th>Credit (₹)</th>
+                            <th>Balance (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ledgerTableBody">
+                        <tr><td colspan="5" class="text-center" style="color: #94a3b8; padding: 2.5rem;">Loading live statement...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
 
-    <!-- Staff Ledger Transactions Table -->
-    <div class="table-card">
-        <h2>Your Personal Ledger Statement</h2>
-        <div id="tableContainer">
-            <p style="color: #94a3b8; text-align: center; padding: 2rem;">Loading your records from Google Sheets...</p>
-        </div>
-    </div>
-
-    <!-- Print Preview Modal (Receipt Style) -->
+    <!-- Statement Receipt Modal -->
     <div id="printModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -110,16 +186,16 @@
             </div>
             
             <div id="printableReceipt" class="receipt-container">
-                <!-- Depot Master Header Details -->
+                <!-- Depot Header -->
                 <div class="receipt-header">
                     <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
-                    <p id="depotFullAddress">Loading Depot Address...</p>
+                    <p id="depotFullAddress">Loading Depot Details...</p>
                     <p id="depotContact">Mob: -</p>
                     <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
                     <span class="receipt-title">** ACCOUNT STATEMENT **</span>
                 </div>
 
-                <!-- Staff Meta Details -->
+                <!-- Staff Meta -->
                 <div class="receipt-meta">
                     <div>
                         <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
@@ -174,8 +250,6 @@
         const staffName = sessionStorage.getItem("name") || "Staff Member";
         const staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
 
-        document.getElementById('staffInfo').textContent = `Logged in: ${staffName} (${staffCode.toUpperCase()})`;
-
         let globalStaffRecords = [];
         let globalStaffInfo = {};
         let globalDepotInfo = {};
@@ -206,101 +280,156 @@
             return s;
         }
 
+        function getField(obj, ...keys) {
+            if (!obj) return '';
+            for (let k of keys) {
+                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
+                    return String(obj[k]).trim();
+                }
+            }
+            const objKeys = Object.keys(obj);
+            for (let k of keys) {
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                if (found && obj[found]) return String(obj[found]).trim();
+            }
+            return '';
+        }
+
         async function loadAllDetails() {
-            const container = document.getElementById('tableContainer');
             try {
-                // 1. Fetch Staff Master & Depot Master for Header Details
                 const [staffList, depotList, ledgerData] = await Promise.all([
                     jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Master`),
                     jsonp(`${SCRIPT_URL}?action=getData&sheet=Depot+Master`),
                     jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Ledger+Entry`)
                 ]);
 
-                // Find logged-in staff info
+                // 1. Staff Info from Staff Master
                 if (Array.isArray(staffList)) {
-                    globalStaffInfo = staffList.find(s => String(s['Staff Login Id'] || s['Staff Code'] || '').trim().toLowerCase() === staffCode.toLowerCase()) || {};
+                    globalStaffInfo = staffList.find(s => {
+                        const id = getField(s, 'Staff Login Id', 'Staff Code', 'ID');
+                        return id.toLowerCase() === staffCode.toLowerCase();
+                    }) || {};
                 }
 
-                // Find corresponding depot info
+                // 2. Depot Info from Depot Master
                 if (Array.isArray(depotList) && depotList.length > 0) {
-                    const assignedDepot = globalStaffInfo['Depot Name'] || '';
-                    globalDepotInfo = depotList.find(d => String(d['Depot Name'] || '').trim().toLowerCase() === assignedDepot.toLowerCase()) || depotList[0];
+                    const assignedDepot = getField(globalStaffInfo, 'Staff Working Depot Name', 'Depot Name', 'Staff Working Depot Code', 'Depot Code');
+                    globalDepotInfo = depotList.find(d => {
+                        const dName = getField(d, 'Depot Name');
+                        const dCode = getField(d, 'Depot Code');
+                        return (assignedDepot && (dName.toLowerCase() === assignedDepot.toLowerCase() || dCode.toLowerCase() === assignedDepot.toLowerCase()));
+                    }) || depotList[0];
                 }
 
-                // 2. Process Ledger Records
+                // Render Profile Card & Photo
+                const finalName = getField(globalStaffInfo, 'Staff Name') || staffName;
+                const finalDepot = getField(globalStaffInfo, 'Staff Working Depot Name') || getField(globalDepotInfo, 'Depot Name') || 'Kishanganj';
+                const staffPhoto = getField(globalStaffInfo, 'Staff Photo', 'Photo', 'Image');
+
+                document.getElementById('dispStaffName').textContent = finalName;
+                document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
+                document.getElementById('dispDepotName').textContent = finalDepot;
+
+                // Load Photo if available, otherwise show fallback initial
+                const avatarBox = document.getElementById('avatarBox');
+                if (staffPhoto && staffPhoto.startsWith('data:image')) {
+                    avatarBox.innerHTML = `<img src="${staffPhoto}" alt="${finalName}">`;
+                } else {
+                    avatarBox.innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
+                }
+
+                // 3. Process Ledger Records
+                const tbody = document.getElementById('ledgerTableBody');
                 if (!Array.isArray(ledgerData) || ledgerData.length === 0) {
-                    container.innerHTML = `<p style="color: #94a3b8; text-align: center; padding: 2rem;">No ledger entries found.</p>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2rem;">No records found.</td></tr>`;
                     return;
                 }
 
                 globalStaffRecords = ledgerData.filter(row => {
-                    const code = String(row['Staff Code'] || '').trim().toLowerCase();
-                    return code === staffCode.toLowerCase();
+                    const code = getField(row, 'Staff Code', 'Staff Login Id');
+                    return code.toLowerCase() === staffCode.toLowerCase();
                 });
 
                 if (globalStaffRecords.length === 0) {
-                    container.innerHTML = `<p style="color: #94a3b8; text-align: center; padding: 2rem;">No ledger records found for ${staffCode}.</p>`;
-                    document.getElementById('totalDebit').textContent = '₹0';
-                    document.getElementById('totalCredit').textContent = '₹0';
-                    document.getElementById('netBalance').textContent = '₹0';
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2rem;">No ledger transactions for ${staffCode}.</td></tr>`;
                     return;
                 }
 
+                // Calculate Running Balances
                 let sumDebit = 0;
                 let sumCredit = 0;
+                let runningBal = 0;
+                let recordsWithBal = [];
+
                 globalStaffRecords.forEach(row => {
-                    sumDebit += Number(row['Debit'] || 0);
-                    sumCredit += Number(row['Credit'] || 0);
-                });
-
-                document.getElementById('totalDebit').textContent = `₹${sumDebit.toLocaleString('en-IN')}`;
-                document.getElementById('totalCredit').textContent = `₹${sumCredit.toLocaleString('en-IN')}`;
-                const net = sumCredit - sumDebit;
-                document.getElementById('netBalance').textContent = `₹${net.toLocaleString('en-IN')}`;
-                document.getElementById('netBalance').style.color = net >= 0 ? '#4ade80' : '#f87171';
-
-                const headers = ['ID', 'Transaction Date', 'Particular', 'Payment Mode', 'Debit', 'Credit', 'Entry Approvel Status (Admin)'];
-                let html = `<table><thead><tr>`;
-                headers.forEach(h => html += `<th>${h}</th>`);
-                html += `</tr></thead><tbody>`;
-
-                globalStaffRecords.slice().reverse().forEach(row => {
-                    html += `<tr>`;
-                    headers.forEach(h => {
-                        let val = row[h] !== undefined ? row[h] : '-';
-                        if (h === 'Transaction Date') val = formatDate(val);
-                        if (h === 'Debit' && Number(val) > 0) val = `<span style="color:#f87171; font-weight:600;">₹${val}</span>`;
-                        if (h === 'Credit' && Number(val) > 0) val = `<span style="color:#4ade80; font-weight:600;">₹${val}</span>`;
-                        if (h === 'Entry Approvel Status (Admin)') {
-                            val = val === 'Approved' ? `<span style="color:#4ade80; font-weight:600;">Approved</span>` : `<span style="color:#facc15;">${val}</span>`;
-                        }
-                        html += `<td>${val}</td>`;
+                    const dr = Number(getField(row, 'Debit') || 0);
+                    const cr = Number(getField(row, 'Credit') || 0);
+                    sumDebit += dr;
+                    sumCredit += cr;
+                    runningBal += (cr - dr);
+                    recordsWithBal.push({
+                        date: formatDate(getField(row, 'Transaction Date')),
+                        particular: getField(row, 'Particular') || '-',
+                        dr: dr,
+                        cr: cr,
+                        bal: runningBal
                     });
-                    html += `</tr>`;
                 });
-                html += `</tbody></table>`;
-                container.innerHTML = html;
+
+                // Top stats
+                document.getElementById('totalCredit').textContent = `₹${sumCredit.toLocaleString('en-IN')}`;
+                document.getElementById('totalDebit').textContent = `₹${sumDebit.toLocaleString('en-IN')}`;
+                
+                const finalBal = sumCredit - sumDebit;
+                const balType = finalBal >= 0 ? '(Cr)' : '(Dr)';
+                const balEl = document.getElementById('netBalance');
+                balEl.textContent = `₹${Math.abs(finalBal).toLocaleString('en-IN')} ${balType}`;
+                balEl.style.color = finalBal >= 0 ? '#22c55e' : '#f43f5e';
+
+                // Display newest first in Table
+                let tableHtml = '';
+                recordsWithBal.slice().reverse().forEach(r => {
+                    tableHtml += `<tr>
+                        <td>${r.date}</td>
+                        <td>${r.particular}</td>
+                        <td class="${r.dr > 0 ? 'text-debit' : 'text-gray'}">${r.dr > 0 ? '₹' + r.dr.toLocaleString('en-IN') : '-'}</td>
+                        <td class="${r.cr > 0 ? 'text-credit' : 'text-gray'}">${r.cr > 0 ? '₹' + r.cr.toLocaleString('en-IN') : '-'}</td>
+                        <td class="text-balance">₹${r.bal.toLocaleString('en-IN')} ${r.bal >= 0 ? '(Cr)' : '(Dr)'}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = tableHtml;
+
             } catch (err) {
-                container.innerHTML = `<p style="color: #f87171; text-align: center; padding: 2rem;">Failed to load data: ${err.message}</p>`;
+                document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#f43f5e; padding:2rem;">Failed to load data: ${err.message}</td></tr>`;
             }
         }
 
         function openPrintPreview() {
-            // Fill Depot Details
+            // Fill Depot Details from Depot Master sheet
             if (globalDepotInfo) {
-                document.getElementById('depotFullAddress').textContent = globalDepotInfo['Depot Address'] || globalDepotInfo['Depot Name'] || 'Depot Address';
-                document.getElementById('depotContact').textContent = `Mob: ${globalDepotInfo['Mobile Number'] || '-'}`;
-                document.getElementById('depotStateCode').textContent = `Code: ${globalDepotInfo['State Code'] || '10 State: Bihar'}`;
-                document.getElementById('depotGstin').textContent = `GSTIN: ${globalDepotInfo['GST NO'] || '-'}`;
+                const compName = getField(globalDepotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
+                const addr = getField(globalDepotInfo, 'Depot Address');
+                const dist = getField(globalDepotInfo, 'Dristric', 'District');
+                const pin = getField(globalDepotInfo, 'Pin Code', 'Pincode');
+                const mob = getField(globalDepotInfo, 'Mob. No.', 'Mobile Number', 'Mob No');
+                const stateCode = getField(globalDepotInfo, 'State Code');
+                const stateName = getField(globalDepotInfo, 'State Name');
+                const gstin = getField(globalDepotInfo, 'GSTIN', 'GST NO');
+
+                document.getElementById('depotCompanyName').textContent = compName;
+                document.getElementById('depotFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
+                document.getElementById('depotContact').textContent = `Mob: ${mob || '-'}`;
+                document.getElementById('depotStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
+                document.getElementById('depotGstin').textContent = `GSTIN: ${gstin || '-'}`;
             }
 
             // Fill Staff Details
-            document.getElementById('rcptStaffName').textContent = globalStaffInfo['Staff Name'] || staffName;
+            document.getElementById('rcptStaffName').textContent = getField(globalStaffInfo, 'Staff Name') || staffName;
             document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
-            document.getElementById('rcptJoinedDate').textContent = formatDate(globalStaffInfo['Staff Joining Date'] || '2025-01-01');
-            document.getElementById('rcptDepotName').textContent = globalStaffInfo['Depot Name'] || globalDepotInfo['Depot Name'] || '-';
+            document.getElementById('rcptJoinedDate').textContent = formatDate(getField(globalStaffInfo, 'Staff Joining Date') || '2022-01-01');
+            document.getElementById('rcptDepotName').textContent = getField(globalStaffInfo, 'Staff Working Depot Name') || getField(globalDepotInfo, 'Depot Name') || 'Kishanganj';
 
-            // Build Running Balance Rows
+            // Build Receipt Table
             const tbody = document.getElementById('rcptTableBody');
             if (globalStaffRecords.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
@@ -313,10 +442,10 @@
             let totalCr = 0;
 
             globalStaffRecords.forEach(row => {
-                const date = formatDate(row['Transaction Date']);
-                const desc = row['Particular'] || '-';
-                const dr = Number(row['Debit'] || 0);
-                const cr = Number(row['Credit'] || 0);
+                const date = formatDate(getField(row, 'Transaction Date'));
+                const desc = getField(row, 'Particular') || '-';
+                const dr = Number(getField(row, 'Debit') || 0);
+                const cr = Number(getField(row, 'Credit') || 0);
 
                 totalDr += dr;
                 totalCr += cr;

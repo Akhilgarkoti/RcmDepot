@@ -36,7 +36,7 @@
             gap: 1.2rem;
         }
 
-        /* Left Side: Yellow Box with Staff Logo */
+        /* Left Side: Staff Logo Box */
         .brand-section {
             display: flex;
             align-items: center;
@@ -60,27 +60,29 @@
         .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
         .logo-text-box span { font-size: 0.72rem; color: #facc15; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Center: Red Line Section with Company Logo & Depot Info */
+        /* Center: Red Line Section with Enlarged Company Logo & Depot Info */
         .depot-center-section {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
+            gap: 1.2rem;
             flex: 1;
             text-align: left;
         }
+        
+        /* Enlarged Company Logo Badge */
         .company-logo-badge {
-            width: 48px;
-            height: 48px;
+            width: 120px;
+            height: 54px;
             border-radius: 10px;
             background: #ffffff;
             border: 2px solid #38bdf8;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+            box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
             overflow: hidden;
-            padding: 2px;
+            padding: 4px 8px;
             flex-shrink: 0;
         }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
@@ -395,10 +397,10 @@
             </div>
         </div>
 
-        <!-- Center: Red Line Section with Company Logo & Depot Info -->
+        <!-- Center: Red Line Section with Enlarged Company Logo & Depot Info -->
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
             </div>
             <div class="depot-header-info">
                 <h1>RCM Depot <span>Management</span></h1>
@@ -660,11 +662,19 @@
             return '';
         }
 
-        function setSafeImage(containerId, directUrl, fallbackUrl) {
+        function setSafeImage(containerId, rawUrl) {
             const container = document.getElementById(containerId);
-            if (!container) return;
-            const targetUrl = directUrl || fallbackUrl;
-            if (!targetUrl) return;
+            if (!container || !rawUrl) return;
+
+            let u = rawUrl.trim();
+            let cleanUrl = u;
+
+            if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
+                const parts = u.split('ibb.co/');
+                if (parts[1]) {
+                    cleanUrl = `https://i.ibb.co/${parts[1].replace(/[^a-zA-Z0-9]/g, '')}/image.png`;
+                }
+            }
 
             const img = new Image();
             img.onload = () => {
@@ -672,10 +682,9 @@
                 container.appendChild(img);
             };
             img.onerror = () => {
-                // If direct fails, load via weserv proxy
-                container.innerHTML = `<img src="https://images.weserv.nl/?url=${encodeURIComponent(targetUrl)}" alt="Logo">`;
+                container.innerHTML = `<img src="https://images.weserv.nl/?url=${encodeURIComponent(u)}" alt="Logo" onerror="this.src='https://api.iconify.design/heroicons:shield-check.svg'">`;
             };
-            img.src = targetUrl;
+            img.src = cleanUrl;
         }
 
         async function loadFastBundle() {
@@ -688,11 +697,11 @@
                 const depotInfo = res.depot || {};
                 const ledgerRows = res.ledger || [];
 
-                // 1. Render Staff Logo (from Cell B2)
-                setSafeImage('staffLogoBox', res.staffLogo, 'https://ibb.co/b5dZ9rHD');
+                // 1. Render Staff Logo (Cell B2)
+                setSafeImage('staffLogoBox', res.staffLogo || 'https://ibb.co/b5dZ9rHD');
 
-                // 2. Render Company Logo (from Cell A2)
-                setSafeImage('companyLogoBox', res.companyLogo, 'https://ibb.co/nNKFfhtR');
+                // 2. Render Enlarged Company Logo (Cell A2)
+                setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
 
                 // 3. Render Header Details
                 if (depotInfo) {
@@ -718,7 +727,7 @@
                 document.getElementById('dispDepotName').textContent = finalDepot;
 
                 if (staffPhoto && (staffPhoto.startsWith('data:image') || staffPhoto.startsWith('http'))) {
-                    setSafeImage('avatarBox', staffPhoto, '');
+                    setSafeImage('avatarBox', staffPhoto);
                 } else {
                     document.getElementById('avatarBox').innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
                 }

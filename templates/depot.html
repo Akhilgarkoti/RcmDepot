@@ -15,6 +15,7 @@
             --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --accent-blue: #38bdf8;
+            --accent-teal: #2dd4bf;
             --accent-green: #34d399;
             --accent-amber: #fbbf24;
             --accent-red: #fb7185;
@@ -71,7 +72,8 @@
         .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.82rem; }
 
         .btn-tool { padding: 0.55rem 0.95rem; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--border-color); }
-        .btn-action-ledger { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn-action-ledger { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
+        .btn-action-trx { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
         .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: #0c1424; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -80,13 +82,18 @@
 
         .staff-avatar-cell { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); background: #1e293b; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--accent-blue); }
 
-        /* Compact Print Modal */
+        .load-more-bar { text-align: center; padding-top: 0.9rem; }
+        .btn-load-older { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.35); padding: 0.55rem 1.3rem; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer; }
+        .btn-load-older:hover { background: var(--accent-blue); color: #000; }
+
+        /* Compact Print Modal & General Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
         .modal-box { background: #111a2e; margin: 3rem auto; max-width: 500px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; }
         .modal-box-compact { max-width: 400px !important; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.2rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.92rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
+        .modal-body { padding: 1.2rem; }
 
         .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', monospace; font-size: 0.76rem; width: 100%; max-width: 380px; margin: 0 auto; }
         .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
@@ -167,12 +174,15 @@
             </form>
         </div>
 
-        <!-- 2. Records History -->
+        <!-- 2. Records History with Month/Year-wise Filter & Load More -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-secondary);">0 records</span></div>
             <div class="table-toolbar">
                 <div class="toolbar-left">
-                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()"><option value="TODAY" selected>📅 Today</option><option value="ALL">🌐 All</option></select>
+                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()">
+                        <option value="TODAY" selected>📅 Today</option>
+                        <option value="ALL">🌐 All</option>
+                    </select>
                     <div class="search-box-wrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search..." oninput="filterHistoryTable()"></div>
                 </div>
             </div>
@@ -182,11 +192,17 @@
                     <tbody id="dispatchTableBody"></tbody>
                 </table>
             </div>
+            <div class="load-more-bar" id="loadOlderBar">
+                <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load All Older Records</button>
+            </div>
         </div>
 
-        <!-- 3. Staff & Ledger -->
+        <!-- 3. Staff & Ledger with Add Staff and Add Trx -->
         <div id="staffTab" class="comfort-panel" style="display:none;">
-            <div class="panel-header"><h3>👥 Assigned Staff and Ledger Details</h3></div>
+            <div class="panel-header">
+                <h3>👥 Assigned Staff and Ledger Details</h3>
+                <button class="btn-tool" style="background:rgba(56,189,248,0.15);color:var(--accent-blue);" onclick="openAddStaffModal()">➕ Request New Staff</button>
+            </div>
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Status</th><th>Actions</th></tr></thead>
@@ -196,7 +212,50 @@
         </div>
     </div>
 
-    <!-- Statement View Modal -->
+    <!-- Modal 1: Request New Staff -->
+    <div id="addStaffModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>➕ Request New Staff Addition</span>
+                <button class="modal-close-btn" onclick="closeAddStaffModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="requestStaffForm">
+                    <div class="form-group"><label>Auto-Generated Code (Locked)</label><input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:var(--accent-blue);font-weight:bold;"></div>
+                    <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" class="form-control" required placeholder="Enter full name"></div>
+                    <div class="form-group"><label>Mobile Number</label><input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit mobile"></div>
+                    <div class="form-group"><label>Photo (Optional)</label><input type="file" class="form-control" accept="image/*" onchange="compressPhoto(this, 'newStaffPhotoBase64')"><input type="hidden" id="newStaffPhotoBase64"></div>
+                    <button type="submit" id="btnReqStaffSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Send Request to Admin</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Add Transaction Request -->
+    <div id="addTrxModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>💳 Request Staff Debit & Credit</span>
+                <button class="modal-close-btn" onclick="closeAddTrxModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="requestTrxForm">
+                    <input type="hidden" id="trxStaffCode"><input type="hidden" id="trxStaffName">
+                    <div class="form-group"><label>Selected Staff</label><input type="text" id="trxStaffDisplay" class="form-control" readonly style="color:var(--accent-blue);font-weight:bold;"></div>
+                    <div class="form-group"><label>Date</label><input type="date" id="trxDate" class="form-control" required></div>
+                    <div class="form-group"><label>Particular / Purpose</label><input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Advance, Salary, Unloading"></div>
+                    <div class="form-group"><label>Payment Mode</label><select id="trxMode" class="form-control"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Transfer">Bank Transfer</option><option value="-">-</option></select></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label style="color:var(--accent-red);">Debit Amount (₹)</label><input type="number" id="trxDebitAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--accent-green);">Credit Amount (₹)</label><input type="number" id="trxCreditAmount" class="form-control" value="0"></div>
+                    </div>
+                    <button type="submit" id="btnReqTrxSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Send Transaction Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Statement View Modal -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box" style="max-width: 720px;">
             <div class="modal-top-bar"><span id="ledgerStaffTitle">📄 Staff Ledger</span><button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button></div>
@@ -217,7 +276,7 @@
         </div>
     </div>
 
-    <!-- Compact Print Modal -->
+    <!-- Modal 4: Compact Print Modal (Width: 380px) -->
     <div id="printModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar"><span>📄 Printable Statement</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
@@ -249,7 +308,7 @@
         </div>
     </div>
 
-    <!-- Secure Password Modal with Current Password -->
+    <!-- Modal 5: Secure Password Modal with Current Password -->
     <div id="pwdModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
@@ -281,6 +340,7 @@
         if (!depotCode) window.location.href = "/";
 
         let depotPrefix = "76287";
+        let globalNextEmpCode = "EMP012";
         let loadedDispatches = [];
         let loadedStaffList = [];
         let depotGlobalInfo = {};
@@ -363,6 +423,45 @@
             return '';
         }
 
+        function compressPhoto(fileInput, targetHiddenId) {
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxDim = 80;
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } }
+                        else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+                        document.getElementById(targetHiddenId).value = canvas.toDataURL('image/jpeg', 0.4);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function populateHistoryMonthDropdown(dispatches) {
+            const selectBox = document.getElementById('historyPeriodFilter');
+            const monthSet = new Set();
+            dispatches.forEach(r => {
+                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'));
+                const parts = cleanDate.split('-');
+                if (parts.length === 3) monthSet.add(`${parts[1]}-${parts[2]}`);
+            });
+
+            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
+            Array.from(monthSet).forEach(mKey => {
+                optionsHtml += `<option value="${mKey}">🗓️ ${mKey} Month</option>`;
+            });
+            selectBox.innerHTML = optionsHtml;
+        }
+
         async function loadDepotData() {
             setFormLiveTime();
             try {
@@ -373,6 +472,7 @@
                 depotGlobalInfo = depot;
                 loadedDispatches = res.dispatches || [];
                 loadedStaffList = res.staffMembers || [];
+                globalNextEmpCode = res.nextEmpCode || "EMP012";
 
                 setSafeImage('companyLogoBox', res.companyLogo);
                 setSafeImage('depotLogoBox', res.depotLogo);
@@ -391,7 +491,8 @@
                 document.getElementById('hiddenDepotName').value = dName;
                 document.getElementById('dispPrefixSeries').value = depotPrefix;
 
-                renderDispatchTable(loadedDispatches);
+                populateHistoryMonthDropdown(loadedDispatches);
+                filterHistoryTable();
                 renderStaffTable(loadedStaffList);
             } catch (err) { console.error(err); }
         }
@@ -414,6 +515,43 @@
                 </tr>`;
             });
             tbody.innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
+        }
+
+        function filterHistoryTable() {
+            const periodFilter = document.getElementById('historyPeriodFilter').value;
+            const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
+            const todayStr = getTodayFormatted().toLowerCase();
+            const loadOlderBtn = document.getElementById('loadOlderBar');
+
+            if (loadOlderBtn) loadOlderBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
+
+            const filtered = loadedDispatches.filter(r => {
+                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')).toLowerCase();
+
+                if (query) {
+                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
+                    const vType = getField(r, 'Vehicle Type').toLowerCase();
+                    const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
+                    const vNo = getField(r, 'Vehicle No').toLowerCase();
+                    const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
+                    return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
+                }
+
+                if (periodFilter === "TODAY") {
+                    if (cleanDate !== todayStr) return false;
+                } else if (periodFilter !== "ALL") {
+                    if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
+                }
+                return true;
+            });
+
+            renderDispatchTable(filtered);
+        }
+
+        function loadAllOlderRecords() {
+            document.getElementById('historyPeriodFilter').value = "ALL";
+            filterHistoryTable();
+            showToast('All historical records loaded!');
         }
 
         function renderStaffTable(list) {
@@ -439,12 +577,104 @@
                     <td style="color:${st.toLowerCase()==='active'?'var(--accent-green)':'var(--accent-red)'};font-weight:bold;">${st}</td>
                     <td>
                         <button class="btn-action-ledger" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
+                        <button class="btn-action-trx" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
                     </td>
                 </tr>`;
             });
             tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No staff found.</td></tr>`;
         }
 
+        // Add Staff Modal
+        function openAddStaffModal() {
+            document.getElementById('requestStaffForm').reset();
+            document.getElementById('newStaffPhotoBase64').value = '';
+            document.getElementById('newStaffCodeLocked').value = globalNextEmpCode;
+            document.getElementById('addStaffModal').style.display = 'block';
+        }
+        function closeAddStaffModal() { document.getElementById('addStaffModal').style.display = 'none'; }
+
+        document.getElementById('requestStaffForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnReqStaffSubmit');
+            btn.disabled = true;
+            btn.textContent = 'Sending Request...';
+
+            const payload = {
+                action: 'requestNewStaff',
+                empCode: document.getElementById('newStaffCodeLocked').value,
+                name: document.getElementById('newStaffName').value.trim(),
+                mobile: document.getElementById('newStaffMobile').value.trim(),
+                photo: document.getElementById('newStaffPhotoBase64').value,
+                depotCode: depotCode,
+                depotName: depotNameStored
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message);
+                    closeAddStaffModal();
+                    loadDepotData();
+                } else {
+                    showToast(res.message || 'Failed to submit staff request.');
+                }
+            } catch (err) { showToast('Error submitting staff request.'); }
+            finally { btn.disabled = false; btn.textContent = 'Send Request to Admin'; }
+        });
+
+        // Add Trx Modal
+        function openAddTrxModal(sCode, sName) {
+            document.getElementById('requestTrxForm').reset();
+            document.getElementById('trxStaffCode').value = sCode;
+            document.getElementById('trxStaffName').value = sName;
+            document.getElementById('trxStaffDisplay').value = `${sName} (${sCode})`;
+            document.getElementById('trxDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('addTrxModal').style.display = 'block';
+        }
+        function closeAddTrxModal() { document.getElementById('addTrxModal').style.display = 'none'; }
+
+        document.getElementById('requestTrxForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const debit = Number(document.getElementById('trxDebitAmount').value) || 0;
+            const credit = Number(document.getElementById('trxCreditAmount').value) || 0;
+
+            if (debit === 0 && credit === 0) {
+                showToast('Please enter either Debit or Credit amount.');
+                return;
+            }
+
+            const btn = document.getElementById('btnReqTrxSubmit');
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            const payload = {
+                action: 'requestStaffTransaction',
+                staffCode: document.getElementById('trxStaffCode').value,
+                staffName: document.getElementById('trxStaffName').value,
+                date: document.getElementById('trxDate').value,
+                particular: document.getElementById('trxParticular').value.trim(),
+                mode: document.getElementById('trxMode').value,
+                debit: debit,
+                credit: credit,
+                depotCode: depotCode,
+                depotName: depotNameStored
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message);
+                    closeAddTrxModal();
+                } else {
+                    showToast(res.message || 'Failed to submit transaction.');
+                }
+            } catch (err) { showToast('Error submitting transaction.'); }
+            finally { btn.disabled = false; btn.textContent = 'Send Transaction Request'; }
+        });
+
+        // Open Staff Ledger
         async function openStaffLedger(code, name) {
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
@@ -475,6 +705,9 @@
                         runningBal += (cr - dr);
                     }
 
+                    const statusColor = isApproved ? 'var(--accent-green)' : 'var(--accent-amber)';
+                    const statusText = isApproved ? 'Approved' : 'Pending';
+
                     html += `<tr>
                         <td><strong>${dt}</strong></td>
                         <td>${part}</td>
@@ -482,7 +715,7 @@
                         <td style="color:${dr > 0 ? 'var(--accent-red)' : '#64748b'};font-weight:bold;">${dr > 0 ? '₹' + dr : '-'}</td>
                         <td style="color:${cr > 0 ? 'var(--accent-green)' : '#64748b'};font-weight:bold;">${cr > 0 ? '₹' + cr : '-'}</td>
                         <td style="color:var(--accent-blue);font-weight:bold;">${isApproved ? '₹' + runningBal : 'Pending'}</td>
-                        <td style="color:${isApproved ? 'var(--accent-green)' : 'var(--accent-amber)'};font-weight:bold;">${isApproved ? 'Approved' : 'Pending'}</td>
+                        <td style="color:${statusColor};font-weight:bold;">${statusText}</td>
                     </tr>`;
                 });
 
@@ -516,7 +749,6 @@
             currentActiveStaffLedger.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
 
-                // Exclude pending from receipt
                 if (appRaw.toLowerCase() === 'approved') {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
@@ -574,6 +806,55 @@
             } catch (err) { showToast("Error updating password"); }
             finally { btn.disabled = false; btn.textContent = 'Update Password'; }
         });
+
+        // Dispatch Form Submit
+        document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
+            const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
+            if (rawList.length === 0) {
+                showToast('No valid invoice numbers entered.');
+                return;
+            }
+
+            const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
+            const payload = {
+                action: 'saveInvoiceDispatch',
+                depotCode: document.getElementById('hiddenDepotCode').value,
+                depotName: document.getElementById('hiddenDepotName').value,
+                invoiceDate: document.getElementById('dispDate').value,
+                entryTime: document.getElementById('dispTime').value,
+                vehicleType: document.getElementById('dispVehicleType').value,
+                vehicleNo: document.getElementById('dispVehicleNo').value,
+                dispatchThrough: document.getElementById('dispThrough').value,
+                dueExcess: document.getElementById('dispDueExcess').value,
+                invoiceList: JSON.stringify(finalizedInvoices),
+                remarks: document.getElementById('dispRemarks').value
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message);
+                    document.getElementById('dispInvoiceDigits').value = '';
+                    document.getElementById('dispThrough').value = '';
+                    document.getElementById('dispVehicleNo').value = '';
+                    loadDepotData();
+                } else {
+                    showToast(res.message || 'Failed to save.');
+                }
+            } catch (err) { showToast('Error saving dispatch.'); }
+        });
+
+        async function deleteDispatchRow(rowId) {
+            if (!confirm(`Delete dispatch record ${rowId}?`)) return;
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
+                showToast(res.message || "Deleted");
+                loadDepotData();
+            } catch (e) { showToast("Error deleting record"); }
+        }
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.depot-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));

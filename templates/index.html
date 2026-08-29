@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCM Depot Management Portal</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #0f172a; color: #f8fafc; }
+        .login-card { background: #1e293b; padding: 2.5rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 100%; max-width: 400px; }
+        .login-card h2 { margin-bottom: 1.5rem; text-align: center; color: #38bdf8; }
+        .input-group { margin-bottom: 1.2rem; }
+        .input-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; }
+        .input-group input, .input-group select { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #fff; outline: none; }
+        .input-group input:focus, .input-group select:focus { border-color: #38bdf8; }
+        .btn { width: 100%; padding: 0.75rem; background: #0284c7; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 0.5rem; }
+        .btn:hover { background: #0369a1; }
+        .error { color: #f87171; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>RCM Depot Portal</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label>Select Role</label>
+                <select id="role">
+                    <option value="admin">Admin</option>
+                    <option value="depot">Depot Manager</option>
+                    <option value="staff">Staff</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" required autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <p id="errorMsg" class="error"></p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const role = document.getElementById('role').value;
+            // रीडायरेक्ट लॉजिक
+            if (role === 'admin') window.location.href = '/admin';
+            else if (role === 'depot') window.location.href = '/depot';
+            else window.location.href = '/staff';
+        });
+    </script>
+</body>
+</html>

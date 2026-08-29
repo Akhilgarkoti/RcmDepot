@@ -104,14 +104,15 @@
         .btn-load-older { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.35); padding: 0.55rem 1.3rem; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer; }
         .btn-load-older:hover { background: var(--accent-blue); color: #000; }
 
-        /* Modal Styles */
+        /* Compact Modal Styles */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
         .modal-box { background: #111a2e; margin: 2rem auto; max-width: 540px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
         .modal-box-wide { max-width: 820px; }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
-        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
+        .modal-box-compact { max-width: 400px !important; }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.2rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
+        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.92rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
-        .modal-body { padding: 1.5rem; }
+        .modal-body { padding: 1.2rem; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
         .form-group-full { grid-column: span 2; }
@@ -123,27 +124,27 @@
         .btn-submit-modal { width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 1rem; }
         .btn-submit-modal:hover { background: #059669; }
 
-        /* Printable Receipt Format */
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-header h2 { font-size: 0.95rem; font-weight: 800; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 0.2rem; }
-        .receipt-header p { font-size: 0.72rem; line-height: 1.35; color: #222; margin-bottom: 0.15rem; }
-        .receipt-title { font-weight: 800; margin-top: 0.4rem; display: block; font-size: 0.84rem; }
+        /* Compact Print Preview 380px Layout */
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', monospace; font-size: 0.76rem; width: 100%; max-width: 380px; margin: 0 auto; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
+        .receipt-header h2 { font-size: 0.9rem; font-weight: 800; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; margin-bottom: 0.15rem; }
+        .receipt-header p { font-size: 0.7rem; line-height: 1.35; color: #222; }
+        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.8rem; }
         
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
-        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; color: #000; font-size: 0.75rem; text-align: left; }
-        .receipt-table td { padding: 4px 2px; font-size: 0.75rem; color: #000; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.72rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.4rem; }
+        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 3px 2px; font-weight: bold; color: #000; font-size: 0.72rem; text-align: left; }
+        .receipt-table td { padding: 3px 2px; font-size: 0.72rem; color: #000; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
-        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.35rem 0; font-size: 0.74rem; line-height: 1.4; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
-        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
+        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.65rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
 
         @media print {
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 420px; margin: 0 auto; background: #fff; color: #000; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 360px; margin: 0 auto; background: #fff; color: #000; }
             .modal-top-bar, .modal-actions { display: none !important; }
         }
 
@@ -365,7 +366,7 @@
             </div>
         </div>
 
-        <!-- 6. Admin Master Panel (All 12 Columns from Google Sheet) -->
+        <!-- 6. Admin Master Panel -->
         <div id="adminMasterTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>🛡️ Admin Master (All 12 Permission Options)</h3>
@@ -399,10 +400,7 @@
     <!-- Modal 1: Add New Depot -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span>🏬 Add New Depot (All 15 Fields)</span>
-                <button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span>🏬 Add New Depot (All 15 Fields)</span><button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="newDepotForm">
                     <div class="form-grid">
@@ -431,10 +429,7 @@
     <!-- Modal 2: Edit Depot -->
     <div id="editDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span>✏️ Edit Depot Record</span>
-                <button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span>✏️ Edit Depot Record</span><button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="editDepotForm">
                     <div class="form-grid">
@@ -463,10 +458,7 @@
     <!-- Modal 3: Add New Staff -->
     <div id="newStaffModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span>👥 Add New Staff Member (All 11 Fields)</span>
-                <button class="modal-close-btn" onclick="closeNewStaffModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span>👥 Add New Staff Member</span><button class="modal-close-btn" onclick="closeNewStaffModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="newStaffForm">
                     <div class="form-grid">
@@ -489,10 +481,7 @@
     <!-- Modal 4: Edit Staff -->
     <div id="editStaffModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span>✏️ Edit Staff Details</span>
-                <button class="modal-close-btn" onclick="closeEditStaffModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span>✏️ Edit Staff Details</span><button class="modal-close-btn" onclick="closeEditStaffModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="editStaffForm">
                     <div class="form-grid">
@@ -517,31 +506,17 @@
     <!-- Modal 5: Staff Full Ledger Statement -->
     <div id="staffLedgerDetailModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span id="dtlLedgerTitle">📄 Full Ledger Detail</span>
-                <button class="modal-close-btn" onclick="closeLedgerDetailModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span id="dtlLedgerTitle">📄 Full Ledger Detail</span><button class="modal-close-btn" onclick="closeLedgerDetailModal()">&times;</button></div>
             <div class="modal-body">
-                <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 1rem; background: var(--input-bg); padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap:wrap; gap:0.6rem;">
-                    <div><strong>Total Credit:</strong> <span id="dtlTotalCredit" style="color:var(--accent-green); font-weight:800;">₹0</span></div>
-                    <div><strong>Total Debit:</strong> <span id="dtlTotalDebit" style="color:var(--accent-red); font-weight:800;">₹0</span></div>
-                    <div><strong>Net Balance:</strong> <span id="dtlNetBalance" style="color:var(--accent-blue); font-weight:800;">₹0</span></div>
-                    <button class="btn-tool" style="background: var(--accent-amber); color:#000; font-weight:800; padding:0.5rem 1rem; border-radius:8px; cursor:pointer;" onclick="openAdminPrintPreview()">🖨️ View Statement & Print</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; background:var(--input-bg); padding:0.8rem 1rem; border-radius:10px; flex-wrap:wrap; gap:0.6rem;">
+                    <div>Credit: <span id="dtlTotalCredit" style="color:var(--accent-green);font-weight:bold;">₹0</span></div>
+                    <div>Debit: <span id="dtlTotalDebit" style="color:var(--accent-red);font-weight:bold;">₹0</span></div>
+                    <div>Net: <span id="dtlNetBalance" style="color:var(--accent-blue);font-weight:bold;">₹0</span></div>
+                    <button class="btn-tool" style="background:var(--accent-amber);color:#000;font-weight:bold;" onclick="openAdminPrintPreview()">🖨️ View Statement & Print</button>
                 </div>
                 <div class="table-responsive" style="max-height: 380px;">
                     <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Particular</th>
-                                <th>Mode</th>
-                                <th>Debit (₹)</th>
-                                <th>Credit (₹)</th>
-                                <th>Balance (₹)</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Date</th><th>Particular</th><th>Mode</th><th>Debit (₹)</th><th>Credit (₹)</th><th>Balance (₹)</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody id="dtlLedgerTableBody"></tbody>
                     </table>
                 </div>
@@ -549,64 +524,31 @@
         </div>
     </div>
 
-    <!-- Modal 6: Edit Ledger Transaction -->
+    <!-- Modal 6: Edit Ledger Entry -->
     <div id="editLedgerModal" class="modal">
         <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>✏️ Edit Ledger Entry</span>
-                <button class="modal-close-btn" onclick="closeEditLedgerModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span>✏️ Edit Ledger Entry</span><button class="modal-close-btn" onclick="closeEditLedgerModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="editLedgerForm">
                     <input type="hidden" id="editLedgerTrxId">
-                    <div class="form-group">
-                        <label>Transaction Date</label>
-                        <input type="text" id="editLedgerDate" class="form-control" required placeholder="dd-MMM-yy">
-                    </div>
-                    <div class="form-group">
-                        <label>Particular</label>
-                        <input type="text" id="editLedgerParticular" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Payment Mode</label>
-                        <select id="editLedgerMode" class="form-control">
-                            <option value="Cash">Cash</option>
-                            <option value="UPI">UPI</option>
-                            <option value="Transfer">Bank Transfer</option>
-                            <option value="-">-</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Transaction Date</label><input type="text" id="editLedgerDate" class="form-control" required placeholder="dd-MMM-yy"></div>
+                    <div class="form-group"><label>Particular</label><input type="text" id="editLedgerParticular" class="form-control" required></div>
+                    <div class="form-group"><label>Payment Mode</label><select id="editLedgerMode" class="form-control"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Transfer">Bank Transfer</option><option value="-">-</option></select></div>
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label style="color:var(--accent-red);">Debit Amount (₹)</label>
-                            <input type="number" id="editLedgerDebit" class="form-control" value="0">
-                        </div>
-                        <div class="form-group">
-                            <label style="color:var(--accent-green);">Credit Amount (₹)</label>
-                            <input type="number" id="editLedgerCredit" class="form-control" value="0">
-                        </div>
+                        <div class="form-group"><label style="color:var(--accent-red);">Debit Amount (₹)</label><input type="number" id="editLedgerDebit" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--accent-green);">Credit Amount (₹)</label><input type="number" id="editLedgerCredit" class="form-control" value="0"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Approval Status</label>
-                        <select id="editLedgerStatus" class="form-control">
-                            <option value="Approved">Approved</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Approval Status</label><select id="editLedgerStatus" class="form-control"><option value="Approved">Approved</option><option value="Pending">Pending</option><option value="Rejected">Rejected</option></select></div>
                     <button type="submit" class="btn-submit-modal">💾 Update Ledger Entry</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal 7: Printable Statement with Real Depot Address Header -->
+    <!-- Modal 7: Compact 380px Print Modal -->
     <div id="printModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>📄 Printable Statement</span>
-                <button class="modal-close-btn" onclick="closeAdminPrintPreview()">&times;</button>
-            </div>
+        <div class="modal-box-compact">
+            <div class="modal-top-bar"><span>📄 Printable Statement</span><button class="modal-close-btn" onclick="closeAdminPrintPreview()">&times;</button></div>
             <div id="printableReceipt" class="receipt-container">
                 <div class="receipt-header">
                     <h2>RCM Consumer Products Private Limited</h2>
@@ -615,14 +557,8 @@
                     <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
                 </div>
                 <div class="receipt-meta">
-                    <div>
-                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
-                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
-                    </div>
-                    <div class="text-right">
-                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
-                        <p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p>
-                    </div>
+                    <div><p><strong>Name:</strong> <span id="rcptStaffName">-</span></p><p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p></div>
+                    <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p></div>
                 </div>
                 <table class="receipt-table">
                     <thead><tr><th>Date/Desc</th><th class="text-right">Dr</th><th class="text-right">Cr</th><th class="text-right">Bal</th></tr></thead>
@@ -631,22 +567,19 @@
                 <div class="receipt-summary">
                     <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
                     <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
-                    <div class="sum-row" style="margin-top:4px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+                    <div class="sum-row" style="margin-top:3px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
                 </div>
             </div>
-            <div style="padding:1rem; background:#0c1322;" class="modal-actions">
+            <div style="padding:0.8rem; background:#0c1322;" class="modal-actions">
                 <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal 8: Add/Edit Admin (All 12 Columns from Admin Master Sheet) -->
+    <!-- Modal 8: Add/Edit Admin (All 12 Columns) -->
     <div id="adminMasterModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span id="adminModalTitle">🛡️ Admin Master & Permissions</span>
-                <button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span id="adminModalTitle">🛡️ Admin Master & Permissions</span><button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="adminMasterForm">
                     <div class="form-grid">
@@ -674,7 +607,6 @@
 
         let adminUser = (sessionStorage.getItem("user") || "").trim();
         let adminName = sessionStorage.getItem("name") || "Admin";
-
         if (!adminUser) window.location.href = "/";
         document.getElementById('adminNameDisplay').textContent = adminName;
 
@@ -705,9 +637,7 @@
                 let parts = str.split('T')[0].split(' ')[0].split('-');
                 if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
             }
-            if (!isNaN(d.getTime())) {
-                return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
-            }
+            if (!isNaN(d.getTime())) return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
             return str.split(' 05:')[0].split('T')[0];
         }
 
@@ -1120,9 +1050,14 @@
                 const code = (getField(l, 'Staff Code', 'code') || '').toUpperCase();
                 const dr = Number(getField(l, 'Debit', 'debit') || 0);
                 const cr = Number(getField(l, 'Credit', 'credit') || 0);
+                const appRaw = (getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
+
                 if (!ledgerMap[code]) ledgerMap[code] = { dr: 0, cr: 0 };
-                ledgerMap[code].dr += dr;
-                ledgerMap[code].cr += cr;
+                // Only count approved transactions in summary
+                if (appRaw.toLowerCase() === 'approved') {
+                    ledgerMap[code].dr += dr;
+                    ledgerMap[code].cr += cr;
+                }
             });
 
             let html = '';
@@ -1170,9 +1105,12 @@
                 const dt = formatCleanDate(getField(l, 'Transaction Date', 'date'));
                 const part = getField(l, 'Particular', 'particular');
                 const mode = getField(l, 'Payment Mode', 'mode') || '-';
-                const st = getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status');
+                const st = (getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = st.toLowerCase() === 'approved';
 
-                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+                if (isApproved) {
+                    totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+                }
 
                 html += `<tr>
                     <td><strong>${dt}</strong></td>
@@ -1180,8 +1118,8 @@
                     <td>${mode}</td>
                     <td style="color:${dr>0?'var(--accent-red)':'#64748b'}; font-weight:700;">${dr>0?'₹'+dr:'-'}</td>
                     <td style="color:${cr>0?'var(--accent-green)':'#64748b'}; font-weight:700;">${cr>0?'₹'+cr:'-'}</td>
-                    <td style="color:var(--accent-blue); font-weight:700;">₹${runningBal}</td>
-                    <td style="color:${st.toLowerCase()==='approved'?'var(--accent-green)':'var(--accent-amber)'}; font-weight:700;">${st}</td>
+                    <td style="color:var(--accent-blue); font-weight:700;">${isApproved ? '₹' + runningBal : 'Pending'}</td>
+                    <td style="color:${isApproved ? 'var(--accent-green)' : 'var(--accent-amber)'}; font-weight:700;">${isApproved ? 'Approved' : 'Pending'}</td>
                     <td>
                         <button class="btn-action-edit" onclick="openEditLedger('${trxId}')">✏️ Edit</button>
                         <button class="btn-action-delete" onclick="deleteRow('Staff Ledger Entry', 0, '${trxId}')">🗑️ Delete</button>
@@ -1228,7 +1166,6 @@
                 credit: document.getElementById('editLedgerCredit').value,
                 approvalStatus: document.getElementById('editLedgerStatus').value
             };
-
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${q}`);
@@ -1239,7 +1176,7 @@
             } catch (err) { showToast("Error updating transaction"); }
         });
 
-        // Print Statement with Real Depot Address Header
+        // Print Statement Preview: Strictly Filter Approved Only
         function openAdminPrintPreview() {
             const depotMatch = (adminBundle.depots || []).find(d => {
                 const dName = (getField(d, 'Depot Name') || '').toLowerCase();
@@ -1271,22 +1208,31 @@
             document.getElementById('rcptPrintDate').textContent = getTodayFormatted();
 
             let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
-            activeLedgerList.forEach(l => {
-                const dr = Number(getField(l, 'Debit', 'debit') || 0);
-                const cr = Number(getField(l, 'Credit', 'credit') || 0);
-                const dt = formatCleanDate(getField(l, 'Transaction Date', 'date'));
-                const part = getField(l, 'Particular', 'particular');
 
-                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
-                html += `<tr>
-                    <td><strong>${dt}</strong><br><span style="font-size:0.7rem;color:#444;">${part}</span></td>
-                    <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                    <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
-                </tr>`;
+            activeLedgerList.forEach(l => {
+                const appRaw = (getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
+                
+                // Strictly exclude pending transactions from print preview
+                if (appRaw.toLowerCase() === 'approved') {
+                    const dr = Number(getField(l, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(l, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(l, 'Transaction Date', 'date'));
+                    const part = getField(l, 'Particular', 'particular');
+
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+
+                    html += `<tr>
+                        <td><strong>${dt}</strong><br><span style="font-size:0.68rem;color:#444;">${part}</span></td>
+                        <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                    </tr>`;
+                }
             });
 
-            document.getElementById('rcptTableBody').innerHTML = html;
+            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="4" class="text-center">No approved transactions.</td></tr>`;
             document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
             document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
             const finalNet = totalCr - totalDr;
@@ -1300,25 +1246,16 @@
         function populateDispatchDepotFilter(depots, dispatches) {
             const selectBox = document.getElementById('dispatchDepotFilter');
             const depotSet = new Map();
-
             depots.forEach(d => {
-                const code = getField(d, 'Depot Code');
-                const name = getField(d, 'Depot Name');
+                const code = getField(d, 'Depot Code'), name = getField(d, 'Depot Name');
                 if (code) depotSet.set(code.toUpperCase(), name || code);
             });
-
             dispatches.forEach(d => {
-                const code = getField(d, 'Depot Code');
-                const name = getField(d, 'Depot Name');
-                if (code && !depotSet.has(code.toUpperCase())) {
-                    depotSet.set(code.toUpperCase(), name || code);
-                }
+                const code = getField(d, 'Depot Code'), name = getField(d, 'Depot Name');
+                if (code && !depotSet.has(code.toUpperCase())) depotSet.set(code.toUpperCase(), name || code);
             });
-
             let opts = `<option value="ALL" selected>🏬 All Depots (${depotSet.size})</option>`;
-            Array.from(depotSet.entries()).sort().forEach(([code, name]) => {
-                opts += `<option value="${code}">${name} (${code})</option>`;
-            });
+            Array.from(depotSet.entries()).sort().forEach(([code, name]) => opts += `<option value="${code}">${name} (${code})</option>`);
             selectBox.innerHTML = opts;
         }
 
@@ -1330,7 +1267,6 @@
                 const parts = dt.split('-');
                 if (parts.length === 3) monthSet.add(`${parts[1]}-${parts[2]}`);
             });
-
             let opts = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
             Array.from(monthSet).forEach(m => opts += `<option value="${m}">🗓️ Month ${m}</option>`);
             selectBox.innerHTML = opts;
@@ -1351,7 +1287,6 @@
                 const cleanDate = formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date')).toLowerCase();
 
                 if (selectedDepot !== "ALL" && dCode !== selectedDepot) return false;
-
                 if (query) {
                     const inv = getField(d, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
                     const vType = getField(d, 'Vehicle Type').toLowerCase();
@@ -1359,16 +1294,13 @@
                     const vNo = getField(d, 'Vehicle No').toLowerCase();
                     return inv.includes(query) || dName.includes(query) || dCode.toLowerCase().includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query);
                 }
-
                 if (periodFilter === "TODAY") {
                     if (cleanDate !== todayStr) return false;
                 } else if (periodFilter !== "ALL") {
                     if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
                 }
-
                 return true;
             });
-
             renderAdminDispatches(filtered);
         }
 
@@ -1400,34 +1332,23 @@
             document.getElementById('adminDispatchBody').innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
         }
 
-        // Admin Master Handlers (All 12 Columns)
+        // Admin Master Handlers
         function renderAdminMaster(list) {
             let html = '';
             list.forEach(a => {
                 const id = getField(a, 'Admin Id');
-                const name = getField(a, 'Admin Name');
-                const mob = getField(a, 'Admin Mob');
-                const login = getField(a, 'Admin Login ID');
-                const f = getField(a, 'Can Access Satff Ledger Entry', 'Can Access Staff Ledger Entry') || 'Deafult';
-                const g = getField(a, 'Can Access Depot Master') || 'Deafult';
-                const h = getField(a, 'Can Access Satff Master', 'Can Access Staff Master') || 'Deafult';
-                const iCol = getField(a, 'Can Access Invoice Dispatch Report') || 'Deafult';
-                const j = getField(a, 'Can Access Admin Master') || 'Deafult';
-                const k = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
-                const l = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
-
                 html += `<tr>
                     <td style="color:var(--accent-purple); font-weight:700;">${id}</td>
-                    <td><strong>${name}</strong></td>
-                    <td>${mob}</td>
-                    <td>${login}</td>
-                    <td>${f}</td>
-                    <td>${g}</td>
-                    <td>${h}</td>
-                    <td>${iCol}</td>
-                    <td>${j}</td>
-                    <td>${k}</td>
-                    <td>${l}</td>
+                    <td><strong>${getField(a, 'Admin Name')}</strong></td>
+                    <td>${getField(a, 'Admin Mob')}</td>
+                    <td>${getField(a, 'Admin Login ID')}</td>
+                    <td>${getField(a, 'Can Access Satff Ledger Entry', 'Can Access Staff Ledger Entry') || 'Deafult'}</td>
+                    <td>${getField(a, 'Can Access Depot Master') || 'Deafult'}</td>
+                    <td>${getField(a, 'Can Access Satff Master', 'Can Access Staff Master') || 'Deafult'}</td>
+                    <td>${getField(a, 'Can Access Invoice Dispatch Report') || 'Deafult'}</td>
+                    <td>${getField(a, 'Can Access Admin Master') || 'Deafult'}</td>
+                    <td>${getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult'}</td>
+                    <td>${getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult'}</td>
                     <td>
                         <button class="btn-action-edit" onclick="openEditAdmin('${id}')">✏️ Edit</button>
                         <button class="btn-action-delete" onclick="deleteRow('Admin Master', 0, '${id}')">🗑️ Delete</button>

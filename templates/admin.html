@@ -45,9 +45,8 @@
         }
         .btn-logout:hover { background: var(--accent-red); color: #fff; }
 
-        .main-container { width: 100%; max-width: 1260px; margin: 1.5rem auto; padding: 0 1.5rem; }
+        .main-container { width: 100%; max-width: 1280px; margin: 1.5rem auto; padding: 0 1.5rem; }
 
-        /* Navigation Tabs */
         .admin-nav-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem; flex-wrap: wrap; }
         .tab-btn {
             background: #111a2e; border: 1px solid var(--border-color); color: var(--text-secondary);
@@ -60,8 +59,11 @@
         .badge-count { background: #f43f5e; color: #fff; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 12px; font-weight: 800; }
 
         .panel-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.6rem; margin-bottom: 1.5rem; }
-        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.7rem; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.7rem; flex-wrap: wrap; gap: 0.6rem; }
         .panel-header h3 { font-size: 1.15rem; font-weight: 800; color: #fff; }
+
+        .btn-new-item { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: 1px solid #38bdf8; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
+        .btn-new-item:hover { background: #0284c7; }
 
         .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -79,17 +81,24 @@
         .btn-action-delete { background: rgba(244, 63, 94, 0.12); color: var(--accent-red); border: 1px solid rgba(244, 63, 94, 0.35); padding: 0.35rem 0.65rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
         .btn-action-delete:hover { background: var(--accent-red); color: #fff; }
 
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
-        .modal-box { background: #111a2e; margin: 3.5rem auto; max-width: 480px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
+        .modal-box { background: #111a2e; margin: 2.5rem auto; max-width: 520px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        .modal-box-wide { max-width: 680px; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
         .modal-body { padding: 1.5rem; }
 
-        .form-group { margin-bottom: 0.9rem; }
-        .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.35rem; }
-        .form-control { width: 100%; padding: 0.75rem 0.95rem; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; font-size: 0.88rem; outline: none; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        .form-group-full { grid-column: span 2; }
+        .form-group { margin-bottom: 0.6rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.3rem; }
+        .form-control { width: 100%; padding: 0.7rem 0.9rem; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; font-size: 0.88rem; outline: none; }
         .form-control:focus { border-color: var(--accent-purple); }
+
+        .btn-submit-modal { width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 1rem; }
+        .btn-submit-modal:hover { background: #059669; }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #10b981; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -178,7 +187,10 @@
         <div id="depotTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>🏬 All RCM Depots (100+ Network)</h3>
-                <span id="depotCount" style="color:var(--text-secondary); font-size:0.85rem;">0 depots</span>
+                <div style="display: flex; gap: 0.6rem; align-items: center;">
+                    <span id="depotCount" style="color:var(--text-secondary); font-size:0.85rem;">0 depots</span>
+                    <button class="btn-new-item" onclick="openNewDepotModal()">➕ Add New Depot</button>
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
@@ -203,7 +215,10 @@
         <div id="staffTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>👥 All Depot Staff Members</h3>
-                <span id="staffCount" style="color:var(--text-secondary); font-size:0.85rem;">0 staff</span>
+                <div style="display: flex; gap: 0.6rem; align-items: center;">
+                    <span id="staffCount" style="color:var(--text-secondary); font-size:0.85rem;">0 staff</span>
+                    <button class="btn-new-item" onclick="openNewStaffModal()">➕ Add New Staff</button>
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
@@ -279,12 +294,182 @@
 
     </div>
 
-    <!-- Edit Staff Modal -->
+    <!-- Modal 1: Add New Depot Modal -->
+    <div id="newDepotModal" class="modal">
+        <div class="modal-box modal-box-wide">
+            <div class="modal-top-bar">
+                <span>🏬 Add New Depot (Google Sheet Link)</span>
+                <button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newDepotForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Depot Code</label>
+                            <input type="text" id="addDepotCode" class="form-control" required placeholder="e.g. D121">
+                        </div>
+                        <div class="form-group">
+                            <label>Depot Name</label>
+                            <input type="text" id="addDepotName" class="form-control" required placeholder="e.g. Kishanganj">
+                        </div>
+                        <div class="form-group-full">
+                            <label>Depot Address</label>
+                            <input type="text" id="addDepotAddress" class="form-control" required placeholder="Street address">
+                        </div>
+                        <div class="form-group">
+                            <label>District</label>
+                            <input type="text" id="addDepotDistrict" class="form-control" required placeholder="e.g. Kishanganj">
+                        </div>
+                        <div class="form-group">
+                            <label>State Name</label>
+                            <input type="text" id="addDepotStateName" class="form-control" required placeholder="e.g. Bihar">
+                        </div>
+                        <div class="form-group">
+                            <label>State Code</label>
+                            <input type="text" id="addDepotStateCode" class="form-control" placeholder="e.g. 10">
+                        </div>
+                        <div class="form-group">
+                            <label>Pincode</label>
+                            <input type="text" id="addDepotPinCode" class="form-control" required placeholder="e.g. 855107">
+                        </div>
+                        <div class="form-group">
+                            <label>GSTIN</label>
+                            <input type="text" id="addDepotGstin" class="form-control" placeholder="10AAMCR5143C1ZU">
+                        </div>
+                        <div class="form-group">
+                            <label>FSSAI</label>
+                            <input type="text" id="addDepotFssai" class="form-control" placeholder="10424370000018">
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice No Series Prefix</label>
+                            <input type="text" id="addDepotInvSeries" class="form-control" required placeholder="e.g. 76287">
+                        </div>
+                        <div class="form-group">
+                            <label>Depot Mobile No</label>
+                            <input type="tel" id="addDepotMobile" class="form-control" required placeholder="10-digit mobile">
+                        </div>
+                        <div class="form-group">
+                            <label>Depot Login ID</label>
+                            <input type="text" id="addDepotLoginId" class="form-control" required placeholder="e.g. d121">
+                        </div>
+                        <div class="form-group">
+                            <label>Login Password</label>
+                            <input type="text" id="addDepotPass" class="form-control" value="1020" required>
+                        </div>
+                        <div class="form-group-full">
+                            <label>Active Status</label>
+                            <select id="addDepotStatus" class="form-control">
+                                <option value="Active" selected>Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnAddDepotSubmit" class="btn-submit-modal">💾 Save Depot to Google Sheet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Edit Depot Modal -->
+    <div id="editDepotModal" class="modal">
+        <div class="modal-box modal-box-wide">
+            <div class="modal-top-bar">
+                <span>✏️ Edit Depot Record</span>
+                <button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editDepotForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Depot Code (Locked)</label>
+                            <input type="text" id="editDepotCode" class="form-control" readonly style="color:var(--accent-blue); font-weight:bold;">
+                        </div>
+                        <div class="form-group">
+                            <label>Depot Name</label>
+                            <input type="text" id="editDepotName" class="form-control" required>
+                        </div>
+                        <div class="form-group-full">
+                            <label>Depot Address</label>
+                            <input type="text" id="editDepotAddress" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>District</label>
+                            <input type="text" id="editDepotDistrict" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>State Name</label>
+                            <input type="text" id="editDepotStateName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice No Series</label>
+                            <input type="text" id="editDepotInvSeries" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Login ID</label>
+                            <input type="text" id="editDepotLoginId" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="text" id="editDepotPass" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Active Status</label>
+                            <select id="editDepotStatus" class="form-control">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit-modal">💾 Update Depot</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Add New Staff Modal -->
+    <div id="newStaffModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>👥 Add New Staff Member</span>
+                <button class="modal-close-btn" onclick="closeNewStaffModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newStaffForm">
+                    <div class="form-group">
+                        <label>Staff Full Name</label>
+                        <input type="text" id="addStaffName" class="form-control" required placeholder="Enter full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="tel" id="addStaffMobile" class="form-control" required placeholder="10-digit mobile">
+                    </div>
+                    <div class="form-group">
+                        <label>Assign Depot</label>
+                        <select id="addStaffDepotSelect" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Default Password</label>
+                        <input type="text" id="addStaffPass" class="form-control" value="1010" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Active Status</label>
+                        <select id="addStaffStatus" class="form-control">
+                            <option value="Active" selected>Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="btnAddStaffSubmit" class="btn-submit-modal">💾 Save Staff to Google Sheet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Edit Staff Modal -->
     <div id="editStaffModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
                 <span>✏️ Edit Staff Details</span>
-                <button class="modal-close-btn" onclick="closeEditModal()">&times;</button>
+                <button class="modal-close-btn" onclick="closeEditStaffModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editStaffForm">
@@ -305,6 +490,10 @@
                         <input type="text" id="editStaffDepot" class="form-control" required>
                     </div>
                     <div class="form-group">
+                        <label>Password</label>
+                        <input type="text" id="editStaffPass" class="form-control">
+                    </div>
+                    <div class="form-group">
                         <label>Active Status</label>
                         <select id="editStaffStatus" class="form-control">
                             <option value="Active">Active</option>
@@ -319,7 +508,7 @@
                             <option value="Rejected">Rejected</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn-approve" style="width:100%; padding:0.8rem; margin-top:0.5rem; justify-content:center;">💾 Save Changes</button>
+                    <button type="submit" class="btn-submit-modal">💾 Save Changes</button>
                 </form>
             </div>
         </div>
@@ -357,7 +546,6 @@
             });
         }
 
-        // Deep Property Finder (Works on any column name variations)
         function getField(obj, ...keys) {
             if (!obj) return '';
             for (let k of keys) {
@@ -398,14 +586,12 @@
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
 
-            // 1. Pending Staff Filter (Matches 'Pending' in Approval / Aproovel Column or 'Inactive' in Status)
             const pStaff = staffList.filter(s => {
                 const appVal = getField(s, 'Aproovel Status (ADMIN)', 'Approval Status', 'Approval', 'Aproovel');
                 const stVal = getField(s, 'Status');
                 return isPendingVal(appVal) || (stVal.toLowerCase() === 'inactive' && isPendingVal(appVal));
             });
 
-            // 2. Pending Transactions Filter (Matches 'Pending' in Entry Approvel Status)
             const pTrx = trxList.filter(t => {
                 const appVal = getField(t, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Approval Status', 'Status');
                 return isPendingVal(appVal);
@@ -420,7 +606,6 @@
                 badge.style.display = 'none';
             }
 
-            // Render Pending Staff
             const sBody = document.getElementById('pendingStaffBody');
             if (pStaff.length === 0) {
                 sBody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending staff requests.</td></tr>`;
@@ -428,16 +613,12 @@
                 let html = '';
                 pStaff.forEach(s => {
                     const code = getField(s, 'Staff Code');
-                    const name = getField(s, 'Staff Name');
-                    const mob = getField(s, 'Staff Mob.');
-                    const depot = getField(s, 'Staff Working Depot Name', 'Depot');
-                    const date = getField(s, 'Staff Joining Date');
                     html += `<tr>
                         <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
-                        <td><strong>${name}</strong></td>
-                        <td>${mob}</td>
-                        <td>${depot}</td>
-                        <td>${date}</td>
+                        <td><strong>${getField(s, 'Staff Name')}</strong></td>
+                        <td>${getField(s, 'Staff Mob.')}</td>
+                        <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
+                        <td>${getField(s, 'Staff Joining Date')}</td>
                         <td style="color:var(--accent-amber); font-weight:700;">Pending</td>
                         <td>
                             <button class="btn-approve" onclick="approveStaff('${code}', 'Active', 'Approved')">✅ Approve</button>
@@ -449,7 +630,6 @@
                 sBody.innerHTML = html;
             }
 
-            // Render Pending Transactions
             const tBody = document.getElementById('pendingTrxBody');
             if (pTrx.length === 0) {
                 tBody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending transaction requests.</td></tr>`;
@@ -457,21 +637,14 @@
                 let html = '';
                 pTrx.forEach(t => {
                     const trxId = getField(t, 'ID', 'id', 'Trx ID');
-                    const dt = getField(t, 'Transaction Date', 'date');
-                    const name = getField(t, 'Staff Name', 'name');
-                    const code = getField(t, 'Staff Code', 'code');
-                    const depot = getField(t, 'Satff Depot Name', 'Staff Depot Name', 'depotName');
-                    const part = getField(t, 'Particular', 'particular');
-                    const mode = getField(t, 'Payment Mode', 'mode');
                     const dr = Number(getField(t, 'Debit', 'debit') || 0);
                     const cr = Number(getField(t, 'Credit', 'credit') || 0);
-
                     html += `<tr>
-                        <td>${dt}</td>
-                        <td><strong>${name}</strong> (${code})</td>
-                        <td>${depot}</td>
-                        <td>${part}</td>
-                        <td>${mode}</td>
+                        <td>${getField(t, 'Transaction Date', 'date')}</td>
+                        <td><strong>${getField(t, 'Staff Name', 'name')}</strong> (${getField(t, 'Staff Code', 'code')})</td>
+                        <td>${getField(t, 'Satff Depot Name', 'Staff Depot Name', 'depotName')}</td>
+                        <td>${getField(t, 'Particular', 'particular')}</td>
+                        <td>${getField(t, 'Payment Mode', 'mode')}</td>
                         <td style="color:var(--accent-red); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
                         <td style="color:var(--accent-green); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
                         <td>
@@ -502,7 +675,7 @@
         }
 
         async function deleteRow(sheetName, colIndex, matchValue) {
-            if (!confirm(`Are you sure you want to delete record (${matchValue}) from ${sheetName}?`)) return;
+            if (!confirm(`Are you sure you want to delete this record (${matchValue}) from ${sheetName}?`)) return;
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteAdminRow&sheetName=${encodeURIComponent(sheetName)}&colIndex=${colIndex}&matchValue=${encodeURIComponent(matchValue)}`);
                 showToast(res.message || "Deleted");
@@ -510,19 +683,156 @@
             } catch (e) { showToast("Error deleting record"); }
         }
 
-        function openEditStaff(code, name, mob, depot, status, app) {
+        // Depot Master Modal Handlers
+        function openNewDepotModal() {
+            document.getElementById('newDepotForm').reset();
+            document.getElementById('newDepotModal').style.display = 'block';
+        }
+        function closeNewDepotModal() { document.getElementById('newDepotModal').style.display = 'none'; }
+
+        document.getElementById('newDepotForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnAddDepotSubmit');
+            btn.disabled = true;
+            btn.textContent = 'Saving to Sheet...';
+
+            const payload = {
+                action: 'saveNewDepot',
+                depotCode: document.getElementById('addDepotCode').value.trim(),
+                depotName: document.getElementById('addDepotName').value.trim(),
+                address: document.getElementById('addDepotAddress').value.trim(),
+                district: document.getElementById('addDepotDistrict').value.trim(),
+                stateName: document.getElementById('addDepotStateName').value.trim(),
+                stateCode: document.getElementById('addDepotStateCode').value.trim(),
+                pinCode: document.getElementById('addDepotPinCode').value.trim(),
+                gstin: document.getElementById('addDepotGstin').value.trim(),
+                fssai: document.getElementById('addDepotFssai').value.trim(),
+                invSeries: document.getElementById('addDepotInvSeries').value.trim(),
+                mobile: document.getElementById('addDepotMobile').value.trim(),
+                loginId: document.getElementById('addDepotLoginId').value.trim(),
+                password: document.getElementById('addDepotPass').value.trim(),
+                status: document.getElementById('addDepotStatus').value
+            };
+
+            try {
+                const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${q}`);
+                if (res && res.success) {
+                    showToast(res.message);
+                    closeNewDepotModal();
+                    loadAdminData();
+                } else {
+                    showToast(res.message || "Failed to add depot");
+                }
+            } catch (err) { showToast("Error adding depot"); }
+            finally { btn.disabled = false; btn.textContent = '💾 Save Depot to Google Sheet'; }
+        });
+
+        function openEditDepot(code) {
+            const d = (adminBundle.depots || []).find(item => (getField(item, 'Depot Code') || '').toUpperCase() === code.toUpperCase());
+            if (!d) return;
+
+            document.getElementById('editDepotCode').value = code;
+            document.getElementById('editDepotName').value = getField(d, 'Depot Name');
+            document.getElementById('editDepotAddress').value = getField(d, 'Depot Address');
+            document.getElementById('editDepotDistrict').value = getField(d, 'Dristric', 'District');
+            document.getElementById('editDepotStateName').value = getField(d, 'State Name');
+            document.getElementById('editDepotInvSeries').value = getField(d, 'Invoice No Series');
+            document.getElementById('editDepotLoginId').value = getField(d, 'Depot Login ID');
+            document.getElementById('editDepotPass').value = getField(d, 'Depot Login Password') || '1020';
+            document.getElementById('editDepotStatus').value = getField(d, 'Active Status', 'Status') || 'Active';
+
+            document.getElementById('editDepotModal').style.display = 'block';
+        }
+        function closeEditDepotModal() { document.getElementById('editDepotModal').style.display = 'none'; }
+
+        document.getElementById('editDepotForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const payload = {
+                action: 'editDepotRecord',
+                depotCode: document.getElementById('editDepotCode').value,
+                depotName: document.getElementById('editDepotName').value,
+                address: document.getElementById('editDepotAddress').value,
+                district: document.getElementById('editDepotDistrict').value,
+                stateName: document.getElementById('editDepotStateName').value,
+                invSeries: document.getElementById('editDepotInvSeries').value,
+                loginId: document.getElementById('editDepotLoginId').value,
+                password: document.getElementById('editDepotPass').value,
+                status: document.getElementById('editDepotStatus').value
+            };
+
+            try {
+                const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${q}`);
+                showToast(res.message || "Updated");
+                closeEditDepotModal();
+                loadAdminData();
+            } catch (err) { showToast("Error updating depot"); }
+        });
+
+        // Staff Master Modal Handlers
+        function openNewStaffModal() {
+            document.getElementById('newStaffForm').reset();
+            const sel = document.getElementById('addStaffDepotSelect');
+            sel.innerHTML = '';
+            (adminBundle.depots || []).forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = `${getField(d, 'Depot Code')}|${getField(d, 'Depot Name')}`;
+                opt.textContent = `${getField(d, 'Depot Name')} (${getField(d, 'Depot Code')})`;
+                sel.appendChild(opt);
+            });
+            document.getElementById('newStaffModal').style.display = 'block';
+        }
+        function closeNewStaffModal() { document.getElementById('newStaffModal').style.display = 'none'; }
+
+        document.getElementById('newStaffForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnAddStaffSubmit');
+            btn.disabled = true;
+            btn.textContent = 'Saving to Sheet...';
+
+            const [dCode, dName] = document.getElementById('addStaffDepotSelect').value.split('|');
+
+            const payload = {
+                action: 'saveNewStaffAdmin',
+                name: document.getElementById('addStaffName').value.trim(),
+                mobile: document.getElementById('addStaffMobile').value.trim(),
+                depotCode: dCode,
+                depotName: dName,
+                password: document.getElementById('addStaffPass').value.trim(),
+                status: document.getElementById('addStaffStatus').value,
+                approval: 'Approved'
+            };
+
+            try {
+                const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${q}`);
+                if (res && res.success) {
+                    showToast(res.message);
+                    closeNewStaffModal();
+                    loadAdminData();
+                } else {
+                    showToast(res.message || "Failed to add staff");
+                }
+            } catch (err) { showToast("Error adding staff"); }
+            finally { btn.disabled = false; btn.textContent = '💾 Save Staff to Google Sheet'; }
+        });
+
+        function openEditStaff(code) {
+            const s = (adminBundle.staff || []).find(item => (getField(item, 'Staff Code') || '').toUpperCase() === code.toUpperCase());
+            if (!s) return;
+
             document.getElementById('editStaffCode').value = code;
-            document.getElementById('editStaffName').value = name;
-            document.getElementById('editStaffMobile').value = mob;
-            document.getElementById('editStaffDepot').value = depot;
-            document.getElementById('editStaffStatus').value = status;
-            document.getElementById('editStaffApproval').value = app;
+            document.getElementById('editStaffName').value = getField(s, 'Staff Name');
+            document.getElementById('editStaffMobile').value = getField(s, 'Staff Mob.');
+            document.getElementById('editStaffDepot').value = getField(s, 'Staff Working Depot Name', 'Depot');
+            document.getElementById('editStaffPass').value = getField(s, 'Staff Login Password') || '1010';
+            document.getElementById('editStaffStatus').value = getField(s, 'Status') || 'Active';
+            document.getElementById('editStaffApproval').value = getField(s, 'Aproovel Status (ADMIN)', 'Approval') || 'Approved';
+
             document.getElementById('editStaffModal').style.display = 'block';
         }
-
-        function closeEditModal() {
-            document.getElementById('editStaffModal').style.display = 'none';
-        }
+        function closeEditStaffModal() { document.getElementById('editStaffModal').style.display = 'none'; }
 
         document.getElementById('editStaffForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -532,6 +842,7 @@
                 name: document.getElementById('editStaffName').value,
                 mobile: document.getElementById('editStaffMobile').value,
                 depot: document.getElementById('editStaffDepot').value,
+                password: document.getElementById('editStaffPass').value,
                 status: document.getElementById('editStaffStatus').value,
                 approval: document.getElementById('editStaffApproval').value
             };
@@ -539,7 +850,7 @@
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${q}`);
                 showToast(res.message || "Updated");
-                closeEditModal();
+                closeEditStaffModal();
                 loadAdminData();
             } catch (err) { showToast("Error editing staff"); }
         });
@@ -560,6 +871,7 @@
                     <td>${getField(d, 'Depot Login ID')}</td>
                     <td style="color:${stColor}; font-weight:700;">${st}</td>
                     <td>
+                        <button class="btn-action-edit" onclick="openEditDepot('${code}')">✏️ Edit</button>
                         <button class="btn-action-delete" onclick="deleteRow('Depot Master', 0, '${code}')">🗑️ Delete</button>
                     </td>
                 </tr>`;
@@ -586,7 +898,7 @@
                     <td style="color:${st.toLowerCase()==='active'?'var(--accent-green)':'var(--accent-red)'}; font-weight:700;">${st}</td>
                     <td style="color:${app.toLowerCase()==='approved'?'var(--accent-green)':'var(--accent-amber)'}; font-weight:700;">${app}</td>
                     <td>
-                        <button class="btn-action-edit" onclick="openEditStaff('${code}', '${name}', '${mob}', '${depot}', '${st}', '${app}')">✏️ Edit</button>
+                        <button class="btn-action-edit" onclick="openEditStaff('${code}')">✏️ Edit</button>
                         <button class="btn-action-delete" onclick="deleteRow('Staff Master', 0, '${code}')">🗑️ Delete</button>
                     </td>
                 </tr>`;

@@ -6,96 +6,115 @@
     <title>Employee Portal - RCM</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
-        body { background: #080d1a; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
         
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; background: #0c1322; border-bottom: 1px solid #1e293b; }
-        .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 1.05rem; color: #f8fafc; }
+        /* Light Blue Background Theme */
+        body { background: #f0f7ff; color: #1e293b; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        /* Top Navigation Bar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; background: #ffffff; border-bottom: 1px solid #bfdbfe; box-shadow: 0 2px 10px rgba(186, 230, 253, 0.3); }
+        .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 1.1rem; color: #0284c7; }
         .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
-        .btn-pwd { background: #eab308; color: #000; border: none; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
-        .btn-pwd:hover { background: #ca8a04; }
-        .btn-logout { background: #e11d48; color: #fff; border: none; padding: 0.45rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
+        .btn-pwd { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; transition: 0.2s; }
+        .btn-pwd:hover { background: #bae6fd; }
+        .btn-logout { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; padding: 0.45rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .btn-logout:hover { background: #fca5a5; color: #991b1b; }
 
+        /* Main Container */
         .main-container { width: 100%; max-width: 950px; margin: 2rem auto; padding: 0 1.5rem; }
 
-        .profile-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        /* User Profile Card */
+        .profile-card { background: #ffffff; border: 1px solid #bae6fd; border-radius: 14px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.08); }
         .profile-left { display: flex; align-items: center; gap: 1.2rem; }
         
-        .avatar-container { width: 62px; height: 62px; border-radius: 50%; overflow: hidden; border: 2px solid #38bdf8; background: #1e293b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+        .avatar-container { width: 62px; height: 62px; border-radius: 50%; overflow: hidden; border: 2px solid #0284c7; background: #e0f2fe; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 10px rgba(2, 132, 199, 0.2); }
         .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-container span { font-weight: bold; font-size: 1.5rem; color: #38bdf8; }
+        .avatar-container span { font-weight: bold; font-size: 1.5rem; color: #0284c7; }
 
-        .profile-details h2 { font-size: 1.4rem; color: #ffffff; margin-bottom: 0.3rem; }
-        .profile-details p { color: #94a3b8; font-size: 0.9rem; }
-        .profile-details span.tag-code { color: #38bdf8; font-weight: 600; }
-        .profile-details span.tag-depot { color: #cbd5e1; font-weight: 600; }
-        .btn-view-statement { background: #facc15; color: #000; border: none; padding: 0.65rem 1.3rem; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: 0.2s; }
-        .btn-view-statement:hover { background: #eab308; }
+        .profile-details h2 { font-size: 1.4rem; color: #0f172a; margin-bottom: 0.3rem; font-weight: 700; }
+        .profile-details p { color: #64748b; font-size: 0.9rem; }
+        .profile-details span.tag-code { color: #0284c7; font-weight: 700; }
+        .profile-details span.tag-depot { color: #334155; font-weight: 600; }
+        .btn-view-statement { background: #0284c7; color: #ffffff; border: none; padding: 0.65rem 1.3rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: 0.2s; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3); }
+        .btn-view-statement:hover { background: #0369a1; }
 
+        /* Stats Cards */
         .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
-        .stat-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.4rem; text-align: center; }
-        .stat-box h4 { font-size: 0.8rem; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 0.6rem; text-transform: uppercase; font-weight: 600; }
-        .stat-box p { font-size: 1.55rem; font-weight: 800; }
-        .stat-credit { color: #22c55e; }
-        .stat-debit { color: #f43f5e; }
-        .stat-bal { color: #22c55e; }
+        .stat-box { background: #ffffff; border: 1px solid #bae6fd; border-radius: 12px; padding: 1.4rem; text-align: center; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.06); }
+        .stat-box h4 { font-size: 0.8rem; letter-spacing: 0.5px; color: #64748b; margin-bottom: 0.6rem; text-transform: uppercase; font-weight: 600; }
+        .stat-box p { font-size: 1.6rem; font-weight: 800; }
+        .stat-credit { color: #16a34a; }
+        .stat-debit { color: #dc2626; }
+        .stat-bal { color: #0284c7; }
 
-        .ledger-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .ledger-card-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.8rem; border-bottom: 1px solid #1e293b; }
-        .ledger-card-header h3 { font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; }
-        .badge-live { color: #38bdf8; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.3rem; }
+        /* Filter Controls */
+        .filter-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.8rem; }
+        .filter-group { display: flex; align-items: center; gap: 0.5rem; }
+        .filter-group label { font-size: 0.85rem; font-weight: 600; color: #475569; }
+        .filter-select { padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid #bae6fd; background: #ffffff; color: #0369a1; font-weight: 600; outline: none; font-size: 0.85rem; cursor: pointer; }
+
+        /* Ledger Table Card */
+        .ledger-card { background: #ffffff; border: 1px solid #bae6fd; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(2, 132, 199, 0.08); }
+        .ledger-card-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.8rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+        .ledger-card-header h3 { font-size: 1.1rem; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; font-weight: 700; }
+        .badge-live { color: #0284c7; font-size: 0.82rem; font-weight: 600; background: #e0f2fe; padding: 0.3rem 0.6rem; border-radius: 20px; display: flex; align-items: center; gap: 0.3rem; }
 
         .table-responsive { width: 100%; overflow-x: auto; }
         table.ledger-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.ledger-table th { padding: 1rem 1.5rem; color: #94a3b8; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #1e293b; }
-        table.ledger-table td { padding: 1rem 1.5rem; font-size: 0.9rem; border-bottom: 1px solid #131d33; }
-        table.ledger-table tr:last-child td { border-bottom: none; }
+        table.ledger-table th { padding: 0.9rem 1.5rem; color: #475569; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #e2e8f0; background: #f1f5f9; }
+        table.ledger-table td { padding: 0.9rem 1.5rem; font-size: 0.88rem; border-bottom: 1px solid #f1f5f9; color: #334155; }
+        table.ledger-table tr:hover { background: #f8fafc; }
 
-        .text-debit { color: #f43f5e; font-weight: 600; }
-        .text-credit { color: #22c55e; font-weight: 600; }
-        .text-balance { color: #22c55e; font-weight: 600; }
-        .text-gray { color: #475569; }
+        .text-debit { color: #dc2626; font-weight: 600; }
+        .text-credit { color: #16a34a; font-weight: 600; }
+        .text-balance { color: #0284c7; font-weight: 600; }
+        .text-gray { color: #94a3b8; }
 
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(5px); overflow-y: auto; }
-        .modal-box { background: #0f172a; margin: 2rem auto; max-width: 500px; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #0b1120; border-bottom: 1px solid #1e293b; }
-        .modal-top-bar span { color: #f8fafc; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
-        .modal-close-btn { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; line-height: 1; }
-        .modal-close-btn:hover { color: #fff; }
+        .table-footer-info { padding: 0.8rem 1.5rem; font-size: 0.8rem; color: #64748b; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
 
-        .pwd-modal-body { padding: 1.5rem; background: #0f172a; }
+        /* Compact Light Blue Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); overflow-y: auto; }
+        .modal-box { background: #ffffff; margin: 2rem auto; max-width: 410px; border-radius: 12px; border: 1px solid #bae6fd; overflow: hidden; box-shadow: 0 20px 40px rgba(2, 132, 199, 0.25); }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #e0f2fe; border-bottom: 1px solid #bae6fd; }
+        .modal-top-bar span { color: #0369a1; font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .modal-close-btn { background: none; border: none; color: #64748b; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+        .modal-close-btn:hover { color: #0f172a; }
+
+        /* Password Form Style */
+        .pwd-modal-body { padding: 1.5rem; background: #ffffff; }
         .pwd-group { margin-bottom: 1.1rem; }
-        .pwd-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.4rem; }
-        .pwd-group input { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #334155; background: #080d1a; color: #fff; outline: none; font-size: 0.9rem; }
-        .pwd-group input:focus { border-color: #38bdf8; }
-        .btn-update-pwd { width: 100%; background: #eab308; color: #000; font-weight: bold; border: none; padding: 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; margin-top: 0.5rem; }
-        .btn-update-pwd:hover { background: #ca8a04; }
+        .pwd-group label { display: block; font-size: 0.85rem; color: #475569; margin-bottom: 0.4rem; font-weight: 500; }
+        .pwd-group input { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; color: #0f172a; outline: none; font-size: 0.9rem; }
+        .pwd-group input:focus { border-color: #0284c7; background: #fff; }
+        .btn-update-pwd { width: 100%; background: #0284c7; color: #ffffff; font-weight: bold; border: none; padding: 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; margin-top: 0.5rem; }
+        .btn-update-pwd:hover { background: #0369a1; }
         .pwd-status { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
 
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.5rem; font-family: 'Courier New', Courier, monospace; font-size: 0.82rem; }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-header h2 { font-size: 0.95rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .receipt-header p { font-size: 0.75rem; line-height: 1.3; color: #222; }
-        .receipt-title { font-weight: bold; margin-top: 0.3rem; display: block; font-size: 0.85rem; letter-spacing: 1px; }
+        /* Thermal Compact Receipt */
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #475569; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
+        .receipt-header h2 { font-size: 0.88rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: bold; margin-top: 0.3rem; display: block; font-size: 0.8rem; letter-spacing: 0.5px; }
 
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.78rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.6rem; }
-        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.78rem; }
-        .receipt-table td { padding: 4px 2px; font-size: 0.78rem; border: none; color: #000; vertical-align: top; }
-        .receipt-table .desc-sub { font-size: 0.7rem; color: #444; display: block; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #475569; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
+        .receipt-table th { border-top: 1px dashed #475569; border-bottom: 1px dashed #475569; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.75rem; }
+        .receipt-table td { padding: 4px 2px; font-size: 0.75rem; border: none; color: #000; vertical-align: top; }
+        .receipt-table .desc-sub { font-size: 0.68rem; color: #555; display: block; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
 
-        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.5rem 0; font-size: 0.8rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary { border-top: 1px dashed #475569; border-bottom: 1px dashed #475569; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
 
-        .receipt-actions { padding: 1rem 1.2rem; background: #0b1120; }
-        .print-green-btn { width: 100%; background: #10b981; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .receipt-actions { padding: 0.9rem 1.2rem; background: #f8fafc; border-top: 1px solid #e2e8f0; }
+        .print-green-btn { width: 100%; background: #10b981; color: white; border: none; padding: 0.7rem; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
         .print-green-btn:hover { background: #059669; }
 
         @media print {
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 480px; margin: 0 auto; padding: 10px; background: #fff; color: #000; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 380px; margin: 0 auto; padding: 5px; background: #fff; color: #000; }
             .modal-top-bar, .receipt-actions { display: none !important; }
         }
 
@@ -147,10 +166,21 @@
             </div>
         </div>
 
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label>Filter Statement:</label>
+                <select id="monthFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="ALL">All Entries (Top 5)</option>
+                </select>
+            </div>
+            <span class="badge-live">Live Synced ⚡</span>
+        </div>
+
         <div class="ledger-card">
             <div class="ledger-card-header">
                 <h3>📑 My Ledger Statement</h3>
-                <span class="badge-live">Live Synced ⚡</span>
+                <span id="showingCount" style="font-size:0.85rem; color:#64748b; font-weight:600;">Showing latest 5 entries</span>
             </div>
             <div class="table-responsive">
                 <table class="ledger-table">
@@ -164,9 +194,13 @@
                         </tr>
                     </thead>
                     <tbody id="ledgerTableBody">
-                        <tr><td colspan="5" class="text-center" style="color: #94a3b8; padding: 2.5rem;">Loading live statement...</td></tr>
+                        <tr><td colspan="5" class="text-center" style="color: #64748b; padding: 2.5rem;">Loading live statement...</td></tr>
                     </tbody>
                 </table>
+            </div>
+            <div class="table-footer-info">
+                <span>Tip: Click <b>View Statement</b> to see and print complete ledger history.</span>
+                <span id="totalRecordsCount">Total records: 0</span>
             </div>
         </div>
 
@@ -200,11 +234,11 @@
         </div>
     </div>
 
-    <!-- Statement Receipt Modal -->
+    <!-- Full Statement Receipt Modal -->
     <div id="printModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
-                <span>📄 Account Statement</span>
+                <span>📄 Full Account Statement</span>
                 <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
             </div>
             
@@ -214,7 +248,7 @@
                     <p id="depotFullAddress">Depot Address</p>
                     <p id="depotContact">Mob: -</p>
                     <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
-                    <span class="receipt-title">** ACCOUNT STATEMENT **</span>
+                    <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
                 </div>
 
                 <div class="receipt-meta">
@@ -231,9 +265,9 @@
                 <table class="receipt-table">
                     <thead>
                         <tr>
-                            <th style="width: 50%;">Date/Desc</th>
-                            <th class="text-right" style="width: 16%;">Dr</th>
-                            <th class="text-right" style="width: 16%;">Cr</th>
+                            <th style="width: 48%;">Date/Desc</th>
+                            <th class="text-right" style="width: 17%;">Dr</th>
+                            <th class="text-right" style="width: 17%;">Cr</th>
                             <th class="text-right" style="width: 18%;">Bal</th>
                         </tr>
                     </thead>
@@ -251,7 +285,7 @@
                         <span>TOTAL CREDIT:</span>
                         <span id="rcptTotalCredit">Rs.0.00</span>
                     </div>
-                    <div class="sum-row" style="margin-top: 4px; font-size: 0.85rem;">
+                    <div class="sum-row" style="margin-top: 4px; font-size: 0.82rem;">
                         <span>NET BALANCE:</span>
                         <span id="rcptNetBalance">Rs.0.00</span>
                     </div>
@@ -259,7 +293,7 @@
             </div>
 
             <div class="receipt-actions">
-                <button class="print-green-btn" onclick="window.print()">🖨️ Print Statement</button>
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
             </div>
         </div>
     </div>
@@ -270,6 +304,9 @@
         const staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
 
         let bundleData = { staff: {}, depot: {}, ledger: [] };
+        let allProcessedRecords = [];
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
@@ -290,10 +327,19 @@
             });
         }
 
-        function formatDate(dStr) {
+        // Format Date to: 28-Aug-26
+        function formatDateToCustom(dStr) {
             if (!dStr) return '-';
-            const s = String(dStr);
-            if (s.includes('T')) return s.split('T')[0];
+            const s = String(dStr).split('T')[0];
+            const parts = s.split('-');
+            if (parts.length === 3) {
+                const y = parts[0];
+                const m = parseInt(parts[1], 10) - 1;
+                const d = parts[2];
+                const shortYear = y.length === 4 ? y.slice(2) : y;
+                const mName = monthNames[m] || parts[1];
+                return `${d}-${mName}-${shortYear}`;
+            }
             return s;
         }
 
@@ -338,29 +384,41 @@
                     avatarBox.innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
                 }
 
-                // 2. Ledger Calculation
-                const tbody = document.getElementById('ledgerTableBody');
+                // 2. Process All Ledger Records & Running Balance
                 if (ledgerRows.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2rem;">No ledger transactions for ${staffCode}.</td></tr>`;
+                    document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#64748b; padding:2rem;">No ledger transactions for ${staffCode}.</td></tr>`;
                     document.getElementById('totalCredit').textContent = '₹0';
                     document.getElementById('totalDebit').textContent = '₹0';
                     document.getElementById('netBalance').textContent = '₹0 (Cr)';
+                    document.getElementById('totalRecordsCount').textContent = 'Total records: 0';
                     return;
                 }
 
                 let sumDebit = 0;
                 let sumCredit = 0;
                 let runningBal = 0;
-                let recordsWithBal = [];
+                allProcessedRecords = [];
+                const monthSet = new Set();
 
                 ledgerRows.forEach(row => {
+                    const rawDate = String(getField(row, 'Transaction Date')).split('T')[0];
                     const dr = Number(getField(row, 'Debit') || 0);
                     const cr = Number(getField(row, 'Credit') || 0);
                     sumDebit += dr;
                     sumCredit += cr;
                     runningBal += (cr - dr);
-                    recordsWithBal.push({
-                        date: formatDate(getField(row, 'Transaction Date')),
+
+                    if (rawDate && rawDate.includes('-')) {
+                        const [yr, mo] = rawDate.split('-');
+                        const mIdx = parseInt(mo, 10) - 1;
+                        if (monthNames[mIdx]) {
+                            monthSet.add(`${monthNames[mIdx]} ${yr}`);
+                        }
+                    }
+
+                    allProcessedRecords.push({
+                        rawDate: rawDate,
+                        customDate: formatDateToCustom(rawDate),
                         particular: getField(row, 'Particular') || '-',
                         dr: dr,
                         cr: cr,
@@ -368,6 +426,14 @@
                     });
                 });
 
+                // Populate Month/Year Filter Dropdown
+                const filterSelect = document.getElementById('monthFilter');
+                filterSelect.innerHTML = `<option value="ALL">All Entries (Top 5)</option>`;
+                monthSet.forEach(mStr => {
+                    filterSelect.innerHTML += `<option value="${mStr}">${mStr}</option>`;
+                });
+
+                // Top Stats Summary
                 document.getElementById('totalCredit').textContent = `₹${sumCredit.toLocaleString('en-IN')}`;
                 document.getElementById('totalDebit').textContent = `₹${sumDebit.toLocaleString('en-IN')}`;
                 
@@ -375,23 +441,54 @@
                 const balType = finalBal >= 0 ? '(Cr)' : '(Dr)';
                 const balEl = document.getElementById('netBalance');
                 balEl.textContent = `₹${Math.abs(finalBal).toLocaleString('en-IN')} ${balType}`;
-                balEl.style.color = finalBal >= 0 ? '#22c55e' : '#f43f5e';
+                balEl.style.color = finalBal >= 0 ? '#16a34a' : '#dc2626';
+                document.getElementById('totalRecordsCount').textContent = `Total records: ${allProcessedRecords.length}`;
 
-                let tableHtml = '';
-                recordsWithBal.slice().reverse().forEach(r => {
-                    tableHtml += `<tr>
-                        <td>${r.date}</td>
-                        <td>${r.particular}</td>
-                        <td class="${r.dr > 0 ? 'text-debit' : 'text-gray'}">${r.dr > 0 ? '₹' + r.dr.toLocaleString('en-IN') : '-'}</td>
-                        <td class="${r.cr > 0 ? 'text-credit' : 'text-gray'}">${r.cr > 0 ? '₹' + r.cr.toLocaleString('en-IN') : '-'}</td>
-                        <td class="text-balance">₹${r.bal.toLocaleString('en-IN')} ${r.bal >= 0 ? '(Cr)' : '(Dr)'}</td>
-                    </tr>`;
-                });
-                tbody.innerHTML = tableHtml;
+                applyFilters();
 
             } catch (err) {
-                document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#f43f5e; padding:2rem;">Failed to load data: ${err.message}</td></tr>`;
+                document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#dc2626; padding:2rem;">Failed to load data: ${err.message}</td></tr>`;
             }
+        }
+
+        // Apply Month/Year Filter & 5 Rows Limit
+        function applyFilters() {
+            const filterVal = document.getElementById('monthFilter').value;
+            let listToRender = [];
+
+            if (filterVal === 'ALL') {
+                // Show latest 5 entries only
+                listToRender = allProcessedRecords.slice(-5).reverse();
+                document.getElementById('showingCount').textContent = `Showing latest 5 entries`;
+            } else {
+                // Filter by specific Month Year
+                const [filterM, filterY] = filterVal.split(' ');
+                listToRender = allProcessedRecords.filter(r => {
+                    if (!r.rawDate) return false;
+                    const [yr, mo] = r.rawDate.split('-');
+                    const mIdx = parseInt(mo, 10) - 1;
+                    return monthNames[mIdx] === filterM && yr === filterY;
+                }).reverse();
+                document.getElementById('showingCount').textContent = `Showing all ${listToRender.length} entries for ${filterVal}`;
+            }
+
+            const tbody = document.getElementById('ledgerTableBody');
+            if (listToRender.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#64748b; padding:2rem;">No entries found for ${filterVal}.</td></tr>`;
+                return;
+            }
+
+            let tableHtml = '';
+            listToRender.forEach(r => {
+                tableHtml += `<tr>
+                    <td><strong>${r.customDate}</strong></td>
+                    <td>${r.particular}</td>
+                    <td class="${r.dr > 0 ? 'text-debit' : 'text-gray'}">${r.dr > 0 ? '₹' + r.dr.toLocaleString('en-IN') : '-'}</td>
+                    <td class="${r.cr > 0 ? 'text-credit' : 'text-gray'}">${r.cr > 0 ? '₹' + r.cr.toLocaleString('en-IN') : '-'}</td>
+                    <td class="text-balance">₹${r.bal.toLocaleString('en-IN')} ${r.bal >= 0 ? '(Cr)' : '(Dr)'}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = tableHtml;
         }
 
         function openPasswordModal() {
@@ -413,7 +510,7 @@
             const btn = document.getElementById('pwdSubmitBtn');
 
             if (newPass !== confirmPass) {
-                msg.style.color = "#f43f5e";
+                msg.style.color = "#dc2626";
                 msg.textContent = "New passwords do not match!";
                 return;
             }
@@ -427,15 +524,15 @@
                 const res = await jsonp(url);
 
                 if (res.success) {
-                    msg.style.color = "#22c55e";
+                    msg.style.color = "#16a34a";
                     msg.textContent = "Password changed successfully in Google Sheet!";
                     setTimeout(() => { closePasswordModal(); }, 1800);
                 } else {
-                    msg.style.color = "#f43f5e";
+                    msg.style.color = "#dc2626";
                     msg.textContent = res.message || "Failed to update password.";
                 }
             } catch (err) {
-                msg.style.color = "#f43f5e";
+                msg.style.color = "#dc2626";
                 msg.textContent = "Error updating password.";
             } finally {
                 btn.disabled = false;
@@ -443,10 +540,10 @@
             }
         });
 
+        // Open Statement - Shows ALL Records from Start to End
         function openPrintPreview() {
             const depotInfo = bundleData.depot || {};
             const staffInfo = bundleData.staff || {};
-            const ledgerRows = bundleData.ledger || [];
 
             const compName = getField(depotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
             const addr = getField(depotInfo, 'Depot Address');
@@ -465,42 +562,37 @@
 
             document.getElementById('rcptStaffName').textContent = getField(staffInfo, 'Staff Name') || staffNameStored;
             document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
-            document.getElementById('rcptJoinedDate').textContent = formatDate(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
+            document.getElementById('rcptJoinedDate').textContent = formatDateToCustom(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
             document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
 
             const tbody = document.getElementById('rcptTableBody');
-            if (ledgerRows.length === 0) {
+            if (allProcessedRecords.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
                 return;
             }
 
             let html = '';
-            let runningBal = 0;
             let totalDr = 0;
             let totalCr = 0;
 
-            ledgerRows.forEach(row => {
-                const date = formatDate(getField(row, 'Transaction Date'));
-                const desc = getField(row, 'Particular') || '-';
-                const dr = Number(getField(row, 'Debit') || 0);
-                const cr = Number(getField(row, 'Credit') || 0);
-
-                totalDr += dr;
-                totalCr += cr;
-                runningBal += (cr - dr);
+            // Render ALL transactions
+            allProcessedRecords.forEach(r => {
+                totalDr += r.dr;
+                totalCr += r.cr;
 
                 html += `<tr>
-                    <td><strong>${date}</strong><span class="desc-sub">${desc}</span></td>
-                    <td class="text-right">${dr > 0 ? dr : '-'}</td>
-                    <td class="text-right">${cr > 0 ? cr : '-'}</td>
-                    <td class="text-right"><strong>${runningBal}</strong></td>
+                    <td><strong>${r.customDate}</strong><span class="desc-sub">${r.particular}</span></td>
+                    <td class="text-right">${r.dr > 0 ? r.dr : '-'}</td>
+                    <td class="text-right">${r.cr > 0 ? r.cr : '-'}</td>
+                    <td class="text-right"><strong>${r.bal}</strong></td>
                 </tr>`;
             });
 
             tbody.innerHTML = html;
             document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
             document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${runningBal.toFixed(2)}`;
+            const finalNet = totalCr - totalDr;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${finalNet.toFixed(2)}`;
 
             document.getElementById('printModal').style.display = 'block';
         }

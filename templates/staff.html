@@ -61,7 +61,7 @@
         .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
         .logo-text-box span { font-size: 0.72rem; color: #facc15; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Center: Enlarged Company Logo & Depot Info */
+        /* Center: 225x58 Company Logo & Depot Info */
         .depot-center-section {
             display: flex;
             align-items: center;
@@ -70,8 +70,9 @@
             flex: 1;
             text-align: left;
         }
+        
         .company-logo-badge {
-            width: 222px;
+            width: 225px;
             height: 58px;
             border-radius: 10px;
             background: #ffffff;
@@ -81,7 +82,7 @@
             justify-content: center;
             box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
             overflow: hidden;
-            padding: 4px 8px;
+            padding: 4px 10px;
             flex-shrink: 0;
         }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
@@ -345,7 +346,7 @@
         /* Statement Receipt with Company Logo */
         .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
         .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-company-logo { width: 135px; height: 50px; margin: 0 auto 0.4rem auto; display: flex; align-items: center; justify-content: center; }
+        .receipt-company-logo { width: 180px; height: 50px; margin: 0 auto 0.4rem auto; display: flex; align-items: center; justify-content: center; }
         .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
         .receipt-header h2 { font-size: 0.92rem; font-weight: 800; margin-bottom: 0.2rem; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -399,17 +400,17 @@
             </div>
         </div>
 
-        <!-- Center: Enlarged Company Logo & Depot Info -->
+        <!-- Center: 225x58 Company Logo & Depot Info -->
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
             </div>
             <div class="depot-header-info">
                 <h1>RCM Depot <span>Management</span></h1>
-                <p id="topDepotAddress">Near Lahra chowk, Chakla Road, Kishanganj, Bihar - 855107</p>
+                <p id="topDepotAddress">Loading depot address...</p>
                 <div class="depot-badges">
-                    <span class="tag-pill"><strong>FSSAI:</strong> <span id="topDepotFssai">10424370000018</span></span>
-                    <span class="tag-pill"><strong>GSTIN:</strong> <span id="topDepotGstin">10AAMCR5143C1ZU</span></span>
+                    <span class="tag-pill"><strong>FSSAI:</strong> <span id="topDepotFssai">-</span></span>
+                    <span class="tag-pill"><strong>GSTIN:</strong> <span id="topDepotGstin">-</span></span>
                 </div>
             </div>
         </div>
@@ -431,7 +432,7 @@
                 </div>
                 <div class="profile-details">
                     <h2 id="dispStaffName">Staff Member</h2>
-                    <p>Employee ID: <span class="tag-code" id="dispStaffCode">EMP001</span> | Assigned Depot: <span class="tag-depot" id="dispDepotName">Loading...</span></p>
+                    <p>Employee ID: <span class="tag-code" id="dispStaffCode">Loading...</span> | Assigned Depot: <span class="tag-depot" id="dispDepotName">Loading...</span></p>
                 </div>
             </div>
             <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
@@ -524,7 +525,7 @@
         </div>
     </div>
 
-    <!-- Statement Receipt Modal (with Company Logo) -->
+    <!-- Statement Receipt Modal -->
     <div id="printModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -534,7 +535,6 @@
             
             <div id="printableReceipt" class="receipt-container">
                 <div class="receipt-header">
-                    <!-- Receipt Company Logo -->
                     <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
                     <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
                     <p id="depotFullAddress">Depot Address</p>
@@ -593,8 +593,15 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
         
-        let staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
-        let staffNameStored = sessionStorage.getItem("name") || "Staff Member";
+        // Strictly get the logged in user
+        let staffCode = (sessionStorage.getItem("user") || "").trim();
+        let staffNameStored = sessionStorage.getItem("name") || "";
+        let staffDepotStored = sessionStorage.getItem("depot") || "";
+
+        // If no user in session, redirect to login
+        if (!staffCode) {
+            window.location.href = "/";
+        }
 
         let bundleData = { staff: {}, depot: {}, ledger: [] };
         let allProcessedRecords = [];
@@ -612,7 +619,7 @@
                     delete window[callbackName];
                     if (script.parentNode) script.parentNode.removeChild(script);
                     reject(new Error("Request Timeout"));
-                }, 12000);
+                }, 8000);
 
                 window[callbackName] = function(data) {
                     clearTimeout(timer);
@@ -674,10 +681,7 @@
             let cleanUrl = u;
 
             if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
-                const parts = u.split('ibb.co/');
-                if (parts[1]) {
-                    cleanUrl = `https://i.ibb.co/${parts[1].replace(/[^a-zA-Z0-9]/g, '')}/image.png`;
-                }
+                cleanUrl = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
             }
 
             const img = new Image();
@@ -692,6 +696,11 @@
         }
 
         async function loadFastBundle() {
+            // Immediate preliminary render from session
+            if (staffNameStored) document.getElementById('dispStaffName').textContent = staffNameStored;
+            if (staffCode) document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
+            if (staffDepotStored) document.getElementById('dispDepotName').textContent = staffDepotStored;
+
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getStaffBundle&staffCode=${encodeURIComponent(staffCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load staff bundle");
@@ -701,30 +710,28 @@
                 const depotInfo = res.depot || {};
                 const ledgerRows = res.ledger || [];
 
-                // 1. Render Staff Logo (Cell B2)
+                // 1. Render Staff Logo (Cell B2) & Company Logo (Cell A2)
                 setSafeImage('staffLogoBox', res.staffLogo || 'https://ibb.co/b5dZ9rHD');
-
-                // 2. Render Enlarged Company Logo (Cell A2)
                 setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
                 setSafeImage('receiptCompanyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
 
-                // 3. Render Header Details
-                if (depotInfo) {
-                    const addr = getField(depotInfo, 'Depot Address');
-                    const dist = getField(depotInfo, 'Dristric', 'District');
-                    const stateName = getField(depotInfo, 'State Name');
-                    const pin = getField(depotInfo, 'Pin Code', 'Pincode');
-                    const fssai = getField(depotInfo, 'FSSAI', 'FSSAI No.');
-                    const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
+                // 2. Render Header Details (strictly for this staff member's working depot)
+                const addr = getField(depotInfo, 'Depot Address');
+                const dist = getField(depotInfo, 'Dristric', 'District');
+                const stateName = getField(depotInfo, 'State Name');
+                const pin = getField(depotInfo, 'Pin Code', 'Pincode');
+                const fssai = getField(depotInfo, 'FSSAI', 'FSSAI No.');
+                const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
 
-                    if (addr) document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
-                    if (fssai) document.getElementById('topDepotFssai').textContent = fssai;
-                    if (gstin) document.getElementById('topDepotGstin').textContent = gstin;
+                if (addr) {
+                    document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
                 }
+                document.getElementById('topDepotFssai').textContent = fssai || '-';
+                document.getElementById('topDepotGstin').textContent = gstin || '-';
 
-                // 4. Render Profile Card
-                const finalName = getField(staffInfo, 'Staff Name') || staffNameStored;
-                const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
+                // 3. Render Profile Card
+                const finalName = getField(staffInfo, 'Staff Name') || staffNameStored || 'Staff Member';
+                const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || staffDepotStored || '-';
                 const staffPhoto = getField(staffInfo, 'Staff Photo', 'Photo', 'Image');
 
                 document.getElementById('dispStaffName').textContent = finalName;
@@ -737,7 +744,7 @@
                     document.getElementById('avatarBox').innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
                 }
 
-                // 5. Process Ledger
+                // 4. Process Ledger
                 if (ledgerRows.length === 0) {
                     document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--text-secondary); padding:2.5rem;">No ledger transactions found for ${staffCode}.</td></tr>`;
                     document.getElementById('totalCredit').textContent = '₹0';
@@ -950,9 +957,8 @@
             
             const joinParsed = parseCleanDate(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
             document.getElementById('rcptJoinedDate').textContent = joinParsed.formatted;
-            document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
+            document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || staffDepotStored;
 
-            // Ensure receipt gets the company logo
             setSafeImage('receiptCompanyLogoBox', bundleData.companyLogo || 'https://ibb.co/nNKFfhtR');
 
             const tbody = document.getElementById('rcptTableBody');

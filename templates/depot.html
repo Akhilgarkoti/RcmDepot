@@ -126,7 +126,7 @@
             border-radius: 8px; color: #ffffff; font-size: 0.9rem; outline: none; transition: border-color 0.2s;
         }
         .form-control:focus { border-color: var(--accent-cyan); }
-        .form-control:read-only { background: rgba(15, 23, 42, 0.5); color: #94a3b8; }
+        .form-control:read-only { background: rgba(15, 23, 42, 0.6); color: var(--accent-cyan); font-weight: 800; }
         textarea.form-control { resize: vertical; min-height: 85px; font-family: monospace; font-size: 0.92rem; }
         select.form-control { cursor: pointer; }
         select.form-control option { background: #0f172a; color: #fff; }
@@ -218,18 +218,47 @@
             background: rgba(17, 24, 39, 0.95); margin: 3rem auto; max-width: 500px; border-radius: 16px;
             border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
         }
-        .modal-box-wide { max-width: 750px; }
+        .modal-box-wide { max-width: 780px; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid var(--border-color); }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
         .modal-body { padding: 1.5rem; }
+
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
+        .receipt-company-logo { width: 180px; height: 50px; margin: 0 auto 0.4rem auto; display: flex; align-items: center; justify-content: center; }
+        .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        .receipt-header h2 { font-size: 0.92rem; font-weight: 800; margin-bottom: 0.2rem; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.82rem; }
+
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
+        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.75rem; text-align: left; }
+        .receipt-table td { padding: 4px 2px; font-size: 0.75rem; border: none; color: #000; vertical-align: top; text-align: left; }
+        .receipt-table .desc-sub { font-size: 0.68rem; color: #444; display: block; }
+        .text-right { text-align: right !important; }
+        .text-center { text-align: center !important; }
+
+        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary .sum-row { display: flex; justify-content: space-between; }
+        .receipt-actions { padding: 0.9rem 1.2rem; background: #0c1322; }
+        .print-green-btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .print-green-btn:hover { background: #059669; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printableReceipt, #printableReceipt * { visibility: visible; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 400px; margin: 0 auto; padding: 5px; background: #fff; color: #000; }
+            .modal-top-bar, .receipt-actions { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Header Navbar -->
     <div class="navbar">
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox">
@@ -263,7 +292,6 @@
 
     <div class="main-container">
 
-        <!-- Navigation Tabs: Tab 3 Renamed to Assigned Staff and Ledger Details -->
         <div class="depot-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
@@ -407,7 +435,7 @@
 
     </div>
 
-    <!-- Modal 1: Request New Staff (With Photo, Auto EMP Code=Login ID, Default Pwd: 1010) -->
+    <!-- Modal 1: Request New Staff (With Locked EMP Code & Light Compression) -->
     <div id="addStaffModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -416,6 +444,12 @@
             </div>
             <div class="modal-body">
                 <form id="requestStaffForm">
+                    <!-- Locked & Readonly EMP Code Display -->
+                    <div class="form-group">
+                        <label>Auto-Generated Staff Code (Locked)</label>
+                        <input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:var(--accent-cyan); font-weight:800; font-size:1.05rem; letter-spacing:1px; background:rgba(15,23,42,0.85);">
+                    </div>
+
                     <div class="form-group">
                         <label>Staff Full Name</label>
                         <input type="text" id="newStaffName" class="form-control" required placeholder="Enter Full Name">
@@ -425,15 +459,15 @@
                         <input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit Mobile Number">
                     </div>
                     <div class="form-group">
-                        <label>Staff Photo (Optional URL or Upload)</label>
-                        <input type="file" id="newStaffPhotoFile" class="form-control" accept="image/*" onchange="convertPhotoToBase64(this)">
+                        <label>Staff Photo (Optional - Auto Compressed)</label>
+                        <input type="file" id="newStaffPhotoFile" class="form-control" accept="image/*" onchange="compressAndSetPhoto(this)">
                         <input type="hidden" id="newStaffPhotoBase64">
                     </div>
                     <div class="form-group" style="background: rgba(10,15,29,0.6); padding: 0.8rem; border-radius: 8px; border: 1px dashed var(--border-color);">
                         <p style="font-size: 0.8rem; color: var(--accent-cyan); line-height: 1.4;">
                             ℹ️ <strong>System Automation:</strong><br>
-                            • EMP Code will be auto-generated sequentially (+1) uniquely across all depots.<br>
-                            • Login ID will be set to the EMP Code.<br>
+                            • EMP Code is unique across all depots.<br>
+                            • Login ID will be set to this EMP Code.<br>
                             • Default Password will be <strong>1010</strong>.
                         </p>
                     </div>
@@ -443,7 +477,7 @@
         </div>
     </div>
 
-    <!-- Modal 2: Request Staff Transaction (Both Debit & Credit in Same Form) -->
+    <!-- Modal 2: Request Staff Transaction -->
     <div id="addTrxModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -499,10 +533,11 @@
                 <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; background: rgba(10,15,29,0.7); padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 1rem; background: rgba(10,15,29,0.7); padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap:wrap; gap:0.6rem;">
                     <div><strong>Total Credit:</strong> <span id="modTotalCredit" style="color:var(--accent-green); font-weight:800;">₹0</span></div>
                     <div><strong>Total Debit:</strong> <span id="modTotalDebit" style="color:var(--accent-red); font-weight:800;">₹0</span></div>
                     <div><strong>Net Balance:</strong> <span id="modNetBalance" style="color:var(--accent-cyan); font-weight:800;">₹0 (Cr)</span></div>
+                    <button class="btn-tool" style="background: linear-gradient(135deg, #f59e0b, #d97706); color:#000; font-weight:800;" onclick="openPrintPreview()">🖨️ View Statement & Print</button>
                 </div>
                 <div class="table-responsive" style="max-height: 380px;">
                     <table class="custom-table">
@@ -522,6 +557,71 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Statement Print Preview Modal -->
+    <div id="printModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>📄 Full Account Statement</span>
+                <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
+            </div>
+            
+            <div id="printableReceipt" class="receipt-container">
+                <div class="receipt-header">
+                    <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
+                    <h2 id="receiptCompanyName">RCM Consumer Products Private Limited</h2>
+                    <p id="receiptFullAddress">Depot Address</p>
+                    <p id="receiptContact">Mob: -</p>
+                    <p><span id="receiptStateCode">Code: -</span> | <span id="receiptGstin">GSTIN: -</span></p>
+                    <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
+                </div>
+
+                <div class="receipt-meta">
+                    <div>
+                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                        <p><strong>Joined:</strong> <span id="rcptJoinedDate">-</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
+                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                    </div>
+                </div>
+
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 48%;">Date/Desc</th>
+                            <th class="text-right" style="width: 17%;">Dr</th>
+                            <th class="text-right" style="width: 17%;">Cr</th>
+                            <th class="text-right" style="width: 18%;">Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcptTableBody">
+                        <tr><td colspan="4" class="text-center">Loading transactions...</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="receipt-summary">
+                    <div class="sum-row">
+                        <span>TOTAL DEBIT:</span>
+                        <span id="rcptTotalDebit">Rs.0.00</span>
+                    </div>
+                    <div class="sum-row">
+                        <span>TOTAL CREDIT:</span>
+                        <span id="rcptTotalCredit">Rs.0.00</span>
+                    </div>
+                    <div class="sum-row" style="margin-top: 4px; font-size: 0.82rem;">
+                        <span>NET BALANCE:</span>
+                        <span id="rcptNetBalance">Rs.0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="receipt-actions">
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
             </div>
         </div>
     </div>
@@ -581,8 +681,13 @@
         }
 
         let depotPrefix = "76287";
+        let globalNextEmpCode = "EMP012";
         let loadedDispatches = [];
         let loadedStaffList = [];
+        let depotGlobalInfo = {};
+        let currentActiveStaffCode = "";
+        let currentActiveStaffName = "";
+        let currentActiveStaffLedger = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -742,13 +847,16 @@
                 if (!res || !res.success) throw new Error("Failed to load depot data");
 
                 const depot = res.depot || {};
+                depotGlobalInfo = depot;
                 const dispatches = res.dispatches || [];
                 const staff = res.staffMembers || [];
                 loadedDispatches = dispatches;
                 loadedStaffList = staff;
+                globalNextEmpCode = res.nextEmpCode || "EMP012";
 
                 setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
                 setSafeImage('depotLogoBox', res.depotLogo || 'https://ibb.co/MkJwfsf8');
+                setSafeImage('receiptCompanyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
 
                 const dName = getField(depot, 'Depot Name') || depotNameStored;
                 const dCode = getField(depot, 'Depot Code') || depotCode;
@@ -858,7 +966,6 @@
             renderDispatchTable(filtered);
         }
 
-        // Render Assigned Staff and Ledger Details
         function renderStaffTable(list) {
             const tbody = document.getElementById('staffTableBody');
             document.getElementById('staffCountBadge').textContent = `${list.length} members`;
@@ -914,19 +1021,42 @@
         function openAddStaffModal() {
             document.getElementById('requestStaffForm').reset();
             document.getElementById('newStaffPhotoBase64').value = '';
+            // Display & Lock the Next Sequential EMP Code
+            document.getElementById('newStaffCodeLocked').value = globalNextEmpCode;
             document.getElementById('addStaffModal').style.display = 'block';
         }
         function closeAddStaffModal() {
             document.getElementById('addStaffModal').style.display = 'none';
         }
 
-        function convertPhotoToBase64(fileInput) {
+        // Client-side lightweight image compression to prevent URL length limits
+        function compressAndSetPhoto(fileInput) {
             if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('newStaffPhotoBase64').value = e.target.result;
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        // Resize max 120x120 for avatar thumbnail
+                        const maxDim = 120;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > h) {
+                            if (w > maxDim) { h *= maxDim / w; w = maxDim; }
+                        } else {
+                            if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+                        // Highly compressed lightweight string
+                        document.getElementById('newStaffPhotoBase64').value = canvas.toDataURL('image/jpeg', 0.55);
+                    };
+                    img.src = e.target.result;
                 };
-                reader.readAsDataURL(fileInput.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
@@ -935,14 +1065,16 @@
             const name = document.getElementById('newStaffName').value.trim();
             const mob = document.getElementById('newStaffMobile').value.trim();
             const photo = document.getElementById('newStaffPhotoBase64').value;
+            const empCodeLocked = document.getElementById('newStaffCodeLocked').value;
             const btn = document.getElementById('btnReqStaffSubmit');
 
             btn.disabled = true;
-            btn.textContent = 'Generating Code & Sending Request...';
+            btn.textContent = 'Sending Request to Admin...';
 
             try {
                 const payload = {
                     action: 'requestNewStaff',
+                    empCode: empCodeLocked,
                     name: name,
                     mobile: mob,
                     photo: photo,
@@ -1022,6 +1154,10 @@
 
         // 3. Modal: View Specific Staff Ledger
         async function openStaffLedger(sCode, sName) {
+            currentActiveStaffCode = sCode;
+            currentActiveStaffName = sName;
+            currentActiveStaffLedger = [];
+
             document.getElementById('ledgerStaffTitle').textContent = `📄 Ledger: ${sName} (${sCode})`;
             const tbody = document.getElementById('modalLedgerTableBody');
             tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem;">Loading statement...</td></tr>`;
@@ -1030,6 +1166,7 @@
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(sCode)}`);
                 const rows = (res && res.ledger) ? res.ledger : [];
+                currentActiveStaffLedger = rows;
 
                 if (rows.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem; color:var(--text-secondary);">No ledger records found for ${sName}.</td></tr>`;
@@ -1083,6 +1220,79 @@
 
         function closeStaffLedgerModal() {
             document.getElementById('staffLedgerModal').style.display = 'none';
+        }
+
+        // 4. Modal: Print Preview Handler
+        function openPrintPreview() {
+            const depot = depotGlobalInfo || {};
+            const compName = getField(depot, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile Number', 'Mob No');
+            const stateCode = getField(depot, 'State Code');
+            const stateName = getField(depot, 'State Name');
+            const gstin = getField(depot, 'GSTIN', 'GST NO');
+
+            document.getElementById('receiptCompanyName').textContent = compName;
+            document.getElementById('receiptFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
+            document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'}`;
+            document.getElementById('receiptStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
+            document.getElementById('receiptGstin').textContent = `GSTIN: ${gstin || '-'}`;
+
+            document.getElementById('rcptStaffName').textContent = currentActiveStaffName || 'Staff Member';
+            document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode.toUpperCase();
+            document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
+
+            const staffMatch = loadedStaffList.find(s => (getField(s, 'Staff Code') || '').toUpperCase() === currentActiveStaffCode.toUpperCase());
+            const joinDate = staffMatch ? formatCleanDate(getField(staffMatch, 'Staff Joining Date')) : '-';
+            document.getElementById('rcptJoinedDate').textContent = joinDate;
+
+            const tbody = document.getElementById('rcptTableBody');
+            if (!currentActiveStaffLedger || currentActiveStaffLedger.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
+                document.getElementById('rcptTotalDebit').textContent = `Rs.0.00`;
+                document.getElementById('rcptTotalCredit').textContent = `Rs.0.00`;
+                document.getElementById('rcptNetBalance').textContent = `Rs.0.00`;
+                document.getElementById('printModal').style.display = 'block';
+                return;
+            }
+
+            let html = '';
+            let totalDr = 0;
+            let totalCr = 0;
+            let runningBal = 0;
+
+            currentActiveStaffLedger.forEach(r => {
+                const dr = Number(getField(r, 'debit', 'Debit') || 0);
+                const cr = Number(getField(r, 'credit', 'Credit') || 0);
+                const dt = formatCleanDate(getField(r, 'date', 'Transaction Date', 'Date'));
+                const part = getField(r, 'particular', 'Particular');
+
+                totalDr += dr;
+                totalCr += cr;
+                runningBal += (cr - dr);
+
+                html += `<tr>
+                    <td><strong>${dt}</strong><span class="desc-sub">${part}</span></td>
+                    <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                    <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
+            const finalNet = totalCr - totalDr;
+            const balType = finalNet >= 0 ? '(Cr)' : '(Dr)';
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${balType}`;
+
+            document.getElementById('printModal').style.display = 'block';
+        }
+
+        function closePrintPreview() {
+            document.getElementById('printModal').style.display = 'none';
         }
 
         // Submit Dispatch

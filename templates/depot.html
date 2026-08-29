@@ -24,276 +24,100 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
 
         .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(13, 20, 36, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 2px solid var(--accent-blue);
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45);
-            padding: 0.75rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.2rem;
+            position: sticky; top: 0; z-index: 1000; background: rgba(13, 20, 36, 0.95);
+            backdrop-filter: blur(20px); border-bottom: 2px solid var(--accent-blue);
+            padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
         }
 
         .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 220px; }
-        .depot-logo-box {
-            width: 52px; height: 52px; border-radius: 12px; background: #ffffff;
-            border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 14px rgba(56, 189, 248, 0.35); overflow: hidden; padding: 2px; flex-shrink: 0;
-        }
+        .depot-logo-box { width: 52px; height: 52px; border-radius: 12px; background: #fff; border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
-        .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
-        .logo-text-box span { font-size: 0.74rem; color: var(--accent-blue); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
         .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.4rem; flex: 1; text-align: left; }
-        .company-logo-badge {
-            width: 222px; height: 58px; border-radius: 10px; background: #ffffff; border: 2px solid var(--accent-blue);
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
-            overflow: hidden; padding: 4px 10px; flex-shrink: 0;
-        }
+        .company-logo-badge { width: 222px; height: 58px; border-radius: 10px; background: #fff; border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px 10px; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .depot-header-info h1 { font-size: 1.15rem; font-weight: 800; color: #ffffff; letter-spacing: 0.3px; margin-bottom: 0.15rem; }
-        .depot-header-info h1 span { color: var(--accent-amber); }
-        .depot-header-info p { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
-        .depot-badges { display: inline-flex; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap; }
-        .tag-pill {
-            background: #1e293b; border: 1px solid var(--border-color);
-            padding: 0.15rem 0.55rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; color: #cbd5e1;
-        }
-        .tag-pill strong { color: var(--accent-blue); }
-
-        .nav-actions { display: flex; align-items: center; gap: 0.7rem; min-width: 190px; justify-content: flex-end; }
-        .btn-pwd {
-            background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.35);
-            padding: 0.5rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-pwd:hover { background: var(--accent-amber); color: #000; }
-        .btn-logout {
-            background: rgba(251, 113, 133, 0.12); color: var(--accent-red); border: 1px solid rgba(251, 113, 133, 0.35);
-            padding: 0.5rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; text-decoration: none; transition: all 0.2s;
-        }
-        .btn-logout:hover { background: var(--accent-red); color: #fff; }
+        .nav-actions { display: flex; align-items: center; gap: 0.7rem; }
+        .btn-pwd { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.35); padding: 0.5rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; }
+        .btn-logout { background: rgba(251, 113, 133, 0.12); color: var(--accent-red); border: 1px solid rgba(251, 113, 133, 0.35); padding: 0.5rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; text-decoration: none; }
 
         .main-container { width: 100%; max-width: 1120px; margin: 1.6rem auto; padding: 0 1.5rem; }
 
         .depot-nav-tabs { display: flex; gap: 0.8rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem; }
-        .tab-btn {
-            background: #141f35; border: 1px solid var(--border-color);
-            color: var(--text-secondary); padding: 0.65rem 1.3rem; border-radius: 10px; font-weight: 700; font-size: 0.88rem;
-            cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 0.45rem;
-        }
-        .tab-btn:hover { background: #1c2b48; color: #fff; }
-        .tab-btn.active {
-            background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; border-color: var(--accent-blue);
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
-        }
+        .tab-btn { background: #141f35; border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.65rem 1.3rem; border-radius: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; }
+        .tab-btn.active { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border-color: var(--accent-blue); }
 
-        .comfort-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
-            margin-bottom: 1.6rem;
-        }
+        .comfort-panel { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 15px 35px rgba(0,0,0,0.35); margin-bottom: 1.6rem; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.9rem; }
-        .panel-header h3 { font-size: 1.2rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; }
-
-        .live-sync-badge {
-            color: var(--accent-teal); font-size: 0.82rem; font-weight: 700; display: inline-flex; align-items: center;
-            gap: 0.35rem; background: rgba(45, 212, 191, 0.1); padding: 0.3rem 0.8rem; border-radius: 20px; border: 1px solid rgba(45, 212, 191, 0.25);
-        }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
         .form-group-full { grid-column: span 2; }
         .form-group { margin-bottom: 0.2rem; }
         .form-group label { display: block; font-size: 0.84rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.45rem; }
         
-        .form-control {
-            width: 100%; padding: 0.85rem 1.05rem; background: var(--input-bg); border: 1px solid var(--border-color);
-            border-radius: 9px; color: #ffffff; font-size: 0.92rem; outline: none; transition: all 0.2s;
-        }
-        .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
-        .form-control:read-only { background: #0c1424; color: var(--accent-blue); font-weight: 800; border-color: #1a2942; }
-        textarea.form-control { resize: vertical; min-height: 95px; font-family: 'Courier New', monospace; font-size: 0.95rem; line-height: 1.4; }
-        select.form-control { cursor: pointer; }
-        select.form-control option { background: #0f172a; color: #fff; }
+        .form-control { width: 100%; padding: 0.85rem 1.05rem; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 9px; color: #ffffff; font-size: 0.92rem; outline: none; }
+        .form-control:read-only { background: #0c1424; color: var(--accent-blue); font-weight: 800; }
+        textarea.form-control { resize: vertical; min-height: 95px; font-family: 'Courier New', monospace; }
 
-        .btn-submit-dispatch {
-            background: linear-gradient(135deg, #059669, #10b981); color: #ffffff; border: none; padding: 0.9rem 1.8rem;
-            border-radius: 9px; font-weight: 700; font-size: 0.96rem; cursor: pointer; display: flex; align-items: center;
-            gap: 0.5rem; transition: all 0.2s; margin-top: 1.2rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        .btn-submit-dispatch:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45); }
+        .btn-submit-dispatch { background: linear-gradient(135deg, #059669, #10b981); color: #fff; border: none; padding: 0.9rem 1.8rem; border-radius: 9px; font-weight: 700; cursor: pointer; margin-top: 1.2rem; }
 
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
-        .filter-select-box {
-            padding: 0.52rem 0.85rem; background: var(--input-bg); border: 1px solid var(--border-color);
-            border-radius: 8px; color: var(--accent-blue); font-size: 0.84rem; font-weight: 700; outline: none; cursor: pointer;
-        }
-        .filter-select-box:focus { border-color: var(--accent-blue); }
-        .filter-select-box option { background: #0f172a; color: #fff; }
-
+        .filter-select-box { padding: 0.52rem 0.85rem; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: var(--accent-blue); font-size: 0.84rem; font-weight: 700; }
         .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
-        .search-input {
-            width: 100%; padding: 0.55rem 1rem 0.55rem 2.2rem; background: var(--input-bg); border: 1px solid var(--border-color);
-            border-radius: 8px; color: #ffffff; font-size: 0.86rem; outline: none; transition: all 0.2s;
-        }
-        .search-input:focus { border-color: var(--accent-blue); }
-        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.82rem; pointer-events: none; }
+        .search-input { width: 100%; padding: 0.55rem 1rem 0.55rem 2.2rem; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; font-size: 0.86rem; }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.82rem; }
 
-        .btn-tool {
-            padding: 0.55rem 0.95rem; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 0.35rem; border: 1px solid var(--border-color); transition: all 0.2s; white-space: nowrap;
-        }
-        .btn-excel { background: rgba(52, 211, 153, 0.12); color: var(--accent-green); border-color: rgba(52, 211, 153, 0.35); }
-        .btn-excel:hover { background: var(--accent-green); color: #000; }
-        .btn-bulk-del { background: rgba(251, 113, 133, 0.12); color: var(--accent-red); border-color: rgba(251, 113, 133, 0.35); }
-        .btn-bulk-del:hover { background: var(--accent-red); color: #fff; }
-        .btn-add-staff { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border-color: rgba(56, 189, 248, 0.35); }
-        .btn-add-staff:hover { background: var(--accent-blue); color: #000; }
+        .btn-tool { padding: 0.55rem 0.95rem; border-radius: 8px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--border-color); }
+        .btn-action-ledger { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn-action-trx { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; cursor: pointer; }
 
-        .btn-action-ledger {
-            background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.3);
-            padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.3rem; transition: all 0.2s;
-        }
-        .btn-action-ledger:hover { background: var(--accent-blue); color: #000; }
-        .btn-action-trx {
-            background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3);
-            padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-action-trx:hover { background: var(--accent-amber); color: #000; }
-
-        .staff-avatar-cell {
-            width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
-            border: 2px solid var(--accent-blue); background: #1e293b; display: inline-flex; align-items: center;
-            justify-content: center; font-weight: 800; font-size: 0.95rem; color: var(--accent-blue); flex-shrink: 0;
-            box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
-        }
-
-        .table-responsive {
-            width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto;
-            border: 1px solid var(--border-color); border-radius: 10px; background: #0c1424;
-        }
+        .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: #0c1424; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.custom-table th {
-            position: sticky; top: 0; z-index: 20; padding: 0.85rem 1rem; color: #ffffff;
-            font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
-            border-bottom: 2px solid var(--accent-blue); background: #111a2e;
-        }
-        table.custom-table td { padding: 0.85rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #1a273e; white-space: nowrap; vertical-align: middle; }
-        table.custom-table tr:hover td { background: var(--bg-card-hover); }
+        table.custom-table th { position: sticky; top: 0; z-index: 20; padding: 0.85rem 1rem; color: #fff; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; background: #111a2e; border-bottom: 2px solid var(--accent-blue); }
+        table.custom-table td { padding: 0.85rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #1a273e; white-space: nowrap; }
 
-        tr.duplicate-row td {
-            background: rgba(251, 191, 36, 0.12) !important;
-            border-top: 1px dashed rgba(251, 191, 36, 0.4);
-            border-bottom: 1px dashed rgba(251, 191, 36, 0.4);
-        }
+        .staff-avatar-cell { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); background: #1e293b; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--accent-blue); }
 
-        .badge-dup {
-            background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.4);
-            padding: 0.15rem 0.45rem; border-radius: 4px; font-size: 0.7rem; font-weight: 800; margin-left: 0.4rem;
-        }
-
-        .btn-row-del {
-            background: rgba(251, 113, 133, 0.12); color: var(--accent-red); border: 1px solid rgba(251, 113, 133, 0.3);
-            padding: 0.32rem 0.68rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
-        }
-        .btn-row-del:hover { background: var(--accent-red); color: #fff; }
-
-        .load-more-bar {
-            text-align: center;
-            padding-top: 0.9rem;
-        }
-        .btn-load-older {
-            background: rgba(56, 189, 248, 0.12);
-            color: var(--accent-blue);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            padding: 0.6rem 1.4rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.88rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .btn-load-older:hover {
-            background: var(--accent-blue);
-            color: #000;
-        }
-
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast-msg {
-            pointer-events: auto; min-width: 280px; max-width: 400px; padding: 0.85rem 1.25rem; border-radius: 12px;
-            font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 0.7rem; backdrop-filter: blur(20px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); transform: translateX(120%); opacity: 0;
-            transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-        .toast-msg.show { transform: translateX(0); opacity: 1; }
-        .toast-success { background: rgba(5, 150, 105, 0.95); color: #ffffff; border: 1px solid var(--accent-green); }
-        .toast-error { background: rgba(225, 29, 72, 0.95); color: #ffffff; border: 1px solid var(--accent-red); }
-        .toast-info { background: rgba(2, 132, 199, 0.95); color: #ffffff; border: 1px solid var(--accent-blue); }
-
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem;
-        }
-        .modal-box {
-            background: #111a2e; margin: 3rem auto; max-width: 500px; border-radius: 16px;
-            border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-        }
-        .modal-box-wide { max-width: 780px; }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
-        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
+        /* Compact Print Modal & Receipt Styles */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
+        .modal-box { background: #111a2e; margin: 3rem auto; max-width: 500px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; }
+        .modal-box-compact { max-width: 400px !important; }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.2rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
+        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.92rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
-        .modal-body { padding: 1.5rem; }
+        .modal-body { padding: 1.2rem; }
 
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-company-logo { width: 180px; height: 50px; margin: 0 auto 0.4rem auto; display: flex; align-items: center; justify-content: center; }
-        .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        .receipt-header h2 { font-size: 0.92rem; font-weight: 800; margin-bottom: 0.2rem; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
-        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.82rem; }
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', monospace; font-size: 0.76rem; width: 100%; max-width: 380px; margin: 0 auto; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
+        .receipt-header h2 { font-size: 0.9rem; font-weight: 800; color: #000; margin-bottom: 0.15rem; }
+        .receipt-header p { font-size: 0.7rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.8rem; }
 
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
-        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.75rem; text-align: left; }
-        .receipt-table td { padding: 4px 2px; font-size: 0.75rem; border: none; color: #000; vertical-align: top; text-align: left; }
-        .receipt-table .desc-sub { font-size: 0.68rem; color: #444; display: block; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.72rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.4rem; }
+        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 3px 2px; font-weight: bold; color: #000; font-size: 0.72rem; text-align: left; }
+        .receipt-table td { padding: 3px 2px; font-size: 0.72rem; color: #000; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
-        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.35rem 0; font-size: 0.74rem; line-height: 1.4; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
-        .receipt-actions { padding: 0.9rem 1.2rem; background: #0c1322; }
-        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .print-green-btn:hover { background: #047857; }
+        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.65rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
 
         @media print {
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 400px; margin: 0 auto; padding: 5px; background: #fff; color: #000; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 360px; margin: 0 auto; background: #fff; color: #000; }
             .modal-top-bar, .receipt-actions { display: none !important; }
         }
+
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
+        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #10b981; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
@@ -302,29 +126,16 @@
 
     <div class="navbar">
         <div class="brand-section">
-            <div class="depot-logo-box" id="depotLogoBox">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#0284c7"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.96.76 1.58V19z"/></svg>
-            </div>
-            <div class="logo-text-box">
-                <h3>RCM DEPOT</h3>
-                <span>Manager Portal</span>
-            </div>
+            <div class="depot-logo-box" id="depotLogoBox"><svg width="28" height="28" viewBox="0 0 24 24" fill="#0284c7"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+            <div><h3 style="color:#fff;font-size:1rem;font-weight:800;">RCM DEPOT</h3><span style="font-size:0.74rem;color:var(--accent-blue);font-weight:700;">Manager Portal</span></div>
         </div>
-
         <div class="depot-center-section">
-            <div class="company-logo-badge" id="companyLogoBox">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
-            </div>
-            <div class="depot-header-info">
-                <h1><span id="headerDepotTitle">Depot Management</span></h1>
-                <p id="topDepotAddress">Loading depot details...</p>
-                <div class="depot-badges">
-                    <span class="tag-pill"><strong>FSSAI:</strong> <span id="topDepotFssai">-</span></span>
-                    <span class="tag-pill"><strong>GSTIN:</strong> <span id="topDepotGstin">-</span></span>
-                </div>
+            <div class="company-logo-badge" id="companyLogoBox"></div>
+            <div>
+                <h1 style="font-size:1.15rem;font-weight:800;color:#fff;"><span id="headerDepotTitle">Depot Management</span></h1>
+                <p id="topDepotAddress" style="font-size:0.8rem;color:var(--text-secondary);">Loading address...</p>
             </div>
         </div>
-
         <div class="nav-actions">
             <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
@@ -332,362 +143,109 @@
     </div>
 
     <div class="main-container">
-
         <div class="depot-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
             <button class="tab-btn" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
         </div>
 
-        <!-- 1. Eye-Comfortable Dispatch Entry Form -->
+        <!-- 1. Dispatch Entry -->
         <div id="dispatchTab" class="comfort-panel">
-            <div class="panel-header">
-                <h3>📦 Record Invoice Dispatch Entry</h3>
-                <span class="live-sync-badge">⚡ Live Sync</span>
-            </div>
-
+            <div class="panel-header"><h3>📦 Record Invoice Dispatch Entry</h3></div>
             <form id="invoiceDispatchForm">
-                <input type="hidden" id="hiddenDepotCode">
-                <input type="hidden" id="hiddenDepotName">
-
+                <input type="hidden" id="hiddenDepotCode"><input type="hidden" id="hiddenDepotName">
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>Invoice Dispatch Date</label>
-                        <input type="text" id="dispDate" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Entry Time (Live)</label>
-                        <input type="text" id="dispTime" class="form-control" readonly style="color:var(--accent-amber);">
-                    </div>
-                    <div class="form-group">
-                        <label>Depot Invoice Series (Prefix)</label>
-                        <input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:var(--accent-amber);">
-                    </div>
-                    <div class="form-group">
-                        <label>Vehicle Type</label>
-                        <select id="dispVehicleType" class="form-control" required>
-                            <option value="Auto" selected>Auto</option>
-                            <option value="Pic-Up">Pic-Up</option>
-                            <option value="Toto">Toto</option>
-                            <option value="Bike">Bike</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Dispatch Through</label>
-                        <input type="text" id="dispThrough" class="form-control" list="throughSuggestions" required placeholder="Search or type name (e.g. Singh PUC Auto, Self...)">
-                        <datalist id="throughSuggestions"></datalist>
-                    </div>
-                    <div class="form-group">
-                        <label>Vehicle Number (Optional / If Any)</label>
-                        <input type="text" id="dispVehicleNo" class="form-control" list="vehicleSuggestions" placeholder="e.g. BR-11-AB-1234">
-                        <datalist id="vehicleSuggestions"></datalist>
-                    </div>
-                    <div class="form-group-full">
-                        <label>Due- Excess Matter If Any</label>
-                        <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
-                    </div>
-                    <div class="form-group-full">
-                        <label>Invoice No. Last 5 Digits <span style="color:var(--accent-blue); font-weight:normal;">(Enter 1 to 50 numbers separated by comma <code>,</code> or New Line <code>Enter</code>. Exactly 5 digits each)</span></label>
-                        <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667, 25678..."></textarea>
-                    </div>
-                    <div class="form-group-full">
-                        <label>Remark If Any</label>
-                        <input type="text" id="dispRemarks" class="form-control" value="-">
-                    </div>
+                    <div class="form-group"><label>Date</label><input type="text" id="dispDate" class="form-control" readonly></div>
+                    <div class="form-group"><label>Live Time</label><input type="text" id="dispTime" class="form-control" readonly style="color:var(--accent-amber);"></div>
+                    <div class="form-group"><label>Depot Prefix</label><input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:var(--accent-amber);"></div>
+                    <div class="form-group"><label>Vehicle Type</label><select id="dispVehicleType" class="form-control"><option value="Auto">Auto</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option></select></div>
+                    <div class="form-group"><label>Dispatch Through</label><input type="text" id="dispThrough" class="form-control" required placeholder="Type name"></div>
+                    <div class="form-group"><label>Vehicle Number</label><input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234"></div>
+                    <div class="form-group-full"><label>Due-Excess</label><input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required></div>
+                    <div class="form-group-full"><label>Invoice Last 5 Digits</label><textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667..."></textarea></div>
+                    <div class="form-group-full"><label>Remark</label><input type="text" id="dispRemarks" class="form-control" value="-"></div>
                 </div>
-
-                <button type="submit" id="btnSubmitDispatch" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
+                <button type="submit" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
             </form>
         </div>
 
-        <!-- 2. Records History Panel with Global Search & Load Older Option -->
+        <!-- 2. Records History -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
-            <div class="panel-header">
-                <h3>📊 Dispatched Trucks & Invoices History</h3>
-                <span id="dispCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 records</span>
-            </div>
-
+            <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-secondary);">0 records</span></div>
             <div class="table-toolbar">
                 <div class="toolbar-left">
-                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()">
-                        <option value="TODAY" selected>📅 Today's Entries</option>
-                        <option value="ALL">🌐 All Records</option>
-                    </select>
-
-                    <div class="search-box-wrap">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="historySearchInput" class="search-input" placeholder="Search across all records..." oninput="filterHistoryTable()">
-                    </div>
-
-                    <button class="btn-tool btn-bulk-del" onclick="deleteSelectedRows()">🗑️ Delete Selected</button>
-                    <span id="selectedCountText" style="font-size:0.82rem; color:var(--text-secondary);">0 selected</span>
-                </div>
-                <div>
-                    <button class="btn-tool btn-excel" onclick="downloadExcel()">📥 Download Excel</button>
+                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()"><option value="TODAY" selected>📅 Today</option><option value="ALL">🌐 All</option></select>
+                    <div class="search-box-wrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search..." oninput="filterHistoryTable()"></div>
                 </div>
             </div>
-
             <div class="table-responsive">
                 <table class="custom-table" id="historyTable">
-                    <thead>
-                        <tr>
-                            <th style="width: 40px;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
-                            <th>Dispatch Date</th>
-                            <th>Invoice Number</th>
-                            <th>Vehicle Type</th>
-                            <th>Dispatch Through</th>
-                            <th>Due-Excess</th>
-                            <th>Vehicle No</th>
-                            <th>Entry Time</th>
-                            <th>Remark</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dispatchTableBody">
-                        <tr><td colspan="10" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading records...</td></tr>
-                    </tbody>
+                    <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
+                    <tbody id="dispatchTableBody"></tbody>
                 </table>
-            </div>
-
-            <div class="load-more-bar" id="loadOlderBar">
-                <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load All Older Records</button>
             </div>
         </div>
 
-        <!-- 3. Assigned Staff and Ledger Details Panel -->
+        <!-- 3. Staff & Ledger -->
         <div id="staffTab" class="comfort-panel" style="display:none;">
-            <div class="panel-header">
-                <h3>👥 Assigned Staff and Ledger Details</h3>
-                <div style="display: flex; gap: 0.8rem; align-items: center;">
-                    <span id="staffCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 members</span>
-                    <button class="btn-tool btn-add-staff" onclick="openAddStaffModal()">➕ Request New Staff</button>
-                </div>
-            </div>
+            <div class="panel-header"><h3>👥 Assigned Staff and Ledger Details</h3><button class="btn-tool" onclick="openAddStaffModal()">➕ Request Staff</button></div>
             <div class="table-responsive">
                 <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th style="width:60px; text-align:center;">Photo</th>
-                            <th>Staff Code</th>
-                            <th>Staff Name</th>
-                            <th>Mobile</th>
-                            <th>Joining Date</th>
-                            <th>Login ID</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="staffTableBody">
-                        <tr><td colspan="8" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading staff...</td></tr>
-                    </tbody>
+                    <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="staffTableBody"></tbody>
                 </table>
             </div>
         </div>
-
     </div>
 
-    <!-- Modal 1: Request New Staff -->
-    <div id="addStaffModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>➕ Request New Staff Addition</span>
-                <button class="modal-close-btn" onclick="closeAddStaffModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="requestStaffForm">
-                    <div class="form-group">
-                        <label>Auto-Generated Staff Code (Locked)</label>
-                        <input type="text" id="newStaffCodeLocked" class="form-control" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Staff Full Name</label>
-                        <input type="text" id="newStaffName" class="form-control" required placeholder="Enter Full Name">
-                    </div>
-                    <div class="form-group">
-                        <label>Mobile Number</label>
-                        <input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit Mobile Number">
-                    </div>
-                    <div class="form-group">
-                        <label>Staff Photo (Optional)</label>
-                        <input type="file" id="newStaffPhotoFile" class="form-control" accept="image/*" onchange="compressAndSetPhoto(this)">
-                        <input type="hidden" id="newStaffPhotoBase64">
-                    </div>
-                    <div class="form-group" style="background: rgba(10,15,29,0.6); padding: 0.8rem; border-radius: 8px; border: 1px dashed var(--border-color);">
-                        <p style="font-size: 0.8rem; color: var(--accent-blue); line-height: 1.4;">
-                            ℹ️ <strong>System Automation:</strong><br>
-                            • EMP Code is unique across all depots.<br>
-                            • Login ID will be set to this EMP Code.<br>
-                            • Default Password will be <strong>1010</strong>.
-                        </p>
-                    </div>
-                    <button type="submit" id="btnReqStaffSubmit" class="btn-submit-dispatch" style="width: 100%; justify-content: center; margin-top: 1rem;">Send Staff Request to Admin</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal 2: Request Staff Transaction -->
-    <div id="addTrxModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>💳 Request Staff Debit & Credit Entry</span>
-                <button class="modal-close-btn" onclick="closeAddTrxModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="requestTrxForm">
-                    <input type="hidden" id="trxStaffCode">
-                    <input type="hidden" id="trxStaffName">
-                    <div class="form-group">
-                        <label>Selected Staff</label>
-                        <input type="text" id="trxStaffDisplay" class="form-control" readonly style="color: var(--accent-blue);">
-                    </div>
-                    <div class="form-group">
-                        <label>Transaction Date</label>
-                        <input type="date" id="trxDate" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Particular / Purpose</label>
-                        <input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Salary, Truck Unloading, Advance, Food Exp">
-                    </div>
-                    <div class="form-group">
-                        <label>Payment Mode</label>
-                        <select id="trxMode" class="form-control">
-                            <option value="Cash">Cash</option>
-                            <option value="UPI">UPI</option>
-                            <option value="Transfer">Bank Transfer</option>
-                            <option value="-">-</option>
-                        </select>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label style="color:var(--accent-red);">Debit Amount (₹) [Advance/Payment]</label>
-                            <input type="number" id="trxDebitAmount" class="form-control" value="0" placeholder="0">
-                        </div>
-                        <div class="form-group">
-                            <label style="color:var(--accent-green);">Credit Amount (₹) [Work/Salary]</label>
-                            <input type="number" id="trxCreditAmount" class="form-control" value="0" placeholder="0">
-                        </div>
-                    </div>
-                    <button type="submit" id="btnReqTrxSubmit" class="btn-submit-dispatch" style="width: 100%; justify-content: center; margin-top: 1rem;">Send Transaction Request to Admin</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal 3: View Staff Ledger Modal -->
+    <!-- Statement View Modal -->
     <div id="staffLedgerModal" class="modal">
-        <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar">
-                <span id="ledgerStaffTitle">📄 Staff Account Ledger</span>
-                <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
-            </div>
+        <div class="modal-box" style="max-width: 720px;">
+            <div class="modal-top-bar"><span id="ledgerStaffTitle">📄 Staff Ledger</span><button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button></div>
             <div class="modal-body">
-                <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 1rem; background: var(--input-bg); padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap:wrap; gap:0.6rem;">
-                    <div><strong>Total Credit:</strong> <span id="modTotalCredit" style="color:var(--accent-green); font-weight:800;">₹0</span></div>
-                    <div><strong>Total Debit:</strong> <span id="modTotalDebit" style="color:var(--accent-red); font-weight:800;">₹0</span></div>
-                    <div><strong>Net Balance:</strong> <span id="modNetBalance" style="color:var(--accent-blue); font-weight:800;">₹0 (Cr)</span></div>
-                    <button class="btn-tool" style="background: var(--accent-amber); color:#000; font-weight:800;" onclick="openPrintPreview()">🖨️ View Statement & Print</button>
+                <div style="display:flex; justify-content:space-between; margin-bottom:1rem; background:var(--input-bg); padding:0.8rem 1rem; border-radius:10px;">
+                    <div>Credit: <span id="modTotalCredit" style="color:var(--accent-green);font-weight:bold;">₹0</span></div>
+                    <div>Debit: <span id="modTotalDebit" style="color:var(--accent-red);font-weight:bold;">₹0</span></div>
+                    <div>Net: <span id="modNetBalance" style="color:var(--accent-blue);font-weight:bold;">₹0</span></div>
+                    <button class="btn-tool" style="background:var(--accent-amber);color:#000;font-weight:bold;" onclick="openPrintPreview()">🖨️ View Statement & Print</button>
                 </div>
-                <div class="table-responsive" style="max-height: 380px;">
+                <div class="table-responsive" style="max-height: 360px;">
                     <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Particular</th>
-                                <th>Mode</th>
-                                <th>Debit (₹)</th>
-                                <th>Credit (₹)</th>
-                                <th>Balance (₹)</th>
-                                <th>Approval</th>
-                            </tr>
-                        </thead>
-                        <tbody id="modalLedgerTableBody">
-                            <tr><td colspan="7" class="text-center" style="padding: 2rem;">Loading statement...</td></tr>
-                        </tbody>
+                        <thead><tr><th>Date</th><th>Particular</th><th>Mode</th><th>Debit (₹)</th><th>Credit (₹)</th><th>Balance (₹)</th><th>Approval</th></tr></thead>
+                        <tbody id="modalLedgerTableBody"></tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal 4: Statement Print Preview Modal -->
+    <!-- Compact Print Modal (Width Reduced to 380px) -->
     <div id="printModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>📄 Full Account Statement</span>
-                <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
-            </div>
-            
+        <div class="modal-box modal-box-compact">
+            <div class="modal-top-bar"><span>📄 Printable Statement</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
             <div id="printableReceipt" class="receipt-container">
                 <div class="receipt-header">
-                    <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
-                    <h2 id="receiptCompanyName">RCM Consumer Products Private Limited</h2>
+                    <h2>RCM Consumer Products Private Limited</h2>
                     <p id="receiptFullAddress">Depot Address</p>
-                    <p id="receiptContact">Mob: -</p>
-                    <p><span id="receiptStateCode">Code: -</span> | <span id="receiptGstin">GSTIN: -</span></p>
+                    <p id="receiptContact">Mob: - | GSTIN: -</p>
                     <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
                 </div>
-
                 <div class="receipt-meta">
-                    <div>
-                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
-                        <p><strong>Joined:</strong> <span id="rcptJoinedDate">-</span></p>
-                    </div>
-                    <div class="text-right">
-                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
-                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
-                    </div>
+                    <div><p><strong>Name:</strong> <span id="rcptStaffName">-</span></p><p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p></div>
+                    <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p></div>
                 </div>
-
                 <table class="receipt-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 48%;">Date/Desc</th>
-                            <th class="text-right" style="width: 17%;">Dr</th>
-                            <th class="text-right" style="width: 17%;">Cr</th>
-                            <th class="text-right" style="width: 18%;">Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rcptTableBody">
-                        <tr><td colspan="4" class="text-center">Loading transactions...</td></tr>
-                    </tbody>
+                    <thead><tr><th>Date/Desc</th><th class="text-right">Dr</th><th class="text-right">Cr</th><th class="text-right">Bal</th></tr></thead>
+                    <tbody id="rcptTableBody"></tbody>
                 </table>
-
                 <div class="receipt-summary">
-                    <div class="sum-row">
-                        <span>TOTAL DEBIT:</span>
-                        <span id="rcptTotalDebit">Rs.0.00</span>
-                    </div>
-                    <div class="sum-row">
-                        <span>TOTAL CREDIT:</span>
-                        <span id="rcptTotalCredit">Rs.0.00</span>
-                    </div>
-                    <div class="sum-row" style="margin-top: 4px; font-size: 0.82rem;">
-                        <span>NET BALANCE:</span>
-                        <span id="rcptNetBalance">Rs.0.00</span>
-                    </div>
+                    <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+                    <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+                    <div class="sum-row" style="margin-top:3px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
                 </div>
             </div>
-
-            <div class="receipt-actions">
-                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-box" style="max-width: 360px;">
-            <div class="modal-top-bar">
-                <span>⚠️ Confirm Action</span>
-                <button class="modal-close-btn" onclick="closeConfirmModal()">&times;</button>
-            </div>
-            <div class="modal-body" style="text-align: center;">
-                <p id="confirmModalMsg" style="font-size: 0.92rem; color: #f8fafc; margin-bottom: 1.4rem; line-height: 1.5;"></p>
-                <div style="display: flex; gap: 0.8rem;">
-                    <button id="confirmCancelBtn" class="btn-tool" style="flex: 1; justify-content: center; background: #1e293b; color:#fff;" onclick="closeConfirmModal()">Cancel</button>
-                    <button id="confirmActionBtn" class="btn-tool btn-bulk-del" style="flex: 1; justify-content: center;">Delete</button>
-                </div>
+            <div style="padding:0.8rem; background:#0c1322;" class="receipt-actions">
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Statement</button>
             </div>
         </div>
     </div>
@@ -695,25 +253,11 @@
     <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>🔑 Change Depot Password</span>
-                <button class="modal-close-btn" onclick="closePasswordModal()">&times;</button>
-            </div>
+            <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="depotPwdForm">
-                    <div class="form-group">
-                        <label>Current Password</label>
-                        <input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password">
-                    </div>
-                    <div class="form-group">
-                        <label>New Password</label>
-                        <input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm New Password</label>
-                        <input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password">
-                    </div>
-                    <button type="submit" id="btnDepotPwdSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1rem;">Update Password</button>
+                    <div class="form-group"><label>New Password</label><input type="password" id="newDepotPass" class="form-control" required></div>
+                    <button type="submit" class="btn-submit-dispatch" style="width:100%;">Update Password</button>
                 </form>
             </div>
         </div>
@@ -724,13 +268,9 @@
 
         let depotCode = (sessionStorage.getItem("user") || "").trim();
         let depotNameStored = sessionStorage.getItem("depot") || sessionStorage.getItem("name") || "Depot";
-
-        if (!depotCode) {
-            window.location.href = "/";
-        }
+        if (!depotCode) window.location.href = "/";
 
         let depotPrefix = "76287";
-        let globalNextEmpCode = "EMP012";
         let loadedDispatches = [];
         let loadedStaffList = [];
         let depotGlobalInfo = {};
@@ -740,822 +280,252 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        function showToast(msg, type = "success") {
+        function showToast(msg) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `toast-msg toast-${type}`;
-            const icon = type === 'success' ? '✅' : (type === 'error' ? '⚠️' : 'ℹ️');
-            toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
+            toast.className = 'toast-msg';
+            toast.textContent = msg;
             container.appendChild(toast);
-            setTimeout(() => { toast.classList.add('show'); }, 50);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
-            }, 3000);
+            setTimeout(() => { toast.remove(); }, 2500);
         }
 
         function formatCleanDate(raw) {
             if (!raw) return '-';
             let str = String(raw).trim();
             if (str === '-' || str === '') return '-';
-
-            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) {
-                return str.replace(/\//g, '-');
-            }
-
+            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) return str.replace(/\//g, '-');
             let d = new Date(raw);
             if (isNaN(d.getTime())) {
                 let parts = str.split('T')[0].split(' ')[0].split('-');
                 if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
             }
-
-            if (!isNaN(d.getTime())) {
-                const day = String(d.getDate()).padStart(2, '0');
-                const m = monthNames[d.getMonth()];
-                const y = String(d.getFullYear()).slice(2);
-                return `${day}-${m}-${y}`;
-            }
-
+            if (!isNaN(d.getTime())) return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
             return str.split(' 05:')[0].split('T')[0];
         }
 
         function getTodayFormatted() {
             const now = new Date();
-            const d = String(now.getDate()).padStart(2, '0');
-            const m = monthNames[now.getMonth()];
-            const y = String(now.getFullYear()).slice(2);
-            return `${d}-${m}-${y}`;
+            return `${String(now.getDate()).padStart(2, '0')}-${monthNames[now.getMonth()]}-${String(now.getFullYear()).slice(2)}`;
         }
 
         function setFormLiveTime() {
             const now = new Date();
             document.getElementById('dispDate').value = getTodayFormatted();
-
-            const hh = String(now.getHours()).padStart(2, '0');
-            const mm = String(now.getMinutes()).padStart(2, '0');
-            const ss = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('dispTime').value = `${hh}:${mm}:${ss}`;
+            document.getElementById('dispTime').value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
         }
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
                 const cbName = 'depot_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                
-                const timer = setTimeout(() => {
-                    cleanup();
-                    reject(new Error("Timeout loading depot data"));
-                }, 8000);
-
-                function cleanup() {
-                    clearTimeout(timer);
-                    if (window[cbName]) delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                }
-
-                window[cbName] = function(data) {
-                    cleanup();
-                    resolve(data);
-                };
-
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 8000);
+                function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
+                window[cbName] = function(data) { cleanup(); resolve(data); };
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
-                script.onerror = () => {
-                    cleanup();
-                    reject(new Error("Network Error"));
-                };
                 document.body.appendChild(script);
             });
-        }
-
-        function setSafeImage(containerId, rawUrl) {
-            const container = document.getElementById(containerId);
-            if (!container || !rawUrl) return;
-
-            let u = rawUrl.trim();
-            if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
-                u = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
-            }
-
-            const img = new Image();
-            img.onload = () => {
-                container.innerHTML = '';
-                container.appendChild(img);
-            };
-            img.onerror = () => {
-                container.innerHTML = `<img src="https://images.weserv.nl/?url=${encodeURIComponent(u)}" alt="Logo">`;
-            };
-            img.src = u;
         }
 
         function getField(obj, ...keys) {
             if (!obj) return '';
             for (let k of keys) {
-                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
-                    return String(obj[k]).trim();
-                }
+                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return String(obj[k]).trim();
             }
             const objKeys = Object.keys(obj);
             for (let k of keys) {
-                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '').includes(cleanK) || cleanK.includes(ok.toLowerCase().replace(/[^a-z0-9]/g, '')));
                 if (found && obj[found]) return String(obj[found]).trim();
             }
             return '';
         }
 
-        function updateDatalists(dispatches) {
-            const throughSet = new Set();
-            const vehicleSet = new Set();
-
-            dispatches.forEach(r => {
-                const throughVal = getField(r, 'Dispatch Throuch', 'Dispatch Through');
-                const vehicleVal = getField(r, 'Vehicle No', 'Vehicle Number');
-                if (throughVal && throughVal !== '-') throughSet.add(throughVal);
-                if (vehicleVal && vehicleVal !== '-') vehicleSet.add(vehicleVal);
-            });
-
-            const throughDatalist = document.getElementById('throughSuggestions');
-            throughDatalist.innerHTML = '';
-            Array.from(throughSet).sort().forEach(val => {
-                const opt = document.createElement('option');
-                opt.value = val;
-                throughDatalist.appendChild(opt);
-            });
-
-            const vehicleDatalist = document.getElementById('vehicleSuggestions');
-            vehicleDatalist.innerHTML = '';
-            Array.from(vehicleSet).sort().forEach(val => {
-                const opt = document.createElement('option');
-                opt.value = val;
-                vehicleDatalist.appendChild(opt);
-            });
-        }
-
-        function populateHistoryMonthDropdown(dispatches) {
-            const selectBox = document.getElementById('historyPeriodFilter');
-            const monthSet = new Set();
-
-            dispatches.forEach(r => {
-                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'));
-                const parts = cleanDate.split('-');
-                if (parts.length === 3) {
-                    const mKey = `${parts[1]}-${parts[2]}`;
-                    monthSet.add(mKey);
-                }
-            });
-
-            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
-            Array.from(monthSet).forEach(mKey => {
-                optionsHtml += `<option value="${mKey}">🗓️ ${mKey} Month</option>`;
-            });
-            selectBox.innerHTML = optionsHtml;
-        }
-
         async function loadDepotData() {
             setFormLiveTime();
-
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
-                if (!res || !res.success) throw new Error("Failed to load depot data");
+                if (!res || !res.success) throw new Error("Failed to load");
 
                 const depot = res.depot || {};
                 depotGlobalInfo = depot;
-                const dispatches = res.dispatches || [];
-                const staff = res.staffMembers || [];
-                loadedDispatches = dispatches;
-                loadedStaffList = staff;
-                globalNextEmpCode = res.nextEmpCode || "EMP012";
-
-                setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
-                setSafeImage('depotLogoBox', res.depotLogo || 'https://ibb.co/MkJwfsf8');
-                setSafeImage('receiptCompanyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
+                loadedDispatches = res.dispatches || [];
+                loadedStaffList = res.staffMembers || [];
 
                 const dName = getField(depot, 'Depot Name') || depotNameStored;
-                const dCode = getField(depot, 'Depot Code') || depotCode;
                 const addr = getField(depot, 'Depot Address');
                 const dist = getField(depot, 'Dristric', 'District');
                 const state = getField(depot, 'State Name');
                 const pin = getField(depot, 'Pin Code', 'Pincode');
-                const fssai = getField(depot, 'FSSAI');
-                const gstin = getField(depot, 'GSTIN');
-
                 depotPrefix = res.invSeries || getField(depot, 'Invoice No Series') || '76287';
 
                 document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
-                if (addr) document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${state} - ${pin}`;
-                document.getElementById('topDepotFssai').textContent = fssai || '-';
-                document.getElementById('topDepotGstin').textContent = gstin || '-';
-
-                document.getElementById('hiddenDepotCode').value = dCode;
+                document.getElementById('topDepotAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+                document.getElementById('hiddenDepotCode').value = getField(depot, 'Depot Code') || depotCode;
                 document.getElementById('hiddenDepotName').value = dName;
                 document.getElementById('dispPrefixSeries').value = depotPrefix;
 
-                updateDatalists(dispatches);
-                populateHistoryMonthDropdown(dispatches);
-                
-                filterHistoryTable();
-                renderStaffTable(staff);
-
-            } catch (err) {
-                console.error(err);
-            }
+                renderDispatchTable(loadedDispatches);
+                renderStaffTable(loadedStaffList);
+            } catch (err) { console.error(err); }
         }
 
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches found for this filter.</td></tr>`;
-                return;
-            }
-
-            const invCounts = {};
-            list.forEach(r => {
-                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
-                if (inv) invCounts[inv] = (invCounts[inv] || 0) + 1;
-            });
-
-            const dupList = [];
-            const normalList = [];
-
-            list.slice().reverse().forEach(r => {
-                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
-                if (invCounts[inv] > 1) dupList.push(r);
-                else normalList.push(r);
-            });
-
-            const finalSortedList = dupList.concat(normalList);
-
             let html = '';
-            finalSortedList.forEach(r => {
-                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
-                const rowId = getField(r, 'ID') || inv;
-                const isDup = invCounts[inv] > 1;
-                const rawDate = getField(r, 'Invoice Dispatch Date', 'Date');
-                const cleanDate = formatCleanDate(rawDate);
-
-                html += `<tr class="${isDup ? 'duplicate-row' : ''}">
-                    <td><input type="checkbox" class="row-checkbox" value="${rowId}" onchange="updateSelectedCount()"></td>
-                    <td><strong>${cleanDate}</strong></td>
-                    <td style="color:var(--accent-green); font-weight:800; font-size:0.95rem;">
-                        ${inv} ${isDup ? '<span class="badge-dup">⚠️ DUPLICATE</span>' : ''}
-                    </td>
-                    <td style="color:var(--accent-amber); font-weight:700;">${getField(r, 'Vehicle Type')}</td>
+            list.slice().reverse().forEach(r => {
+                html += `<tr>
+                    <td>${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}</td>
+                    <td style="color:var(--accent-green);font-weight:bold;">${getField(r, 'Inoice No. Last Digit', 'Invoice No')}</td>
+                    <td>${getField(r, 'Vehicle Type')}</td>
                     <td>${getField(r, 'Dispatch Throuch', 'Dispatch Through')}</td>
-                    <td>${getField(r, 'Due- Excess Matter If Any', 'Due-Excess')}</td>
-                    <td style="color:#ffffff; font-weight:600;">${getField(r, 'Vehicle No') || '-'}</td>
-                    <td style="color:var(--accent-blue);">${getField(r, 'Entry Time')}</td>
-                    <td style="color:#94a3b8;">${getField(r, 'Remark If Any', 'Remark') || '-'}</td>
-                    <td>
-                        <button class="btn-row-del" onclick="confirmDeleteSingle('${rowId}')">🗑️ Delete</button>
-                    </td>
+                    <td>${getField(r, 'Due- Excess Matter If Any')}</td>
+                    <td>${getField(r, 'Vehicle No') || '-'}</td>
+                    <td>${getField(r, 'Entry Time')}</td>
+                    <td>${getField(r, 'Remark If Any') || '-'}</td>
+                    <td><button class="btn-tool" style="background:rgba(244,63,94,0.15);color:var(--accent-red);" onclick="deleteDispatchRow('${getField(r, 'ID')}')">🗑️</button></td>
                 </tr>`;
             });
-            tbody.innerHTML = html;
-            updateSelectedCount();
+            tbody.innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
         }
 
-        // Global Search across all records when user types, else fallback to Period Filter
-        function filterHistoryTable() {
-            const periodFilter = document.getElementById('historyPeriodFilter').value;
-            const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
-            const todayStr = getTodayFormatted().toLowerCase();
-            const loadOlderBtn = document.getElementById('loadOlderBar');
-
-            if (loadOlderBtn) {
-                loadOlderBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
-            }
-
-            const filtered = loadedDispatches.filter(r => {
-                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')).toLowerCase();
-
-                // 1. If searching, search EVERYTHING across all records
-                if (query) {
-                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
-                    const vType = getField(r, 'Vehicle Type').toLowerCase();
-                    const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
-                    const vNo = getField(r, 'Vehicle No').toLowerCase();
-                    const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
-
-                    return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
-                }
-
-                // 2. If not searching, respect the Period Filter (Today / Month / All)
-                if (periodFilter === "TODAY") {
-                    if (cleanDate !== todayStr) return false;
-                } else if (periodFilter !== "ALL") {
-                    if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
-                }
-
-                return true;
-            });
-
-            renderDispatchTable(filtered);
-        }
-
-        // Load Older Records Button Click Handler
-        function loadAllOlderRecords() {
-            document.getElementById('historyPeriodFilter').value = "ALL";
-            filterHistoryTable();
-            showToast('All historical records loaded!', 'info');
-        }
-
-        // Render Staff Table with Visible Employee Photo
         function renderStaffTable(list) {
             const tbody = document.getElementById('staffTableBody');
-            document.getElementById('staffCountBadge').textContent = `${list.length} members`;
-
-            if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No staff assigned to this depot.</td></tr>`;
-                return;
-            }
-
             let html = '';
             list.forEach(s => {
-                const sCode = getField(s, 'Staff Code');
-                const sName = getField(s, 'Staff Name');
-                const photo = getField(s, 'Staff Photo', 'Photo', 'Staff image', 'Image');
+                const code = getField(s, 'Staff Code');
+                const name = getField(s, 'Staff Name');
                 const st = getField(s, 'Status') || 'Active';
-                const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
-                const cleanJoinDate = formatCleanDate(getField(s, 'Staff Joining Date'));
+                const photo = getField(s, 'Staff Photo', 'Photo');
 
-                let avatarHtml = `<div class="staff-avatar-cell">${sName.charAt(0).toUpperCase()}</div>`;
+                let avatarHtml = `<div class="staff-avatar-cell">${name.charAt(0).toUpperCase()}</div>`;
                 if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
-                    avatarHtml = `<img src="${photo}" class="staff-avatar-cell" alt="${sName}" onerror="this.outerHTML='<div class=\\'staff-avatar-cell\\'>${sName.charAt(0).toUpperCase()}</div>'">`;
+                    avatarHtml = `<img src="${photo}" class="staff-avatar-cell" alt="${name}">`;
                 }
 
                 html += `<tr>
                     <td style="text-align:center;">${avatarHtml}</td>
-                    <td style="color:var(--accent-blue); font-weight:700;">${sCode}</td>
-                    <td><strong>${sName}</strong></td>
+                    <td style="color:var(--accent-blue);font-weight:bold;">${code}</td>
+                    <td><strong>${name}</strong></td>
                     <td>${getField(s, 'Staff Mob.')}</td>
-                    <td>${cleanJoinDate}</td>
-                    <td>${getField(s, 'Staff Login Id')}</td>
-                    <td style="color:${stColor}; font-weight:700;">${st}</td>
+                    <td>${formatCleanDate(getField(s, 'Staff Joining Date'))}</td>
+                    <td style="color:${st.toLowerCase()==='active'?'var(--accent-green)':'var(--accent-red)'};font-weight:bold;">${st}</td>
                     <td>
-                        <button class="btn-action-ledger" onclick="openStaffLedger('${sCode}', '${sName}')">📄 Ledger</button>
-                        <button class="btn-action-trx" onclick="openAddTrxModal('${sCode}', '${sName}')">➕ Add Trx</button>
+                        <button class="btn-action-ledger" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
                     </td>
                 </tr>`;
             });
-            tbody.innerHTML = html;
+            tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No staff found.</td></tr>`;
         }
 
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.depot-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
-            document.getElementById('recordsTab').style.display = (tabId === 'recordsTab') ? 'block' : 'none';
-            document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
-        }
-
-        function openAddStaffModal() {
-            document.getElementById('requestStaffForm').reset();
-            document.getElementById('newStaffPhotoBase64').value = '';
-            document.getElementById('newStaffCodeLocked').value = globalNextEmpCode;
-            document.getElementById('addStaffModal').style.display = 'block';
-        }
-        function closeAddStaffModal() {
-            document.getElementById('addStaffModal').style.display = 'none';
-        }
-
-        function compressAndSetPhoto(fileInput) {
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const maxDim = 80;
-                        let w = img.width, h = img.height;
-                        if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } }
-                        else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
-                        canvas.width = w; canvas.height = h;
-                        ctx.drawImage(img, 0, 0, w, h);
-                        document.getElementById('newStaffPhotoBase64').value = canvas.toDataURL('image/jpeg', 0.4);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        document.getElementById('requestStaffForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const name = document.getElementById('newStaffName').value.trim();
-            const mob = document.getElementById('newStaffMobile').value.trim();
-            const photo = document.getElementById('newStaffPhotoBase64').value;
-            const empCodeLocked = document.getElementById('newStaffCodeLocked').value;
-            const btn = document.getElementById('btnReqStaffSubmit');
-
-            btn.disabled = true;
-            btn.textContent = 'Sending Request to Admin...';
-
-            try {
-                const payload = {
-                    action: 'requestNewStaff',
-                    empCode: empCodeLocked,
-                    name: name,
-                    mobile: mob,
-                    photo: photo,
-                    depotCode: depotCode,
-                    depotName: depotNameStored
-                };
-
-                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
-                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
-
-                if (res && res.success) {
-                    showToast(res.message, 'success');
-                    closeAddStaffModal();
-                    loadDepotData();
-                } else {
-                    showToast(res.message || 'Failed to submit staff request.', 'error');
-                }
-            } catch (err) {
-                showToast('Network error sending staff request.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Send Staff Request to Admin';
-            }
-        });
-
-        function openAddTrxModal(sCode, sName) {
-            document.getElementById('requestTrxForm').reset();
-            document.getElementById('trxStaffCode').value = sCode;
-            document.getElementById('trxStaffName').value = sName;
-            document.getElementById('trxStaffDisplay').value = `${sName} (${sCode})`;
-            document.getElementById('trxDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('trxDebitAmount').value = 0;
-            document.getElementById('trxCreditAmount').value = 0;
-            document.getElementById('addTrxModal').style.display = 'block';
-        }
-        function closeAddTrxModal() {
-            document.getElementById('addTrxModal').style.display = 'none';
-        }
-
-        document.getElementById('requestTrxForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const sCode = document.getElementById('trxStaffCode').value;
-            const sName = document.getElementById('trxStaffName').value;
-            const date = document.getElementById('trxDate').value;
-            const particular = document.getElementById('trxParticular').value.trim();
-            const mode = document.getElementById('trxMode').value;
-            const debit = Number(document.getElementById('trxDebitAmount').value) || 0;
-            const credit = Number(document.getElementById('trxCreditAmount').value) || 0;
-            const btn = document.getElementById('btnReqTrxSubmit');
-
-            if (debit === 0 && credit === 0) {
-                showToast('Please enter either a Debit or Credit amount.', 'error');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = 'Submitting Request...';
-
-            try {
-                const url = `${SCRIPT_URL}?action=requestStaffTransaction&staffCode=${encodeURIComponent(sCode)}&staffName=${encodeURIComponent(sName)}&date=${encodeURIComponent(date)}&particular=${encodeURIComponent(particular)}&mode=${encodeURIComponent(mode)}&debit=${debit}&credit=${credit}&depotCode=${encodeURIComponent(depotCode)}&depotName=${encodeURIComponent(depotNameStored)}`;
-                const res = await jsonp(url);
-
-                if (res && res.success) {
-                    showToast(res.message, 'success');
-                    closeAddTrxModal();
-                } else {
-                    showToast(res.message || 'Failed to submit transaction.', 'error');
-                }
-            } catch (err) {
-                showToast('Network error submitting transaction request.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Send Transaction Request to Admin';
-            }
-        });
-
-        async function openStaffLedger(sCode, sName) {
-            currentActiveStaffCode = sCode;
-            currentActiveStaffName = sName;
-            currentActiveStaffLedger = [];
-
-            document.getElementById('ledgerStaffTitle').textContent = `📄 Ledger: ${sName} (${sCode})`;
+        // Open Staff Ledger with True Status Check (Pending if Not Approved)
+        async function openStaffLedger(code, name) {
+            currentActiveStaffCode = code;
+            currentActiveStaffName = name;
+            document.getElementById('ledgerStaffTitle').textContent = `📄 Ledger: ${name} (${code})`;
             const tbody = document.getElementById('modalLedgerTableBody');
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem;">Loading statement...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2rem;">Loading...</td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(sCode)}`);
+                const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(code)}`);
                 const rows = (res && res.ledger) ? res.ledger : [];
                 currentActiveStaffLedger = rows;
 
-                if (rows.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem; color:var(--text-secondary);">No ledger records found for ${sName}.</td></tr>`;
-                    document.getElementById('modTotalCredit').textContent = '₹0';
-                    document.getElementById('modTotalDebit').textContent = '₹0';
-                    document.getElementById('modNetBalance').textContent = '₹0 (Cr)';
-                    return;
-                }
-
                 let totalDr = 0, totalCr = 0, runningBal = 0, html = '';
                 rows.forEach(r => {
-                    const dr = Number(getField(r, 'debit', 'Debit') || 0);
-                    const cr = Number(getField(r, 'credit', 'Credit') || 0);
-                    const dt = formatCleanDate(getField(r, 'date', 'Transaction Date', 'Date'));
-                    const part = getField(r, 'particular', 'Particular');
-                    const mode = getField(r, 'mode', 'Mode') || '-';
-                    const appSt = getField(r, 'approvalStatus', 'Approval Status') || 'Approved';
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                    const part = getField(r, 'Particular', 'particular');
+                    const mode = getField(r, 'Payment Mode', 'mode') || '-';
 
-                    totalDr += dr; totalCr += cr; runningBal += (cr - dr);
-                    const appColor = appSt.toLowerCase() === 'approved' ? 'var(--accent-green)' : 'var(--accent-amber)';
+                    // Accurate Check from Col K
+                    const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                    const isApproved = appRaw.toLowerCase() === 'approved';
+
+                    if (isApproved) {
+                        totalDr += dr;
+                        totalCr += cr;
+                        runningBal += (cr - dr);
+                    }
+
+                    const statusColor = isApproved ? 'var(--accent-green)' : 'var(--accent-amber)';
+                    const statusText = isApproved ? 'Approved' : 'Pending';
 
                     html += `<tr>
                         <td><strong>${dt}</strong></td>
                         <td>${part}</td>
                         <td>${mode}</td>
-                        <td style="color:${dr > 0 ? 'var(--accent-red)' : '#64748b'}; font-weight:700;">${dr > 0 ? '₹' + dr.toLocaleString('en-IN') : '-'}</td>
-                        <td style="color:${cr > 0 ? 'var(--accent-green)' : '#64748b'}; font-weight:700;">${cr > 0 ? '₹' + cr.toLocaleString('en-IN') : '-'}</td>
-                        <td style="color:var(--accent-blue); font-weight:700;">₹${runningBal.toLocaleString('en-IN')}</td>
-                        <td style="color:${appColor}; font-weight:700;">${appSt}</td>
+                        <td style="color:${dr > 0 ? 'var(--accent-red)' : '#64748b'};font-weight:bold;">${dr > 0 ? '₹' + dr : '-'}</td>
+                        <td style="color:${cr > 0 ? 'var(--accent-green)' : '#64748b'};font-weight:bold;">${cr > 0 ? '₹' + cr : '-'}</td>
+                        <td style="color:var(--accent-blue);font-weight:bold;">${isApproved ? '₹' + runningBal : 'Pending'}</td>
+                        <td style="color:${statusColor};font-weight:bold;">${statusText}</td>
                     </tr>`;
                 });
 
-                tbody.innerHTML = html;
-                document.getElementById('modTotalCredit').textContent = `₹${totalCr.toLocaleString('en-IN')}`;
-                document.getElementById('modTotalDebit').textContent = `₹${totalDr.toLocaleString('en-IN')}`;
+                tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transactions.</td></tr>`;
+                document.getElementById('modTotalCredit').textContent = `₹${totalCr}`;
+                document.getElementById('modTotalDebit').textContent = `₹${totalDr}`;
                 const net = totalCr - totalDr;
-                document.getElementById('modNetBalance').textContent = `₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
-                document.getElementById('modNetBalance').style.color = net >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-            } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem; color:var(--accent-red);">Failed to load ledger records.</td></tr>`;
-            }
+                document.getElementById('modNetBalance').textContent = `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+            } catch (e) { tbody.innerHTML = `<tr><td colspan="7" class="text-center">Error loading ledger.</td></tr>`; }
         }
+        function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
 
-        function closeStaffLedgerModal() {
-            document.getElementById('staffLedgerModal').style.display = 'none';
-        }
-
+        // Print Statement with Full Depot Address & Compact Layout
         function openPrintPreview() {
             const depot = depotGlobalInfo || {};
-            const compName = getField(depot, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
             const addr = getField(depot, 'Depot Address');
             const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
             const pin = getField(depot, 'Pin Code', 'Pincode');
-            const mob = getField(depot, 'Mob. No.', 'Mobile Number', 'Mob No');
-            const stateCode = getField(depot, 'State Code');
-            const stateName = getField(depot, 'State Name');
-            const gstin = getField(depot, 'GSTIN', 'GST NO');
+            const mob = getField(depot, 'Mob. No.', 'Mobile');
+            const gstin = getField(depot, 'GSTIN');
 
-            document.getElementById('receiptCompanyName').textContent = compName;
-            document.getElementById('receiptFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
-            document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'}`;
-            document.getElementById('receiptStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
-            document.getElementById('receiptGstin').textContent = `GSTIN: ${gstin || '-'}`;
-
-            document.getElementById('rcptStaffName').textContent = currentActiveStaffName || 'Staff Member';
-            document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode.toUpperCase();
+            document.getElementById('receiptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
+            document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode;
             document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
-
-            const staffMatch = loadedStaffList.find(s => (getField(s, 'Staff Code') || '').toUpperCase() === currentActiveStaffCode.toUpperCase());
-            const joinDate = staffMatch ? formatCleanDate(getField(staffMatch, 'Staff Joining Date')) : '-';
-            document.getElementById('rcptJoinedDate').textContent = joinDate;
-
-            const tbody = document.getElementById('rcptTableBody');
-            if (!currentActiveStaffLedger || currentActiveStaffLedger.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
-                document.getElementById('rcptTotalDebit').textContent = `Rs.0.00`;
-                document.getElementById('rcptTotalCredit').textContent = `Rs.0.00`;
-                document.getElementById('rcptNetBalance').textContent = `Rs.0.00`;
-                document.getElementById('printModal').style.display = 'block';
-                return;
-            }
+            document.getElementById('rcptPrintDate').textContent = getTodayFormatted();
 
             let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
             currentActiveStaffLedger.forEach(r => {
-                const dr = Number(getField(r, 'debit', 'Debit') || 0);
-                const cr = Number(getField(r, 'credit', 'Credit') || 0);
-                const dt = formatCleanDate(getField(r, 'date', 'Transaction Date', 'Date'));
-                const part = getField(r, 'particular', 'Particular');
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                const part = getField(r, 'Particular', 'particular');
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
 
-                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
-
-                html += `<tr>
-                    <td><strong>${dt}</strong><span class="desc-sub">${part}</span></td>
-                    <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                    <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
-                </tr>`;
+                if (appRaw.toLowerCase() === 'approved') {
+                    totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+                    html += `<tr>
+                        <td><strong>${dt}</strong><br><span style="font-size:0.68rem;color:#444;">${part}</span></td>
+                        <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                    </tr>`;
+                }
             });
 
-            tbody.innerHTML = html;
+            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="4" class="text-center">No approved transactions.</td></tr>`;
             document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
             document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
             const finalNet = totalCr - totalDr;
-            const balType = finalNet >= 0 ? '(Cr)' : '(Dr)';
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${balType}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+
             document.getElementById('printModal').style.display = 'block';
         }
+        function closePrintPreview() { document.getElementById('printModal').style.display = 'none'; }
 
-        function closePrintPreview() {
-            document.getElementById('printModal').style.display = 'none';
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.depot-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
+            document.getElementById('recordsTab').style.display = (tabId === 'recordsTab') ? 'block' : 'none';
+            document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
         }
-
-        document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitDispatch');
-            const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
-
-            if (!rawInput) {
-                showToast('Please enter at least one invoice number.', 'error');
-                return;
-            }
-
-            const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
-            if (rawList.length === 0) {
-                showToast('No valid numeric invoice numbers found.', 'error');
-                return;
-            }
-
-            const invalidNumbers = rawList.filter(num => num.length !== 5);
-            if (invalidNumbers.length > 0) {
-                showToast(`Invalid numbers: (${invalidNumbers.join(', ')}). Must be exactly 5 digits.`, 'error');
-                return;
-            }
-
-            const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
-
-            const payload = {
-                action: 'saveInvoiceDispatch',
-                depotCode: document.getElementById('hiddenDepotCode').value,
-                depotName: document.getElementById('hiddenDepotName').value,
-                invoiceDate: document.getElementById('dispDate').value,
-                entryTime: document.getElementById('dispTime').value,
-                vehicleType: document.getElementById('dispVehicleType').value,
-                vehicleNo: document.getElementById('dispVehicleNo').value,
-                dispatchThrough: document.getElementById('dispThrough').value,
-                dueExcess: document.getElementById('dispDueExcess').value,
-                invoiceList: JSON.stringify(finalizedInvoices),
-                remarks: document.getElementById('dispRemarks').value
-            };
-
-            btn.disabled = true;
-            btn.textContent = `Saving ${finalizedInvoices.length} Invoices...`;
-
-            try {
-                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
-                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
-
-                if (res && res.success) {
-                    showToast(res.message, 'success');
-                    document.getElementById('dispInvoiceDigits').value = '';
-                    document.getElementById('dispThrough').value = '';
-                    document.getElementById('dispVehicleNo').value = '';
-                    document.getElementById('dispRemarks').value = '-';
-                    document.getElementById('dispDueExcess').value = 'No Due/excess';
-                    setTimeout(loadDepotData, 800);
-                } else {
-                    showToast(res.message || 'Failed to save.', 'error');
-                }
-            } catch (err) {
-                showToast('Network error saving dispatch records.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '💾 Save Dispatch Entry';
-            }
-        });
-
-        function toggleSelectAll(master) {
-            document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = master.checked);
-            updateSelectedCount();
-        }
-
-        function updateSelectedCount() {
-            const count = document.querySelectorAll('.row-checkbox:checked').length;
-            document.getElementById('selectedCountText').textContent = `${count} selected`;
-        }
-
-        let pendingDeleteAction = null;
-        function showConfirmDialog(msg, onConfirm) {
-            document.getElementById('confirmModalMsg').textContent = msg;
-            pendingDeleteAction = onConfirm;
-            document.getElementById('confirmModal').style.display = 'block';
-        }
-        function closeConfirmModal() {
-            document.getElementById('confirmModal').style.display = 'none';
-            pendingDeleteAction = null;
-        }
-
-        document.getElementById('confirmActionBtn').addEventListener('click', function() {
-            if (pendingDeleteAction) pendingDeleteAction();
-            closeConfirmModal();
-        });
-
-        function confirmDeleteSingle(rowId) {
-            showConfirmDialog(`Delete dispatch record for Invoice/ID ${rowId}?`, async () => {
-                try {
-                    const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
-                    if (res && res.success) {
-                        showToast('Record deleted successfully!', 'success');
-                        loadDepotData();
-                    } else {
-                        showToast(res.message || 'Failed to delete record.', 'error');
-                    }
-                } catch (err) {
-                    showToast('Network error deleting record.', 'error');
-                }
-            });
-        }
-
-        function deleteSelectedRows() {
-            const checked = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.value);
-            if (checked.length === 0) {
-                showToast('Please select at least one record to delete.', 'info');
-                return;
-            }
-
-            showConfirmDialog(`Delete ${checked.length} selected dispatch records?`, async () => {
-                try {
-                    const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(checked.join(','))}`);
-                    if (res && res.success) {
-                        showToast(`Deleted ${checked.length} records successfully!`, 'success');
-                        document.getElementById('selectAllCheckbox').checked = false;
-                        loadDepotData();
-                    } else {
-                        showToast(res.message || 'Failed to delete records.', 'error');
-                    }
-                } catch (err) {
-                    showToast('Network error deleting records.', 'error');
-                }
-            });
-        }
-
-        function downloadExcel() {
-            if (!loadedDispatches || loadedDispatches.length === 0) {
-                showToast('No dispatch records to download.', 'info');
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Dispatch Date,Invoice Number,Vehicle Type,Dispatch Through,Due-Excess,Vehicle No,Entry Time,Remarks\n";
-
-            loadedDispatches.forEach(r => {
-                const date = `"${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}"`;
-                const inv = `"${getField(r, 'Inoice No. Last Digit', 'Invoice No')}"`;
-                const vType = `"${getField(r, 'Vehicle Type')}"`;
-                const through = `"${getField(r, 'Dispatch Throuch', 'Dispatch Through')}"`;
-                const due = `"${getField(r, 'Due- Excess Matter If Any', 'Due-Excess')}"`;
-                const vNo = `"${getField(r, 'Vehicle No')}"`;
-                const time = `"${getField(r, 'Entry Time')}"`;
-                const remarks = `"${getField(r, 'Remark If Any', 'Remark')}"`;
-
-                csvContent += [date, inv, vType, through, due, vNo, time, remarks].join(",") + "\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Dispatch_Report_${depotNameStored}_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Excel report downloaded!', 'success');
-        }
-
-        function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
-        function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
-
-        document.getElementById('depotPwdForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const oldPass = document.getElementById('oldDepotPass').value.trim();
-            const newPass = document.getElementById('newDepotPass').value.trim();
-            const confirmPass = document.getElementById('confirmDepotPass').value.trim();
-            const btn = document.getElementById('btnDepotPwdSubmit');
-
-            if (newPass !== confirmPass) {
-                showToast('New passwords do not match!', 'error');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = 'Updating...';
-
-            try {
-                const url = `${SCRIPT_URL}?action=changeDepotPassword&username=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
-                const res = await jsonp(url);
-
-                if (res && res.success) {
-                    showToast('Password changed successfully!', 'success');
-                    setTimeout(closePasswordModal, 1500);
-                } else {
-                    showToast(res.message || 'Failed to update password.', 'error');
-                }
-            } catch (err) {
-                showToast('Error updating password.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Update Password';
-            }
-        });
 
         window.onload = loadDepotData;
     </script>

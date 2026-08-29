@@ -10,7 +10,7 @@
     <style>
         :root {
             --bg-main: #060919;
-            --bg-card: rgba(17, 24, 39, 0.65);
+            --bg-card: rgba(17, 24, 39, 0.7);
             --border-color: rgba(255, 255, 255, 0.12);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
@@ -35,12 +35,16 @@
             flex-direction: column;
         }
 
-        /* Top Header Navbar */
+        /* Top Sticky Header Navbar (Remains Fixed on Scroll) */
         .navbar {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-bottom: 2px solid #0284c7;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
             padding: 0.8rem 2rem;
             display: flex;
             align-items: center;
@@ -191,6 +195,19 @@
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
         .panel-header h3 { font-size: 1.15rem; font-weight: 800; color: #ffffff; }
 
+        .live-sync-badge {
+            color: var(--accent-cyan);
+            font-size: 0.82rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(56, 189, 248, 0.1);
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+        }
+
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -213,7 +230,7 @@
         }
         .form-control:focus { border-color: var(--accent-cyan); }
         .form-control:read-only { background: rgba(15, 23, 42, 0.5); color: #94a3b8; }
-        textarea.form-control { resize: vertical; min-height: 80px; font-family: monospace; }
+        textarea.form-control { resize: vertical; min-height: 85px; font-family: monospace; font-size: 0.92rem; }
         select.form-control { cursor: pointer; }
         select.form-control option { background: #0f172a; color: #fff; }
 
@@ -308,6 +325,7 @@
             padding: 0.85rem 1rem;
             font-size: 0.86rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
         }
         table.custom-table tr:hover td { background: rgba(30, 41, 59, 0.4); }
 
@@ -359,7 +377,7 @@
 </head>
 <body>
 
-    <!-- Header Navbar -->
+    <!-- Header Navbar (Fixed on Scroll) -->
     <div class="navbar">
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox">
@@ -404,7 +422,7 @@
         <div id="dispatchTab" class="glass-panel">
             <div class="panel-header">
                 <h3>📦 Record Invoice Dispatch Entry (Single / Multi-Invoice)</h3>
-                <span style="color:var(--accent-cyan); font-size:0.85rem; font-weight:700;">Live Google Sheet Sync</span>
+                <span class="live-sync-badge">⚡ Live Sync</span>
             </div>
 
             <form id="invoiceDispatchForm">
@@ -441,34 +459,34 @@
                         </select>
                     </div>
 
-                    <!-- 5. Vehicle No -->
-                    <div class="form-group">
-                        <label>Vehicle Number (Optional / If Any)</label>
-                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234">
-                    </div>
-
-                    <!-- 6. Dispatch Through -->
+                    <!-- 5. Dispatch Through (Interchanged to Left) -->
                     <div class="form-group">
                         <label>Dispatch Through</label>
                         <input type="text" id="dispThrough" class="form-control" required placeholder="e.g. Singh PUC Auto, Monir Auto, Self">
                     </div>
 
-                    <!-- 7. Due-Excess -->
+                    <!-- 6. Vehicle Number (Interchanged to Right) -->
                     <div class="form-group">
+                        <label>Vehicle Number (Optional / If Any)</label>
+                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234">
+                    </div>
+
+                    <!-- 7. Due-Excess -->
+                    <div class="form-group-full">
                         <label>Due- Excess Matter If Any</label>
                         <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
                     </div>
 
-                    <!-- 8. Remark If Any -->
-                    <div class="form-group">
-                        <label>Remark If Any</label>
-                        <input type="text" id="dispRemarks" class="form-control" value="-">
-                    </div>
-
-                    <!-- 9. Invoice Last 5 Digits -->
+                    <!-- 8. Invoice No. Last 5 Digits (FULL WIDTH) -->
                     <div class="form-group-full">
                         <label>Invoice No. Last 5 Digits <span style="color:var(--accent-cyan); font-weight:normal;">(Enter 1 to 50 invoices separated by comma <code>,</code> or New Line <code>Enter</code>. Exactly 5 digits each)</span></label>
                         <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667, 25678... (Prefix will be auto-attached)"></textarea>
+                    </div>
+
+                    <!-- 9. Remark If Any (UNDER INVOICE NO - FULL WIDTH) -->
+                    <div class="form-group-full">
+                        <label>Remark If Any</label>
+                        <input type="text" id="dispRemarks" class="form-control" value="-">
                     </div>
                 </div>
 
@@ -477,7 +495,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History Panel with Search Bar -->
+        <!-- 2. Records History Panel with Live Search Bar -->
         <div id="recordsTab" class="glass-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatched Trucks & Invoices History</h3>
@@ -591,12 +609,42 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+        // Clean Date Formatter function (Converts ISO/GMT Strings to dd-MMM-yy)
+        function formatCleanDate(raw) {
+            if (!raw) return '-';
+            let str = String(raw).trim();
+            if (str === '-' || str === '') return '-';
+
+            // Already in DD/MMM/YY or DD-MMM-YY format
+            if (str.match(/^\d{2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) {
+                return str.replace(/\//g, '-');
+            }
+
+            let d = new Date(raw);
+            if (isNaN(d.getTime())) {
+                // Try parse YYYY-MM-DD
+                let parts = str.split('T')[0].split(' ')[0].split('-');
+                if (parts.length === 3) {
+                    d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+                }
+            }
+
+            if (isNaN(d.getTime())) {
+                return str.split('T')[0].split(' 05:')[0];
+            }
+
+            const day = String(d.getDate()).padStart(2, '0');
+            const m = monthNames[d.getMonth()];
+            const y = String(d.getFullYear()).slice(2);
+            return `${day}-${m}-${y}`;
+        }
+
         function updateLiveClockAndDate() {
             const now = new Date();
             const d = String(now.getDate()).padStart(2, '0');
             const m = monthNames[now.getMonth()];
             const y = String(now.getFullYear()).slice(2);
-            document.getElementById('dispDate').value = `${d}/${m}/${y}`;
+            document.getElementById('dispDate').value = `${d}-${m}-${y}`;
 
             const hh = String(now.getHours()).padStart(2, '0');
             const mm = String(now.getMinutes()).padStart(2, '0');
@@ -713,7 +761,7 @@
             }
         }
 
-        // Render Dispatch Table with Duplicate Top Highlight & Checkboxes
+        // Render Dispatch Table with Clean Formatted Dates & Duplicates on Top
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
@@ -723,7 +771,6 @@
                 return;
             }
 
-            // Count occurrences to detect duplicates
             const invCounts = {};
             list.forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
@@ -749,10 +796,12 @@
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
                 const rowId = getField(r, 'ID') || inv;
                 const isDup = invCounts[inv] > 1;
+                const rawDate = getField(r, 'Invoice Dispatch Date', 'Date');
+                const cleanDate = formatCleanDate(rawDate);
 
                 html += `<tr class="${isDup ? 'duplicate-row' : ''}">
                     <td><input type="checkbox" class="row-checkbox" value="${rowId}" onchange="updateSelectedCount()"></td>
-                    <td>${getField(r, 'Invoice Dispatch Date', 'Date')}</td>
+                    <td><strong>${cleanDate}</strong></td>
                     <td style="color:var(--accent-green); font-weight:800; font-size:0.95rem;">
                         ${inv} ${isDup ? '<span class="badge-dup">⚠️ DUPLICATE</span>' : ''}
                     </td>
@@ -784,7 +833,7 @@
                 const vType = getField(r, 'Vehicle Type').toLowerCase();
                 const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
                 const vNo = getField(r, 'Vehicle No').toLowerCase();
-                const date = getField(r, 'Invoice Dispatch Date', 'Date').toLowerCase();
+                const date = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')).toLowerCase();
                 const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
 
                 return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || date.includes(query) || remark.includes(query);
@@ -806,11 +855,12 @@
             list.forEach(s => {
                 const st = getField(s, 'Status') || 'Active';
                 const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
+                const cleanJoinDate = formatCleanDate(getField(s, 'Staff Joining Date'));
                 html += `<tr>
                     <td style="color:var(--accent-cyan); font-weight:700;">${getField(s, 'Staff Code')}</td>
                     <td><strong>${getField(s, 'Staff Name')}</strong></td>
                     <td>${getField(s, 'Staff Mob.')}</td>
-                    <td>${getField(s, 'Staff Joining Date')}</td>
+                    <td>${cleanJoinDate}</td>
                     <td>${getField(s, 'Staff Login Id')}</td>
                     <td style="color:${stColor}; font-weight:700;">${st}</td>
                 </tr>`;
@@ -973,7 +1023,7 @@
             csvContent += "Dispatch Date,Invoice Number,Vehicle Type,Dispatch Through,Due-Excess,Vehicle No,Entry Time,Remarks\n";
 
             loadedDispatches.forEach(r => {
-                const date = `"${getField(r, 'Invoice Dispatch Date', 'Date')}"`;
+                const date = `"${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}"`;
                 const inv = `"${getField(r, 'Inoice No. Last Digit', 'Invoice No')}"`;
                 const vType = `"${getField(r, 'Vehicle Type')}"`;
                 const through = `"${getField(r, 'Dispatch Throuch', 'Dispatch Through')}"`;

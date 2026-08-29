@@ -35,7 +35,7 @@
             flex-direction: column;
         }
 
-        /* Top Sticky Header Navbar (Remains Fixed on Scroll) */
+        /* Top Sticky Header Navbar */
         .navbar {
             position: sticky;
             top: 0;
@@ -360,9 +360,46 @@
         }
         .btn-row-del:hover { background: var(--accent-red); color: #fff; }
 
-        /* Password Modal */
+        /* Floating Modern Toast Notification */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast-msg {
+            pointer-events: auto;
+            min-width: 280px;
+            max-width: 400px;
+            padding: 0.85rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        .toast-msg.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .toast-success { background: rgba(16, 185, 129, 0.9); color: #ffffff; border: 1px solid #34d399; }
+        .toast-error { background: rgba(244, 63, 94, 0.9); color: #ffffff; border: 1px solid #fb7185; }
+        .toast-info { background: rgba(2, 132, 199, 0.9); color: #ffffff; border: 1px solid #38bdf8; }
+
+        /* Modal Styles */
         .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
             background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem;
         }
         .modal-box {
@@ -376,6 +413,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Floating Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
 
     <!-- Header Navbar (Fixed on Scroll) -->
     <div class="navbar">
@@ -459,16 +499,18 @@
                         </select>
                     </div>
 
-                    <!-- 5. Dispatch Through (Interchanged to Left) -->
+                    <!-- 5. Dispatch Through (With Dynamic Datalist) -->
                     <div class="form-group">
                         <label>Dispatch Through</label>
-                        <input type="text" id="dispThrough" class="form-control" required placeholder="e.g. Singh PUC Auto, Monir Auto, Self">
+                        <input type="text" id="dispThrough" class="form-control" list="throughSuggestions" required placeholder="Type to search (e.g. Singh PUC Auto, Self...)">
+                        <datalist id="throughSuggestions"></datalist>
                     </div>
 
-                    <!-- 6. Vehicle Number (Interchanged to Right) -->
+                    <!-- 6. Vehicle Number (With Dynamic Datalist) -->
                     <div class="form-group">
                         <label>Vehicle Number (Optional / If Any)</label>
-                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234">
+                        <input type="text" id="dispVehicleNo" class="form-control" list="vehicleSuggestions" placeholder="e.g. BR-11-AB-1234">
+                        <datalist id="vehicleSuggestions"></datalist>
                     </div>
 
                     <!-- 7. Due-Excess -->
@@ -483,7 +525,7 @@
                         <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667, 25678... (Prefix will be auto-attached)"></textarea>
                     </div>
 
-                    <!-- 9. Remark If Any (UNDER INVOICE NO - FULL WIDTH) -->
+                    <!-- 9. Remark If Any (FULL WIDTH) -->
                     <div class="form-group-full">
                         <label>Remark If Any</label>
                         <input type="text" id="dispRemarks" class="form-control" value="-">
@@ -491,7 +533,6 @@
                 </div>
 
                 <button type="submit" id="btnSubmitDispatch" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
-                <p id="dispatchStatus" style="margin-top:0.8rem; font-size:0.88rem; font-weight:600;"></p>
             </form>
         </div>
 
@@ -566,6 +607,23 @@
 
     </div>
 
+    <!-- Confirmation Modal (Modern Glass Box) -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-box" style="max-width: 360px;">
+            <div class="modal-top-bar">
+                <span>⚠️ Confirm Action</span>
+                <button class="modal-close-btn" onclick="closeConfirmModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p id="confirmModalMsg" style="font-size: 0.92rem; color: #f8fafc; margin-bottom: 1.4rem; line-height: 1.5;"></p>
+                <div style="display: flex; gap: 0.8rem;">
+                    <button id="confirmCancelBtn" class="btn-tool" style="flex: 1; justify-content: center; background: rgba(30,41,59,0.8); color:#fff;" onclick="closeConfirmModal()">Cancel</button>
+                    <button id="confirmActionBtn" class="btn-tool btn-bulk-del" style="flex: 1; justify-content: center;">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box">
@@ -588,7 +646,6 @@
                         <input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password">
                     </div>
                     <button type="submit" id="btnDepotPwdSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1rem;">Update Password</button>
-                    <p id="depotPwdMsg" style="margin-top:0.8rem; font-size:0.85rem; text-align:center; font-weight:600;"></p>
                 </form>
             </div>
         </div>
@@ -609,34 +666,50 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        // Clean Date Formatter function (Converts ISO/GMT Strings to dd-MMM-yy)
+        // Toast Notification Function
+        function showToast(msg, type = "success") {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast-msg toast-${type}`;
+            
+            const icon = type === 'success' ? '✅' : (type === 'error' ? '⚠️' : 'ℹ️');
+            toast.innerHTML = `<span>${icon}</span> <span>${msg}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => { toast.classList.add('show'); }, 50);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 400);
+            }, 3000);
+        }
+
+        // Clean Date Formatter function (Converts ISO/GMT to dd-MMM-yy)
         function formatCleanDate(raw) {
             if (!raw) return '-';
             let str = String(raw).trim();
             if (str === '-' || str === '') return '-';
 
-            // Already in DD/MMM/YY or DD-MMM-YY format
-            if (str.match(/^\d{2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) {
+            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) {
                 return str.replace(/\//g, '-');
             }
 
             let d = new Date(raw);
             if (isNaN(d.getTime())) {
-                // Try parse YYYY-MM-DD
                 let parts = str.split('T')[0].split(' ')[0].split('-');
                 if (parts.length === 3) {
                     d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
                 }
             }
 
-            if (isNaN(d.getTime())) {
-                return str.split('T')[0].split(' 05:')[0];
+            if (!isNaN(d.getTime())) {
+                const day = String(d.getDate()).padStart(2, '0');
+                const m = monthNames[d.getMonth()];
+                const y = String(d.getFullYear()).slice(2);
+                return `${day}-${m}-${y}`;
             }
 
-            const day = String(d.getDate()).padStart(2, '0');
-            const m = monthNames[d.getMonth()];
-            const y = String(d.getFullYear()).slice(2);
-            return `${day}-${m}-${y}`;
+            return str.split(' 05:')[0].split('T')[0];
         }
 
         function updateLiveClockAndDate() {
@@ -718,6 +791,38 @@
             return '';
         }
 
+        // Populate Auto-Suggestions for Dispatch Through & Vehicle No
+        function updateDatalists(dispatches) {
+            const throughSet = new Set();
+            const vehicleSet = new Set();
+
+            dispatches.forEach(r => {
+                const throughVal = getField(r, 'Dispatch Throuch', 'Dispatch Through');
+                const vehicleVal = getField(r, 'Vehicle No', 'Vehicle Number');
+
+                if (throughVal && throughVal !== '-') throughSet.add(throughVal);
+                if (vehicleVal && vehicleVal !== '-') vehicleSet.add(vehicleVal);
+            });
+
+            // Populate Dispatch Through Suggestions
+            const throughDatalist = document.getElementById('throughSuggestions');
+            throughDatalist.innerHTML = '';
+            Array.from(throughSet).sort().forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val;
+                throughDatalist.appendChild(opt);
+            });
+
+            // Populate Vehicle No Suggestions
+            const vehicleDatalist = document.getElementById('vehicleSuggestions');
+            vehicleDatalist.innerHTML = '';
+            Array.from(vehicleSet).sort().forEach(val => {
+                const opt = document.createElement('option');
+                opt.value = val;
+                vehicleDatalist.appendChild(opt);
+            });
+        }
+
         async function loadDepotData() {
             updateLiveClockAndDate();
 
@@ -753,6 +858,9 @@
                 document.getElementById('hiddenDepotName').value = dName;
                 document.getElementById('dispPrefixSeries').value = depotPrefix;
 
+                // Update dynamic datalists for auto-suggest
+                updateDatalists(dispatches);
+
                 renderDispatchTable(dispatches);
                 renderStaffTable(staff);
 
@@ -761,7 +869,6 @@
             }
         }
 
-        // Render Dispatch Table with Clean Formatted Dates & Duplicates on Top
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
@@ -812,7 +919,7 @@
                     <td style="color:var(--accent-cyan);">${getField(r, 'Entry Time')}</td>
                     <td style="color:#94a3b8;">${getField(r, 'Remark If Any', 'Remark') || '-'}</td>
                     <td>
-                        <button class="btn-row-del" onclick="deleteSingleRow('${rowId}')">🗑️ Delete</button>
+                        <button class="btn-row-del" onclick="confirmDeleteSingle('${rowId}')">🗑️ Delete</button>
                     </td>
                 </tr>`;
             });
@@ -820,7 +927,6 @@
             updateSelectedCount();
         }
 
-        // Live Search Filter for History
         function filterHistoryTable() {
             const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
             if (!query) {
@@ -877,38 +983,33 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
         }
 
-        // Multi-Invoice Form Submission with Strict 5-Digit Check
+        // Submit Dispatch
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const btn = document.getElementById('btnSubmitDispatch');
-            const statusMsg = document.getElementById('dispatchStatus');
             const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
 
             if (!rawInput) {
-                statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = '⚠️ Please enter at least one invoice number.';
+                showToast('Please enter at least one invoice number.', 'error');
                 return;
             }
 
             const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
 
             if (rawList.length === 0) {
-                statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = '⚠️ No valid numeric invoice numbers found.';
+                showToast('No valid numeric invoice numbers found.', 'error');
                 return;
             }
 
             if (rawList.length > 50) {
-                statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = '⚠️ Maximum 50 invoice numbers allowed at one time.';
+                showToast('Maximum 50 invoice numbers allowed at one time.', 'error');
                 return;
             }
 
             const invalidNumbers = rawList.filter(num => num.length !== 5);
             if (invalidNumbers.length > 0) {
-                statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = `⚠️ Invalid digits: (${invalidNumbers.join(', ')}). Each invoice number MUST be exactly 5 digits.`;
+                showToast(`Invalid numbers: (${invalidNumbers.join(', ')}). Must be exactly 5 digits.`, 'error');
                 return;
             }
 
@@ -929,16 +1030,14 @@
             };
 
             btn.disabled = true;
-            btn.textContent = `Saving ${finalizedInvoices.length} Invoices to Sheet...`;
-            statusMsg.textContent = '';
+            btn.textContent = `Saving ${finalizedInvoices.length} Invoices...`;
 
             try {
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
 
                 if (res && res.success) {
-                    statusMsg.style.color = 'var(--accent-green)';
-                    statusMsg.textContent = '✅ ' + res.message;
+                    showToast(res.message, 'success');
                     
                     document.getElementById('dispInvoiceDigits').value = '';
                     document.getElementById('dispThrough').value = '';
@@ -946,21 +1045,18 @@
                     document.getElementById('dispRemarks').value = '-';
                     document.getElementById('dispDueExcess').value = 'No Due/excess';
 
-                    setTimeout(loadDepotData, 1200);
+                    setTimeout(loadDepotData, 800);
                 } else {
-                    statusMsg.style.color = 'var(--accent-red)';
-                    statusMsg.textContent = '⚠️ ' + (res.message || 'Failed to save.');
+                    showToast(res.message || 'Failed to save.', 'error');
                 }
             } catch (err) {
-                statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = '⚠️ Network error saving dispatch records.';
+                showToast('Network error saving dispatch records.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = '💾 Save Dispatch Entry';
             }
         });
 
-        // Checkbox Handlers
         function toggleSelectAll(master) {
             document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = master.checked);
             updateSelectedCount();
@@ -971,51 +1067,70 @@
             document.getElementById('selectedCountText').textContent = `${count} selected`;
         }
 
-        // Single Row Delete
-        async function deleteSingleRow(rowId) {
-            if (!confirm(`Are you sure you want to delete dispatch record for Invoice/ID ${rowId}?`)) return;
+        // Custom Modern Confirmation Dialog
+        let pendingDeleteAction = null;
 
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
-                if (res && res.success) {
-                    alert('Record deleted successfully!');
-                    loadDepotData();
-                } else {
-                    alert(res.message || 'Failed to delete record.');
+        function showConfirmDialog(msg, onConfirm) {
+            document.getElementById('confirmModalMsg').textContent = msg;
+            pendingDeleteAction = onConfirm;
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+            pendingDeleteAction = null;
+        }
+
+        document.getElementById('confirmActionBtn').addEventListener('click', function() {
+            if (pendingDeleteAction) pendingDeleteAction();
+            closeConfirmModal();
+        });
+
+        // Delete Single Row
+        function confirmDeleteSingle(rowId) {
+            showConfirmDialog(`Delete dispatch record for Invoice/ID ${rowId}?`, async () => {
+                try {
+                    const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
+                    if (res && res.success) {
+                        showToast('Record deleted successfully!', 'success');
+                        loadDepotData();
+                    } else {
+                        showToast(res.message || 'Failed to delete record.', 'error');
+                    }
+                } catch (err) {
+                    showToast('Network error deleting record.', 'error');
                 }
-            } catch (err) {
-                alert('Network error deleting record.');
-            }
+            });
         }
 
         // Bulk Delete Selected Rows
-        async function deleteSelectedRows() {
+        function deleteSelectedRows() {
             const checked = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.value);
             if (checked.length === 0) {
-                alert('Please select at least one record to delete.');
+                showToast('Please select at least one record to delete.', 'info');
                 return;
             }
 
-            if (!confirm(`Are you sure you want to delete ${checked.length} selected dispatch records?`)) return;
-
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(checked.join(','))}`);
-                if (res && res.success) {
-                    alert(`Successfully deleted ${checked.length} records!`);
-                    document.getElementById('selectAllCheckbox').checked = false;
-                    loadDepotData();
-                } else {
-                    alert(res.message || 'Failed to delete records.');
+            showConfirmDialog(`Delete ${checked.length} selected dispatch records?`, async () => {
+                try {
+                    const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(checked.join(','))}`);
+                    if (res && res.success) {
+                        showToast(`Deleted ${checked.length} records successfully!`, 'success');
+                        document.getElementById('selectAllCheckbox').checked = false;
+                        loadDepotData();
+                    } else {
+                        showToast(res.message || 'Failed to delete records.', 'error');
+                    }
+                } catch (err) {
+                    showToast('Network error deleting records.', 'error');
                 }
-            } catch (err) {
-                alert('Network error deleting records.');
-            }
+            });
         }
 
         // Download History as Excel
         function downloadExcel() {
             if (!loadedDispatches || loadedDispatches.length === 0) {
-                alert('No dispatch records to download.');
+                showToast('No dispatch records to download.', 'info');
                 return;
             }
 
@@ -1042,6 +1157,7 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            showToast('Excel report downloaded!', 'success');
         }
 
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
@@ -1052,34 +1168,28 @@
             const oldPass = document.getElementById('oldDepotPass').value.trim();
             const newPass = document.getElementById('newDepotPass').value.trim();
             const confirmPass = document.getElementById('confirmDepotPass').value.trim();
-            const msg = document.getElementById('depotPwdMsg');
             const btn = document.getElementById('btnDepotPwdSubmit');
 
             if (newPass !== confirmPass) {
-                msg.style.color = 'var(--accent-red)';
-                msg.textContent = 'New passwords do not match!';
+                showToast('New passwords do not match!', 'error');
                 return;
             }
 
             btn.disabled = true;
             btn.textContent = 'Updating...';
-            msg.textContent = '';
 
             try {
                 const url = `${SCRIPT_URL}?action=changeDepotPassword&username=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
                 const res = await jsonp(url);
 
                 if (res && res.success) {
-                    msg.style.color = 'var(--accent-green)';
-                    msg.textContent = 'Password changed successfully!';
-                    setTimeout(closePasswordModal, 1800);
+                    showToast('Password changed successfully!', 'success');
+                    setTimeout(closePasswordModal, 1500);
                 } else {
-                    msg.style.color = 'var(--accent-red)';
-                    msg.textContent = res.message || 'Failed to update password.';
+                    showToast(res.message || 'Failed to update password.', 'error');
                 }
             } catch (err) {
-                msg.style.color = 'var(--accent-red)';
-                msg.textContent = 'Error updating password.';
+                showToast('Error updating password.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Update Password';

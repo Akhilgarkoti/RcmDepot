@@ -101,7 +101,6 @@
             box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
         }
 
-        /* Comfortable Eye-Friendly Entry Form Layout */
         .comfort-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -180,7 +179,6 @@
         }
         .btn-action-trx:hover { background: var(--accent-amber); color: #000; }
 
-        /* Employee Avatar Styling */
         .staff-avatar-cell {
             width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
             border: 2px solid var(--accent-blue); background: #1e293b; display: inline-flex; align-items: center;
@@ -189,7 +187,7 @@
         }
 
         .table-responsive {
-            width: 100%; max-height: 540px; overflow-y: auto; overflow-x: auto;
+            width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto;
             border: 1px solid var(--border-color); border-radius: 10px; background: #0c1424;
         }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -217,6 +215,29 @@
             padding: 0.32rem 0.68rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
         }
         .btn-row-del:hover { background: var(--accent-red); color: #fff; }
+
+        .load-more-bar {
+            text-align: center;
+            padding-top: 0.9rem;
+        }
+        .btn-load-older {
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 0.6rem 1.4rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .btn-load-older:hover {
+            background: var(--accent-blue);
+            color: #000;
+        }
 
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast-msg {
@@ -379,7 +400,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History Panel -->
+        <!-- 2. Records History Panel with Global Search & Load Older Option -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatched Trucks & Invoices History</h3>
@@ -395,7 +416,7 @@
 
                     <div class="search-box-wrap">
                         <span class="search-icon">🔍</span>
-                        <input type="text" id="historySearchInput" class="search-input" placeholder="Search invoice, vehicle, through..." oninput="filterHistoryTable()">
+                        <input type="text" id="historySearchInput" class="search-input" placeholder="Search across all records..." oninput="filterHistoryTable()">
                     </div>
 
                     <button class="btn-tool btn-bulk-del" onclick="deleteSelectedRows()">🗑️ Delete Selected</button>
@@ -427,9 +448,13 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="load-more-bar" id="loadOlderBar">
+                <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load All Older Records</button>
+            </div>
         </div>
 
-        <!-- 3. Assigned Staff and Ledger Details Panel (With Visible Employee Photo Avatar) -->
+        <!-- 3. Assigned Staff and Ledger Details Panel -->
         <div id="staffTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>👥 Assigned Staff and Ledger Details</h3>
@@ -990,20 +1015,21 @@
             updateSelectedCount();
         }
 
+        // Global Search across all records when user types, else fallback to Period Filter
         function filterHistoryTable() {
             const periodFilter = document.getElementById('historyPeriodFilter').value;
             const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
             const todayStr = getTodayFormatted().toLowerCase();
+            const loadOlderBtn = document.getElementById('loadOlderBar');
+
+            if (loadOlderBtn) {
+                loadOlderBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
+            }
 
             const filtered = loadedDispatches.filter(r => {
                 const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')).toLowerCase();
 
-                if (periodFilter === "TODAY") {
-                    if (cleanDate !== todayStr) return false;
-                } else if (periodFilter !== "ALL") {
-                    if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
-                }
-
+                // 1. If searching, search EVERYTHING across all records
                 if (query) {
                     const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
                     const vType = getField(r, 'Vehicle Type').toLowerCase();
@@ -1014,10 +1040,24 @@
                     return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
                 }
 
+                // 2. If not searching, respect the Period Filter (Today / Month / All)
+                if (periodFilter === "TODAY") {
+                    if (cleanDate !== todayStr) return false;
+                } else if (periodFilter !== "ALL") {
+                    if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
+                }
+
                 return true;
             });
 
             renderDispatchTable(filtered);
+        }
+
+        // Load Older Records Button Click Handler
+        function loadAllOlderRecords() {
+            document.getElementById('historyPeriodFilter').value = "ALL";
+            filterHistoryTable();
+            showToast('All historical records loaded!', 'info');
         }
 
         // Render Staff Table with Visible Employee Photo

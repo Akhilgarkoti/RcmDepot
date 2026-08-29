@@ -3,114 +3,496 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - RCM Depot Portal</title>
+    <title>RCM Master Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0b132b; color: #f8fafc; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 2rem; }
-        .header h1 { color: #38bdf8; font-size: 1.5rem; }
-        .user-info { display: flex; align-items: center; gap: 1rem; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
-        .nav-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-        .tab-btn { background: #1c2541; border: 1px solid #334155; color: #94a3b8; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; font-weight: 500; }
-        .tab-btn.active { background: #0284c7; color: #fff; border-color: #0284c7; }
-        .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; }
-        .table-card h2 { margin-bottom: 1rem; font-size: 1.2rem; color: #38bdf8; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #334155; font-size: 0.9rem; white-space: nowrap; }
-        th { color: #94a3b8; font-weight: 600; background: #131c31; }
-        .loading { text-align: center; color: #94a3b8; padding: 2rem; font-size: 1rem; }
+        :root {
+            --bg-main: #090e1a;
+            --bg-card: #111a2e;
+            --border-color: #1e2c47;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #f43f5e;
+            --accent-purple: #a855f7;
+            --input-bg: #060a14;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+
+        .navbar {
+            position: sticky; top: 0; z-index: 1000; background: rgba(17, 26, 46, 0.95);
+            backdrop-filter: blur(20px); border-bottom: 2px solid var(--accent-purple);
+            padding: 0.8rem 2rem; display: flex; align-items: center; justify-content: space-between;
+        }
+
+        .brand-section { display: flex; align-items: center; gap: 0.8rem; }
+        .admin-logo-box {
+            width: 48px; height: 48px; border-radius: 10px; background: #ffffff;
+            border: 2px solid var(--accent-purple); display: flex; align-items: center; justify-content: center;
+            overflow: hidden; padding: 2px;
+        }
+        .admin-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+
+        .nav-actions { display: flex; align-items: center; gap: 0.7rem; }
+        .btn-logout {
+            background: rgba(244, 63, 94, 0.15); color: var(--accent-red); border: 1px solid rgba(244, 63, 94, 0.35);
+            padding: 0.5rem 1.1rem; border-radius: 8px; font-weight: 700; font-size: 0.82rem; text-decoration: none;
+        }
+        .btn-logout:hover { background: var(--accent-red); color: #fff; }
+
+        .main-container { width: 100%; max-width: 1240px; margin: 1.5rem auto; padding: 0 1.5rem; }
+
+        /* Navigation Tabs */
+        .admin-nav-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem; flex-wrap: wrap; }
+        .tab-btn {
+            background: #111a2e; border: 1px solid var(--border-color); color: var(--text-secondary);
+            padding: 0.65rem 1.1rem; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.2s;
+        }
+        .tab-btn:hover { background: #1a2744; color: #fff; }
+        .tab-btn.active { background: linear-gradient(135deg, #a855f7, #7c3aed); color: #ffffff; border-color: #c084fc; box-shadow: 0 4px 14px rgba(168, 85, 247, 0.3); }
+
+        .badge-count { background: #f43f5e; color: #fff; font-size: 0.72rem; padding: 0.15rem 0.45rem; border-radius: 12px; font-weight: 800; }
+
+        .panel-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.6rem; margin-bottom: 1.5rem; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.7rem; }
+        .panel-header h3 { font-size: 1.15rem; font-weight: 800; color: #fff; }
+
+        .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; }
+        table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
+        table.custom-table th { position: sticky; top: 0; z-index: 10; padding: 0.75rem 1rem; color: #fff; font-size: 0.76rem; font-weight: 800; text-transform: uppercase; background: #0b1220; border-bottom: 2px solid var(--accent-purple); }
+        table.custom-table td { padding: 0.75rem 1rem; font-size: 0.85rem; border-bottom: 1px solid #18243b; white-space: nowrap; }
+        table.custom-table tr:hover td { background: #16223b; }
+
+        .btn-approve { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.3rem; }
+        .btn-approve:hover { background: var(--accent-green); color: #000; }
+        .btn-reject { background: rgba(244, 63, 94, 0.15); color: var(--accent-red); border: 1px solid rgba(244, 63, 94, 0.4); padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
+        .btn-reject:hover { background: var(--accent-red); color: #fff; }
+
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
+        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #10b981; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>RCM Depot - Admin Control Panel</h1>
-        <div class="user-info">
-            <span id="welcomeUser" style="color: #38bdf8;"></span>
-            <a href="/" onclick="sessionStorage.clear()" class="logout-btn">Logout</a>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="navbar">
+        <div class="brand-section">
+            <div class="admin-logo-box" id="companyLogoBox">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#a855f7"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div>
+                <h3 style="font-size:1.05rem; font-weight:800;">RCM Master Control</h3>
+                <span style="font-size:0.72rem; color:var(--accent-purple); font-weight:700; text-transform:uppercase;">Admin ERP Console</span>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <span id="adminNameDisplay" style="font-weight:700; color:var(--text-secondary); font-size:0.85rem;">Admin</span>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
         </div>
     </div>
 
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="loadData('Depot Master', this)">Depot Master</button>
-        <button class="tab-btn" onclick="loadData('Staff Master', this)">Staff Master</button>
-        <button class="tab-btn" onclick="loadData('Staff Ledger Entry', this)">Staff Ledger</button>
-        <button class="tab-btn" onclick="loadData('Invoice Dispatch Report', this)">Invoice Dispatch</button>
-    </div>
+    <div class="main-container">
 
-    <div class="table-card">
-        <h2 id="sheetTitle">Depot Master Records</h2>
-        <div id="tableContainer">
-            <p class="loading">Fetching live data from Google Sheets...</p>
+        <div class="admin-nav-tabs">
+            <button class="tab-btn active" onclick="switchAdminTab('pendingTab', this)">⚡ Pending Approvals <span id="pendingBadge" class="badge-count" style="display:none;">0</span></button>
+            <button class="tab-btn" onclick="switchAdminTab('depotTab', this)">🏬 Depot Master</button>
+            <button class="tab-btn" onclick="switchAdminTab('staffTab', this)">👥 Staff Master</button>
+            <button class="tab-btn" onclick="switchAdminTab('ledgerTab', this)">💳 Staff Ledgers</button>
+            <button class="tab-btn" onclick="switchAdminTab('dispatchTab', this)">📦 Dispatch Reports</button>
         </div>
+
+        <!-- 1. Pending Approvals Panel -->
+        <div id="pendingTab" class="panel-card">
+            <div class="panel-header">
+                <h3>⚡ Pending Staff & Transaction Approvals</h3>
+            </div>
+
+            <h4 style="font-size: 0.95rem; color: var(--accent-blue); margin-bottom: 0.8rem;">1. Pending Staff Registrations</h4>
+            <div class="table-responsive" style="margin-bottom: 1.5rem;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Staff Code</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Depot</th>
+                            <th>Joining Date</th>
+                            <th>Approval Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingStaffBody">
+                        <tr><td colspan="7" class="text-center" style="padding: 2rem;">Loading pending staff...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h4 style="font-size: 0.95rem; color: var(--accent-amber); margin-bottom: 0.8rem;">2. Pending Debit / Credit Transactions</h4>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Staff</th>
+                            <th>Depot</th>
+                            <th>Particular</th>
+                            <th>Mode</th>
+                            <th>Debit (₹)</th>
+                            <th>Credit (₹)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingTrxBody">
+                        <tr><td colspan="8" class="text-center" style="padding: 2rem;">Loading pending transactions...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Depot Master Panel -->
+        <div id="depotTab" class="panel-card" style="display:none;">
+            <div class="panel-header">
+                <h3>🏬 All RCM Depots (100+ Network)</h3>
+                <span id="depotCount" style="color:var(--text-secondary); font-size:0.85rem;">0 depots</span>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Depot Code</th>
+                            <th>Depot Name</th>
+                            <th>District</th>
+                            <th>State</th>
+                            <th>Inv Series</th>
+                            <th>Login ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminDepotBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Staff Master Panel -->
+        <div id="staffTab" class="panel-card" style="display:none;">
+            <div class="panel-header">
+                <h3>👥 All Depot Staff Members</h3>
+                <span id="staffCount" style="color:var(--text-secondary); font-size:0.85rem;">0 staff</span>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Staff Code</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Depot</th>
+                            <th>Login ID</th>
+                            <th>Status</th>
+                            <th>Approval</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminStaffBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. Staff Ledgers Panel -->
+        <div id="ledgerTab" class="panel-card" style="display:none;">
+            <div class="panel-header">
+                <h3>💳 Staff Master Ledger Entries</h3>
+                <span id="ledgerCount" style="color:var(--text-secondary); font-size:0.85rem;">0 entries</span>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Staff Code</th>
+                            <th>Staff Name</th>
+                            <th>Particular</th>
+                            <th>Mode</th>
+                            <th>Debit (₹)</th>
+                            <th>Credit (₹)</th>
+                            <th>Depot</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminLedgerBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Dispatch Reports Panel -->
+        <div id="dispatchTab" class="panel-card" style="display:none;">
+            <div class="panel-header">
+                <h3>📦 All Depot Dispatch Reports</h3>
+                <span id="dispatchCount" style="color:var(--text-secondary); font-size:0.85rem;">0 records</span>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Invoice Number</th>
+                            <th>Depot Code</th>
+                            <th>Depot Name</th>
+                            <th>Vehicle Type</th>
+                            <th>Dispatch Through</th>
+                            <th>Vehicle No</th>
+                            <th>Due/Excess</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminDispatchBody"></tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
-        document.getElementById('welcomeUser').textContent = sessionStorage.getItem("name") ? `Welcome, ${sessionStorage.getItem("name")}` : '';
+        let adminUser = (sessionStorage.getItem("user") || "").trim();
+        let adminName = sessionStorage.getItem("name") || "Admin";
+
+        if (!adminUser) window.location.href = "/";
+        document.getElementById('adminNameDisplay').textContent = adminName;
+
+        let adminBundle = {};
+
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 2500);
+        }
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
-                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
-                window[callbackName] = function(data) {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    resolve(data);
-                };
+                const cbName = 'admin_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-                script.onerror = () => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    reject(new Error("Network Error"));
-                };
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 8000);
+                function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
+                window[cbName] = function(data) { cleanup(); resolve(data); };
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
                 document.body.appendChild(script);
             });
         }
 
-        async function loadData(sheetName, button) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            if(button) button.classList.add('active');
-            
-            document.getElementById('sheetTitle').textContent = `${sheetName} Records`;
-            const container = document.getElementById('tableContainer');
-            container.innerHTML = `<p class="loading">Loading data from Google Sheet (${sheetName})...</p>`;
+        function getField(obj, ...keys) {
+            if (!obj) return '';
+            for (let k of keys) {
+                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return String(obj[k]).trim();
+            }
+            const objKeys = Object.keys(obj);
+            for (let k of keys) {
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                if (found && obj[found]) return String(obj[found]).trim();
+            }
+            return '';
+        }
 
+        async function loadAdminData() {
             try {
-                const requestUrl = `${SCRIPT_URL}?action=getData&sheet=${encodeURIComponent(sheetName)}`;
-                const data = await jsonp(requestUrl);
+                const res = await jsonp(`${SCRIPT_URL}?action=getAdminBundle`);
+                if (!res || !res.success) throw new Error("Failed to load");
 
-                if (!Array.isArray(data) || data.length === 0) {
-                    container.innerHTML = `<p class="loading">No records found in this sheet.</p>`;
-                    return;
-                }
-
-                const headers = Object.keys(data[0]);
-                let tableHtml = `<table><thead><tr>`;
-                headers.forEach(h => tableHtml += `<th>${h}</th>`);
-                tableHtml += `</tr></thead><tbody>`;
-
-                data.forEach(row => {
-                    tableHtml += `<tr>`;
-                    headers.forEach(h => {
-                        let val = row[h] !== undefined ? row[h] : '';
-                        if (typeof val === 'string' && val.startsWith('data:image')) {
-                            val = `<img src="${val}" style="height:35px; border-radius:4px;">`;
-                        }
-                        tableHtml += `<td>${val}</td>`;
-                    });
-                    tableHtml += `</tr>`;
-                });
-
-                tableHtml += `</tbody></table>`;
-                container.innerHTML = tableHtml;
+                adminBundle = res;
+                renderPendingApprovals();
+                renderDepots(res.depots || []);
+                renderStaff(res.staff || []);
+                renderLedgers(res.ledgers || []);
+                renderDispatches(res.dispatches || []);
             } catch (err) {
-                container.innerHTML = `<p class="loading" style="color: #f87171;">Failed to load live data: ${err.message}</p>`;
+                console.error(err);
             }
         }
 
-        window.onload = () => loadData('Depot Master', document.querySelector('.tab-btn.active'));
+        function renderPendingApprovals() {
+            const staffList = adminBundle.staff || [];
+            const trxList = adminBundle.ledgers || [];
+
+            // Filter pending staff
+            const pStaff = staffList.filter(s => (getField(s, 'Approval Status', 'Approval') || '').toLowerCase() === 'pending');
+            const pTrx = trxList.filter(t => (getField(t, 'approvalStatus', 'Approval Status') || '').toLowerCase() === 'pending');
+
+            const totalPending = pStaff.length + pTrx.length;
+            const badge = document.getElementById('pendingBadge');
+            if (totalPending > 0) {
+                badge.style.display = 'inline-block';
+                badge.textContent = totalPending;
+            } else {
+                badge.style.display = 'none';
+            }
+
+            // Render Pending Staff
+            const sBody = document.getElementById('pendingStaffBody');
+            if (pStaff.length === 0) {
+                sBody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending staff requests.</td></tr>`;
+            } else {
+                let html = '';
+                pStaff.forEach(s => {
+                    const code = getField(s, 'Staff Code');
+                    html += `<tr>
+                        <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
+                        <td><strong>${getField(s, 'Staff Name')}</strong></td>
+                        <td>${getField(s, 'Staff Mob.')}</td>
+                        <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
+                        <td>${getField(s, 'Staff Joining Date')}</td>
+                        <td style="color:var(--accent-amber); font-weight:700;">Pending</td>
+                        <td>
+                            <button class="btn-approve" onclick="approveStaff('${code}', 'Active', 'Approved')">✅ Approve</button>
+                            <button class="btn-reject" onclick="approveStaff('${code}', 'Inactive', 'Rejected')">❌ Reject</button>
+                        </td>
+                    </tr>`;
+                });
+                sBody.innerHTML = html;
+            }
+
+            // Render Pending Transactions
+            const tBody = document.getElementById('pendingTrxBody');
+            if (pTrx.length === 0) {
+                tBody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending transaction requests.</td></tr>`;
+            } else {
+                let html = '';
+                pTrx.forEach(t => {
+                    const trxId = getField(t, 'id', 'Trx ID');
+                    const dr = Number(getField(t, 'debit') || 0);
+                    const cr = Number(getField(t, 'credit') || 0);
+                    html += `<tr>
+                        <td>${getField(t, 'date')}</td>
+                        <td><strong>${getField(t, 'name')}</strong> (${getField(t, 'code')})</td>
+                        <td>${getField(t, 'depotName', 'Depot')}</td>
+                        <td>${getField(t, 'particular')}</td>
+                        <td>${getField(t, 'mode')}</td>
+                        <td style="color:var(--accent-red); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
+                        <td style="color:var(--accent-green); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
+                        <td>
+                            <button class="btn-approve" onclick="approveTransaction('${trxId}', 'Approved')">✅ Approve</button>
+                            <button class="btn-reject" onclick="approveTransaction('${trxId}', 'Rejected')">❌ Reject</button>
+                        </td>
+                    </tr>`;
+                });
+                tBody.innerHTML = html;
+            }
+        }
+
+        async function approveStaff(code, status, approval) {
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=updateStaffApproval&staffCode=${encodeURIComponent(code)}&status=${status}&approval=${approval}`);
+                showToast(res.message || "Updated");
+                loadAdminData();
+            } catch (e) { showToast("Error updating staff"); }
+        }
+
+        async function approveTransaction(trxId, approval) {
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=updateTransactionApproval&trxId=${encodeURIComponent(trxId)}&approval=${approval}`);
+                showToast(res.message || "Updated");
+                loadAdminData();
+            } catch (e) { showToast("Error updating transaction"); }
+        }
+
+        function renderDepots(list) {
+            document.getElementById('depotCount').textContent = `${list.length} depots`;
+            let html = '';
+            list.forEach(d => {
+                const st = getField(d, 'Active Status', 'Status') || 'Active';
+                const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
+                html += `<tr>
+                    <td style="color:var(--accent-blue); font-weight:700;">${getField(d, 'Depot Code')}</td>
+                    <td><strong>${getField(d, 'Depot Name')}</strong></td>
+                    <td>${getField(d, 'Dristric', 'District')}</td>
+                    <td>${getField(d, 'State Name')}</td>
+                    <td style="color:var(--accent-amber); font-weight:700;">${getField(d, 'Invoice No Series')}</td>
+                    <td>${getField(d, 'Depot Login ID')}</td>
+                    <td style="color:${stColor}; font-weight:700;">${st}</td>
+                </tr>`;
+            });
+            document.getElementById('adminDepotBody').innerHTML = html;
+        }
+
+        function renderStaff(list) {
+            document.getElementById('staffCount').textContent = `${list.length} staff`;
+            let html = '';
+            list.forEach(s => {
+                const st = getField(s, 'Status') || 'Active';
+                const app = getField(s, 'Approval Status', 'Approval') || 'Approved';
+                html += `<tr>
+                    <td style="color:var(--accent-blue); font-weight:700;">${getField(s, 'Staff Code')}</td>
+                    <td><strong>${getField(s, 'Staff Name')}</strong></td>
+                    <td>${getField(s, 'Staff Mob.')}</td>
+                    <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
+                    <td>${getField(s, 'Staff Login Id')}</td>
+                    <td style="color:${st.toLowerCase()==='active'?'var(--accent-green)':'var(--accent-red)'}; font-weight:700;">${st}</td>
+                    <td style="color:${app.toLowerCase()==='approved'?'var(--accent-green)':'var(--accent-amber)'}; font-weight:700;">${app}</td>
+                </tr>`;
+            });
+            document.getElementById('adminStaffBody').innerHTML = html;
+        }
+
+        function renderLedgers(list) {
+            document.getElementById('ledgerCount').textContent = `${list.length} entries`;
+            let html = '';
+            list.slice().reverse().forEach(l => {
+                const dr = Number(getField(l, 'debit') || 0);
+                const cr = Number(getField(l, 'credit') || 0);
+                html += `<tr>
+                    <td>${getField(l, 'date')}</td>
+                    <td style="color:var(--accent-blue);">${getField(l, 'code')}</td>
+                    <td><strong>${getField(l, 'name')}</strong></td>
+                    <td>${getField(l, 'particular')}</td>
+                    <td>${getField(l, 'mode')}</td>
+                    <td style="color:var(--accent-red); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
+                    <td style="color:var(--accent-green); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
+                    <td>${getField(l, 'depotName', 'Depot')}</td>
+                    <td>${getField(l, 'approvalStatus', 'Status')}</td>
+                </tr>`;
+            });
+            document.getElementById('adminLedgerBody').innerHTML = html;
+        }
+
+        function renderDispatches(list) {
+            document.getElementById('dispatchCount').textContent = `${list.length} records`;
+            let html = '';
+            list.slice().reverse().forEach(d => {
+                html += `<tr>
+                    <td>${getField(d, 'Invoice Dispatch Date', 'Date')}</td>
+                    <td style="color:var(--accent-green); font-weight:700;">#${getField(d, 'Inoice No. Last Digit', 'Invoice No')}</td>
+                    <td>${getField(d, 'Depot Code')}</td>
+                    <td><strong>${getField(d, 'Depot Name')}</strong></td>
+                    <td>${getField(d, 'Vehicle Type')}</td>
+                    <td>${getField(d, 'Dispatch Throuch', 'Dispatch Through')}</td>
+                    <td>${getField(d, 'Vehicle No') || '-'}</td>
+                    <td>${getField(d, 'Due- Excess Matter If Any')}</td>
+                </tr>`;
+            });
+            document.getElementById('adminDispatchBody').innerHTML = html;
+        }
+
+        function switchAdminTab(tabId, btn) {
+            document.querySelectorAll('.admin-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.getElementById('pendingTab').style.display = (tabId === 'pendingTab') ? 'block' : 'none';
+            document.getElementById('depotTab').style.display = (tabId === 'depotTab') ? 'block' : 'none';
+            document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
+            document.getElementById('ledgerTab').style.display = (tabId === 'ledgerTab') ? 'block' : 'none';
+            document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
+        }
+
+        window.onload = loadAdminData;
     </script>
 </body>
 </html>

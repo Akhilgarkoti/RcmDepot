@@ -3,419 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff Portal - RCM Depot</title>
+    <title>RCM Staff Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #0a0f1d;
-            --bg-card: #111827;
-            --bg-card-hover: #172033;
-            --border-color: #1f293d;
-            --text-primary: #f8fafc;
+            --bg-main: #0c1322;
+            --bg-card: #131d31;
+            --border-color: #22324f;
+            --text-primary: #f1f5f9;
             --text-secondary: #94a3b8;
             --accent-blue: #38bdf8;
-            --accent-amber: #f59e0b;
-            --accent-green: #10b981;
-            --accent-red: #f43f5e;
+            --accent-green: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-red: #fb7185;
+            --input-bg: #090e1a;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
-        
-        /* Top Header Navbar */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+
         .navbar {
-            background: linear-gradient(180deg, #0f1a30 0%, #0b1324 100%);
-            border-bottom: 2px solid #e11d48;
-            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45);
-            padding: 0.8rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.2rem;
+            position: sticky; top: 0; z-index: 1000; background: rgba(13, 20, 36, 0.95);
+            backdrop-filter: blur(20px); border-bottom: 2px solid var(--accent-blue);
+            padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
         }
 
-        /* Left Side: Staff Logo Box */
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            min-width: 190px;
-        }
-        .staff-logo-box {
-            width: 54px;
-            height: 54px;
-            border-radius: 12px;
-            background: #ffffff;
-            border: 2px solid #facc15;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 16px rgba(250, 204, 21, 0.35);
-            overflow: hidden;
-            padding: 2px;
-            flex-shrink: 0;
-        }
+        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
+        .staff-logo-box { width: 50px; height: 50px; border-radius: 12px; background: #fff; border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .staff-logo-box img { width: 100%; height: 100%; object-fit: contain; }
-        .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
-        .logo-text-box span { font-size: 0.72rem; color: #facc15; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Center: 225x58 Company Logo & Depot Info */
-        .depot-center-section {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.4rem;
-            flex: 1;
-            text-align: left;
-        }
-        
-        .company-logo-badge {
-            width: 225px;
-            height: 58px;
-            border-radius: 10px;
-            background: #ffffff;
-            border: 2px solid #38bdf8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
-            overflow: hidden;
-            padding: 4px 10px;
-            flex-shrink: 0;
-        }
+        .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex: 1; text-align: left; }
+        .company-logo-badge { width: 200px; height: 52px; border-radius: 10px; background: #fff; border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px 10px; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .depot-header-info h1 {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 0.3px;
-            margin-bottom: 0.15rem;
-        }
-        .depot-header-info h1 span { color: var(--accent-amber); }
-        .depot-header-info p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-        .depot-badges {
-            display: inline-flex;
-            gap: 0.5rem;
-            margin-top: 0.25rem;
-            flex-wrap: wrap;
-        }
-        .tag-pill {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid var(--border-color);
-            padding: 0.15rem 0.55rem;
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: #cbd5e1;
-        }
-        .tag-pill strong { color: var(--accent-blue); }
+        .nav-actions { display: flex; align-items: center; gap: 0.7rem; }
+        .btn-pwd { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.35); padding: 0.5rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; }
+        .btn-logout { background: rgba(251, 113, 133, 0.12); color: var(--accent-red); border: 1px solid rgba(251, 113, 133, 0.35); padding: 0.5rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; text-decoration: none; }
 
-        /* Nav Actions */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            min-width: 180px;
-            justify-content: flex-end;
-        }
-        .btn-pwd {
-            background: rgba(245, 158, 11, 0.12);
-            color: #fbbf24;
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            padding: 0.5rem 0.95rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
-            transition: all 0.2s;
-        }
-        .btn-pwd:hover { background: var(--accent-amber); color: #000; }
-        .btn-logout {
-            background: rgba(244, 63, 94, 0.12);
-            color: #fb7185;
-            border: 1px solid rgba(244, 63, 94, 0.35);
-            padding: 0.5rem 1.1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .btn-logout:hover { background: var(--accent-red); color: #fff; }
+        .main-container { width: 100%; max-width: 1060px; margin: 1.6rem auto; padding: 0 1.5rem; }
 
-        /* Main Container */
-        .main-container { width: 100%; max-width: 980px; margin: 1.8rem auto; padding: 0 1.5rem; }
-
-        /* Profile Card */
         .profile-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 1.3rem 1.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.4rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px;
+            padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.4rem; flex-wrap: wrap; gap: 1rem;
         }
         .profile-left { display: flex; align-items: center; gap: 1.2rem; }
-        .avatar-container {
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid var(--accent-blue);
-            background: #1e293b;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 0 14px rgba(56, 189, 248, 0.25);
-        }
-        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-container span { font-weight: 800; font-size: 1.4rem; color: var(--accent-blue); }
-
-        .profile-details h2 { font-size: 1.25rem; font-weight: 700; color: #ffffff; margin-bottom: 0.2rem; }
-        .profile-details p { color: var(--text-secondary); font-size: 0.85rem; }
-        .profile-details span.tag-code { color: var(--accent-blue); font-weight: 700; }
-        .profile-details span.tag-depot { color: #f1f5f9; font-weight: 600; }
-
-        .btn-view-statement {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #050811;
-            border: none;
-            padding: 0.65rem 1.3rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.88rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
-        }
-        .btn-view-statement:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+        .staff-avatar-large {
+            width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
+            border: 2.5px solid var(--accent-blue); background: #1e293b; display: flex;
+            align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: var(--accent-blue);
         }
 
-        /* 3 Dynamic Sum Stats Cards */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.4rem; }
-        .stat-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.2rem 1.4rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        .stat-box::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-        .stat-box-credit::after { background: var(--accent-green); }
-        .stat-box-debit::after { background: var(--accent-red); }
-        .stat-box-bal::after { background: var(--accent-blue); }
+        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.4rem; }
+        .sum-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.2rem; text-align: center; }
+        .sum-card span { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
+        .sum-card h2 { font-size: 1.4rem; font-weight: 800; }
 
-        .stat-box h4 {
-            font-size: 0.74rem;
-            letter-spacing: 0.6px;
-            color: var(--text-secondary);
-            margin-bottom: 0.4rem;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-        .stat-box p { font-size: 1.45rem; font-weight: 800; letter-spacing: -0.5px; }
-        .stat-credit { color: var(--accent-green); }
-        .stat-debit { color: var(--accent-red); }
-        .stat-bal { color: var(--accent-blue); }
-
-        /* Filter Bar */
-        .filter-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.8rem; }
-        .filter-group { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-        .filter-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); }
-        .filter-select {
-            padding: 0.5rem 0.9rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: var(--bg-card);
-            color: var(--accent-blue);
-            font-weight: 600;
-            outline: none;
-            font-size: 0.85rem;
-            cursor: pointer;
-        }
-        .filter-select:focus { border-color: var(--accent-blue); }
-
-        /* Ledger Table Card */
-        .ledger-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .ledger-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.1rem 1.6rem;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(15, 23, 42, 0.4);
-        }
-        .ledger-card-header h3 { font-size: 1.05rem; color: #ffffff; font-weight: 700; }
-        .badge-live {
-            color: var(--accent-blue);
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            background: rgba(56, 189, 248, 0.1);
-            padding: 0.25rem 0.6rem;
-            border-radius: 20px;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+        .btn-statement-view {
+            background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none;
+            padding: 0.65rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.88rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 0.4rem;
         }
 
-        .table-responsive { width: 100%; overflow-x: auto; }
-        table.ledger-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.ledger-table th {
-            padding: 0.9rem 1.4rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(15, 23, 42, 0.6);
-        }
-        table.ledger-table td {
-            padding: 0.95rem 1.4rem;
-            font-size: 0.88rem;
-            border-bottom: 1px solid #141e33;
-        }
-        table.ledger-table tr:hover td { background: var(--bg-card-hover); }
-        table.ledger-table tr:last-child td { border-bottom: none; }
+        .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: #0c1424; }
+        table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
+        table.custom-table th { position: sticky; top: 0; z-index: 10; padding: 0.85rem 1rem; color: #fff; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; background: #111a2e; border-bottom: 2px solid var(--accent-blue); }
+        table.custom-table td { padding: 0.85rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #1a273e; white-space: nowrap; }
 
-        .text-debit { color: var(--accent-red); font-weight: 600; }
-        .text-credit { color: var(--accent-green); font-weight: 600; }
-        .text-balance { color: var(--accent-blue); font-weight: 600; }
-        .text-gray { color: #64748b; }
+        /* Compact 380px Print Modal */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
+        .modal-box-compact { background: #111a2e; margin: 3rem auto; width: 100%; max-width: 400px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.2rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
+        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.92rem; }
+        .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
 
-        .load-more-container { padding: 1.1rem; text-align: center; border-top: 1px solid var(--border-color); background: #0c1220; }
-        .btn-load-more {
-            background: #17233a;
-            color: var(--accent-blue);
-            border: 1px solid var(--border-color);
-            padding: 0.55rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-load-more:hover { background: #1e2e4d; color: #fff; }
-
-        /* Modals */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(6px); overflow-y: auto; }
-        .modal-box { background: var(--bg-card); margin: 3rem auto; max-width: 440px; border-radius: 14px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: #0c1322; border-bottom: 1px solid var(--border-color); }
-        .modal-top-bar span { color: #f8fafc; font-size: 0.95rem; font-weight: 700; }
-        .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; line-height: 1; }
-        .modal-close-btn:hover { color: #fff; }
-
-        .pwd-modal-body { padding: 1.5rem; }
-        .pwd-group { margin-bottom: 1.1rem; }
-        .pwd-group label { display: block; font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.4rem; font-weight: 600; }
-        .pwd-group input { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: #0a0f1d; color: #fff; outline: none; font-size: 0.9rem; }
-        .pwd-group input:focus { border-color: var(--accent-blue); }
-        .btn-update-pwd { width: 100%; background: var(--accent-amber); color: #000; font-weight: 700; border: none; padding: 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 0.4rem; }
-        .btn-update-pwd:hover { background: #d97706; }
-        .pwd-status { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
-
-        /* Statement Receipt with Company Logo */
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-company-logo { width: 180px; height: 50px; margin: 0 auto 0.4rem auto; display: flex; align-items: center; justify-content: center; }
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', monospace; font-size: 0.76rem; width: 100%; max-width: 380px; margin: 0 auto; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
+        .receipt-company-logo { width: 160px; height: 44px; margin: 0 auto 0.3rem auto; display: flex; align-items: center; justify-content: center; }
         .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        .receipt-header h2 { font-size: 0.92rem; font-weight: 800; margin-bottom: 0.2rem; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
-        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.82rem; }
+        .receipt-header h2 { font-size: 0.9rem; font-weight: 800; color: #000; margin-bottom: 0.15rem; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .receipt-header p { font-size: 0.7rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.8rem; }
 
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
-        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.75rem; }
-        .receipt-table td { padding: 4px 2px; font-size: 0.75rem; border: none; color: #000; vertical-align: top; }
-        .receipt-table .desc-sub { font-size: 0.68rem; color: #444; display: block; }
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.72rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.4rem; }
+        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 3px 2px; font-weight: bold; color: #000; font-size: 0.72rem; text-align: left; }
+        .receipt-table td { padding: 3px 2px; font-size: 0.72rem; color: #000; }
+        .text-right { text-align: right !important; }
+        .text-center { text-align: center !important; }
 
-        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.35rem 0; font-size: 0.74rem; line-height: 1.4; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
-
-        .receipt-actions { padding: 0.9rem 1.2rem; background: #0c1322; }
-        .print-green-btn { width: 100%; background: var(--accent-green); color: white; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .print-green-btn:hover { background: #059669; }
+        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.65rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
 
         @media print {
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 390px; margin: 0 auto; padding: 5px; background: #fff; color: #000; }
-            .modal-top-bar, .receipt-actions { display: none !important; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 360px; margin: 0 auto; background: #fff; color: #000; }
+            .modal-top-bar, .modal-actions { display: none !important; }
         }
 
-        @media (max-width: 820px) {
-            .navbar { flex-direction: column; text-align: center; gap: 0.8rem; padding: 1rem; }
-            .brand-section, .nav-actions, .depot-center-section { justify-content: center; width: 100%; }
-            .depot-center-section { flex-direction: column; text-align: center; }
-            .profile-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .btn-view-statement { width: 100%; justify-content: center; }
-            .stats-row { grid-template-columns: 1fr; }
-        }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
+        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #10b981; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
-    <!-- Header Navbar -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <div class="navbar">
-        <!-- Left: Yellow Box with Staff Logo -->
         <div class="brand-section">
-            <div class="staff-logo-box" id="staffLogoBox">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#581c87"><path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm5 11.2c0 .9-.6 1.8-1.5 1.8H8.5c-.9 0-1.5-.9-1.5-1.8 0-2 2-3.2 5-3.2s5 1.2 5 3.2z"/></svg>
-            </div>
-            <div class="logo-text-box">
-                <h3>RCM DEPOT</h3>
-                <span>Staff Portal</span>
+            <div class="staff-logo-box" id="staffLogoBox"></div>
+            <div>
+                <h3 style="color:#fff;font-size:1rem;font-weight:800;">RCM DEPOT</h3>
+                <span style="font-size:0.74rem;color:var(--accent-blue);font-weight:700;">STAFF PORTAL</span>
             </div>
         </div>
-
-        <!-- Center: 225x58 Company Logo & Depot Info -->
         <div class="depot-center-section">
-            <div class="company-logo-badge" id="companyLogoBox">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
-            </div>
-            <div class="depot-header-info">
-                <h1>RCM Depot <span>Management</span></h1>
-                <p id="topDepotAddress">Loading depot address...</p>
-                <div class="depot-badges">
-                    <span class="tag-pill"><strong>FSSAI:</strong> <span id="topDepotFssai">-</span></span>
-                    <span class="tag-pill"><strong>GSTIN:</strong> <span id="topDepotGstin">-</span></span>
-                </div>
+            <div class="company-logo-badge" id="companyLogoBox"></div>
+            <div>
+                <h1 style="font-size:1.1rem;font-weight:800;color:#fff;"><span id="headerDepotTitle">RCM Depot</span></h1>
+                <p id="topDepotAddress" style="font-size:0.78rem;color:var(--text-secondary);">Loading address...</p>
             </div>
         </div>
-
-        <!-- Right: Actions -->
         <div class="nav-actions">
             <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
@@ -423,580 +135,353 @@
     </div>
 
     <div class="main-container">
-
-        <!-- Profile Header Card -->
+        <!-- Profile Banner -->
         <div class="profile-card">
             <div class="profile-left">
-                <div class="avatar-container" id="avatarBox">
-                    <span id="avatarFallback">U</span>
+                <div id="staffAvatarBox" class="staff-avatar-large">U</div>
+                <div>
+                    <h2 id="staffDisplayName" style="font-size:1.3rem;font-weight:800;">Staff Name</h2>
+                    <p style="color:var(--text-secondary);font-size:0.86rem;">
+                        Employee ID: <strong id="staffDisplayCode" style="color:var(--accent-blue);">-</strong> | Assigned Depot: <strong id="staffDisplayDepot" style="color:#fff;">-</strong>
+                    </p>
                 </div>
-                <div class="profile-details">
-                    <h2 id="dispStaffName">Staff Member</h2>
-                    <p>Employee ID: <span class="tag-code" id="dispStaffCode">Loading...</span> | Assigned Depot: <span class="tag-depot" id="dispDepotName">Loading...</span></p>
-                </div>
             </div>
-            <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
+            <button class="btn-statement-view" onclick="openPrintModal()">📄 View Statement & Print</button>
         </div>
 
-        <!-- 3 Dynamic Sum Stats Cards -->
-        <div class="stats-row">
-            <div class="stat-box stat-box-credit">
-                <h4>Total Credit (₹)</h4>
-                <p class="stat-credit" id="totalCredit">₹0</p>
+        <!-- Summary Cards -->
+        <div class="summary-grid">
+            <div class="sum-card">
+                <span>Total Credit (₹)</span>
+                <h2 id="staffTotalCredit" style="color:var(--accent-green);">₹0</h2>
             </div>
-            <div class="stat-box stat-box-debit">
-                <h4>Total Debit (₹)</h4>
-                <p class="stat-debit" id="totalDebit">₹0</p>
+            <div class="sum-card">
+                <span>Total Debit (₹)</span>
+                <h2 id="staffTotalDebit" style="color:var(--accent-red);">₹0</h2>
             </div>
-            <div class="stat-box stat-box-bal">
-                <h4>Net Balance</h4>
-                <p class="stat-bal" id="netBalance">₹0 (Cr)</p>
+            <div class="sum-card">
+                <span>Net Balance</span>
+                <h2 id="staffNetBalance" style="color:var(--accent-blue);">₹0</h2>
             </div>
         </div>
 
-        <!-- Separate Year & Month Filters -->
-        <div class="filter-bar">
-            <div class="filter-group">
-                <label>Filter Statement:</label>
-                <select id="yearFilter" class="filter-select" onchange="onYearChange()">
-                    <option value="ALL">All Years</option>
-                </select>
-                <select id="monthFilter" class="filter-select" onchange="applyFilters()">
-                    <option value="ALL">All Months</option>
-                </select>
-            </div>
-            <span class="badge-live">⚡ Real-time Synced</span>
-        </div>
-
-        <!-- Ledger Table Card -->
-        <div class="ledger-card">
-            <div class="ledger-card-header">
-                <h3>📑 Ledger Transactions</h3>
-                <span id="showingCount" style="font-size:0.85rem; color:var(--text-secondary); font-weight:600;">Showing 5 entries</span>
+        <!-- Ledger Table -->
+        <div class="panel-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:14px;padding:1.4rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h3 style="font-size:1.05rem;font-weight:800;">📜 Ledger Transactions</h3>
+                <span id="trxCountBadge" style="color:var(--text-secondary);font-size:0.82rem;">0 entries</span>
             </div>
             <div class="table-responsive">
-                <table class="ledger-table">
+                <table class="custom-table">
                     <thead>
                         <tr>
                             <th>Date</th>
                             <th>Particular</th>
+                            <th>Mode</th>
                             <th>Debit (₹)</th>
                             <th>Credit (₹)</th>
                             <th>Balance (₹)</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="ledgerTableBody">
-                        <tr><td colspan="5" class="text-center" style="color: var(--text-secondary); padding: 2.5rem;">Loading live statement...</td></tr>
-                    </tbody>
+                    <tbody id="staffLedgerBody"></tbody>
                 </table>
             </div>
-            <div class="load-more-container" id="loadMoreBox" style="display: none;">
-                <button class="btn-load-more" id="loadMoreBtn" onclick="loadMoreEntries()">⬇️ Load More Entries</button>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Password Modal -->
-    <div id="passwordModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>🔑 Change Password</span>
-                <button class="modal-close-btn" onclick="closePasswordModal()">&times;</button>
-            </div>
-            <div class="pwd-modal-body">
-                <form id="changePasswordForm">
-                    <div class="pwd-group">
-                        <label>Current Password</label>
-                        <input type="password" id="oldPass" required placeholder="Enter Current Password">
-                    </div>
-                    <div class="pwd-group">
-                        <label>New Password</label>
-                        <input type="password" id="newPass" required placeholder="Enter New Password">
-                    </div>
-                    <div class="pwd-group">
-                        <label>Confirm New Password</label>
-                        <input type="password" id="confirmPass" required placeholder="Confirm New Password">
-                    </div>
-                    <button type="submit" class="btn-update-pwd" id="pwdSubmitBtn">Update Password</button>
-                    <p id="pwdStatusMsg" class="pwd-status"></p>
-                </form>
-            </div>
         </div>
     </div>
 
-    <!-- Statement Receipt Modal -->
+    <!-- Compact Print Modal (Width: 380px) -->
     <div id="printModal" class="modal">
-        <div class="modal-box">
+        <div class="modal-box-compact">
             <div class="modal-top-bar">
                 <span>📄 Full Account Statement</span>
-                <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
+                <button class="modal-close-btn" onclick="closePrintModal()">&times;</button>
             </div>
-            
             <div id="printableReceipt" class="receipt-container">
                 <div class="receipt-header">
                     <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
-                    <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
-                    <p id="depotFullAddress">Depot Address</p>
-                    <p id="depotContact">Mob: -</p>
-                    <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
+                    <h2>RCM Consumer Products Private Limited</h2>
+                    <p id="receiptFullAddress">Depot Address</p>
+                    <p id="receiptContact">Mob: - | GSTIN: -</p>
                     <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
                 </div>
-
                 <div class="receipt-meta">
                     <div>
                         <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
-                        <p><strong>Joined:</strong> <span id="rcptJoinedDate">-</span></p>
+                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
                     </div>
                     <div class="text-right">
-                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
                         <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                        <p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p>
                     </div>
                 </div>
-
                 <table class="receipt-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 48%;">Date/Desc</th>
-                            <th class="text-right" style="width: 17%;">Dr</th>
-                            <th class="text-right" style="width: 17%;">Cr</th>
-                            <th class="text-right" style="width: 18%;">Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="rcptTableBody">
-                        <tr><td colspan="4" class="text-center">Loading transactions...</td></tr>
-                    </tbody>
+                    <thead><tr><th>Date/Desc</th><th class="text-right">Dr</th><th class="text-right">Cr</th><th class="text-right">Bal</th></tr></thead>
+                    <tbody id="rcptTableBody"></tbody>
                 </table>
-
                 <div class="receipt-summary">
-                    <div class="sum-row">
-                        <span>TOTAL DEBIT:</span>
-                        <span id="rcptTotalDebit">Rs.0.00</span>
-                    </div>
-                    <div class="sum-row">
-                        <span>TOTAL CREDIT:</span>
-                        <span id="rcptTotalCredit">Rs.0.00</span>
-                    </div>
-                    <div class="sum-row" style="margin-top: 4px; font-size: 0.82rem;">
-                        <span>NET BALANCE:</span>
-                        <span id="rcptNetBalance">Rs.0.00</span>
-                    </div>
+                    <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+                    <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+                    <div class="sum-row" style="margin-top:3px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
                 </div>
             </div>
-
-            <div class="receipt-actions">
+            <div style="padding:0.8rem; background:#0c1322;" class="modal-actions">
                 <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="pwdModal" class="modal">
+        <div class="modal-box-compact">
+            <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
+            <div style="padding:1.2rem;">
+                <form id="staffPwdForm">
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">New Password</label>
+                        <input type="password" id="newStaffPass" class="form-control" style="width:100%;padding:0.7rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required>
+                    </div>
+                    <button type="submit" style="width:100%;padding:0.75rem;background:var(--accent-blue);color:#000;font-weight:800;border:none;border-radius:8px;cursor:pointer;">Update Password</button>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
-        
-        // Strictly get the logged in user
+
         let staffCode = (sessionStorage.getItem("user") || "").trim();
-        let staffNameStored = sessionStorage.getItem("name") || "";
-        let staffDepotStored = sessionStorage.getItem("depot") || "";
+        let staffNameStored = sessionStorage.getItem("name") || "Staff";
+        if (!staffCode) window.location.href = "/";
 
-        // If no user in session, redirect to login
-        if (!staffCode) {
-            window.location.href = "/";
-        }
-
-        let bundleData = { staff: {}, depot: {}, ledger: [] };
-        let allProcessedRecords = [];
-        let currentFilteredList = [];
-        let displayedLimit = 5;
+        let staffDataGlobal = {};
+        let depotDataGlobal = {};
+        let staffLedgerRows = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        function jsonp(url) {
-            return new Promise((resolve, reject) => {
-                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
-                const script = document.createElement('script');
-                
-                const timer = setTimeout(() => {
-                    delete window[callbackName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    reject(new Error("Request Timeout"));
-                }, 8000);
-
-                window[callbackName] = function(data) {
-                    clearTimeout(timer);
-                    delete window[callbackName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    resolve(data);
-                };
-
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
-                script.onerror = () => {
-                    clearTimeout(timer);
-                    delete window[callbackName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    reject(new Error("Network Error"));
-                };
-                document.body.appendChild(script);
-            });
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-msg';
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 2500);
         }
 
-        function parseCleanDate(raw) {
-            if (!raw) return { formatted: '-', year: '', month: '' };
+        function formatCleanDate(raw) {
+            if (!raw) return '-';
+            let str = String(raw).trim();
+            if (str === '-' || str === '') return '-';
+            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) return str.replace(/\//g, '-');
             let d = new Date(raw);
             if (isNaN(d.getTime())) {
-                const str = String(raw).split('T')[0].split(' ')[0];
-                const parts = str.split('-');
+                let parts = str.split('T')[0].split(' ')[0].split('-');
                 if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
             }
-
-            if (isNaN(d.getTime())) return { formatted: String(raw).split('T')[0].split(' ')[0], year: '', month: '' };
-
-            const day = String(d.getDate()).padStart(2, '0');
-            const mName = monthNames[d.getMonth()];
-            const yFull = String(d.getFullYear());
-            const yShort = yFull.slice(2);
-
-            return { formatted: `${day}-${mName}-${yShort}`, year: yFull, month: mName };
+            if (!isNaN(d.getTime())) return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
+            return str.split(' 05:')[0].split('T')[0];
         }
 
-        function getField(obj, ...keys) {
-            if (!obj) return '';
-            for (let k of keys) {
-                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
-                    return String(obj[k]).trim();
-                }
-            }
-            const objKeys = Object.keys(obj);
-            for (let k of keys) {
-                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
-                if (found && obj[found]) return String(obj[found]).trim();
-            }
-            return '';
+        function getTodayFormatted() {
+            const now = new Date();
+            return `${String(now.getDate()).padStart(2, '0')}-${monthNames[now.getMonth()]}-${String(now.getFullYear()).slice(2)}`;
+        }
+
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const cbName = 'staff_cb_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 8000);
+                function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
+                window[cbName] = function(data) { cleanup(); resolve(data); };
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+                document.body.appendChild(script);
+            });
         }
 
         function setSafeImage(containerId, rawUrl) {
             const container = document.getElementById(containerId);
             if (!container || !rawUrl) return;
-
             let u = rawUrl.trim();
-            let cleanUrl = u;
-
             if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
-                cleanUrl = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
+                u = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
             }
-
             const img = new Image();
-            img.onload = () => {
-                container.innerHTML = '';
-                container.appendChild(img);
-            };
-            img.onerror = () => {
-                container.innerHTML = `<img src="https://images.weserv.nl/?url=${encodeURIComponent(u)}" alt="Logo">`;
-            };
-            img.src = cleanUrl;
+            img.onload = () => { container.innerHTML = ''; container.appendChild(img); };
+            img.onerror = () => { container.innerHTML = `<img src="${u}" alt="Logo">`; };
+            img.src = u;
         }
 
-        async function loadFastBundle() {
-            // Immediate preliminary render from session
-            if (staffNameStored) document.getElementById('dispStaffName').textContent = staffNameStored;
-            if (staffCode) document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
-            if (staffDepotStored) document.getElementById('dispDepotName').textContent = staffDepotStored;
+        function getField(obj, ...keys) {
+            if (!obj) return '';
+            for (let k of keys) {
+                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return String(obj[k]).trim();
+            }
+            const objKeys = Object.keys(obj);
+            for (let k of keys) {
+                const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '').includes(cleanK) || cleanK.includes(ok.toLowerCase().replace(/[^a-z0-9]/g, '')));
+                if (found && obj[found]) return String(obj[found]).trim();
+            }
+            return '';
+        }
 
+        async function loadStaffData() {
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getStaffBundle&staffCode=${encodeURIComponent(staffCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load staff bundle");
 
-                bundleData = res;
-                const staffInfo = res.staff || {};
-                const depotInfo = res.depot || {};
-                const ledgerRows = res.ledger || [];
+                staffDataGlobal = res.staff || {};
+                depotDataGlobal = res.depot || {};
+                staffLedgerRows = res.ledger || [];
 
-                // 1. Render Staff Logo (Cell B2) & Company Logo (Cell A2)
-                setSafeImage('staffLogoBox', res.staffLogo || 'https://ibb.co/b5dZ9rHD');
-                setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
-                setSafeImage('receiptCompanyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
+                setSafeImage('companyLogoBox', res.companyLogo);
+                setSafeImage('staffLogoBox', res.staffLogo);
+                setSafeImage('receiptCompanyLogoBox', res.companyLogo);
 
-                // 2. Render Header Details (strictly for this staff member's working depot)
-                const addr = getField(depotInfo, 'Depot Address');
-                const dist = getField(depotInfo, 'Dristric', 'District');
-                const stateName = getField(depotInfo, 'State Name');
-                const pin = getField(depotInfo, 'Pin Code', 'Pincode');
-                const fssai = getField(depotInfo, 'FSSAI', 'FSSAI No.');
-                const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
+                const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+                const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
+                const sDepot = getField(staffDataGlobal, 'Staff Working Depot Name', 'Depot') || getField(depotDataGlobal, 'Depot Name');
+                const photo = getField(staffDataGlobal, 'Staff Photo', 'Photo');
 
-                if (addr) {
-                    document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
-                }
-                document.getElementById('topDepotFssai').textContent = fssai || '-';
-                document.getElementById('topDepotGstin').textContent = gstin || '-';
+                document.getElementById('staffDisplayName').textContent = sName;
+                document.getElementById('staffDisplayCode').textContent = sCode;
+                document.getElementById('staffDisplayDepot').textContent = sDepot || '-';
 
-                // 3. Render Profile Card
-                const finalName = getField(staffInfo, 'Staff Name') || staffNameStored || 'Staff Member';
-                const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || staffDepotStored || '-';
-                const staffPhoto = getField(staffInfo, 'Staff Photo', 'Photo', 'Image');
-
-                document.getElementById('dispStaffName').textContent = finalName;
-                document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
-                document.getElementById('dispDepotName').textContent = finalDepot;
-
-                if (staffPhoto && (staffPhoto.startsWith('data:image') || staffPhoto.startsWith('http'))) {
-                    setSafeImage('avatarBox', staffPhoto);
+                const avatarBox = document.getElementById('staffAvatarBox');
+                if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
+                    avatarBox.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
                 } else {
-                    document.getElementById('avatarBox').innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
+                    avatarBox.textContent = sName.charAt(0).toUpperCase();
                 }
 
-                // 4. Process Ledger
-                if (ledgerRows.length === 0) {
-                    document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--text-secondary); padding:2.5rem;">No ledger transactions found for ${staffCode}.</td></tr>`;
-                    document.getElementById('totalCredit').textContent = '₹0';
-                    document.getElementById('totalDebit').textContent = '₹0';
-                    document.getElementById('netBalance').textContent = '₹0 (Cr)';
-                    return;
-                }
+                // Depot address header
+                const addr = getField(depotDataGlobal, 'Depot Address');
+                const dist = getField(depotDataGlobal, 'Dristric', 'District');
+                const state = getField(depotDataGlobal, 'State Name');
+                const pin = getField(depotDataGlobal, 'Pin Code', 'Pincode');
+                const dTitle = getField(depotDataGlobal, 'Depot Name') || sDepot;
 
-                let runningBal = 0;
-                allProcessedRecords = [];
-                const yearSet = new Set();
+                document.getElementById('headerDepotTitle').textContent = `${dTitle} Depot`;
+                document.getElementById('topDepotAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
 
-                ledgerRows.forEach(row => {
-                    const rawDate = getField(row, 'Transaction Date');
-                    const parsed = parseCleanDate(rawDate);
-                    
-                    const dr = Number(getField(row, 'Debit') || 0);
-                    const cr = Number(getField(row, 'Credit') || 0);
+                renderLedgerTable(staffLedgerRows);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderLedgerTable(list) {
+            const tbody = document.getElementById('staffLedgerBody');
+            document.getElementById('trxCountBadge').textContent = `${list.length} entries`;
+
+            let totalDr = 0, totalCr = 0, runningBal = 0, html = '';
+
+            list.forEach(r => {
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                const part = getField(r, 'Particular', 'particular');
+                const mode = getField(r, 'Payment Mode', 'mode') || '-';
+
+                // Accurate check from Col K: only approved transactions add to balance
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
                     runningBal += (cr - dr);
-
-                    if (parsed.year) yearSet.add(parsed.year);
-
-                    allProcessedRecords.push({
-                        year: parsed.year,
-                        month: parsed.month,
-                        customDate: parsed.formatted,
-                        particular: getField(row, 'Particular') || '-',
-                        dr: dr,
-                        cr: cr,
-                        bal: runningBal
-                    });
-                });
-
-                // Populate Year Filter
-                const yearSel = document.getElementById('yearFilter');
-                yearSel.innerHTML = `<option value="ALL">All Years</option>`;
-                Array.from(yearSet).sort().reverse().forEach(yr => {
-                    yearSel.innerHTML += `<option value="${yr}">${yr}</option>`;
-                });
-
-                onYearChange();
-
-            } catch (err) {
-                document.getElementById('ledgerTableBody').innerHTML = `<tr><td colspan="5" class="text-center" style="color:#f43f5e; padding:2.5rem;">Failed to load data: ${err.message}</td></tr>`;
-            }
-        }
-
-        function onYearChange() {
-            const selYear = document.getElementById('yearFilter').value;
-            const monthSel = document.getElementById('monthFilter');
-            monthSel.innerHTML = `<option value="ALL">All Months</option>`;
-
-            const monthsAvailable = new Set();
-            allProcessedRecords.forEach(r => {
-                if (selYear === 'ALL' || r.year === selYear) {
-                    if (r.month) monthsAvailable.add(r.month);
                 }
-            });
 
-            monthNames.forEach(m => {
-                if (monthsAvailable.has(m)) {
-                    monthSel.innerHTML += `<option value="${m}">${m}</option>`;
-                }
-            });
-
-            displayedLimit = 5;
-            applyFilters();
-        }
-
-        function applyFilters() {
-            const selYear = document.getElementById('yearFilter').value;
-            const selMonth = document.getElementById('monthFilter').value;
-
-            currentFilteredList = allProcessedRecords.filter(r => {
-                const matchYear = (selYear === 'ALL' || r.year === selYear);
-                const matchMonth = (selMonth === 'ALL' || r.month === selMonth);
-                return matchYear && matchMonth;
-            });
-
-            let filterDebitSum = 0;
-            let filterCreditSum = 0;
-
-            currentFilteredList.forEach(r => {
-                filterDebitSum += r.dr;
-                filterCreditSum += r.cr;
-            });
-
-            document.getElementById('totalCredit').textContent = `₹${filterCreditSum.toLocaleString('en-IN')}`;
-            document.getElementById('totalDebit').textContent = `₹${filterDebitSum.toLocaleString('en-IN')}`;
-            
-            const filterNet = filterCreditSum - filterDebitSum;
-            const balType = filterNet >= 0 ? '(Cr)' : '(Dr)';
-            const balEl = document.getElementById('netBalance');
-            balEl.textContent = `₹${Math.abs(filterNet).toLocaleString('en-IN')} ${balType}`;
-            balEl.style.color = filterNet >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-
-            renderTableRows();
-        }
-
-        function renderTableRows() {
-            const tbody = document.getElementById('ledgerTableBody');
-            const loadMoreBox = document.getElementById('loadMoreBox');
-
-            if (currentFilteredList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:var(--text-secondary); padding:2rem;">No entries found for selected filter.</td></tr>`;
-                document.getElementById('showingCount').textContent = `0 entries`;
-                loadMoreBox.style.display = 'none';
-                return;
-            }
-
-            const reversedList = currentFilteredList.slice().reverse();
-            const visibleEntries = reversedList.slice(0, displayedLimit);
-
-            let tableHtml = '';
-            visibleEntries.forEach(r => {
-                tableHtml += `<tr>
-                    <td><strong>${r.customDate}</strong></td>
-                    <td>${r.particular}</td>
-                    <td class="${r.dr > 0 ? 'text-debit' : 'text-gray'}">${r.dr > 0 ? '₹' + r.dr.toLocaleString('en-IN') : '-'}</td>
-                    <td class="${r.cr > 0 ? 'text-credit' : 'text-gray'}">${r.cr > 0 ? '₹' + r.cr.toLocaleString('en-IN') : '-'}</td>
-                    <td class="text-balance">₹${r.bal.toLocaleString('en-IN')} ${r.bal >= 0 ? '(Cr)' : '(Dr)'}</td>
-                </tr>`;
-            });
-            tbody.innerHTML = tableHtml;
-
-            document.getElementById('showingCount').textContent = `Showing ${visibleEntries.length} of ${currentFilteredList.length} entries`;
-
-            if (currentFilteredList.length > displayedLimit) {
-                loadMoreBox.style.display = 'block';
-            } else {
-                loadMoreBox.style.display = 'none';
-            }
-        }
-
-        function loadMoreEntries() {
-            displayedLimit += 5;
-            renderTableRows();
-        }
-
-        function openPasswordModal() {
-            document.getElementById('passwordModal').style.display = 'block';
-            document.getElementById('changePasswordForm').reset();
-            document.getElementById('pwdStatusMsg').textContent = '';
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'none';
-        }
-
-        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const oldPass = document.getElementById('oldPass').value.trim();
-            const newPass = document.getElementById('newPass').value.trim();
-            const confirmPass = document.getElementById('confirmPass').value.trim();
-            const msg = document.getElementById('pwdStatusMsg');
-            const btn = document.getElementById('pwdSubmitBtn');
-
-            if (newPass !== confirmPass) {
-                msg.style.color = "var(--accent-red)";
-                msg.textContent = "New passwords do not match!";
-                return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = "Updating...";
-            msg.textContent = "";
-
-            try {
-                const url = `${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
-                const res = await jsonp(url);
-
-                if (res.success) {
-                    msg.style.color = "var(--accent-green)";
-                    msg.textContent = "Password changed successfully!";
-                    setTimeout(() => { closePasswordModal(); }, 1800);
-                } else {
-                    msg.style.color = "var(--accent-red)";
-                    msg.textContent = res.message || "Failed to update password.";
-                }
-            } catch (err) {
-                msg.style.color = "var(--accent-red)";
-                msg.textContent = "Error updating password.";
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Update Password";
-            }
-        });
-
-        function openPrintPreview() {
-            const depotInfo = bundleData.depot || {};
-            const staffInfo = bundleData.staff || {};
-
-            const compName = getField(depotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
-            const addr = getField(depotInfo, 'Depot Address');
-            const dist = getField(depotInfo, 'Dristric', 'District');
-            const pin = getField(depotInfo, 'Pin Code', 'Pincode');
-            const mob = getField(depotInfo, 'Mob. No.', 'Mobile Number', 'Mob No');
-            const stateCode = getField(depotInfo, 'State Code');
-            const stateName = getField(depotInfo, 'State Name');
-            const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
-
-            document.getElementById('depotCompanyName').textContent = compName;
-            document.getElementById('depotFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
-            document.getElementById('depotContact').textContent = `Mob: ${mob || '-'}`;
-            document.getElementById('depotStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
-            document.getElementById('depotGstin').textContent = `GSTIN: ${gstin || '-'}`;
-
-            document.getElementById('rcptStaffName').textContent = getField(staffInfo, 'Staff Name') || staffNameStored;
-            document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
-            
-            const joinParsed = parseCleanDate(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
-            document.getElementById('rcptJoinedDate').textContent = joinParsed.formatted;
-            document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || staffDepotStored;
-
-            setSafeImage('receiptCompanyLogoBox', bundleData.companyLogo || 'https://ibb.co/nNKFfhtR');
-
-            const tbody = document.getElementById('rcptTableBody');
-            if (allProcessedRecords.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            let totalDr = 0;
-            let totalCr = 0;
-
-            allProcessedRecords.forEach(r => {
-                totalDr += r.dr;
-                totalCr += r.cr;
+                const statusColor = isApproved ? 'var(--accent-green)' : 'var(--accent-amber)';
+                const statusText = isApproved ? 'Approved' : 'Pending';
 
                 html += `<tr>
-                    <td><strong>${r.customDate}</strong><span class="desc-sub">${r.particular}</span></td>
-                    <td class="text-right">${r.dr > 0 ? r.dr : '-'}</td>
-                    <td class="text-right">${r.cr > 0 ? r.cr : '-'}</td>
-                    <td class="text-right"><strong>${r.bal}</strong></td>
+                    <td><strong>${dt}</strong></td>
+                    <td>${part}</td>
+                    <td>${mode}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-red)' : '#64748b'};font-weight:bold;">${dr > 0 ? '₹' + dr : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-green)' : '#64748b'};font-weight:bold;">${cr > 0 ? '₹' + cr : '-'}</td>
+                    <td style="color:var(--accent-blue);font-weight:bold;">${isApproved ? '₹' + runningBal : 'Pending'}</td>
+                    <td style="color:${statusColor};font-weight:bold;">${statusText}</td>
                 </tr>`;
             });
 
-            tbody.innerHTML = html;
+            tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transactions found.</td></tr>`;
+            document.getElementById('staffTotalCredit').textContent = `₹${totalCr.toLocaleString('en-IN')}`;
+            document.getElementById('staffTotalDebit').textContent = `₹${totalDr.toLocaleString('en-IN')}`;
+            const net = totalCr - totalDr;
+            document.getElementById('staffNetBalance').textContent = `₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+        }
+
+        // Print Statement Preview: Strictly Filter Approved Only
+        function openPrintModal() {
+            const addr = getField(depotDataGlobal, 'Depot Address');
+            const dist = getField(depotDataGlobal, 'Dristric', 'District');
+            const state = getField(depotDataGlobal, 'State Name');
+            const pin = getField(depotDataGlobal, 'Pin Code', 'Pincode');
+            const mob = getField(depotDataGlobal, 'Mob. No.', 'Mobile');
+            const gstin = getField(depotDataGlobal, 'GSTIN');
+
+            document.getElementById('receiptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+
+            document.getElementById('rcptStaffName').textContent = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+            document.getElementById('rcptStaffCode').textContent = getField(staffDataGlobal, 'Staff Code') || staffCode;
+            document.getElementById('rcptDepotName').textContent = getField(depotDataGlobal, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
+            document.getElementById('rcptPrintDate').textContent = getTodayFormatted();
+
+            let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
+
+            staffLedgerRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
+                
+                // Strictly exclude pending transactions from print preview
+                if (appRaw.toLowerCase() === 'approved') {
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                    const part = getField(r, 'Particular', 'particular');
+
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+
+                    html += `<tr>
+                        <td><strong>${dt}</strong><br><span style="font-size:0.68rem;color:#444;">${part}</span></td>
+                        <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                    </tr>`;
+                }
+            });
+
+            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="4" class="text-center">No approved transactions.</td></tr>`;
             document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
             document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
             const finalNet = totalCr - totalDr;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${finalNet.toFixed(2)}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('printModal').style.display = 'block';
         }
+        function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
 
-        function closePrintPreview() {
-            document.getElementById('printModal').style.display = 'none';
-        }
+        function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
+        function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 
-        window.onload = loadFastBundle;
+        document.getElementById('staffPwdForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const newPass = document.getElementById('newStaffPass').value.trim();
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&newPass=${encodeURIComponent(newPass)}`);
+                showToast(res.message || "Password updated!");
+                closePasswordModal();
+            } catch (err) { showToast("Error updating password"); }
+        });
+
+        window.onload = loadStaffData;
     </script>
 </body>
 </html>

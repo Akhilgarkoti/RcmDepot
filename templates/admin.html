@@ -45,12 +45,12 @@
         }
         .btn-logout:hover { background: var(--accent-red); color: #fff; }
 
-        .main-container { width: 100%; max-width: 1280px; margin: 1.5rem auto; padding: 0 1.5rem; }
+        .main-container { width: 100%; max-width: 1300px; margin: 1.5rem auto; padding: 0 1.5rem; }
 
-        .admin-nav-tabs { display: flex; gap: 0.6rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem; flex-wrap: wrap; }
+        .admin-nav-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem; flex-wrap: wrap; }
         .tab-btn {
             background: #111a2e; border: 1px solid var(--border-color); color: var(--text-secondary);
-            padding: 0.65rem 1.1rem; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer;
+            padding: 0.6rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer;
             display: inline-flex; align-items: center; gap: 0.4rem; transition: all 0.2s;
         }
         .tab-btn:hover { background: #1a2744; color: #fff; }
@@ -64,6 +64,21 @@
 
         .btn-new-item { background: linear-gradient(135deg, #0284c7, #0369a1); color: #fff; border: 1px solid #38bdf8; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 700; font-size: 0.84rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
         .btn-new-item:hover { background: #0284c7; }
+
+        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
+        
+        .filter-select-box {
+            padding: 0.5rem 0.85rem; background: var(--input-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; color: var(--accent-blue); font-size: 0.84rem; font-weight: 700; outline: none; cursor: pointer;
+        }
+
+        .search-box-wrap { position: relative; min-width: 240px; max-width: 340px; flex: 1; }
+        .search-input {
+            width: 100%; padding: 0.52rem 1rem 0.52rem 2.2rem; background: var(--input-bg); border: 1px solid var(--border-color);
+            border-radius: 8px; color: #ffffff; font-size: 0.86rem; outline: none;
+        }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 0.82rem; pointer-events: none; }
 
         .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 8px; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
@@ -80,11 +95,19 @@
         .btn-action-edit:hover { background: var(--accent-blue); color: #000; }
         .btn-action-delete { background: rgba(244, 63, 94, 0.12); color: var(--accent-red); border: 1px solid rgba(244, 63, 94, 0.35); padding: 0.35rem 0.65rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
         .btn-action-delete:hover { background: var(--accent-red); color: #fff; }
+        .btn-action-ledger { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.35rem 0.65rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.2rem; }
+        .btn-action-ledger:hover { background: var(--accent-amber); color: #000; }
+
+        .staff-avatar-cell { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--accent-blue); background: #1e293b; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--accent-blue); font-size: 0.85rem; }
+
+        .load-more-bar { text-align: center; padding-top: 0.9rem; }
+        .btn-load-older { background: rgba(56, 189, 248, 0.12); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.35); padding: 0.55rem 1.3rem; border-radius: 8px; font-weight: 700; font-size: 0.86rem; cursor: pointer; }
+        .btn-load-older:hover { background: var(--accent-blue); color: #000; }
 
         /* Modal Styles */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
         .modal-box { background: #111a2e; margin: 2rem auto; max-width: 540px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
-        .modal-box-wide { max-width: 780px; }
+        .modal-box-wide { max-width: 800px; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
@@ -99,6 +122,27 @@
 
         .btn-submit-modal { width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #10b981, #059669); color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 1rem; }
         .btn-submit-modal:hover { background: #059669; }
+
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Courier New', Courier, monospace; font-size: 0.78rem; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
+        .receipt-header h2 { font-size: 0.92rem; font-weight: 800; color: #000; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.82rem; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.74rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
+        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; color: #000; font-size: 0.75rem; text-align: left; }
+        .receipt-table td { padding: 4px 2px; font-size: 0.75rem; color: #000; }
+        .text-right { text-align: right !important; }
+        .text-center { text-align: center !important; }
+        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary .sum-row { display: flex; justify-content: space-between; }
+        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.7rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printableReceipt, #printableReceipt * { visibility: visible; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 400px; margin: 0 auto; background: #fff; color: #000; }
+            .modal-top-bar, .modal-actions { display: none !important; }
+        }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #10b981; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -132,6 +176,7 @@
             <button class="tab-btn" onclick="switchAdminTab('staffTab', this)">👥 Staff Master</button>
             <button class="tab-btn" onclick="switchAdminTab('ledgerTab', this)">💳 Staff Ledgers</button>
             <button class="tab-btn" onclick="switchAdminTab('dispatchTab', this)">📦 Dispatch Reports</button>
+            <button class="tab-btn" onclick="switchAdminTab('adminMasterTab', this)">🛡️ Admin Master</button>
         </div>
 
         <!-- 1. Pending Approvals Panel -->
@@ -225,10 +270,13 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
+                            <th style="width:50px; text-align:center;">Photo</th>
                             <th>Staff Code</th>
                             <th>Name</th>
                             <th>Mobile</th>
-                            <th>Depot</th>
+                            <th>Joining Date</th>
+                            <th>Depot Code</th>
+                            <th>Depot Name</th>
                             <th>Login ID</th>
                             <th>Status</th>
                             <th>Approval</th>
@@ -240,39 +288,52 @@
             </div>
         </div>
 
-        <!-- 4. Staff Ledgers Panel -->
+        <!-- 4. Staff Ledgers Summary Panel -->
         <div id="ledgerTab" class="panel-card" style="display:none;">
             <div class="panel-header">
-                <h3>💳 Staff Master Ledger Entries</h3>
-                <span id="ledgerCount" style="color:var(--text-secondary); font-size:0.85rem;">0 entries</span>
+                <h3>💳 Staff Master Ledger Summary</h3>
+                <span id="ledgerStaffCount" style="color:var(--text-secondary); font-size:0.85rem;">0 staff accounts</span>
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Date</th>
                             <th>Staff Code</th>
                             <th>Staff Name</th>
-                            <th>Particular</th>
-                            <th>Mode</th>
-                            <th>Debit (₹)</th>
-                            <th>Credit (₹)</th>
-                            <th>Depot</th>
-                            <th>Status</th>
+                            <th>Mobile</th>
+                            <th>Depot Name</th>
+                            <th>Total Credit (₹)</th>
+                            <th>Total Debit (₹)</th>
+                            <th>Net Balance (₹)</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminLedgerBody"></tbody>
+                    <tbody id="adminLedgerSummaryBody"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 5. Dispatch Reports Panel -->
+        <!-- 5. Dispatch Reports Panel with Year, Month, Today, Search & Load More -->
         <div id="dispatchTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>📦 All Depot Dispatch Reports</h3>
                 <span id="dispatchCount" style="color:var(--text-secondary); font-size:0.85rem;">0 records</span>
             </div>
+
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <select id="dispatchPeriodFilter" class="filter-select-box" onchange="filterAdminDispatchTable()">
+                        <option value="TODAY" selected>📅 Today's Entries</option>
+                        <option value="ALL">🌐 All Records</option>
+                    </select>
+
+                    <div class="search-box-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="adminDispatchSearch" class="search-input" placeholder="Search across all records..." oninput="filterAdminDispatchTable()">
+                    </div>
+                </div>
+            </div>
+
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead>
@@ -291,11 +352,38 @@
                     <tbody id="adminDispatchBody"></tbody>
                 </table>
             </div>
+
+            <div class="load-more-bar" id="loadMoreDispatchBar">
+                <button class="btn-load-older" onclick="loadAllAdminDispatches()">📥 Load All Older Records</button>
+            </div>
+        </div>
+
+        <!-- 6. Admin Master Panel -->
+        <div id="adminMasterTab" class="panel-card" style="display:none;">
+            <div class="panel-header">
+                <h3>🛡️ Admin Master (Role & Permission Control)</h3>
+                <button class="btn-new-item" onclick="openNewAdminModal()">➕ Add New Admin</button>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Admin ID</th>
+                            <th>Admin Name</th>
+                            <th>Mobile</th>
+                            <th>Login ID</th>
+                            <th>Password</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminMasterBody"></tbody>
+                </table>
+            </div>
         </div>
 
     </div>
 
-    <!-- Modal 1: Add New Depot Modal (All 15 Fields) -->
+    <!-- Modal 1: Add New Depot -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar">
@@ -305,239 +393,203 @@
             <div class="modal-body">
                 <form id="newDepotForm">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>A: Depot Code</label>
-                            <input type="text" id="addDepotCode" class="form-control" required placeholder="e.g. D121">
-                        </div>
-                        <div class="form-group">
-                            <label>B: Depot Name</label>
-                            <input type="text" id="addDepotName" class="form-control" required placeholder="e.g. Kishanganj">
-                        </div>
-                        <div class="form-group-full">
-                            <label>C: Company Name (Compny Name)</label>
-                            <input type="text" id="addDepotCompanyName" class="form-control" value="RCM Consumer Products Private Limited" required>
-                        </div>
-                        <div class="form-group-full">
-                            <label>D: Depot Address</label>
-                            <input type="text" id="addDepotAddress" class="form-control" required placeholder="Full street address">
-                        </div>
-                        <div class="form-group">
-                            <label>E: Pin Code</label>
-                            <input type="text" id="addDepotPinCode" class="form-control" required placeholder="e.g. 855107">
-                        </div>
-                        <div class="form-group">
-                            <label>F: State Name</label>
-                            <input type="text" id="addDepotStateName" class="form-control" required placeholder="e.g. Bihar">
-                        </div>
-                        <div class="form-group">
-                            <label>G: State Code</label>
-                            <input type="text" id="addDepotStateCode" class="form-control" placeholder="e.g. 10">
-                        </div>
-                        <div class="form-group">
-                            <label>H: District (Dristric)</label>
-                            <input type="text" id="addDepotDistrict" class="form-control" required placeholder="e.g. Kishanganj">
-                        </div>
-                        <div class="form-group">
-                            <label>I: GSTIN</label>
-                            <input type="text" id="addDepotGstin" class="form-control" placeholder="10AAMCR5143C1ZU">
-                        </div>
-                        <div class="form-group">
-                            <label>J: FSSAI</label>
-                            <input type="text" id="addDepotFssai" class="form-control" placeholder="10424370000018">
-                        </div>
-                        <div class="form-group">
-                            <label>K: Mob. No.</label>
-                            <input type="tel" id="addDepotMobile" class="form-control" required placeholder="10-digit mobile">
-                        </div>
-                        <div class="form-group">
-                            <label>L: Depot Login ID</label>
-                            <input type="text" id="addDepotLoginId" class="form-control" required placeholder="e.g. d121">
-                        </div>
-                        <div class="form-group">
-                            <label>M: Depot Login Password</label>
-                            <input type="text" id="addDepotPass" class="form-control" value="1020" required>
-                        </div>
-                        <div class="form-group">
-                            <label>N: Active Status</label>
-                            <select id="addDepotStatus" class="form-control">
-                                <option value="Active" selected>Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>O: Invoice No Series</label>
-                            <input type="text" id="addDepotInvSeries" class="form-control" required placeholder="e.g. 76287">
-                        </div>
+                        <div class="form-group"><label>A: Depot Code</label><input type="text" id="addDepotCode" class="form-control" required placeholder="e.g. D121"></div>
+                        <div class="form-group"><label>B: Depot Name</label><input type="text" id="addDepotName" class="form-control" required placeholder="e.g. Kishanganj"></div>
+                        <div class="form-group-full"><label>C: Company Name (Compny Name)</label><input type="text" id="addDepotCompanyName" class="form-control" value="RCM Consumer Products Private Limited" required></div>
+                        <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="addDepotAddress" class="form-control" required placeholder="Full address"></div>
+                        <div class="form-group"><label>E: Pin Code</label><input type="text" id="addDepotPinCode" class="form-control" required></div>
+                        <div class="form-group"><label>F: State Name</label><input type="text" id="addDepotStateName" class="form-control" required></div>
+                        <div class="form-group"><label>G: State Code</label><input type="text" id="addDepotStateCode" class="form-control"></div>
+                        <div class="form-group"><label>H: District (Dristric)</label><input type="text" id="addDepotDistrict" class="form-control" required></div>
+                        <div class="form-group"><label>I: GSTIN</label><input type="text" id="addDepotGstin" class="form-control"></div>
+                        <div class="form-group"><label>J: FSSAI</label><input type="text" id="addDepotFssai" class="form-control"></div>
+                        <div class="form-group"><label>K: Mob. No.</label><input type="tel" id="addDepotMobile" class="form-control" required></div>
+                        <div class="form-group"><label>L: Depot Login ID</label><input type="text" id="addDepotLoginId" class="form-control" required></div>
+                        <div class="form-group"><label>M: Depot Login Password</label><input type="text" id="addDepotPass" class="form-control" value="1020" required></div>
+                        <div class="form-group"><label>N: Active Status</label><select id="addDepotStatus" class="form-control"><option value="Active" selected>Active</option><option value="Inactive">Inactive</option></select></div>
+                        <div class="form-group"><label>O: Invoice No Series</label><input type="text" id="addDepotInvSeries" class="form-control" required></div>
                     </div>
-                    <button type="submit" id="btnAddDepotSubmit" class="btn-submit-modal">💾 Save Depot to Google Sheet</button>
+                    <button type="submit" class="btn-submit-modal">💾 Save Depot to Google Sheet</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal 2: Edit Depot Modal (All 15 Fields) -->
+    <!-- Modal 2: Edit Depot -->
     <div id="editDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar">
-                <span>✏️ Edit Depot Record (All 15 Fields)</span>
+                <span>✏️ Edit Depot Record</span>
                 <button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editDepotForm">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>A: Depot Code (Locked)</label>
-                            <input type="text" id="editDepotCode" class="form-control" readonly style="color:var(--accent-blue); font-weight:bold;">
-                        </div>
-                        <div class="form-group">
-                            <label>B: Depot Name</label>
-                            <input type="text" id="editDepotName" class="form-control" required>
-                        </div>
-                        <div class="form-group-full">
-                            <label>C: Company Name (Compny Name)</label>
-                            <input type="text" id="editDepotCompanyName" class="form-control" required>
-                        </div>
-                        <div class="form-group-full">
-                            <label>D: Depot Address</label>
-                            <input type="text" id="editDepotAddress" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>E: Pin Code</label>
-                            <input type="text" id="editDepotPinCode" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>F: State Name</label>
-                            <input type="text" id="editDepotStateName" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>G: State Code</label>
-                            <input type="text" id="editDepotStateCode" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>H: District (Dristric)</label>
-                            <input type="text" id="editDepotDistrict" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>I: GSTIN</label>
-                            <input type="text" id="editDepotGstin" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>J: FSSAI</label>
-                            <input type="text" id="editDepotFssai" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>K: Mob. No.</label>
-                            <input type="tel" id="editDepotMobile" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>L: Depot Login ID</label>
-                            <input type="text" id="editDepotLoginId" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>M: Depot Login Password</label>
-                            <input type="text" id="editDepotPass" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>N: Active Status</label>
-                            <select id="editDepotStatus" class="form-control">
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>O: Invoice No Series</label>
-                            <input type="text" id="editDepotInvSeries" class="form-control" required>
-                        </div>
+                        <div class="form-group"><label>A: Depot Code (Locked)</label><input type="text" id="editDepotCode" class="form-control" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
+                        <div class="form-group"><label>B: Depot Name</label><input type="text" id="editDepotName" class="form-control" required></div>
+                        <div class="form-group-full"><label>C: Company Name</label><input type="text" id="editDepotCompanyName" class="form-control" required></div>
+                        <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="editDepotAddress" class="form-control"></div>
+                        <div class="form-group"><label>E: Pin Code</label><input type="text" id="editDepotPinCode" class="form-control" required></div>
+                        <div class="form-group"><label>F: State Name</label><input type="text" id="editDepotStateName" class="form-control" required></div>
+                        <div class="form-group"><label>G: State Code</label><input type="text" id="editDepotStateCode" class="form-control"></div>
+                        <div class="form-group"><label>H: District</label><input type="text" id="editDepotDistrict" class="form-control" required></div>
+                        <div class="form-group"><label>I: GSTIN</label><input type="text" id="editDepotGstin" class="form-control"></div>
+                        <div class="form-group"><label>J: FSSAI</label><input type="text" id="editDepotFssai" class="form-control"></div>
+                        <div class="form-group"><label>K: Mob. No.</label><input type="tel" id="editDepotMobile" class="form-control" required></div>
+                        <div class="form-group"><label>L: Depot Login ID</label><input type="text" id="editDepotLoginId" class="form-control" required></div>
+                        <div class="form-group"><label>M: Password</label><input type="text" id="editDepotPass" class="form-control" required></div>
+                        <div class="form-group"><label>N: Active Status</label><select id="editDepotStatus" class="form-control"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+                        <div class="form-group"><label>O: Invoice No Series</label><input type="text" id="editDepotInvSeries" class="form-control" required></div>
                     </div>
-                    <button type="submit" class="btn-submit-modal">💾 Update Depot in Google Sheet</button>
+                    <button type="submit" class="btn-submit-modal">💾 Update Depot</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal 3: Add New Staff Modal -->
+    <!-- Modal 3: Add New Staff (All Fields A to K) -->
     <div id="newStaffModal" class="modal">
-        <div class="modal-box">
+        <div class="modal-box modal-box-wide">
             <div class="modal-top-bar">
-                <span>👥 Add New Staff Member</span>
+                <span>👥 Add New Staff Member (All 11 Fields)</span>
                 <button class="modal-close-btn" onclick="closeNewStaffModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="newStaffForm">
-                    <div class="form-group">
-                        <label>Staff Full Name</label>
-                        <input type="text" id="addStaffName" class="form-control" required placeholder="Enter full name">
+                    <div class="form-grid">
+                        <div class="form-group"><label>B: Staff Full Name</label><input type="text" id="addStaffName" class="form-control" required></div>
+                        <div class="form-group"><label>C: Mobile Number</label><input type="tel" id="addStaffMobile" class="form-control" required></div>
+                        <div class="form-group"><label>D: Joining Date</label><input type="date" id="addStaffJoinDate" class="form-control" required></div>
+                        <div class="form-group"><label>E: Login ID (Optional, Defaults to EMP Code)</label><input type="text" id="addStaffLoginId" class="form-control" placeholder="Leave blank for auto"></div>
+                        <div class="form-group"><label>F: Password</label><input type="text" id="addStaffPass" class="form-control" value="1010" required></div>
+                        <div class="form-group"><label>G & H: Assign Depot</label><select id="addStaffDepotSelect" class="form-control" required></select></div>
+                        <div class="form-group"><label>I: Status</label><select id="addStaffStatus" class="form-control"><option value="Active" selected>Active</option><option value="Inactive">Inactive</option></select></div>
+                        <div class="form-group"><label>J: Approval Status</label><select id="addStaffApproval" class="form-control"><option value="Approved" selected>Approved</option><option value="Pending">Pending</option></select></div>
+                        <div class="form-group-full"><label>K: Staff Photo (Optional Upload)</label><input type="file" id="addStaffPhotoFile" class="form-control" accept="image/*" onchange="compressPhoto(this, 'addStaffPhotoBase64')"><input type="hidden" id="addStaffPhotoBase64"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Mobile Number</label>
-                        <input type="tel" id="addStaffMobile" class="form-control" required placeholder="10-digit mobile">
-                    </div>
-                    <div class="form-group">
-                        <label>Assign Depot</label>
-                        <select id="addStaffDepotSelect" class="form-control" required></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Default Password</label>
-                        <input type="text" id="addStaffPass" class="form-control" value="1010" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Active Status</label>
-                        <select id="addStaffStatus" class="form-control">
-                            <option value="Active" selected>Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                    <button type="submit" id="btnAddStaffSubmit" class="btn-submit-modal">💾 Save Staff to Google Sheet</button>
+                    <button type="submit" class="btn-submit-modal">💾 Save Staff to Google Sheet</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal 4: Edit Staff Modal -->
+    <!-- Modal 4: Edit Staff (All Fields A to K) -->
     <div id="editStaffModal" class="modal">
-        <div class="modal-box">
+        <div class="modal-box modal-box-wide">
             <div class="modal-top-bar">
                 <span>✏️ Edit Staff Details</span>
                 <button class="modal-close-btn" onclick="closeEditStaffModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editStaffForm">
-                    <div class="form-group">
-                        <label>Staff Code (Locked)</label>
-                        <input type="text" id="editStaffCode" class="form-control" readonly style="color:var(--accent-blue); font-weight:bold;">
+                    <div class="form-grid">
+                        <div class="form-group"><label>A: Staff Code (Locked)</label><input type="text" id="editStaffCode" class="form-control" readonly style="color:var(--accent-blue); font-weight:bold;"></div>
+                        <div class="form-group"><label>B: Staff Name</label><input type="text" id="editStaffName" class="form-control" required></div>
+                        <div class="form-group"><label>C: Mobile Number</label><input type="tel" id="editStaffMobile" class="form-control" required></div>
+                        <div class="form-group"><label>D: Joining Date</label><input type="text" id="editStaffJoinDate" class="form-control" required></div>
+                        <div class="form-group"><label>E: Login ID</label><input type="text" id="editStaffLoginId" class="form-control" required></div>
+                        <div class="form-group"><label>F: Password</label><input type="text" id="editStaffPass" class="form-control" required></div>
+                        <div class="form-group"><label>G: Depot Code</label><input type="text" id="editStaffDepotCode" class="form-control"></div>
+                        <div class="form-group"><label>H: Depot Name</label><input type="text" id="editStaffDepot" class="form-control" required></div>
+                        <div class="form-group"><label>I: Status</label><select id="editStaffStatus" class="form-control"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+                        <div class="form-group"><label>J: Approval Status</label><select id="editStaffApproval" class="form-control"><option value="Approved">Approved</option><option value="Pending">Pending</option><option value="Rejected">Rejected</option></select></div>
+                        <div class="form-group-full"><label>K: Photo (Upload New or Keep Existing)</label><input type="file" class="form-control" accept="image/*" onchange="compressPhoto(this, 'editStaffPhotoBase64')"><input type="hidden" id="editStaffPhotoBase64"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Staff Name</label>
-                        <input type="text" id="editStaffName" class="form-control" required>
+                    <button type="submit" class="btn-submit-modal">💾 Update Staff</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Staff Full Ledger Statement & Print Preview -->
+    <div id="staffLedgerDetailModal" class="modal">
+        <div class="modal-box modal-box-wide">
+            <div class="modal-top-bar">
+                <span id="dtlLedgerTitle">📄 Full Ledger Detail</span>
+                <button class="modal-close-btn" onclick="closeLedgerDetailModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; justify-content: space-between; align-items:center; margin-bottom: 1rem; background: var(--input-bg); padding: 0.8rem 1rem; border-radius: 10px; border: 1px solid var(--border-color); flex-wrap:wrap; gap:0.6rem;">
+                    <div><strong>Total Credit:</strong> <span id="dtlTotalCredit" style="color:var(--accent-green); font-weight:800;">₹0</span></div>
+                    <div><strong>Total Debit:</strong> <span id="dtlTotalDebit" style="color:var(--accent-red); font-weight:800;">₹0</span></div>
+                    <div><strong>Net Balance:</strong> <span id="dtlNetBalance" style="color:var(--accent-blue); font-weight:800;">₹0</span></div>
+                    <button class="btn-tool" style="background: var(--accent-amber); color:#000; font-weight:800; padding:0.5rem 1rem; border-radius:8px; cursor:pointer;" onclick="openAdminPrintPreview()">🖨️ View Statement & Print</button>
+                </div>
+                <div class="table-responsive" style="max-height: 380px;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Particular</th>
+                                <th>Mode</th>
+                                <th>Debit (₹)</th>
+                                <th>Credit (₹)</th>
+                                <th>Balance (₹)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dtlLedgerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Printable Receipt Modal -->
+    <div id="printModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>📄 Printable Statement</span>
+                <button class="modal-close-btn" onclick="closeAdminPrintPreview()">&times;</button>
+            </div>
+            <div id="printableReceipt" class="receipt-container">
+                <div class="receipt-header">
+                    <h2>RCM Consumer Products Private Limited</h2>
+                    <p id="rcptDepotHeaderAddr">Depot Address</p>
+                    <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
+                </div>
+                <div class="receipt-meta">
+                    <div>
+                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
                     </div>
-                    <div class="form-group">
-                        <label>Mobile Number</label>
-                        <input type="tel" id="editStaffMobile" class="form-control" required>
+                    <div class="text-right">
+                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                        <p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p>
                     </div>
-                    <div class="form-group">
-                        <label>Working Depot Name</label>
-                        <input type="text" id="editStaffDepot" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="text" id="editStaffPass" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label>Active Status</label>
-                        <select id="editStaffStatus" class="form-control">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Approval Status</label>
-                        <select id="editStaffApproval" class="form-control">
-                            <option value="Approved">Approved</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-submit-modal">💾 Save Changes</button>
+                </div>
+                <table class="receipt-table">
+                    <thead><tr><th>Date/Desc</th><th class="text-right">Dr</th><th class="text-right">Cr</th><th class="text-right">Bal</th></tr></thead>
+                    <tbody id="rcptTableBody"></tbody>
+                </table>
+                <div class="receipt-summary">
+                    <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+                    <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+                    <div class="sum-row" style="margin-top:4px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+                </div>
+            </div>
+            <div style="padding:1rem; background:#0c1322;" class="modal-actions">
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 7: Add/Edit Admin Modal -->
+    <div id="adminMasterModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span id="adminModalTitle">🛡️ Add New Admin</span>
+                <button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="adminMasterForm">
+                    <div class="form-group"><label>Admin ID</label><input type="text" id="admId" class="form-control" required placeholder="e.g. ADM002"></div>
+                    <div class="form-group"><label>Admin Full Name</label><input type="text" id="admName" class="form-control" required></div>
+                    <div class="form-group"><label>Mobile Number</label><input type="tel" id="admMobile" class="form-control" required></div>
+                    <div class="form-group"><label>Login ID</label><input type="text" id="admLoginId" class="form-control" required></div>
+                    <div class="form-group"><label>Login Password</label><input type="text" id="admPass" class="form-control" required></div>
+                    <button type="submit" class="btn-submit-modal">💾 Save Admin Details</button>
                 </form>
             </div>
         </div>
@@ -553,6 +605,12 @@
         document.getElementById('adminNameDisplay').textContent = adminName;
 
         let adminBundle = {};
+        let activeLedgerStaffCode = "";
+        let activeLedgerStaffName = "";
+        let activeLedgerDepotName = "";
+        let activeLedgerList = [];
+
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
         function showToast(msg) {
             const container = document.getElementById('toastContainer');
@@ -561,6 +619,27 @@
             toast.textContent = msg;
             container.appendChild(toast);
             setTimeout(() => { toast.remove(); }, 2500);
+        }
+
+        function formatCleanDate(raw) {
+            if (!raw) return '-';
+            let str = String(raw).trim();
+            if (str === '-' || str === '') return '-';
+            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) return str.replace(/\//g, '-');
+            let d = new Date(raw);
+            if (isNaN(d.getTime())) {
+                let parts = str.split('T')[0].split(' ')[0].split('-');
+                if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+            }
+            if (!isNaN(d.getTime())) {
+                return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
+            }
+            return str.split(' 05:')[0].split('T')[0];
+        }
+
+        function getTodayFormatted() {
+            const now = new Date();
+            return `${String(now.getDate()).padStart(2, '0')}-${monthNames[now.getMonth()]}-${String(now.getFullYear()).slice(2)}`;
         }
 
         function jsonp(url) {
@@ -595,6 +674,29 @@
             return (s === 'pending' || s.indexOf('pend') !== -1);
         }
 
+        function compressPhoto(fileInput, targetHiddenId) {
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxDim = 80;
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } }
+                        else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
+                        canvas.width = w; canvas.height = h;
+                        ctx.drawImage(img, 0, 0, w, h);
+                        document.getElementById(targetHiddenId).value = canvas.toDataURL('image/jpeg', 0.4);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         async function loadAdminData() {
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getAdminBundle`);
@@ -604,8 +706,10 @@
                 renderPendingApprovals();
                 renderDepots(res.depots || []);
                 renderStaff(res.staff || []);
-                renderLedgers(res.ledgers || []);
-                renderDispatches(res.dispatches || []);
+                renderLedgerSummary(res.staff || [], res.ledgers || []);
+                populateDispatchPeriodFilter(res.dispatches || []);
+                filterAdminDispatchTable();
+                renderAdminMaster(res.admins || []);
             } catch (err) {
                 console.error(err);
             }
@@ -615,30 +719,17 @@
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
 
-            const pStaff = staffList.filter(s => {
-                const appVal = getField(s, 'Aproovel Status (ADMIN)', 'Approval Status', 'Approval', 'Aproovel');
-                const stVal = getField(s, 'Status');
-                return isPendingVal(appVal) || (stVal.toLowerCase() === 'inactive' && isPendingVal(appVal));
-            });
-
-            const pTrx = trxList.filter(t => {
-                const appVal = getField(t, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Approval Status', 'Status');
-                return isPendingVal(appVal);
-            });
+            const pStaff = staffList.filter(s => isPendingVal(getField(s, 'Aproovel Status (ADMIN)', 'Approval Status', 'Approval', 'Aproovel')));
+            const pTrx = trxList.filter(t => isPendingVal(getField(t, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Approval Status', 'Status')));
 
             const totalPending = pStaff.length + pTrx.length;
             const badge = document.getElementById('pendingBadge');
-            if (totalPending > 0) {
-                badge.style.display = 'inline-block';
-                badge.textContent = totalPending;
-            } else {
-                badge.style.display = 'none';
-            }
+            badge.style.display = totalPending > 0 ? 'inline-block' : 'none';
+            badge.textContent = totalPending;
 
             const sBody = document.getElementById('pendingStaffBody');
-            if (pStaff.length === 0) {
-                sBody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending staff requests.</td></tr>`;
-            } else {
+            if (pStaff.length === 0) sBody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending staff requests.</td></tr>`;
+            else {
                 let html = '';
                 pStaff.forEach(s => {
                     const code = getField(s, 'Staff Code');
@@ -660,9 +751,8 @@
             }
 
             const tBody = document.getElementById('pendingTrxBody');
-            if (pTrx.length === 0) {
-                tBody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending transaction requests.</td></tr>`;
-            } else {
+            if (pTrx.length === 0) tBody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:1.5rem; color:var(--text-secondary);">No pending transaction requests.</td></tr>`;
+            else {
                 let html = '';
                 pTrx.forEach(t => {
                     const trxId = getField(t, 'ID', 'id', 'Trx ID');
@@ -704,7 +794,7 @@
         }
 
         async function deleteRow(sheetName, colIndex, matchValue) {
-            if (!confirm(`Are you sure you want to delete this record (${matchValue}) from ${sheetName}?`)) return;
+            if (!confirm(`Are you sure you want to delete record (${matchValue}) from ${sheetName}?`)) return;
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteAdminRow&sheetName=${encodeURIComponent(sheetName)}&colIndex=${colIndex}&matchValue=${encodeURIComponent(matchValue)}`);
                 showToast(res.message || "Deleted");
@@ -712,7 +802,7 @@
             } catch (e) { showToast("Error deleting record"); }
         }
 
-        // 15-Field New Depot Modal Handlers
+        // Depot Master Handlers
         function openNewDepotModal() {
             document.getElementById('newDepotForm').reset();
             document.getElementById('addDepotCompanyName').value = 'RCM Consumer Products Private Limited';
@@ -722,10 +812,6 @@
 
         document.getElementById('newDepotForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const btn = document.getElementById('btnAddDepotSubmit');
-            btn.disabled = true;
-            btn.textContent = 'Saving to Sheet...';
-
             const payload = {
                 action: 'saveNewDepot',
                 depotCode: document.getElementById('addDepotCode').value.trim(),
@@ -744,22 +830,15 @@
                 status: document.getElementById('addDepotStatus').value,
                 invSeries: document.getElementById('addDepotInvSeries').value.trim()
             };
-
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${q}`);
-                if (res && res.success) {
-                    showToast(res.message);
-                    closeNewDepotModal();
-                    loadAdminData();
-                } else {
-                    showToast(res.message || "Failed to add depot");
-                }
-            } catch (err) { showToast("Error adding depot"); }
-            finally { btn.disabled = false; btn.textContent = '💾 Save Depot to Google Sheet'; }
+                showToast(res.message || "Depot saved");
+                closeNewDepotModal();
+                loadAdminData();
+            } catch (err) { showToast("Error saving depot"); }
         });
 
-        // 15-Field Edit Depot Modal Handlers
         function openEditDepot(code) {
             const d = (adminBundle.depots || []).find(item => (getField(item, 'Depot Code') || '').toUpperCase() === code.toUpperCase());
             if (!d) return;
@@ -804,7 +883,6 @@
                 status: document.getElementById('editDepotStatus').value,
                 invSeries: document.getElementById('editDepotInvSeries').value
             };
-
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${q}`);
@@ -814,9 +892,10 @@
             } catch (err) { showToast("Error updating depot"); }
         });
 
-        // Staff Master Modal Handlers
+        // Staff Master Handlers
         function openNewStaffModal() {
             document.getElementById('newStaffForm').reset();
+            document.getElementById('addStaffPhotoBase64').value = '';
             const sel = document.getElementById('addStaffDepotSelect');
             sel.innerHTML = '';
             (adminBundle.depots || []).forEach(d => {
@@ -831,35 +910,27 @@
 
         document.getElementById('newStaffForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const btn = document.getElementById('btnAddStaffSubmit');
-            btn.disabled = true;
-            btn.textContent = 'Saving to Sheet...';
-
             const [dCode, dName] = document.getElementById('addStaffDepotSelect').value.split('|');
-
             const payload = {
                 action: 'saveNewStaffAdmin',
                 name: document.getElementById('addStaffName').value.trim(),
                 mobile: document.getElementById('addStaffMobile').value.trim(),
+                joiningDate: document.getElementById('addStaffJoinDate').value,
+                loginId: document.getElementById('addStaffLoginId').value.trim(),
+                password: document.getElementById('addStaffPass').value.trim(),
                 depotCode: dCode,
                 depotName: dName,
-                password: document.getElementById('addStaffPass').value.trim(),
                 status: document.getElementById('addStaffStatus').value,
-                approval: 'Approved'
+                approval: document.getElementById('addStaffApproval').value,
+                photo: document.getElementById('addStaffPhotoBase64').value
             };
-
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${q}`);
-                if (res && res.success) {
-                    showToast(res.message);
-                    closeNewStaffModal();
-                    loadAdminData();
-                } else {
-                    showToast(res.message || "Failed to add staff");
-                }
-            } catch (err) { showToast("Error adding staff"); }
-            finally { btn.disabled = false; btn.textContent = '💾 Save Staff to Google Sheet'; }
+                showToast(res.message || "Staff saved");
+                closeNewStaffModal();
+                loadAdminData();
+            } catch (err) { showToast("Error saving staff"); }
         });
 
         function openEditStaff(code) {
@@ -869,10 +940,14 @@
             document.getElementById('editStaffCode').value = code;
             document.getElementById('editStaffName').value = getField(s, 'Staff Name');
             document.getElementById('editStaffMobile').value = getField(s, 'Staff Mob.');
-            document.getElementById('editStaffDepot').value = getField(s, 'Staff Working Depot Name', 'Depot');
+            document.getElementById('editStaffJoinDate').value = getField(s, 'Staff Joining Date');
+            document.getElementById('editStaffLoginId').value = getField(s, 'Staff Login Id');
             document.getElementById('editStaffPass').value = getField(s, 'Staff Login Password') || '1010';
+            document.getElementById('editStaffDepotCode').value = getField(s, 'Staff Working Depot Code');
+            document.getElementById('editStaffDepot').value = getField(s, 'Staff Working Depot Name', 'Depot');
             document.getElementById('editStaffStatus').value = getField(s, 'Status') || 'Active';
             document.getElementById('editStaffApproval').value = getField(s, 'Aproovel Status (ADMIN)', 'Approval') || 'Approved';
+            document.getElementById('editStaffPhotoBase64').value = '';
 
             document.getElementById('editStaffModal').style.display = 'block';
         }
@@ -885,10 +960,14 @@
                 staffCode: document.getElementById('editStaffCode').value,
                 name: document.getElementById('editStaffName').value,
                 mobile: document.getElementById('editStaffMobile').value,
-                depot: document.getElementById('editStaffDepot').value,
+                joiningDate: document.getElementById('editStaffJoinDate').value,
+                loginId: document.getElementById('editStaffLoginId').value,
                 password: document.getElementById('editStaffPass').value,
+                depotCode: document.getElementById('editStaffDepotCode').value,
+                depot: document.getElementById('editStaffDepot').value,
                 status: document.getElementById('editStaffStatus').value,
-                approval: document.getElementById('editStaffApproval').value
+                approval: document.getElementById('editStaffApproval').value,
+                photo: document.getElementById('editStaffPhotoBase64').value
             };
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
@@ -904,24 +983,16 @@
             let html = '';
             list.forEach(d => {
                 const code = getField(d, 'Depot Code');
-                const name = getField(d, 'Depot Name');
-                const comp = getField(d, 'Compny Name', 'Company Name');
-                const dist = getField(d, 'Dristric', 'District');
-                const state = getField(d, 'State Name');
-                const inv = getField(d, 'Invoice No Series');
-                const login = getField(d, 'Depot Login ID');
                 const st = getField(d, 'Active Status', 'Status') || 'Active';
-                const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
-
                 html += `<tr>
                     <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
-                    <td><strong>${name}</strong></td>
-                    <td style="color:#cbd5e1;">${comp}</td>
-                    <td>${dist}</td>
-                    <td>${state}</td>
-                    <td style="color:var(--accent-amber); font-weight:700;">${inv}</td>
-                    <td>${login}</td>
-                    <td style="color:${stColor}; font-weight:700;">${st}</td>
+                    <td><strong>${getField(d, 'Depot Name')}</strong></td>
+                    <td style="color:#cbd5e1;">${getField(d, 'Compny Name', 'Company Name')}</td>
+                    <td>${getField(d, 'Dristric', 'District')}</td>
+                    <td>${getField(d, 'State Name')}</td>
+                    <td style="color:var(--accent-amber); font-weight:700;">${getField(d, 'Invoice No Series')}</td>
+                    <td>${getField(d, 'Depot Login ID')}</td>
+                    <td style="color:${st.toLowerCase()==='active'?'var(--accent-green)':'var(--accent-red)'}; font-weight:700;">${st}</td>
                     <td>
                         <button class="btn-action-edit" onclick="openEditDepot('${code}')">✏️ Edit</button>
                         <button class="btn-action-delete" onclick="deleteRow('Depot Master', 0, '${code}')">🗑️ Delete</button>
@@ -937,15 +1008,23 @@
             list.forEach(s => {
                 const code = getField(s, 'Staff Code');
                 const name = getField(s, 'Staff Name');
-                const mob = getField(s, 'Staff Mob.');
-                const depot = getField(s, 'Staff Working Depot Name', 'Depot');
+                const photo = getField(s, 'Staff Photo', 'Photo');
                 const st = getField(s, 'Status') || 'Active';
-                const app = getField(s, 'Aproovel Status (ADMIN)', 'Approval Status', 'Approval') || 'Approved';
+                const app = getField(s, 'Aproovel Status (ADMIN)', 'Approval') || 'Approved';
+
+                let avatarHtml = `<div class="staff-avatar-cell">${name.charAt(0).toUpperCase()}</div>`;
+                if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
+                    avatarHtml = `<img src="${photo}" class="staff-avatar-cell" alt="${name}" onerror="this.outerHTML='<div class=\\'staff-avatar-cell\\'>${name.charAt(0).toUpperCase()}</div>'">`;
+                }
+
                 html += `<tr>
+                    <td style="text-align:center;">${avatarHtml}</td>
                     <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
                     <td><strong>${name}</strong></td>
-                    <td>${mob}</td>
-                    <td>${depot}</td>
+                    <td>${getField(s, 'Staff Mob.')}</td>
+                    <td>${getField(s, 'Staff Joining Date')}</td>
+                    <td>${getField(s, 'Staff Working Depot Code')}</td>
+                    <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
                     <td>${getField(s, 'Staff Login Id')}</td>
                     <td style="color:${st.toLowerCase()==='active'?'var(--accent-green)':'var(--accent-red)'}; font-weight:700;">${st}</td>
                     <td style="color:${app.toLowerCase()==='approved'?'var(--accent-green)':'var(--accent-amber)'}; font-weight:700;">${app}</td>
@@ -958,38 +1037,184 @@
             document.getElementById('adminStaffBody').innerHTML = html;
         }
 
-        function renderLedgers(list) {
-            document.getElementById('ledgerCount').textContent = `${list.length} entries`;
+        // Staff Ledger Summary View
+        function renderLedgerSummary(staffList, ledgerList) {
+            document.getElementById('ledgerStaffCount').textContent = `${staffList.length} staff accounts`;
+
+            const ledgerMap = {};
+            ledgerList.forEach(l => {
+                const code = (getField(l, 'Staff Code', 'code') || '').toUpperCase();
+                const dr = Number(getField(l, 'Debit', 'debit') || 0);
+                const cr = Number(getField(l, 'Credit', 'credit') || 0);
+                if (!ledgerMap[code]) ledgerMap[code] = { dr: 0, cr: 0 };
+                ledgerMap[code].dr += dr;
+                ledgerMap[code].cr += cr;
+            });
+
             let html = '';
-            list.slice().reverse().forEach(l => {
+            staffList.forEach(s => {
+                const code = getField(s, 'Staff Code');
+                const name = getField(s, 'Staff Name');
+                const mob = getField(s, 'Staff Mob.');
+                const depot = getField(s, 'Staff Working Depot Name', 'Depot');
+
+                const summary = ledgerMap[code.toUpperCase()] || { dr: 0, cr: 0 };
+                const net = summary.cr - summary.dr;
+                const netColor = net >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+                html += `<tr>
+                    <td style="color:var(--accent-blue); font-weight:700;">${code}</td>
+                    <td><strong>${name}</strong></td>
+                    <td>${mob}</td>
+                    <td>${depot}</td>
+                    <td style="color:var(--accent-green); font-weight:700;">₹${summary.cr.toLocaleString('en-IN')}</td>
+                    <td style="color:var(--accent-red); font-weight:700;">₹${summary.dr.toLocaleString('en-IN')}</td>
+                    <td style="color:${netColor}; font-weight:800;">₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}</td>
+                    <td>
+                        <button class="btn-action-ledger" onclick="openStaffLedgerDetails('${code}', '${name}', '${depot}')">📄 View Statement</button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('adminLedgerSummaryBody').innerHTML = html;
+        }
+
+        function openStaffLedgerDetails(code, name, depot) {
+            activeLedgerStaffCode = code;
+            activeLedgerStaffName = name;
+            activeLedgerDepotName = depot;
+
+            document.getElementById('dtlLedgerTitle').textContent = `📄 Full Statement: ${name} (${code})`;
+
+            const matchedTrx = (adminBundle.ledgers || []).filter(l => (getField(l, 'Staff Code', 'code') || '').toUpperCase() === code.toUpperCase());
+            activeLedgerList = matchedTrx;
+
+            let totalDr = 0, totalCr = 0, runningBal = 0, html = '';
+            matchedTrx.forEach(l => {
                 const trxId = getField(l, 'ID', 'id', 'Trx ID');
                 const dr = Number(getField(l, 'Debit', 'debit') || 0);
                 const cr = Number(getField(l, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(l, 'Transaction Date', 'date'));
+                const part = getField(l, 'Particular', 'particular');
+                const mode = getField(l, 'Payment Mode', 'mode') || '-';
+                const st = getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status');
+
+                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+
                 html += `<tr>
-                    <td>${getField(l, 'Transaction Date', 'date')}</td>
-                    <td style="color:var(--accent-blue);">${getField(l, 'Staff Code', 'code')}</td>
-                    <td><strong>${getField(l, 'Staff Name', 'name')}</strong></td>
-                    <td>${getField(l, 'Particular', 'particular')}</td>
-                    <td>${getField(l, 'Payment Mode', 'mode')}</td>
-                    <td style="color:var(--accent-red); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
-                    <td style="color:var(--accent-green); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
-                    <td>${getField(l, 'Satff Depot Name', 'Staff Depot Name', 'depotName')}</td>
-                    <td>${getField(l, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status')}</td>
+                    <td><strong>${dt}</strong></td>
+                    <td>${part}</td>
+                    <td>${mode}</td>
+                    <td style="color:${dr>0?'var(--accent-red)':'#64748b'}; font-weight:700;">${dr>0?'₹'+dr:'-'}</td>
+                    <td style="color:${cr>0?'var(--accent-green)':'#64748b'}; font-weight:700;">${cr>0?'₹'+cr:'-'}</td>
+                    <td style="color:var(--accent-blue); font-weight:700;">₹${runningBal}</td>
+                    <td style="color:${st.toLowerCase()==='approved'?'var(--accent-green)':'var(--accent-amber)'}; font-weight:700;">${st}</td>
                     <td>
                         <button class="btn-action-delete" onclick="deleteRow('Staff Ledger Entry', 0, '${trxId}')">🗑️ Delete</button>
                     </td>
                 </tr>`;
             });
-            document.getElementById('adminLedgerBody').innerHTML = html;
+
+            document.getElementById('dtlLedgerTableBody').innerHTML = html || `<tr><td colspan="8" class="text-center" style="padding:1.5rem;">No transactions found.</td></tr>`;
+            document.getElementById('dtlTotalCredit').textContent = `₹${totalCr.toLocaleString('en-IN')}`;
+            document.getElementById('dtlTotalDebit').textContent = `₹${totalDr.toLocaleString('en-IN')}`;
+            const net = totalCr - totalDr;
+            document.getElementById('dtlNetBalance').textContent = `₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('dtlNetBalance').style.color = net >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+            document.getElementById('staffLedgerDetailModal').style.display = 'block';
+        }
+        function closeLedgerDetailModal() { document.getElementById('staffLedgerDetailModal').style.display = 'none'; }
+
+        function openAdminPrintPreview() {
+            document.getElementById('rcptStaffName').textContent = activeLedgerStaffName;
+            document.getElementById('rcptStaffCode').textContent = activeLedgerStaffCode;
+            document.getElementById('rcptDepotName').textContent = activeLedgerDepotName;
+            document.getElementById('rcptPrintDate').textContent = getTodayFormatted();
+
+            let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
+            activeLedgerList.forEach(l => {
+                const dr = Number(getField(l, 'Debit', 'debit') || 0);
+                const cr = Number(getField(l, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(l, 'Transaction Date', 'date'));
+                const part = getField(l, 'Particular', 'particular');
+
+                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+                html += `<tr>
+                    <td><strong>${dt}</strong><br><span style="font-size:0.7rem;color:#444;">${part}</span></td>
+                    <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                    <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                </tr>`;
+            });
+
+            document.getElementById('rcptTableBody').innerHTML = html;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
+            const finalNet = totalCr - totalDr;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            document.getElementById('printModal').style.display = 'block';
+        }
+        function closeAdminPrintPreview() { document.getElementById('printModal').style.display = 'none'; }
+
+        // Dispatch Reports Filter (Year, Month, Today, Search & Load More)
+        function populateDispatchPeriodFilter(dispatches) {
+            const selectBox = document.getElementById('dispatchPeriodFilter');
+            const monthSet = new Set();
+            dispatches.forEach(d => {
+                const dt = formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date'));
+                const parts = dt.split('-');
+                if (parts.length === 3) monthSet.add(`${parts[1]}-${parts[2]}`);
+            });
+
+            let opts = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
+            Array.from(monthSet).forEach(m => opts += `<option value="${m}">🗓️ Month ${m}</option>`);
+            selectBox.innerHTML = opts;
         }
 
-        function renderDispatches(list) {
+        function filterAdminDispatchTable() {
+            const filter = document.getElementById('dispatchPeriodFilter').value;
+            const query = document.getElementById('adminDispatchSearch').value.trim().toLowerCase();
+            const todayStr = getTodayFormatted().toLowerCase();
+            const loadBtn = document.getElementById('loadMoreDispatchBar');
+
+            if (loadBtn) loadBtn.style.display = (filter === "ALL" || query !== "") ? "none" : "block";
+
+            const filtered = (adminBundle.dispatches || []).filter(d => {
+                const cleanDate = formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date')).toLowerCase();
+
+                if (query) {
+                    const inv = getField(d, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
+                    const dName = getField(d, 'Depot Name').toLowerCase();
+                    const dCode = getField(d, 'Depot Code').toLowerCase();
+                    const vNo = getField(d, 'Vehicle No').toLowerCase();
+                    return inv.includes(query) || dName.includes(query) || dCode.includes(query) || vNo.includes(query) || cleanDate.includes(query);
+                }
+
+                if (filter === "TODAY") {
+                    if (cleanDate !== todayStr) return false;
+                } else if (filter !== "ALL") {
+                    if (!cleanDate.includes(filter.toLowerCase())) return false;
+                }
+                return true;
+            });
+
+            renderAdminDispatches(filtered);
+        }
+
+        function loadAllAdminDispatches() {
+            document.getElementById('dispatchPeriodFilter').value = "ALL";
+            filterAdminDispatchTable();
+            showToast("All historical records loaded!");
+        }
+
+        function renderAdminDispatches(list) {
             document.getElementById('dispatchCount').textContent = `${list.length} records`;
             let html = '';
             list.slice().reverse().forEach(d => {
                 const invId = getField(d, 'ID', 'Invoice No');
                 html += `<tr>
-                    <td>${getField(d, 'Invoice Dispatch Date', 'Date')}</td>
+                    <td>${formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date'))}</td>
                     <td style="color:var(--accent-green); font-weight:700;">#${getField(d, 'Inoice No. Last Digit', 'Invoice No')}</td>
                     <td>${getField(d, 'Depot Code')}</td>
                     <td><strong>${getField(d, 'Depot Name')}</strong></td>
@@ -1002,8 +1227,71 @@
                     </td>
                 </tr>`;
             });
-            document.getElementById('adminDispatchBody').innerHTML = html;
+            document.getElementById('adminDispatchBody').innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
         }
+
+        // Admin Master Section Handlers
+        function renderAdminMaster(list) {
+            let html = '';
+            list.forEach(a => {
+                const id = getField(a, 'Admin Id');
+                html += `<tr>
+                    <td style="color:var(--accent-purple); font-weight:700;">${id}</td>
+                    <td><strong>${getField(a, 'Admin Name')}</strong></td>
+                    <td>${getField(a, 'Admin Mob')}</td>
+                    <td>${getField(a, 'Admin Login ID')}</td>
+                    <td>••••••••</td>
+                    <td>
+                        <button class="btn-action-edit" onclick="openEditAdmin('${id}')">✏️ Edit</button>
+                        <button class="btn-action-delete" onclick="deleteRow('Admin Master', 0, '${id}')">🗑️ Delete</button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('adminMasterBody').innerHTML = html;
+        }
+
+        function openNewAdminModal() {
+            document.getElementById('adminMasterForm').reset();
+            document.getElementById('admId').readOnly = false;
+            document.getElementById('adminModalTitle').textContent = '🛡️ Add New Admin';
+            document.getElementById('adminMasterModal').style.display = 'block';
+        }
+
+        function openEditAdmin(id) {
+            const a = (adminBundle.admins || []).find(item => (getField(item, 'Admin Id') || '').toUpperCase() === id.toUpperCase());
+            if (!a) return;
+
+            document.getElementById('admId').value = id;
+            document.getElementById('admId').readOnly = true;
+            document.getElementById('admName').value = getField(a, 'Admin Name');
+            document.getElementById('admMobile').value = getField(a, 'Admin Mob');
+            document.getElementById('admLoginId').value = getField(a, 'Admin Login ID');
+            document.getElementById('admPass').value = getField(a, 'Admin Login Password');
+            document.getElementById('adminModalTitle').textContent = `✏️ Edit Admin (${id})`;
+
+            document.getElementById('adminMasterModal').style.display = 'block';
+        }
+        function closeAdminMasterModal() { document.getElementById('adminMasterModal').style.display = 'none'; }
+
+        document.getElementById('adminMasterForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const isEdit = document.getElementById('admId').readOnly;
+            const payload = {
+                action: isEdit ? 'editAdminRecord' : 'saveNewAdmin',
+                adminId: document.getElementById('admId').value.trim(),
+                name: document.getElementById('admName').value.trim(),
+                mobile: document.getElementById('admMobile').value.trim(),
+                loginId: document.getElementById('admLoginId').value.trim(),
+                password: document.getElementById('admPass').value.trim()
+            };
+            try {
+                const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${q}`);
+                showToast(res.message || "Admin saved");
+                closeAdminMasterModal();
+                loadAdminData();
+            } catch (err) { showToast("Error saving admin"); }
+        });
 
         function switchAdminTab(tabId, btn) {
             document.querySelectorAll('.admin-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
@@ -1014,6 +1302,7 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
             document.getElementById('ledgerTab').style.display = (tabId === 'ledgerTab') ? 'block' : 'none';
             document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
+            document.getElementById('adminMasterTab').style.display = (tabId === 'adminMasterTab') ? 'block' : 'none';
         }
 
         window.onload = loadAdminData;

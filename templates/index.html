@@ -44,7 +44,26 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error("Network Error"));
+                };
+                document.body.appendChild(script);
+            });
+        }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -55,24 +74,23 @@
             const loginBtn = document.getElementById('loginBtn');
 
             errorMsg.textContent = "";
-            loginBtn.textContent = "Verifying with Google Sheets...";
+            loginBtn.textContent = "Verifying...";
             loginBtn.disabled = true;
 
             try {
-                const fetchUrl = `${GOOGLE_SCRIPT_URL}?action=login&role=${encodeURIComponent(role)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
-                const res = await fetch(fetchUrl);
-                const data = await res.json();
+                const requestUrl = `${SCRIPT_URL}?action=login&role=${encodeURIComponent(role)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                const data = await jsonp(requestUrl);
 
-                if (data.success) {
+                if (data && data.success) {
                     sessionStorage.setItem("user", data.username);
                     sessionStorage.setItem("role", data.role);
                     sessionStorage.setItem("name", data.name);
                     window.location.href = `/${data.role}`;
                 } else {
-                    errorMsg.textContent = data.message || "Invalid Username or Password";
+                    errorMsg.textContent = data.message || "Invalid credentials.";
                 }
             } catch (err) {
-                errorMsg.textContent = "Unable to connect to Google Sheets. Check internet connection.";
+                errorMsg.textContent = "Unable to connect to Google Sheets.";
             } finally {
                 loginBtn.textContent = "Login";
                 loginBtn.disabled = false;

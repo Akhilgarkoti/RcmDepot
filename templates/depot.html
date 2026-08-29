@@ -19,7 +19,6 @@
             --accent-green: #10b981;
             --accent-amber: #f59e0b;
             --accent-red: #f43f5e;
-            --accent-purple: #a855f7;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -39,9 +38,8 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.92);
             backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
             border-bottom: 2px solid #0284c7;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
             padding: 0.8rem 2rem;
@@ -170,8 +168,6 @@
         }
         .btn-action-trx:hover { background: var(--accent-amber); color: #000; }
 
-        .staff-avatar-cell { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--accent-cyan); background: #1e293b; }
-
         .table-responsive { width: 100%; overflow-x: auto; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th {
@@ -202,13 +198,13 @@
         .toast-msg {
             pointer-events: auto; min-width: 280px; max-width: 400px; padding: 0.85rem 1.25rem; border-radius: 12px;
             font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 0.7rem; backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px); box-shadow: 0 15px 35px rgba(0,0,0,0.6); transform: translateX(120%); opacity: 0;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6); transform: translateX(120%); opacity: 0;
             transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         .toast-msg.show { transform: translateX(0); opacity: 1; }
-        .toast-success { background: rgba(16, 185, 129, 0.9); color: #ffffff; border: 1px solid #34d399; }
-        .toast-error { background: rgba(244, 63, 94, 0.9); color: #ffffff; border: 1px solid #fb7185; }
-        .toast-info { background: rgba(2, 132, 199, 0.9); color: #ffffff; border: 1px solid #38bdf8; }
+        .toast-success { background: rgba(16, 185, 129, 0.95); color: #ffffff; border: 1px solid #34d399; }
+        .toast-error { background: rgba(244, 63, 94, 0.95); color: #ffffff; border: 1px solid #fb7185; }
+        .toast-info { background: rgba(2, 132, 199, 0.95); color: #ffffff; border: 1px solid #38bdf8; }
 
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
@@ -416,18 +412,17 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Photo</th>
                             <th>Staff Code</th>
                             <th>Staff Name</th>
                             <th>Mobile</th>
                             <th>Joining Date</th>
-                            <th>Net Balance (₹)</th>
+                            <th>Login ID</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="staffTableBody">
-                        <tr><td colspan="8" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading staff...</td></tr>
+                        <tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading staff...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -435,7 +430,7 @@
 
     </div>
 
-    <!-- Modal 1: Request New Staff (With Locked EMP Code & Light Compression) -->
+    <!-- Modal 1: Request New Staff -->
     <div id="addStaffModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -444,12 +439,10 @@
             </div>
             <div class="modal-body">
                 <form id="requestStaffForm">
-                    <!-- Locked & Readonly EMP Code Display -->
                     <div class="form-group">
                         <label>Auto-Generated Staff Code (Locked)</label>
                         <input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:var(--accent-cyan); font-weight:800; font-size:1.05rem; letter-spacing:1px; background:rgba(15,23,42,0.85);">
                     </div>
-
                     <div class="form-group">
                         <label>Staff Full Name</label>
                         <input type="text" id="newStaffName" class="form-control" required placeholder="Enter Full Name">
@@ -459,7 +452,7 @@
                         <input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit Mobile Number">
                     </div>
                     <div class="form-group">
-                        <label>Staff Photo (Optional - Auto Compressed)</label>
+                        <label>Staff Photo (Optional)</label>
                         <input type="file" id="newStaffPhotoFile" class="form-control" accept="image/*" onchange="compressAndSetPhoto(this)">
                         <input type="hidden" id="newStaffPhotoBase64">
                     </div>
@@ -717,9 +710,7 @@
             let d = new Date(raw);
             if (isNaN(d.getTime())) {
                 let parts = str.split('T')[0].split(' ')[0].split('-');
-                if (parts.length === 3) {
-                    d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
-                }
+                if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
             }
 
             if (!isNaN(d.getTime())) {
@@ -732,7 +723,7 @@
             return str.split(' 05:')[0].split('T')[0];
         }
 
-        function updateLiveClockAndDate() {
+        function setFormLiveTime() {
             const now = new Date();
             const d = String(now.getDate()).padStart(2, '0');
             const m = monthNames[now.getMonth()];
@@ -744,7 +735,6 @@
             const ss = String(now.getSeconds()).padStart(2, '0');
             document.getElementById('dispTime').value = `${hh}:${mm}:${ss}`;
         }
-        setInterval(updateLiveClockAndDate, 1000);
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
@@ -840,7 +830,7 @@
         }
 
         async function loadDepotData() {
-            updateLiveClockAndDate();
+            setFormLiveTime();
 
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
@@ -907,11 +897,8 @@
 
             list.slice().reverse().forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
-                if (invCounts[inv] > 1) {
-                    dupList.push(r);
-                } else {
-                    normalList.push(r);
-                }
+                if (invCounts[inv] > 1) dupList.push(r);
+                else normalList.push(r);
             });
 
             const finalSortedList = dupList.concat(normalList);
@@ -971,7 +958,7 @@
             document.getElementById('staffCountBadge').textContent = `${list.length} members`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No staff assigned to this depot.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No staff assigned to this depot.</td></tr>`;
                 return;
             }
 
@@ -979,25 +966,16 @@
             list.forEach(s => {
                 const sCode = getField(s, 'Staff Code');
                 const sName = getField(s, 'Staff Name');
-                const photo = getField(s, 'Staff Photo', 'Photo');
                 const st = getField(s, 'Status') || 'Active';
                 const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
                 const cleanJoinDate = formatCleanDate(getField(s, 'Staff Joining Date'));
-                const netBal = Number(s._netBalance || 0);
-                const balColor = netBal >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-
-                let avatarHtml = `<div class="staff-avatar-cell" style="display:flex;align-items:center;justify-content:center;font-weight:bold;color:var(--accent-cyan);">${sName.charAt(0)}</div>`;
-                if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
-                    avatarHtml = `<img src="${photo}" class="staff-avatar-cell" alt="${sName}">`;
-                }
 
                 html += `<tr>
-                    <td>${avatarHtml}</td>
                     <td style="color:var(--accent-cyan); font-weight:700;">${sCode}</td>
                     <td><strong>${sName}</strong></td>
                     <td>${getField(s, 'Staff Mob.')}</td>
                     <td>${cleanJoinDate}</td>
-                    <td style="color:${balColor}; font-weight:800;">₹${Math.abs(netBal).toLocaleString('en-IN')} ${netBal >= 0 ? '(Cr)' : '(Dr)'}</td>
+                    <td>${getField(s, 'Staff Login Id')}</td>
                     <td style="color:${stColor}; font-weight:700;">${st}</td>
                     <td>
                         <button class="btn-action-ledger" onclick="openStaffLedger('${sCode}', '${sName}')">📄 Ledger</button>
@@ -1017,11 +995,9 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
         }
 
-        // 1. Modal: Request New Staff Addition
         function openAddStaffModal() {
             document.getElementById('requestStaffForm').reset();
             document.getElementById('newStaffPhotoBase64').value = '';
-            // Display & Lock the Next Sequential EMP Code
             document.getElementById('newStaffCodeLocked').value = globalNextEmpCode;
             document.getElementById('addStaffModal').style.display = 'block';
         }
@@ -1029,7 +1005,6 @@
             document.getElementById('addStaffModal').style.display = 'none';
         }
 
-        // Client-side lightweight image compression to prevent URL length limits
         function compressAndSetPhoto(fileInput) {
             if (fileInput.files && fileInput.files[0]) {
                 const file = fileInput.files[0];
@@ -1039,20 +1014,13 @@
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        // Resize max 120x120 for avatar thumbnail
-                        const maxDim = 120;
-                        let w = img.width;
-                        let h = img.height;
-                        if (w > h) {
-                            if (w > maxDim) { h *= maxDim / w; w = maxDim; }
-                        } else {
-                            if (h > maxDim) { w *= maxDim / h; h = maxDim; }
-                        }
-                        canvas.width = w;
-                        canvas.height = h;
+                        const maxDim = 80;
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > maxDim) { h *= maxDim / w; w = maxDim; } }
+                        else { if (h > maxDim) { w *= maxDim / h; h = maxDim; } }
+                        canvas.width = w; canvas.height = h;
                         ctx.drawImage(img, 0, 0, w, h);
-                        // Highly compressed lightweight string
-                        document.getElementById('newStaffPhotoBase64').value = canvas.toDataURL('image/jpeg', 0.55);
+                        document.getElementById('newStaffPhotoBase64').value = canvas.toDataURL('image/jpeg', 0.4);
                     };
                     img.src = e.target.result;
                 };
@@ -1100,7 +1068,6 @@
             }
         });
 
-        // 2. Modal: Request Staff Debit / Credit Entry
         function openAddTrxModal(sCode, sName) {
             document.getElementById('requestTrxForm').reset();
             document.getElementById('trxStaffCode').value = sCode;
@@ -1152,7 +1119,6 @@
             }
         });
 
-        // 3. Modal: View Specific Staff Ledger
         async function openStaffLedger(sCode, sName) {
             currentActiveStaffCode = sCode;
             currentActiveStaffName = sName;
@@ -1176,11 +1142,7 @@
                     return;
                 }
 
-                let totalDr = 0;
-                let totalCr = 0;
-                let runningBal = 0;
-                let html = '';
-
+                let totalDr = 0, totalCr = 0, runningBal = 0, html = '';
                 rows.forEach(r => {
                     const dr = Number(getField(r, 'debit', 'Debit') || 0);
                     const cr = Number(getField(r, 'credit', 'Credit') || 0);
@@ -1189,10 +1151,7 @@
                     const mode = getField(r, 'mode', 'Mode') || '-';
                     const appSt = getField(r, 'approvalStatus', 'Approval Status') || 'Approved';
 
-                    totalDr += dr;
-                    totalCr += cr;
-                    runningBal += (cr - dr);
-
+                    totalDr += dr; totalCr += cr; runningBal += (cr - dr);
                     const appColor = appSt.toLowerCase() === 'approved' ? 'var(--accent-green)' : 'var(--accent-amber)';
 
                     html += `<tr>
@@ -1212,7 +1171,6 @@
                 const net = totalCr - totalDr;
                 document.getElementById('modNetBalance').textContent = `₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
                 document.getElementById('modNetBalance').style.color = net >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
-
             } catch (e) {
                 tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 2rem; color:var(--accent-red);">Failed to load ledger records.</td></tr>`;
             }
@@ -1222,7 +1180,6 @@
             document.getElementById('staffLedgerModal').style.display = 'none';
         }
 
-        // 4. Modal: Print Preview Handler
         function openPrintPreview() {
             const depot = depotGlobalInfo || {};
             const compName = getField(depot, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
@@ -1258,20 +1215,14 @@
                 return;
             }
 
-            let html = '';
-            let totalDr = 0;
-            let totalCr = 0;
-            let runningBal = 0;
-
+            let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
             currentActiveStaffLedger.forEach(r => {
                 const dr = Number(getField(r, 'debit', 'Debit') || 0);
                 const cr = Number(getField(r, 'credit', 'Credit') || 0);
                 const dt = formatCleanDate(getField(r, 'date', 'Transaction Date', 'Date'));
                 const part = getField(r, 'particular', 'Particular');
 
-                totalDr += dr;
-                totalCr += cr;
-                runningBal += (cr - dr);
+                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
 
                 html += `<tr>
                     <td><strong>${dt}</strong><span class="desc-sub">${part}</span></td>
@@ -1287,7 +1238,6 @@
             const finalNet = totalCr - totalDr;
             const balType = finalNet >= 0 ? '(Cr)' : '(Dr)';
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${balType}`;
-
             document.getElementById('printModal').style.display = 'block';
         }
 
@@ -1295,10 +1245,8 @@
             document.getElementById('printModal').style.display = 'none';
         }
 
-        // Submit Dispatch
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
             const btn = document.getElementById('btnSubmitDispatch');
             const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
 
@@ -1308,14 +1256,8 @@
             }
 
             const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
-
             if (rawList.length === 0) {
                 showToast('No valid numeric invoice numbers found.', 'error');
-                return;
-            }
-
-            if (rawList.length > 50) {
-                showToast('Maximum 50 invoice numbers allowed at one time.', 'error');
                 return;
             }
 
@@ -1355,7 +1297,6 @@
                     document.getElementById('dispVehicleNo').value = '';
                     document.getElementById('dispRemarks').value = '-';
                     document.getElementById('dispDueExcess').value = 'No Due/excess';
-
                     setTimeout(loadDepotData, 800);
                 } else {
                     showToast(res.message || 'Failed to save.', 'error');
@@ -1379,13 +1320,11 @@
         }
 
         let pendingDeleteAction = null;
-
         function showConfirmDialog(msg, onConfirm) {
             document.getElementById('confirmModalMsg').textContent = msg;
             pendingDeleteAction = onConfirm;
             document.getElementById('confirmModal').style.display = 'block';
         }
-
         function closeConfirmModal() {
             document.getElementById('confirmModal').style.display = 'none';
             pendingDeleteAction = null;

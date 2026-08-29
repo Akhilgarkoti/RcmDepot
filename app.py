@@ -35,7 +35,7 @@ def api_login():
         else:
             return jsonify({"success": False, "message": result.get("message", "Invalid credentials")}), 401
     except Exception as e:
-        return jsonify({"success": False, "message": "Connection Error. Ensure Apps Script access is set to 'Anyone'."}), 500
+        return jsonify({"success": False, "message": "Connection error: " + str(e)}), 500
 
 @app.route('/api/data', methods=['GET'])
 def get_sheet_data():

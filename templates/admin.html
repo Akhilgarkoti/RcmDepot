@@ -46,9 +46,28 @@
     </div>
 
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
         document.getElementById('welcomeUser').textContent = sessionStorage.getItem("name") ? `Welcome, ${sessionStorage.getItem("name")}` : '';
+
+        function jsonp(url) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    resolve(data);
+                };
+                const script = document.createElement('script');
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    reject(new Error("Network Error"));
+                };
+                document.body.appendChild(script);
+            });
+        }
 
         async function loadData(sheetName, button) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -59,8 +78,8 @@
             container.innerHTML = `<p class="loading">Loading data from Google Sheet (${sheetName})...</p>`;
 
             try {
-                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getData&sheet=${encodeURIComponent(sheetName)}`);
-                const data = await res.json();
+                const requestUrl = `${SCRIPT_URL}?action=getData&sheet=${encodeURIComponent(sheetName)}`;
+                const data = await jsonp(requestUrl);
 
                 if (!Array.isArray(data) || data.length === 0) {
                     container.innerHTML = `<p class="loading">No records found in this sheet.</p>`;

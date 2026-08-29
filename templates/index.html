@@ -10,9 +10,9 @@
     <style>
         :root {
             --glass-bg: rgba(15, 23, 42, 0.65);
-            --glass-card: rgba(17, 24, 39, 0.55);
+            --glass-card: rgba(17, 24, 39, 0.6);
             --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-input: rgba(10, 15, 29, 0.6);
+            --glass-input: rgba(10, 15, 29, 0.65);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --accent-blue: #0284c7;
@@ -57,7 +57,6 @@
 
         .auth-header { text-align: center; margin-bottom: 1.6rem; }
         
-        /* Exact Width 222px and Height 58px */
         .company-logo-wrap {
             width: 222px;
             height: 58px;
@@ -109,7 +108,7 @@
             align-items: center;
             gap: 0.3rem;
         }
-        .role-btn .role-icon { font-size: 1.35rem; transition: transform 0.2s; }
+        .role-btn .role-icon { font-size: 1.35rem; }
         .role-btn .role-label { font-size: 0.82rem; font-weight: 700; }
 
         .role-btn:hover {
@@ -181,6 +180,22 @@
         .btn-submit:active { transform: scale(0.99); }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
+        /* Error Box Banner */
+        .status-msg {
+            margin-top: 1rem;
+            font-size: 0.88rem;
+            text-align: center;
+            font-weight: 700;
+            min-height: 1.4rem;
+            line-height: 1.4;
+            color: #fb7185;
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem 0.8rem;
+            display: none;
+        }
+
         .auth-footer-links {
             display: flex;
             justify-content: space-between;
@@ -198,16 +213,6 @@
             transition: all 0.2s;
         }
         .auth-link:hover { color: #bae6fd; text-shadow: 0 0 8px rgba(56, 189, 248, 0.6); }
-
-        .status-msg {
-            margin-top: 1rem;
-            font-size: 0.86rem;
-            text-align: center;
-            font-weight: 600;
-            min-height: 1.2rem;
-            line-height: 1.4;
-            color: var(--accent-red);
-        }
 
         .dev-footer {
             margin-top: 1.4rem;
@@ -287,7 +292,7 @@
         .contact-item:last-child { border-bottom: none; }
         .contact-item span.icon { font-size: 1.15rem; }
         .contact-item span.label { color: var(--text-secondary); font-weight: 600; width: 68px; }
-        .contact-item a { color: var(--accent-cyan); font-weight: 700; text-decoration: none; word-break: break-all; transition: color 0.2s; }
+        .contact-item a { color: var(--accent-cyan); font-weight: 700; text-decoration: none; word-break: break-all; }
         .contact-item a:hover { color: #bae6fd; text-decoration: underline; }
 
         .btn-modal-close {
@@ -318,15 +323,15 @@
 
         <div class="role-selector-title">Select Portal Role</div>
         <div class="role-options-grid">
-            <div class="role-btn active" data-role="staff" onclick="selectRole('staff')">
+            <div class="role-btn active" data-role="staff" onclick="selectRole('staff', true)">
                 <span class="role-icon">👤</span>
                 <span class="role-label">Staff</span>
             </div>
-            <div class="role-btn" data-role="depot" onclick="selectRole('depot')">
+            <div class="role-btn" data-role="depot" onclick="selectRole('depot', true)">
                 <span class="role-icon">🏬</span>
                 <span class="role-label">Depot</span>
             </div>
-            <div class="role-btn" data-role="admin" onclick="selectRole('admin')">
+            <div class="role-btn" data-role="admin" onclick="selectRole('admin', true)">
                 <span class="role-icon">🛡️</span>
                 <span class="role-label">Admin</span>
             </div>
@@ -398,7 +403,7 @@
 
         let currentRole = "staff";
 
-        function selectRole(role) {
+        function selectRole(role, clearError = false) {
             currentRole = role;
             document.getElementById('selectedRoleInput').value = role;
 
@@ -414,8 +419,12 @@
             const userNameInput = document.getElementById('userName');
             const loginBtn = document.getElementById('loginBtn');
             const subText = document.getElementById('portalSubText');
-            const errBox = document.getElementById('loginMsg');
-            errBox.textContent = "";
+            
+            if (clearError) {
+                const errBox = document.getElementById('loginMsg');
+                errBox.style.display = 'none';
+                errBox.textContent = '';
+            }
 
             if (role === "staff") {
                 userLabel.textContent = "Staff Code / Login ID";
@@ -468,6 +477,7 @@
             });
         }
 
+        // Handle Login Submit
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -480,6 +490,7 @@
 
             btn.disabled = true;
             btn.textContent = "Verifying credentials...";
+            msgBox.style.display = 'none';
             msgBox.textContent = "";
 
             try {
@@ -499,20 +510,23 @@
                     else if (role === "depot") window.location.href = "/depot";
                     else if (role === "admin") window.location.href = "/admin";
                 } else {
-                    msgBox.textContent = (res && res.message) ? res.message : "Invalid credentials.";
+                    // Show error message clearly
+                    msgBox.textContent = (res && res.message) ? ("⚠️ " + res.message) : "⚠️ Invalid username or password.";
+                    msgBox.style.display = 'block';
                     btn.disabled = false;
-                    selectRole(role);
+                    selectRole(role, false);
                 }
             } catch (err) {
-                msgBox.textContent = err.message || "Failed to login. Please try again.";
+                msgBox.textContent = "⚠️ " + (err.message || "Failed to login. Please try again.");
+                msgBox.style.display = 'block';
                 btn.disabled = false;
-                selectRole(role);
+                selectRole(role, false);
             }
         });
 
         function openContactModal(actionReason) {
             document.getElementById('modalActionTitle').textContent = `📞 ${actionReason}`;
-            document.getElementById('modalActionDesc').textContent = `For ${actionReason.toLowerCase()}, kindly contact the Administrator below:`;
+            document.getElementById('modalActionDesc').textContent = `For ${actionReason.toLowerCase()}, kindly contact the administrator below:`;
             document.getElementById('adminContactModal').style.display = 'block';
         }
 

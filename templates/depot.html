@@ -35,7 +35,6 @@
             flex-direction: column;
         }
 
-        /* Top Sticky Header Navbar */
         .navbar {
             position: sticky;
             top: 0;
@@ -92,10 +91,8 @@
         }
         .btn-logout:hover { background: var(--accent-red); color: #fff; }
 
-        /* Main Workspace Container */
         .main-container { width: 100%; max-width: 1100px; margin: 1.8rem auto; padding: 0 1.5rem; }
 
-        /* Modern Nav Tabs */
         .depot-nav-tabs { display: flex; gap: 0.8rem; margin-bottom: 1.4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem; }
         .tab-btn {
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(10px); border: 1px solid var(--border-color);
@@ -107,7 +104,6 @@
             background: linear-gradient(135deg, #0284c7, #0369a1); color: #ffffff; border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
         }
 
-        /* Form Glass Card */
         .glass-panel {
             background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border-color);
             border-radius: 16px; padding: 1.8rem; box-shadow: 0 20px 40px rgba(0,0,0,0.4); margin-bottom: 1.6rem;
@@ -142,7 +138,6 @@
         }
         .btn-submit-dispatch:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45); }
 
-        /* History Table Toolbar */
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; flex: 1; }
         .search-box-wrap { position: relative; min-width: 260px; max-width: 380px; flex: 1; }
@@ -164,7 +159,6 @@
         .btn-add-staff { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); }
         .btn-add-staff:hover { background: var(--accent-blue); color: #fff; }
 
-        /* Action Buttons on Staff Table */
         .btn-action-ledger {
             background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);
             padding: 0.35rem 0.7rem; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.3rem; transition: all 0.2s;
@@ -176,7 +170,8 @@
         }
         .btn-action-trx:hover { background: var(--accent-amber); color: #000; }
 
-        /* Data Table */
+        .staff-avatar-cell { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--accent-cyan); background: #1e293b; }
+
         .table-responsive { width: 100%; overflow-x: auto; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th {
@@ -203,7 +198,6 @@
         }
         .btn-row-del:hover { background: var(--accent-red); color: #fff; }
 
-        /* Floating Modern Toast Notification */
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
         .toast-msg {
             pointer-events: auto; min-width: 280px; max-width: 400px; padding: 0.85rem 1.25rem; border-radius: 12px;
@@ -216,7 +210,6 @@
         .toast-error { background: rgba(244, 63, 94, 0.9); color: #ffffff; border: 1px solid #fb7185; }
         .toast-info { background: rgba(2, 132, 199, 0.9); color: #ffffff; border: 1px solid #38bdf8; }
 
-        /* Modal Styles */
         .modal {
             display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
             background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem;
@@ -225,7 +218,7 @@
             background: rgba(17, 24, 39, 0.95); margin: 3rem auto; max-width: 500px; border-radius: 16px;
             border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
         }
-        .modal-box-wide { max-width: 700px; }
+        .modal-box-wide { max-width: 750px; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid var(--border-color); }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
@@ -234,10 +227,9 @@
 </head>
 <body>
 
-    <!-- Floating Toast Container -->
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Header Navbar (Fixed on Scroll) -->
+    <!-- Header Navbar -->
     <div class="navbar">
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox">
@@ -271,11 +263,11 @@
 
     <div class="main-container">
 
-        <!-- Navigation Tabs -->
+        <!-- Navigation Tabs: Tab 3 Renamed to Assigned Staff and Ledger Details -->
         <div class="depot-nav-tabs">
             <button class="tab-btn active" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
-            <button class="tab-btn" onclick="switchTab('staffTab', this)">👥 Assigned Staff</button>
+            <button class="tab-btn" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
         </div>
 
         <!-- 1. Invoice Dispatch Form Panel -->
@@ -339,7 +331,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History Panel with Live Search Bar -->
+        <!-- 2. Records History Panel -->
         <div id="recordsTab" class="glass-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatched Trucks & Invoices History</h3>
@@ -383,10 +375,10 @@
             </div>
         </div>
 
-        <!-- 3. Staff List Panel (With Request New Staff & Ledger View & Request Trx) -->
+        <!-- 3. Assigned Staff and Ledger Details Panel -->
         <div id="staffTab" class="glass-panel" style="display:none;">
             <div class="panel-header">
-                <h3>👥 Staff Working in this Depot</h3>
+                <h3>👥 Assigned Staff and Ledger Details</h3>
                 <div style="display: flex; gap: 0.8rem; align-items: center;">
                     <span id="staffCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 members</span>
                     <button class="btn-tool btn-add-staff" onclick="openAddStaffModal()">➕ Request New Staff</button>
@@ -396,17 +388,18 @@
                 <table class="custom-table">
                     <thead>
                         <tr>
+                            <th>Photo</th>
                             <th>Staff Code</th>
-                            <th>Name</th>
+                            <th>Staff Name</th>
                             <th>Mobile</th>
                             <th>Joining Date</th>
-                            <th>Login ID</th>
+                            <th>Net Balance (₹)</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="staffTableBody">
-                        <tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading staff...</td></tr>
+                        <tr><td colspan="8" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading staff...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -414,30 +407,35 @@
 
     </div>
 
-    <!-- Modal 1: Request New Staff Modal (Admin Approval Request) -->
+    <!-- Modal 1: Request New Staff (With Photo, Auto EMP Code=Login ID, Default Pwd: 1010) -->
     <div id="addStaffModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
-                <span>➕ Request New Staff (Admin Approval)</span>
+                <span>➕ Request New Staff Addition</span>
                 <button class="modal-close-btn" onclick="closeAddStaffModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="requestStaffForm">
                     <div class="form-group">
                         <label>Staff Full Name</label>
-                        <input type="text" id="newStaffName" class="form-control" required placeholder="Enter full name">
+                        <input type="text" id="newStaffName" class="form-control" required placeholder="Enter Full Name">
                     </div>
                     <div class="form-group">
                         <label>Mobile Number</label>
-                        <input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit mobile no">
+                        <input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit Mobile Number">
                     </div>
                     <div class="form-group">
-                        <label>Desired Login ID</label>
-                        <input type="text" id="newStaffLoginId" class="form-control" required placeholder="e.g. EMP012 or Name">
+                        <label>Staff Photo (Optional URL or Upload)</label>
+                        <input type="file" id="newStaffPhotoFile" class="form-control" accept="image/*" onchange="convertPhotoToBase64(this)">
+                        <input type="hidden" id="newStaffPhotoBase64">
                     </div>
-                    <div class="form-group">
-                        <label>Initial Password</label>
-                        <input type="password" id="newStaffPassword" class="form-control" required placeholder="••••">
+                    <div class="form-group" style="background: rgba(10,15,29,0.6); padding: 0.8rem; border-radius: 8px; border: 1px dashed var(--border-color);">
+                        <p style="font-size: 0.8rem; color: var(--accent-cyan); line-height: 1.4;">
+                            ℹ️ <strong>System Automation:</strong><br>
+                            • EMP Code will be auto-generated sequentially (+1) uniquely across all depots.<br>
+                            • Login ID will be set to the EMP Code.<br>
+                            • Default Password will be <strong>1010</strong>.
+                        </p>
                     </div>
                     <button type="submit" id="btnReqStaffSubmit" class="btn-submit-dispatch" style="width: 100%; justify-content: center; margin-top: 1rem;">Send Staff Request to Admin</button>
                 </form>
@@ -445,11 +443,11 @@
         </div>
     </div>
 
-    <!-- Modal 2: Request Debit / Credit Transaction Modal (Admin Approval Request) -->
+    <!-- Modal 2: Request Staff Transaction (Both Debit & Credit in Same Form) -->
     <div id="addTrxModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
-                <span>💳 Request Staff Transaction (Debit/Credit)</span>
+                <span>💳 Request Staff Debit & Credit Entry</span>
                 <button class="modal-close-btn" onclick="closeAddTrxModal()">&times;</button>
             </div>
             <div class="modal-body">
@@ -465,15 +463,8 @@
                         <input type="date" id="trxDate" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label>Transaction Type</label>
-                        <select id="trxType" class="form-control" required onchange="toggleDebitCreditFields()">
-                            <option value="DEBIT">Debit (Advance / Payment Given)</option>
-                            <option value="CREDIT">Credit (Salary / Truck Unloading / Work)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>Particular / Purpose</label>
-                        <input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Truck Unloading, Advance, Clinic">
+                        <input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Salary, Truck Unloading, Advance, Food Exp">
                     </div>
                     <div class="form-group">
                         <label>Payment Mode</label>
@@ -484,9 +475,15 @@
                             <option value="-">-</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Amount (₹)</label>
-                        <input type="number" id="trxAmount" class="form-control" required placeholder="Enter Amount (e.g. 500)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label style="color:var(--accent-red);">Debit Amount (₹) [Advance/Payment]</label>
+                            <input type="number" id="trxDebitAmount" class="form-control" value="0" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label style="color:var(--accent-green);">Credit Amount (₹) [Work/Salary]</label>
+                            <input type="number" id="trxCreditAmount" class="form-control" value="0" placeholder="0">
+                        </div>
                     </div>
                     <button type="submit" id="btnReqTrxSubmit" class="btn-submit-dispatch" style="width: 100%; justify-content: center; margin-top: 1rem;">Send Transaction Request to Admin</button>
                 </form>
@@ -861,13 +858,13 @@
             renderDispatchTable(filtered);
         }
 
-        // Render Staff Table with Action Buttons (Ledger View + Add Trx)
+        // Render Assigned Staff and Ledger Details
         function renderStaffTable(list) {
             const tbody = document.getElementById('staffTableBody');
             document.getElementById('staffCountBadge').textContent = `${list.length} members`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No staff assigned to this depot.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No staff assigned to this depot.</td></tr>`;
                 return;
             }
 
@@ -875,16 +872,25 @@
             list.forEach(s => {
                 const sCode = getField(s, 'Staff Code');
                 const sName = getField(s, 'Staff Name');
+                const photo = getField(s, 'Staff Photo', 'Photo');
                 const st = getField(s, 'Status') || 'Active';
                 const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
                 const cleanJoinDate = formatCleanDate(getField(s, 'Staff Joining Date'));
+                const netBal = Number(s._netBalance || 0);
+                const balColor = netBal >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+                let avatarHtml = `<div class="staff-avatar-cell" style="display:flex;align-items:center;justify-content:center;font-weight:bold;color:var(--accent-cyan);">${sName.charAt(0)}</div>`;
+                if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
+                    avatarHtml = `<img src="${photo}" class="staff-avatar-cell" alt="${sName}">`;
+                }
 
                 html += `<tr>
+                    <td>${avatarHtml}</td>
                     <td style="color:var(--accent-cyan); font-weight:700;">${sCode}</td>
                     <td><strong>${sName}</strong></td>
                     <td>${getField(s, 'Staff Mob.')}</td>
                     <td>${cleanJoinDate}</td>
-                    <td>${getField(s, 'Staff Login Id')}</td>
+                    <td style="color:${balColor}; font-weight:800;">₹${Math.abs(netBal).toLocaleString('en-IN')} ${netBal >= 0 ? '(Cr)' : '(Dr)'}</td>
                     <td style="color:${stColor}; font-weight:700;">${st}</td>
                     <td>
                         <button class="btn-action-ledger" onclick="openStaffLedger('${sCode}', '${sName}')">📄 Ledger</button>
@@ -904,29 +910,48 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
         }
 
-        // 1. Modal: Request New Staff
+        // 1. Modal: Request New Staff Addition
         function openAddStaffModal() {
             document.getElementById('requestStaffForm').reset();
+            document.getElementById('newStaffPhotoBase64').value = '';
             document.getElementById('addStaffModal').style.display = 'block';
         }
         function closeAddStaffModal() {
             document.getElementById('addStaffModal').style.display = 'none';
         }
 
+        function convertPhotoToBase64(fileInput) {
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('newStaffPhotoBase64').value = e.target.result;
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
         document.getElementById('requestStaffForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const name = document.getElementById('newStaffName').value.trim();
             const mob = document.getElementById('newStaffMobile').value.trim();
-            const login = document.getElementById('newStaffLoginId').value.trim();
-            const pass = document.getElementById('newStaffPassword').value.trim();
+            const photo = document.getElementById('newStaffPhotoBase64').value;
             const btn = document.getElementById('btnReqStaffSubmit');
 
             btn.disabled = true;
-            btn.textContent = 'Sending Request...';
+            btn.textContent = 'Generating Code & Sending Request...';
 
             try {
-                const url = `${SCRIPT_URL}?action=requestNewStaff&name=${encodeURIComponent(name)}&mobile=${encodeURIComponent(mob)}&loginId=${encodeURIComponent(login)}&password=${encodeURIComponent(pass)}&depotCode=${encodeURIComponent(depotCode)}&depotName=${encodeURIComponent(depotNameStored)}`;
-                const res = await jsonp(url);
+                const payload = {
+                    action: 'requestNewStaff',
+                    name: name,
+                    mobile: mob,
+                    photo: photo,
+                    depotCode: depotCode,
+                    depotName: depotNameStored
+                };
+
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
 
                 if (res && res.success) {
                     showToast(res.message, 'success');
@@ -943,13 +968,15 @@
             }
         });
 
-        // 2. Modal: Request Staff Transaction
+        // 2. Modal: Request Staff Debit / Credit Entry
         function openAddTrxModal(sCode, sName) {
             document.getElementById('requestTrxForm').reset();
             document.getElementById('trxStaffCode').value = sCode;
             document.getElementById('trxStaffName').value = sName;
             document.getElementById('trxStaffDisplay').value = `${sName} (${sCode})`;
             document.getElementById('trxDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('trxDebitAmount').value = 0;
+            document.getElementById('trxCreditAmount').value = 0;
             document.getElementById('addTrxModal').style.display = 'block';
         }
         function closeAddTrxModal() {
@@ -961,14 +988,16 @@
             const sCode = document.getElementById('trxStaffCode').value;
             const sName = document.getElementById('trxStaffName').value;
             const date = document.getElementById('trxDate').value;
-            const type = document.getElementById('trxType').value;
             const particular = document.getElementById('trxParticular').value.trim();
             const mode = document.getElementById('trxMode').value;
-            const amount = Number(document.getElementById('trxAmount').value) || 0;
+            const debit = Number(document.getElementById('trxDebitAmount').value) || 0;
+            const credit = Number(document.getElementById('trxCreditAmount').value) || 0;
             const btn = document.getElementById('btnReqTrxSubmit');
 
-            const debit = type === 'DEBIT' ? amount : 0;
-            const credit = type === 'CREDIT' ? amount : 0;
+            if (debit === 0 && credit === 0) {
+                showToast('Please enter either a Debit or Credit amount.', 'error');
+                return;
+            }
 
             btn.disabled = true;
             btn.textContent = 'Submitting Request...';
@@ -1056,7 +1085,7 @@
             document.getElementById('staffLedgerModal').style.display = 'none';
         }
 
-        // Submit Dispatch Form
+        // Submit Dispatch
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 

@@ -15,25 +15,17 @@
         .btn-print:hover { background: #0369a1; }
         .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem; }
         .stat-card { background: #1c2541; padding: 1.2rem; border-radius: 8px; border: 1px solid #334155; }
         .stat-card h3 { color: #94a3b8; font-size: 0.85rem; margin-bottom: 0.3rem; }
-        .stat-card p { font-size: 1.5rem; font-weight: bold; }
+        .stat-card p { font-size: 1.6rem; font-weight: bold; }
         
-        .grid-layout { display: grid; grid-template-columns: 340px 1fr; gap: 1.5rem; }
-        .form-card, .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; }
-        .form-card h2, .table-card h2 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 1.2rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #94a3b8; }
-        .form-group input, .form-group select { width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid #334155; background: #0b132b; color: #fff; outline: none; }
-        .submit-btn { width: 100%; padding: 0.75rem; background: #0284c7; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
-        .submit-btn:hover { background: #0369a1; }
-        .table-card { overflow-x: auto; }
+        .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; overflow-x: auto; }
+        .table-card h2 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 1.2rem; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #334155; font-size: 0.85rem; white-space: nowrap; }
-        th { color: #94a3b8; background: #131c31; }
-        .status-msg { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
-
+        th, td { padding: 0.85rem 1rem; border-bottom: 1px solid #334155; font-size: 0.9rem; white-space: nowrap; }
+        th { color: #94a3b8; background: #131c31; font-weight: 600; }
+        
         /* Modal Styles for Print Preview */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
         .modal-content { background: #ffffff; color: #1e293b; margin: 2rem auto; padding: 2.5rem; max-width: 850px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
@@ -54,8 +46,6 @@
             #printableArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0; color: #000; background: #fff; }
             .modal-actions, .modal-close { display: none !important; }
         }
-
-        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -86,43 +76,11 @@
         </div>
     </div>
 
-    <div class="grid-layout">
-        <!-- New Ledger Request Form -->
-        <div class="form-card">
-            <h2>Submit Ledger Entry</h2>
-            <form id="ledgerForm">
-                <div class="form-group">
-                    <label>Particular / Purpose</label>
-                    <input type="text" id="particular" required placeholder="e.g., Advance, Loading Work">
-                </div>
-                <div class="form-group">
-                    <label>Payment Mode</label>
-                    <select id="payMode">
-                        <option value="Cash">Cash</option>
-                        <option value="UPI">UPI / Online</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="-">-</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Debit Amount (Advance taken)</label>
-                    <input type="number" id="debit" value="0" placeholder="0">
-                </div>
-                <div class="form-group">
-                    <label>Credit Amount (Work/Salary earned)</label>
-                    <input type="number" id="credit" value="0" placeholder="0">
-                </div>
-                <button type="submit" class="submit-btn" id="saveLedgerBtn">Submit Entry</button>
-                <p id="ledgerStatusMsg" class="status-msg"></p>
-            </form>
-        </div>
-
-        <!-- Staff Ledger Transactions Table -->
-        <div class="table-card">
-            <h2>Your Personal Ledger Transactions</h2>
-            <div id="tableContainer">
-                <p style="color: #94a3b8;">Loading your records...</p>
-            </div>
+    <!-- Staff Ledger Transactions Table -->
+    <div class="table-card">
+        <h2>Your Personal Ledger Statement</h2>
+        <div id="tableContainer">
+            <p style="color: #94a3b8; text-align: center; padding: 2rem;">Loading your records from Google Sheets...</p>
         </div>
     </div>
 
@@ -196,7 +154,7 @@
             try {
                 const data = await jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Ledger+Entry`);
                 if (!Array.isArray(data) || data.length === 0) {
-                    container.innerHTML = `<p style="color: #94a3b8;">No ledger entries found.</p>`;
+                    container.innerHTML = `<p style="color: #94a3b8; text-align: center; padding: 2rem;">No ledger entries found.</p>`;
                     return;
                 }
 
@@ -207,7 +165,7 @@
                 });
 
                 if (globalStaffRecords.length === 0) {
-                    container.innerHTML = `<p style="color: #94a3b8;">No ledger records found for ${staffCode}.</p>`;
+                    container.innerHTML = `<p style="color: #94a3b8; text-align: center; padding: 2rem;">No ledger records found for ${staffCode}.</p>`;
                     document.getElementById('totalDebit').textContent = '₹0';
                     document.getElementById('totalCredit').textContent = '₹0';
                     document.getElementById('netBalance').textContent = '₹0';
@@ -249,7 +207,7 @@
                 html += `</tbody></table>`;
                 container.innerHTML = html;
             } catch (err) {
-                container.innerHTML = `<p style="color: #f87171;">Failed to load transactions: ${err.message}</p>`;
+                container.innerHTML = `<p style="color: #f87171; text-align: center; padding: 2rem;">Failed to load transactions: ${err.message}</p>`;
             }
         }
 
@@ -288,41 +246,6 @@
         function closePrintPreview() {
             document.getElementById('printModal').style.display = 'none';
         }
-
-        document.getElementById('ledgerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('saveLedgerBtn');
-            const msg = document.getElementById('ledgerStatusMsg');
-            btn.disabled = true;
-            btn.textContent = "Saving to Google Sheets...";
-            msg.textContent = "";
-
-            const particular = document.getElementById('particular').value;
-            const payMode = document.getElementById('payMode').value;
-            const debit = document.getElementById('debit').value;
-            const credit = document.getElementById('credit').value;
-
-            const url = `${SCRIPT_URL}?action=addLedger&staffCode=${encodeURIComponent(staffCode)}&staffName=${encodeURIComponent(staffName)}&particular=${encodeURIComponent(particular)}&payMode=${encodeURIComponent(payMode)}&debit=${encodeURIComponent(debit)}&credit=${encodeURIComponent(credit)}`;
-
-            try {
-                const res = await jsonp(url);
-                if (res.success) {
-                    msg.style.color = "#4ade80";
-                    msg.textContent = "Entry submitted successfully!";
-                    document.getElementById('ledgerForm').reset();
-                    loadLedger();
-                } else {
-                    msg.style.color = "#f87171";
-                    msg.textContent = res.message || "Failed to save.";
-                }
-            } catch (err) {
-                msg.style.color = "#f87171";
-                msg.textContent = "Error saving data.";
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Submit Entry";
-            }
-        });
 
         window.onload = loadLedger;
     </script>

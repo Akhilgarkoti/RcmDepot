@@ -19,6 +19,7 @@
             --accent-green: #10b981;
             --accent-amber: #f59e0b;
             --accent-red: #f43f5e;
+            --accent-purple: #a855f7;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -47,7 +48,6 @@
             gap: 1.2rem;
         }
 
-        /* Left: Depot Logo + RCM Depot Manager Portal */
         .brand-section {
             display: flex;
             align-items: center;
@@ -72,7 +72,6 @@
         .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
         .logo-text-box span { font-size: 0.74rem; color: #38bdf8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Center: 222x58 Company Logo + Depot Details */
         .depot-center-section {
             display: flex;
             align-items: center;
@@ -118,7 +117,6 @@
         }
         .tag-pill strong { color: var(--accent-cyan); }
 
-        /* Right: Password & Logout */
         .nav-actions { display: flex; align-items: center; gap: 0.7rem; min-width: 190px; justify-content: flex-end; }
         .btn-pwd {
             background: rgba(245, 158, 11, 0.12);
@@ -147,13 +145,13 @@
         .btn-logout:hover { background: var(--accent-red); color: #fff; }
 
         /* Main Workspace Container */
-        .main-container { width: 100%; max-width: 1080px; margin: 1.8rem auto; padding: 0 1.5rem; }
+        .main-container { width: 100%; max-width: 1100px; margin: 1.8rem auto; padding: 0 1.5rem; }
 
         /* Stats Strip */
         .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1.2rem;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
             margin-bottom: 1.6rem;
         }
         .glass-stat-card {
@@ -161,12 +159,12 @@
             backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 1.2rem 1.4rem;
+            padding: 1.1rem 1.2rem;
             text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
         }
-        .glass-stat-card h4 { font-size: 0.76rem; letter-spacing: 0.6px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
-        .glass-stat-card p { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
+        .glass-stat-card h4 { font-size: 0.74rem; letter-spacing: 0.6px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
+        .glass-stat-card p { font-size: 1.45rem; font-weight: 800; color: #ffffff; }
 
         /* Modern Nav Tabs */
         .depot-nav-tabs {
@@ -234,6 +232,7 @@
         }
         .form-control:focus { border-color: var(--accent-cyan); }
         .form-control:read-only { background: rgba(15, 23, 42, 0.5); color: #94a3b8; }
+        textarea.form-control { resize: vertical; min-height: 80px; font-family: monospace; }
         select.form-control { cursor: pointer; }
         select.form-control option { background: #0f172a; color: #fff; }
 
@@ -255,11 +254,38 @@
         }
         .btn-submit-dispatch:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45); }
 
+        /* History Table Toolbar */
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .toolbar-left { display: flex; align-items: center; gap: 0.6rem; }
+        .btn-tool {
+            padding: 0.5rem 0.95rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .btn-excel { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.35); }
+        .btn-excel:hover { background: var(--accent-green); color: #fff; }
+        .btn-bulk-del { background: rgba(244, 63, 94, 0.15); color: #fb7185; border-color: rgba(244, 63, 94, 0.35); }
+        .btn-bulk-del:hover { background: var(--accent-red); color: #fff; }
+
         /* Data Table */
         .table-responsive { width: 100%; overflow-x: auto; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th {
-            padding: 0.85rem 1.2rem;
+            padding: 0.85rem 1rem;
             color: var(--text-secondary);
             font-size: 0.78rem;
             font-weight: 700;
@@ -269,11 +295,42 @@
             background: rgba(15, 23, 42, 0.6);
         }
         table.custom-table td {
-            padding: 0.85rem 1.2rem;
+            padding: 0.85rem 1rem;
             font-size: 0.86rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         table.custom-table tr:hover td { background: rgba(30, 41, 59, 0.4); }
+
+        /* Highlight Duplicate Rows */
+        tr.duplicate-row td {
+            background: rgba(245, 158, 11, 0.15) !important;
+            border-top: 1px dashed rgba(245, 158, 11, 0.4);
+            border-bottom: 1px dashed rgba(245, 158, 11, 0.4);
+        }
+
+        .badge-dup {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin-left: 0.4rem;
+        }
+
+        .btn-row-del {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-row-del:hover { background: var(--accent-red); color: #fff; }
 
         /* Password Modal */
         .modal {
@@ -294,7 +351,6 @@
 
     <!-- Header Navbar -->
     <div class="navbar">
-        <!-- Left: Depot Logo + RCM Depot Manager Portal -->
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="#0284c7"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.96.76 1.58V19z"/></svg>
@@ -305,7 +361,6 @@
             </div>
         </div>
 
-        <!-- Center: 222x58 Company Logo + Depot Details -->
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
@@ -320,7 +375,6 @@
             </div>
         </div>
 
-        <!-- Right: Password & Logout -->
         <div class="nav-actions">
             <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
@@ -332,12 +386,16 @@
         <!-- Stats Overview Cards -->
         <div class="stats-grid">
             <div class="glass-stat-card">
+                <h4>Invoice Series Prefix</h4>
+                <p id="statInvPrefix" style="color:var(--accent-amber);">-</p>
+            </div>
+            <div class="glass-stat-card">
                 <h4>Total Dispatched Entries</h4>
                 <p id="statTotalDispatch">0</p>
             </div>
             <div class="glass-stat-card">
-                <h4>Last Recorded Invoice</h4>
-                <p id="statLastInvoice" style="color:var(--accent-amber);">-</p>
+                <h4>Duplicate Entries Detected</h4>
+                <p id="statTotalDuplicates" style="color:var(--accent-red);">0</p>
             </div>
             <div class="glass-stat-card">
                 <h4>Active Staff Members</h4>
@@ -355,12 +413,11 @@
         <!-- 1. Invoice Dispatch Form Panel -->
         <div id="dispatchTab" class="glass-panel">
             <div class="panel-header">
-                <h3>📦 Record Invoice Dispatch Entry</h3>
+                <h3>📦 Record Invoice Dispatch Entry (Single / Multi-Invoice)</h3>
                 <span style="color:var(--accent-cyan); font-size:0.85rem; font-weight:700;">Live Google Sheet Sync</span>
             </div>
 
             <form id="invoiceDispatchForm">
-                <!-- Hidden Depot Code & Name -->
                 <input type="hidden" id="hiddenDepotCode">
                 <input type="hidden" id="hiddenDepotName">
 
@@ -377,7 +434,13 @@
                         <input type="text" id="dispTime" class="form-control" readonly style="color:var(--accent-amber); font-weight:700;">
                     </div>
 
-                    <!-- 3. Vehicle Type (Default: Auto) -->
+                    <!-- 3. Depot Invoice Series Prefix (Auto from Depot Master) -->
+                    <div class="form-group">
+                        <label>Depot Invoice Series (Prefix)</label>
+                        <input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:var(--accent-amber); font-weight:800; font-size:1.05rem;">
+                    </div>
+
+                    <!-- 4. Vehicle Type (Default: Auto) -->
                     <div class="form-group">
                         <label>Vehicle Type</label>
                         <select id="dispVehicleType" class="form-control" required>
@@ -388,34 +451,34 @@
                         </select>
                     </div>
 
-                    <!-- 4. Vehicle No -->
+                    <!-- 5. Vehicle No -->
                     <div class="form-group">
                         <label>Vehicle Number (Optional / If Any)</label>
                         <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234">
                     </div>
 
-                    <!-- 5. Dispatch Through -->
+                    <!-- 6. Dispatch Through -->
                     <div class="form-group">
                         <label>Dispatch Through</label>
                         <input type="text" id="dispThrough" class="form-control" required placeholder="e.g. Singh PUC Auto, Monir Auto, Self">
                     </div>
 
-                    <!-- 6. Due-Excess (Default: No Due/excess) -->
+                    <!-- 7. Due-Excess (Default: No Due/excess) -->
                     <div class="form-group">
                         <label>Due- Excess Matter If Any</label>
                         <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
-                    </div>
-
-                    <!-- 7. Invoice No. Last 5 Digits -->
-                    <div class="form-group">
-                        <label>Invoice No. Last Digit(s)</label>
-                        <input type="text" id="dispInvoiceDigits" class="form-control" required placeholder="e.g. 25815 or 76287" style="color:var(--accent-amber); font-weight:700;">
                     </div>
 
                     <!-- 8. Remark If Any (Default: -) -->
                     <div class="form-group">
                         <label>Remark If Any</label>
                         <input type="text" id="dispRemarks" class="form-control" value="-">
+                    </div>
+
+                    <!-- 9. Invoice Last 5 Digits (Can enter up to 50 numbers separated by comma or Enter) -->
+                    <div class="form-group-full">
+                        <label>Invoice No. Last 5 Digits <span style="color:var(--accent-cyan); font-weight:normal;">(Enter 1 to 50 invoices separated by comma <code>,</code> or New Line <code>Enter</code>. Exactly 5 digits each)</span></label>
+                        <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667, 25678... (Prefix will be auto-attached)"></textarea>
                     </div>
                 </div>
 
@@ -424,29 +487,41 @@
             </form>
         </div>
 
-        <!-- 2. Records History Panel -->
+        <!-- 2. Records History Panel (No ID Column + Duplicate Top Highlight + Delete + Bulk Delete + Excel Download) -->
         <div id="recordsTab" class="glass-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatched Trucks & Invoices History</h3>
                 <span id="dispCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 records</span>
             </div>
+
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <button class="btn-tool btn-bulk-del" onclick="deleteSelectedRows()">🗑️ Delete Selected</button>
+                    <span id="selectedCountText" style="font-size:0.82rem; color:var(--text-secondary);">0 selected</span>
+                </div>
+                <div>
+                    <button class="btn-tool btn-excel" onclick="downloadExcel()">📥 Download Excel</button>
+                </div>
+            </div>
+
             <div class="table-responsive">
-                <table class="custom-table">
+                <table class="custom-table" id="historyTable">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th style="width: 40px;"><input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)"></th>
                             <th>Dispatch Date</th>
+                            <th>Invoice Number</th>
                             <th>Vehicle Type</th>
                             <th>Dispatch Through</th>
                             <th>Due-Excess</th>
-                            <th>Invoice Digits</th>
                             <th>Vehicle No</th>
                             <th>Entry Time</th>
                             <th>Remark</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="dispatchTableBody">
-                        <tr><td colspan="9" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading records...</td></tr>
+                        <tr><td colspan="10" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading records...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -517,19 +592,18 @@
             window.location.href = "/";
         }
 
+        let depotPrefix = "76287";
+        let loadedDispatches = [];
+
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-        // Live Clock and Auto Date
         function updateLiveClockAndDate() {
             const now = new Date();
-            
-            // Format dd-MMM-yy (e.g. 30/Aug/26)
             const d = String(now.getDate()).padStart(2, '0');
             const m = monthNames[now.getMonth()];
             const y = String(now.getFullYear()).slice(2);
             document.getElementById('dispDate').value = `${d}/${m}/${y}`;
 
-            // Live Time HH:mm:ss
             const hh = String(now.getHours()).padStart(2, '0');
             const mm = String(now.getMinutes()).padStart(2, '0');
             const ss = String(now.getSeconds()).padStart(2, '0');
@@ -612,12 +686,11 @@
                 const depot = res.depot || {};
                 const dispatches = res.dispatches || [];
                 const staff = res.staffMembers || [];
+                loadedDispatches = dispatches;
 
-                // 1. Logos
                 setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
                 setSafeImage('depotLogoBox', res.depotLogo || 'https://ibb.co/MkJwfsf8');
 
-                // 2. Header Details
                 const dName = getField(depot, 'Depot Name') || depotNameStored;
                 const dCode = getField(depot, 'Depot Code') || depotCode;
                 const addr = getField(depot, 'Depot Address');
@@ -627,22 +700,21 @@
                 const fssai = getField(depot, 'FSSAI');
                 const gstin = getField(depot, 'GSTIN');
 
+                depotPrefix = res.invSeries || getField(depot, 'Invoice No Series') || '76287';
+
                 document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
                 if (addr) document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${state} - ${pin}`;
                 document.getElementById('topDepotFssai').textContent = fssai || '-';
                 document.getElementById('topDepotGstin').textContent = gstin || '-';
 
-                // 3. Hidden Fields & Invoice Digits prefill
                 document.getElementById('hiddenDepotCode').value = dCode;
                 document.getElementById('hiddenDepotName').value = dName;
-                document.getElementById('dispInvoiceDigits').value = res.nextInvoice || '25815';
+                document.getElementById('dispPrefixSeries').value = depotPrefix;
+                document.getElementById('statInvPrefix').textContent = depotPrefix;
 
-                // 4. Stats
                 document.getElementById('statTotalDispatch').textContent = dispatches.length;
-                document.getElementById('statLastInvoice').textContent = dispatches.length > 0 ? ('#' + getField(dispatches[dispatches.length - 1], 'Inoice No. Last Digit', 'Invoice No')) : (res.nextInvoice || '-');
                 document.getElementById('statTotalStaff').textContent = staff.length;
 
-                // 5. Render Tables
                 renderDispatchTable(dispatches);
                 renderStaffTable(staff);
 
@@ -651,30 +723,68 @@
             }
         }
 
+        // Render Dispatch Table with Duplicate Top Highlight & Checkboxes
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches recorded yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches recorded yet.</td></tr>`;
+                document.getElementById('statTotalDuplicates').textContent = '0';
                 return;
             }
 
-            let html = '';
+            // Count occurrences to detect duplicates
+            const invCounts = {};
+            list.forEach(r => {
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
+                if (inv) invCounts[inv] = (invCounts[inv] || 0) + 1;
+            });
+
+            // Split into duplicates (shown first) and uniques
+            const dupList = [];
+            const normalList = [];
+            let totalDupCount = 0;
+
             list.slice().reverse().forEach(r => {
-                html += `<tr>
-                    <td style="color:var(--accent-cyan); font-weight:700;">#${getField(r, 'ID')}</td>
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
+                if (invCounts[inv] > 1) {
+                    dupList.push(r);
+                    totalDupCount++;
+                } else {
+                    normalList.push(r);
+                }
+            });
+
+            document.getElementById('statTotalDuplicates').textContent = totalDupCount;
+
+            const finalSortedList = dupList.concat(normalList);
+
+            let html = '';
+            finalSortedList.forEach(r => {
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No', 'Invoice No.');
+                const rowId = getField(r, 'ID') || inv;
+                const isDup = invCounts[inv] > 1;
+
+                html += `<tr class="${isDup ? 'duplicate-row' : ''}">
+                    <td><input type="checkbox" class="row-checkbox" value="${rowId}" onchange="updateSelectedCount()"></td>
                     <td>${getField(r, 'Invoice Dispatch Date', 'Date')}</td>
+                    <td style="color:var(--accent-green); font-weight:800; font-size:0.95rem;">
+                        ${inv} ${isDup ? '<span class="badge-dup">⚠️ DUPLICATE</span>' : ''}
+                    </td>
                     <td style="color:var(--accent-amber); font-weight:700;">${getField(r, 'Vehicle Type')}</td>
                     <td>${getField(r, 'Dispatch Throuch', 'Dispatch Through')}</td>
                     <td>${getField(r, 'Due- Excess Matter If Any', 'Due-Excess')}</td>
-                    <td style="color:var(--accent-green); font-weight:800;">${getField(r, 'Inoice No. Last Digit', 'Invoice No')}</td>
                     <td style="color:#ffffff; font-weight:600;">${getField(r, 'Vehicle No') || '-'}</td>
                     <td style="color:var(--accent-cyan);">${getField(r, 'Entry Time')}</td>
                     <td style="color:#94a3b8;">${getField(r, 'Remark If Any', 'Remark') || '-'}</td>
+                    <td>
+                        <button class="btn-row-del" onclick="deleteSingleRow('${rowId}')">🗑️ Delete</button>
+                    </td>
                 </tr>`;
             });
             tbody.innerHTML = html;
+            updateSelectedCount();
         }
 
         function renderStaffTable(list) {
@@ -711,12 +821,45 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
         }
 
-        // Save Invoice Dispatch Form
+        // Handle Multi-Invoice Form Submission with Strict 5-Digit Validation
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const btn = document.getElementById('btnSubmitDispatch');
             const statusMsg = document.getElementById('dispatchStatus');
+            const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
+
+            if (!rawInput) {
+                statusMsg.style.color = 'var(--accent-red)';
+                statusMsg.textContent = '⚠️ Please enter at least one invoice number.';
+                return;
+            }
+
+            // Split by comma or new lines and remove extra spaces
+            const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
+
+            if (rawList.length === 0) {
+                statusMsg.style.color = 'var(--accent-red)';
+                statusMsg.textContent = '⚠️ No valid numeric invoice numbers found.';
+                return;
+            }
+
+            if (rawList.length > 50) {
+                statusMsg.style.color = 'var(--accent-red)';
+                statusMsg.textContent = '⚠️ Maximum 50 invoice numbers allowed at one time.';
+                return;
+            }
+
+            // Validate exactly 5 digits for each invoice number
+            const invalidNumbers = rawList.filter(num => num.length !== 5);
+            if (invalidNumbers.length > 0) {
+                statusMsg.style.color = 'var(--accent-red)';
+                statusMsg.textContent = `⚠️ Invalid digits: (${invalidNumbers.join(', ')}). Each invoice number MUST be exactly 5 digits (not more, not less).`;
+                return;
+            }
+
+            // Attach Depot Prefix Series to each 5-digit number
+            const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
 
             const payload = {
                 action: 'saveInvoiceDispatch',
@@ -728,12 +871,12 @@
                 vehicleNo: document.getElementById('dispVehicleNo').value,
                 dispatchThrough: document.getElementById('dispThrough').value,
                 dueExcess: document.getElementById('dispDueExcess').value,
-                invoiceDigits: document.getElementById('dispInvoiceDigits').value,
+                invoiceList: JSON.stringify(finalizedInvoices),
                 remarks: document.getElementById('dispRemarks').value
             };
 
             btn.disabled = true;
-            btn.textContent = 'Saving to Google Sheet...';
+            btn.textContent = `Saving ${finalizedInvoices.length} Invoices to Sheet...`;
             statusMsg.textContent = '';
 
             try {
@@ -744,6 +887,7 @@
                     statusMsg.style.color = 'var(--accent-green)';
                     statusMsg.textContent = '✅ ' + res.message;
                     
+                    document.getElementById('dispInvoiceDigits').value = '';
                     document.getElementById('dispThrough').value = '';
                     document.getElementById('dispVehicleNo').value = '';
                     document.getElementById('dispRemarks').value = '-';
@@ -756,12 +900,96 @@
                 }
             } catch (err) {
                 statusMsg.style.color = 'var(--accent-red)';
-                statusMsg.textContent = '⚠️ Network error saving dispatch.';
+                statusMsg.textContent = '⚠️ Network error saving dispatch records.';
             } finally {
                 btn.disabled = false;
                 btn.textContent = '💾 Save Dispatch Entry';
             }
         });
+
+        // Checkbox Handlers
+        function toggleSelectAll(master) {
+            document.querySelectorAll('.row-checkbox').forEach(cb => cb.checked = master.checked);
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('.row-checkbox:checked').length;
+            document.getElementById('selectedCountText').textContent = `${count} selected`;
+        }
+
+        // Single Row Delete
+        async function deleteSingleRow(rowId) {
+            if (!confirm(`Are you sure you want to delete dispatch record for Invoice/ID ${rowId}?`)) return;
+
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
+                if (res && res.success) {
+                    alert('Record deleted successfully!');
+                    loadDepotData();
+                } else {
+                    alert(res.message || 'Failed to delete record.');
+                }
+            } catch (err) {
+                alert('Network error deleting record.');
+            }
+        }
+
+        // Bulk Delete Selected Rows
+        async function deleteSelectedRows() {
+            const checked = Array.from(document.querySelectorAll('.row-checkbox:checked')).map(cb => cb.value);
+            if (checked.length === 0) {
+                alert('Please select at least one record to delete.');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete ${checked.length} selected dispatch records?`)) return;
+
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(checked.join(','))}`);
+                if (res && res.success) {
+                    alert(`Successfully deleted ${checked.length} records!`);
+                    document.getElementById('selectAllCheckbox').checked = false;
+                    loadDepotData();
+                } else {
+                    alert(res.message || 'Failed to delete records.');
+                }
+            } catch (err) {
+                alert('Network error deleting records.');
+            }
+        }
+
+        // Download History as Excel (CSV format)
+        function downloadExcel() {
+            if (!loadedDispatches || loadedDispatches.length === 0) {
+                alert('No dispatch records to download.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Dispatch Date,Invoice Number,Vehicle Type,Dispatch Through,Due-Excess,Vehicle No,Entry Time,Remarks\n";
+
+            loadedDispatches.forEach(r => {
+                const date = `"${getField(r, 'Invoice Dispatch Date', 'Date')}"`;
+                const inv = `"${getField(r, 'Inoice No. Last Digit', 'Invoice No')}"`;
+                const vType = `"${getField(r, 'Vehicle Type')}"`;
+                const through = `"${getField(r, 'Dispatch Throuch', 'Dispatch Through')}"`;
+                const due = `"${getField(r, 'Due- Excess Matter If Any', 'Due-Excess')}"`;
+                const vNo = `"${getField(r, 'Vehicle No')}"`;
+                const time = `"${getField(r, 'Entry Time')}"`;
+                const remarks = `"${getField(r, 'Remark If Any', 'Remark')}"`;
+
+                csvContent += [date, inv, vType, through, due, vNo, time, remarks].join(",") + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Dispatch_Report_${depotNameStored}_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
 
         // Password Modal Handlers
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }

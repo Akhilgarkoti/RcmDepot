@@ -8,21 +8,18 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; }
         body { background: #080d1a; color: #f1f5f9; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Top Navigation Bar */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 2.5rem; background: #0c1322; border-bottom: 1px solid #1e293b; }
         .nav-brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 1.05rem; color: #f8fafc; }
         .nav-actions { display: flex; align-items: center; gap: 0.8rem; }
         .btn-pwd { background: #eab308; color: #000; border: none; padding: 0.45rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; }
+        .btn-pwd:hover { background: #ca8a04; }
         .btn-logout { background: #e11d48; color: #fff; border: none; padding: 0.45rem 1.2rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: none; }
 
-        /* Main Container */
         .main-container { width: 100%; max-width: 950px; margin: 2rem auto; padding: 0 1.5rem; }
 
-        /* User Profile Card */
         .profile-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .profile-left { display: flex; align-items: center; gap: 1.2rem; }
         
-        /* Staff Photo & Fallback */
         .avatar-container { width: 62px; height: 62px; border-radius: 50%; overflow: hidden; border: 2px solid #38bdf8; background: #1e293b; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
         .avatar-container span { font-weight: bold; font-size: 1.5rem; color: #38bdf8; }
@@ -34,7 +31,6 @@
         .btn-view-statement { background: #facc15; color: #000; border: none; padding: 0.65rem 1.3rem; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; transition: 0.2s; }
         .btn-view-statement:hover { background: #eab308; }
 
-        /* Stats Cards */
         .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; margin-bottom: 1.5rem; }
         .stat-box { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 1.4rem; text-align: center; }
         .stat-box h4 { font-size: 0.8rem; letter-spacing: 0.5px; color: #94a3b8; margin-bottom: 0.6rem; text-transform: uppercase; font-weight: 600; }
@@ -43,7 +39,6 @@
         .stat-debit { color: #f43f5e; }
         .stat-bal { color: #22c55e; }
 
-        /* Ledger Table Card */
         .ledger-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .ledger-card-header { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 1.8rem; border-bottom: 1px solid #1e293b; }
         .ledger-card-header h3 { font-size: 1.1rem; color: #ffffff; display: flex; align-items: center; gap: 0.5rem; }
@@ -60,7 +55,6 @@
         .text-balance { color: #22c55e; font-weight: 600; }
         .text-gray { color: #475569; }
 
-        /* Receipt Print Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(5px); overflow-y: auto; }
         .modal-box { background: #0f172a; margin: 2rem auto; max-width: 500px; border-radius: 12px; border: 1px solid #1e293b; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #0b1120; border-bottom: 1px solid #1e293b; }
@@ -68,7 +62,15 @@
         .modal-close-btn { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; line-height: 1; }
         .modal-close-btn:hover { color: #fff; }
 
-        /* Thermal White Statement */
+        .pwd-modal-body { padding: 1.5rem; background: #0f172a; }
+        .pwd-group { margin-bottom: 1.1rem; }
+        .pwd-group label { display: block; font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.4rem; }
+        .pwd-group input { width: 100%; padding: 0.75rem; border-radius: 6px; border: 1px solid #334155; background: #080d1a; color: #fff; outline: none; font-size: 0.9rem; }
+        .pwd-group input:focus { border-color: #38bdf8; }
+        .btn-update-pwd { width: 100%; background: #eab308; color: #000; font-weight: bold; border: none; padding: 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.95rem; margin-top: 0.5rem; }
+        .btn-update-pwd:hover { background: #ca8a04; }
+        .pwd-status { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
+
         .receipt-container { background: #ffffff; color: #000000; padding: 1.5rem; font-family: 'Courier New', Courier, monospace; font-size: 0.82rem; }
         .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
         .receipt-header h2 { font-size: 0.95rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
@@ -107,35 +109,29 @@
 </head>
 <body>
 
-    <!-- Navbar -->
     <div class="navbar">
-        <div class="nav-brand">
-            👤 Staff Portal
-        </div>
+        <div class="nav-brand">👤 Staff Portal</div>
         <div class="nav-actions">
-            <button class="btn-pwd" onclick="alert('Contact Admin to update password.')">🔑 Password</button>
+            <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
         </div>
     </div>
 
     <div class="main-container">
 
-        <!-- Profile Header Card -->
         <div class="profile-card">
             <div class="profile-left">
-                <!-- Staff Image Container -->
                 <div class="avatar-container" id="avatarBox">
                     <span id="avatarFallback">U</span>
                 </div>
                 <div class="profile-details">
                     <h2 id="dispStaffName">Staff Member</h2>
-                    <p>Code: <span class="tag-code" id="dispStaffCode">EMP000</span> | Depot: <span class="tag-depot" id="dispDepotName">Kishanganj</span></p>
+                    <p>Code: <span class="tag-code" id="dispStaffCode">EMP000</span> | Depot: <span class="tag-depot" id="dispDepotName">Loading...</span></p>
                 </div>
             </div>
             <button class="btn-view-statement" onclick="openPrintPreview()">📄 View Statement</button>
         </div>
 
-        <!-- 3 Stats Cards -->
         <div class="stats-row">
             <div class="stat-box">
                 <h4>TOTAL CREDIT (₹)</h4>
@@ -151,7 +147,6 @@
             </div>
         </div>
 
-        <!-- Ledger Table Card -->
         <div class="ledger-card">
             <div class="ledger-card-header">
                 <h3>📑 My Ledger Statement</h3>
@@ -177,6 +172,34 @@
 
     </div>
 
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>🔑 Change Password</span>
+                <button class="modal-close-btn" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <div class="pwd-modal-body">
+                <form id="changePasswordForm">
+                    <div class="pwd-group">
+                        <label>Current Password</label>
+                        <input type="password" id="oldPass" required placeholder="Enter Current Password">
+                    </div>
+                    <div class="pwd-group">
+                        <label>New Password</label>
+                        <input type="password" id="newPass" required placeholder="Enter New Password">
+                    </div>
+                    <div class="pwd-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmPass" required placeholder="Confirm New Password">
+                    </div>
+                    <button type="submit" class="btn-update-pwd" id="pwdSubmitBtn">Update Password</button>
+                    <p id="pwdStatusMsg" class="pwd-status"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Statement Receipt Modal -->
     <div id="printModal" class="modal">
         <div class="modal-box">
@@ -186,16 +209,14 @@
             </div>
             
             <div id="printableReceipt" class="receipt-container">
-                <!-- Depot Header -->
                 <div class="receipt-header">
                     <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
-                    <p id="depotFullAddress">Loading Depot Details...</p>
+                    <p id="depotFullAddress">Depot Address</p>
                     <p id="depotContact">Mob: -</p>
                     <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
                     <span class="receipt-title">** ACCOUNT STATEMENT **</span>
                 </div>
 
-                <!-- Staff Meta -->
                 <div class="receipt-meta">
                     <div>
                         <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
@@ -207,7 +228,6 @@
                     </div>
                 </div>
 
-                <!-- Receipt Table -->
                 <table class="receipt-table">
                     <thead>
                         <tr>
@@ -222,7 +242,6 @@
                     </tbody>
                 </table>
 
-                <!-- Summary Total -->
                 <div class="receipt-summary">
                     <div class="sum-row">
                         <span>TOTAL DEBIT:</span>
@@ -247,12 +266,10 @@
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
-        const staffName = sessionStorage.getItem("name") || "Staff Member";
+        const staffNameStored = sessionStorage.getItem("name") || "Staff Member";
         const staffCode = (sessionStorage.getItem("user") || "EMP001").trim();
 
-        let globalStaffRecords = [];
-        let globalStaffInfo = {};
-        let globalDepotInfo = {};
+        let bundleData = { staff: {}, depot: {}, ledger: [] };
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
@@ -295,42 +312,25 @@
             return '';
         }
 
-        async function loadAllDetails() {
+        async function loadFastBundle() {
             try {
-                const [staffList, depotList, ledgerData] = await Promise.all([
-                    jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Master`),
-                    jsonp(`${SCRIPT_URL}?action=getData&sheet=Depot+Master`),
-                    jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Ledger+Entry`)
-                ]);
+                const res = await jsonp(`${SCRIPT_URL}?action=getStaffBundle&staffCode=${encodeURIComponent(staffCode)}`);
+                if (!res || !res.success) throw new Error("Failed to load staff bundle");
 
-                // 1. Staff Info from Staff Master
-                if (Array.isArray(staffList)) {
-                    globalStaffInfo = staffList.find(s => {
-                        const id = getField(s, 'Staff Login Id', 'Staff Code', 'ID');
-                        return id.toLowerCase() === staffCode.toLowerCase();
-                    }) || {};
-                }
+                bundleData = res;
+                const staffInfo = res.staff || {};
+                const depotInfo = res.depot || {};
+                const ledgerRows = res.ledger || [];
 
-                // 2. Depot Info from Depot Master
-                if (Array.isArray(depotList) && depotList.length > 0) {
-                    const assignedDepot = getField(globalStaffInfo, 'Staff Working Depot Name', 'Depot Name', 'Staff Working Depot Code', 'Depot Code');
-                    globalDepotInfo = depotList.find(d => {
-                        const dName = getField(d, 'Depot Name');
-                        const dCode = getField(d, 'Depot Code');
-                        return (assignedDepot && (dName.toLowerCase() === assignedDepot.toLowerCase() || dCode.toLowerCase() === assignedDepot.toLowerCase()));
-                    }) || depotList[0];
-                }
-
-                // Render Profile Card & Photo
-                const finalName = getField(globalStaffInfo, 'Staff Name') || staffName;
-                const finalDepot = getField(globalStaffInfo, 'Staff Working Depot Name') || getField(globalDepotInfo, 'Depot Name') || 'Kishanganj';
-                const staffPhoto = getField(globalStaffInfo, 'Staff Photo', 'Photo', 'Image');
+                // 1. Profile Render
+                const finalName = getField(staffInfo, 'Staff Name') || staffNameStored;
+                const finalDepot = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
+                const staffPhoto = getField(staffInfo, 'Staff Photo', 'Photo', 'Image');
 
                 document.getElementById('dispStaffName').textContent = finalName;
                 document.getElementById('dispStaffCode').textContent = staffCode.toUpperCase();
                 document.getElementById('dispDepotName').textContent = finalDepot;
 
-                // Load Photo if available, otherwise show fallback initial
                 const avatarBox = document.getElementById('avatarBox');
                 if (staffPhoto && staffPhoto.startsWith('data:image')) {
                     avatarBox.innerHTML = `<img src="${staffPhoto}" alt="${finalName}">`;
@@ -338,30 +338,22 @@
                     avatarBox.innerHTML = `<span>${finalName.charAt(0).toUpperCase()}</span>`;
                 }
 
-                // 3. Process Ledger Records
+                // 2. Ledger Calculation
                 const tbody = document.getElementById('ledgerTableBody');
-                if (!Array.isArray(ledgerData) || ledgerData.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2rem;">No records found.</td></tr>`;
-                    return;
-                }
-
-                globalStaffRecords = ledgerData.filter(row => {
-                    const code = getField(row, 'Staff Code', 'Staff Login Id');
-                    return code.toLowerCase() === staffCode.toLowerCase();
-                });
-
-                if (globalStaffRecords.length === 0) {
+                if (ledgerRows.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="color:#94a3b8; padding:2rem;">No ledger transactions for ${staffCode}.</td></tr>`;
+                    document.getElementById('totalCredit').textContent = '₹0';
+                    document.getElementById('totalDebit').textContent = '₹0';
+                    document.getElementById('netBalance').textContent = '₹0 (Cr)';
                     return;
                 }
 
-                // Calculate Running Balances
                 let sumDebit = 0;
                 let sumCredit = 0;
                 let runningBal = 0;
                 let recordsWithBal = [];
 
-                globalStaffRecords.forEach(row => {
+                ledgerRows.forEach(row => {
                     const dr = Number(getField(row, 'Debit') || 0);
                     const cr = Number(getField(row, 'Credit') || 0);
                     sumDebit += dr;
@@ -376,7 +368,6 @@
                     });
                 });
 
-                // Top stats
                 document.getElementById('totalCredit').textContent = `₹${sumCredit.toLocaleString('en-IN')}`;
                 document.getElementById('totalDebit').textContent = `₹${sumDebit.toLocaleString('en-IN')}`;
                 
@@ -386,7 +377,6 @@
                 balEl.textContent = `₹${Math.abs(finalBal).toLocaleString('en-IN')} ${balType}`;
                 balEl.style.color = finalBal >= 0 ? '#22c55e' : '#f43f5e';
 
-                // Display newest first in Table
                 let tableHtml = '';
                 recordsWithBal.slice().reverse().forEach(r => {
                     tableHtml += `<tr>
@@ -404,34 +394,82 @@
             }
         }
 
-        function openPrintPreview() {
-            // Fill Depot Details from Depot Master sheet
-            if (globalDepotInfo) {
-                const compName = getField(globalDepotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
-                const addr = getField(globalDepotInfo, 'Depot Address');
-                const dist = getField(globalDepotInfo, 'Dristric', 'District');
-                const pin = getField(globalDepotInfo, 'Pin Code', 'Pincode');
-                const mob = getField(globalDepotInfo, 'Mob. No.', 'Mobile Number', 'Mob No');
-                const stateCode = getField(globalDepotInfo, 'State Code');
-                const stateName = getField(globalDepotInfo, 'State Name');
-                const gstin = getField(globalDepotInfo, 'GSTIN', 'GST NO');
+        function openPasswordModal() {
+            document.getElementById('passwordModal').style.display = 'block';
+            document.getElementById('changePasswordForm').reset();
+            document.getElementById('pwdStatusMsg').textContent = '';
+        }
 
-                document.getElementById('depotCompanyName').textContent = compName;
-                document.getElementById('depotFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
-                document.getElementById('depotContact').textContent = `Mob: ${mob || '-'}`;
-                document.getElementById('depotStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
-                document.getElementById('depotGstin').textContent = `GSTIN: ${gstin || '-'}`;
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('oldPass').value.trim();
+            const newPass = document.getElementById('newPass').value.trim();
+            const confirmPass = document.getElementById('confirmPass').value.trim();
+            const msg = document.getElementById('pwdStatusMsg');
+            const btn = document.getElementById('pwdSubmitBtn');
+
+            if (newPass !== confirmPass) {
+                msg.style.color = "#f43f5e";
+                msg.textContent = "New passwords do not match!";
+                return;
             }
 
-            // Fill Staff Details
-            document.getElementById('rcptStaffName').textContent = getField(globalStaffInfo, 'Staff Name') || staffName;
-            document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
-            document.getElementById('rcptJoinedDate').textContent = formatDate(getField(globalStaffInfo, 'Staff Joining Date') || '2022-01-01');
-            document.getElementById('rcptDepotName').textContent = getField(globalStaffInfo, 'Staff Working Depot Name') || getField(globalDepotInfo, 'Depot Name') || 'Kishanganj';
+            btn.disabled = true;
+            btn.textContent = "Updating Google Sheet...";
+            msg.textContent = "";
 
-            // Build Receipt Table
+            try {
+                const url = `${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
+                const res = await jsonp(url);
+
+                if (res.success) {
+                    msg.style.color = "#22c55e";
+                    msg.textContent = "Password changed successfully in Google Sheet!";
+                    setTimeout(() => { closePasswordModal(); }, 1800);
+                } else {
+                    msg.style.color = "#f43f5e";
+                    msg.textContent = res.message || "Failed to update password.";
+                }
+            } catch (err) {
+                msg.style.color = "#f43f5e";
+                msg.textContent = "Error updating password.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Update Password";
+            }
+        });
+
+        function openPrintPreview() {
+            const depotInfo = bundleData.depot || {};
+            const staffInfo = bundleData.staff || {};
+            const ledgerRows = bundleData.ledger || [];
+
+            const compName = getField(depotInfo, 'Compny Name', 'Company Name') || 'RCM Consumer Products Private Limited';
+            const addr = getField(depotInfo, 'Depot Address');
+            const dist = getField(depotInfo, 'Dristric', 'District');
+            const pin = getField(depotInfo, 'Pin Code', 'Pincode');
+            const mob = getField(depotInfo, 'Mob. No.', 'Mobile Number', 'Mob No');
+            const stateCode = getField(depotInfo, 'State Code');
+            const stateName = getField(depotInfo, 'State Name');
+            const gstin = getField(depotInfo, 'GSTIN', 'GST NO');
+
+            document.getElementById('depotCompanyName').textContent = compName;
+            document.getElementById('depotFullAddress').textContent = `${addr}, ${dist}, ${stateName} - ${pin}`;
+            document.getElementById('depotContact').textContent = `Mob: ${mob || '-'}`;
+            document.getElementById('depotStateCode').textContent = `Code: ${stateCode} State: ${stateName}`;
+            document.getElementById('depotGstin').textContent = `GSTIN: ${gstin || '-'}`;
+
+            document.getElementById('rcptStaffName').textContent = getField(staffInfo, 'Staff Name') || staffNameStored;
+            document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
+            document.getElementById('rcptJoinedDate').textContent = formatDate(getField(staffInfo, 'Staff Joining Date') || '2022-01-01');
+            document.getElementById('rcptDepotName').textContent = getField(staffInfo, 'Staff Working Depot Name') || getField(depotInfo, 'Depot Name') || 'Kishanganj';
+
             const tbody = document.getElementById('rcptTableBody');
-            if (globalStaffRecords.length === 0) {
+            if (ledgerRows.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
                 return;
             }
@@ -441,7 +479,7 @@
             let totalDr = 0;
             let totalCr = 0;
 
-            globalStaffRecords.forEach(row => {
+            ledgerRows.forEach(row => {
                 const date = formatDate(getField(row, 'Transaction Date'));
                 const desc = getField(row, 'Particular') || '-';
                 const dr = Number(getField(row, 'Debit') || 0);
@@ -452,10 +490,7 @@
                 runningBal += (cr - dr);
 
                 html += `<tr>
-                    <td>
-                        <strong>${date}</strong>
-                        <span class="desc-sub">${desc}</span>
-                    </td>
+                    <td><strong>${date}</strong><span class="desc-sub">${desc}</span></td>
                     <td class="text-right">${dr > 0 ? dr : '-'}</td>
                     <td class="text-right">${cr > 0 ? cr : '-'}</td>
                     <td class="text-right"><strong>${runningBal}</strong></td>
@@ -474,7 +509,7 @@
             document.getElementById('printModal').style.display = 'none';
         }
 
-        window.onload = loadAllDetails;
+        window.onload = loadFastBundle;
     </script>
 </body>
 </html>

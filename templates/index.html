@@ -44,6 +44,8 @@
     </div>
 
     <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const role = document.getElementById('role').value;
@@ -53,24 +55,24 @@
             const loginBtn = document.getElementById('loginBtn');
 
             errorMsg.textContent = "";
-            loginBtn.textContent = "Verifying...";
+            loginBtn.textContent = "Verifying with Google Sheets...";
             loginBtn.disabled = true;
 
             try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ role, username, password })
-                });
-
+                const fetchUrl = `${GOOGLE_SCRIPT_URL}?action=login&role=${encodeURIComponent(role)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                const res = await fetch(fetchUrl);
                 const data = await res.json();
-                if (res.ok && data.success) {
-                    window.location.href = data.redirect;
+
+                if (data.success) {
+                    sessionStorage.setItem("user", data.username);
+                    sessionStorage.setItem("role", data.role);
+                    sessionStorage.setItem("name", data.name);
+                    window.location.href = `/${data.role}`;
                 } else {
-                    errorMsg.textContent = data.message || "Invalid credentials.";
+                    errorMsg.textContent = data.message || "Invalid Username or Password";
                 }
             } catch (err) {
-                errorMsg.textContent = "Server connection error. Please try again.";
+                errorMsg.textContent = "Unable to connect to Google Sheets. Check internet connection.";
             } finally {
                 loginBtn.textContent = "Login";
                 loginBtn.disabled = false;

@@ -3,169 +3,770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Depot Portal - RCM Depot</title>
+    <title>RCM Depot Manager Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: #0b132b; color: #f8fafc; padding: 2rem; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 1rem; margin-bottom: 2rem; }
-        .header h1 { color: #38bdf8; font-size: 1.5rem; }
-        .logout-btn { background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-decoration: none; font-size: 0.9rem; }
-        .grid-layout { display: grid; grid-template-columns: 360px 1fr; gap: 2rem; }
-        .form-card, .table-card { background: #1c2541; padding: 1.5rem; border-radius: 8px; border: 1px solid #334155; }
-        .form-card h2, .table-card h2 { color: #38bdf8; font-size: 1.2rem; margin-bottom: 1.2rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.3rem; font-size: 0.85rem; color: #94a3b8; }
-        .form-group input, .form-group select { width: 100%; padding: 0.65rem; border-radius: 6px; border: 1px solid #334155; background: #0b132b; color: #fff; outline: none; }
-        .submit-btn { width: 100%; padding: 0.75rem; background: #0284c7; border: none; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
-        .submit-btn:hover { background: #0369a1; }
-        .table-card { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th, td { padding: 0.75rem 1rem; border-bottom: 1px solid #334155; font-size: 0.85rem; white-space: nowrap; }
-        th { color: #94a3b8; background: #131c31; }
-        .status-msg { margin-top: 0.8rem; font-size: 0.85rem; text-align: center; }
-        @media (max-width: 900px) { .grid-layout { grid-template-columns: 1fr; } }
+        :root {
+            --bg-main: #060919;
+            --bg-card: rgba(17, 24, 39, 0.6);
+            --border-color: rgba(255, 255, 255, 0.12);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #0284c7;
+            --accent-cyan: #38bdf8;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #f43f5e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body {
+            background-color: #060919;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 15%, rgba(2, 132, 199, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 90%, rgba(245, 158, 11, 0.1) 0px, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Navbar */
+        .navbar {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid #0284c7;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            padding: 0.8rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.2rem;
+        }
+
+        /* Left: Depot Logo + RCM Depot Manager Portal */
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 220px;
+        }
+        .depot-logo-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+            overflow: hidden;
+            padding: 2px;
+            flex-shrink: 0;
+        }
+        .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        .logo-text-box h3 { font-size: 1rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; }
+        .logo-text-box span { font-size: 0.74rem; color: #38bdf8; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Center: 222x58 Company Logo + Depot Details */
+        .depot-center-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.4rem;
+            flex: 1;
+            text-align: left;
+        }
+        .company-logo-badge {
+            width: 222px;
+            height: 58px;
+            border-radius: 10px;
+            background: #ffffff;
+            border: 2px solid #38bdf8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+            overflow: hidden;
+            padding: 4px 10px;
+            flex-shrink: 0;
+        }
+        .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
+
+        .depot-header-info h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.15rem;
+        }
+        .depot-header-info h1 span { color: var(--accent-amber); }
+        .depot-header-info p { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .depot-badges { display: inline-flex; gap: 0.5rem; margin-top: 0.25rem; flex-wrap: wrap; }
+        .tag-pill {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.55rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+        .tag-pill strong { color: var(--accent-cyan); }
+
+        /* Right: Password & Logout */
+        .nav-actions { display: flex; align-items: center; gap: 0.7rem; min-width: 190px; justify-content: flex-end; }
+        .btn-pwd {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 0.5rem 0.95rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-pwd:hover { background: var(--accent-amber); color: #000; }
+        .btn-logout {
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            padding: 0.5rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { background: var(--accent-red); color: #fff; }
+
+        /* Main Workspace Container */
+        .main-container { width: 100%; max-width: 1080px; margin: 1.8rem auto; padding: 0 1.5rem; }
+
+        /* Stats Strip */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.2rem;
+            margin-bottom: 1.6rem;
+        }
+        .glass-stat-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.2rem 1.4rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .glass-stat-card h4 { font-size: 0.76rem; letter-spacing: 0.6px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
+        .glass-stat-card p { font-size: 1.5rem; font-weight: 800; color: #ffffff; }
+
+        /* Modern Nav Tabs */
+        .depot-nav-tabs {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.4rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.6rem;
+        }
+        .tab-btn {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.65rem 1.3rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .tab-btn:hover { background: rgba(30, 41, 59, 0.8); color: #fff; }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff;
+            border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Form Glass Card */
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            margin-bottom: 1.6rem;
+        }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.4rem; }
+        .panel-header h3 { font-size: 1.15rem; font-weight: 800; color: #ffffff; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+        }
+        .form-group-full { grid-column: span 2; }
+        .form-group { margin-bottom: 0.5rem; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem; }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.78rem 0.95rem;
+            background: rgba(10, 15, 29, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus { border-color: var(--accent-cyan); }
+        .form-control:read-only { background: rgba(15, 23, 42, 0.5); color: #94a3b8; }
+
+        .btn-submit-dispatch {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #ffffff;
+            border: none;
+            padding: 0.85rem 1.6rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        .btn-submit-dispatch:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45); }
+
+        /* Data Table */
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
+        table.custom-table th {
+            padding: 0.85rem 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+        }
+        table.custom-table td {
+            padding: 0.85rem 1.2rem;
+            font-size: 0.86rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        table.custom-table tr:hover td { background: rgba(30, 41, 59, 0.4); }
+
+        /* Password Modal */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem;
+        }
+        .modal-box {
+            background: rgba(17, 24, 39, 0.95); margin: 4.5rem auto; max-width: 410px; border-radius: 16px;
+            border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+        }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.3rem; background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid var(--border-color); }
+        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
+        .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
+        .modal-body { padding: 1.5rem; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div>
-            <h1>RCM Depot Manager Portal</h1>
-            <p id="depotInfo" style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.3rem;"></p>
+
+    <!-- Header Navbar -->
+    <div class="navbar">
+        <!-- Left: Depot Logo + RCM Depot Manager Portal -->
+        <div class="brand-section">
+            <div class="depot-logo-box" id="depotLogoBox">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#0284c7"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.96.76 1.58V19z"/></svg>
+            </div>
+            <div class="logo-text-box">
+                <h3>RCM DEPOT</h3>
+                <span>Manager Portal</span>
+            </div>
         </div>
-        <a href="/" onclick="sessionStorage.clear()" class="logout-btn">Logout</a>
+
+        <!-- Center: 222x58 Company Logo + Depot Details -->
+        <div class="depot-center-section">
+            <div class="company-logo-badge" id="companyLogoBox">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
+            </div>
+            <div class="depot-header-info">
+                <h1><span id="headerDepotTitle">Depot Management</span></h1>
+                <p id="topDepotAddress">Loading depot details...</p>
+                <div class="depot-badges">
+                    <span class="tag-pill"><strong>FSSAI:</strong> <span id="topDepotFssai">-</span></span>
+                    <span class="tag-pill"><strong>GSTIN:</strong> <span id="topDepotGstin">-</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="nav-actions">
+            <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
+        </div>
     </div>
 
-    <div class="grid-layout">
-        <!-- New Dispatch Entry Form -->
-        <div class="form-card">
-            <h2>New Invoice Dispatch Entry</h2>
-            <form id="dispatchForm">
-                <div class="form-group">
-                    <label>Invoice Number</label>
-                    <input type="text" id="invoiceNo" required placeholder="e.g., 25640">
+    <div class="main-container">
+
+        <!-- Stats Overview Cards -->
+        <div class="stats-grid">
+            <div class="glass-stat-card">
+                <h4>Total Dispatched Trucks</h4>
+                <p id="statTotalDispatch">0</p>
+            </div>
+            <div class="glass-stat-card">
+                <h4>Total Cartons Shipped</h4>
+                <p id="statTotalCartons">0</p>
+            </div>
+            <div class="glass-stat-card">
+                <h4>Active Staff Members</h4>
+                <p id="statTotalStaff">0</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="depot-nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
+            <button class="tab-btn" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
+            <button class="tab-btn" onclick="switchTab('staffTab', this)">👥 Assigned Staff</button>
+        </div>
+
+        <!-- 1. Invoice Dispatch Form Panel -->
+        <div id="dispatchTab" class="glass-panel">
+            <div class="panel-header">
+                <h3>📦 Record Invoice / Vehicle Dispatch</h3>
+                <span style="color:var(--accent-cyan); font-size:0.85rem; font-weight:700;">Live Google Sheet Sync</span>
+            </div>
+
+            <form id="invoiceDispatchForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Assigned Depot</label>
+                        <input type="text" id="dispDepotName" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Number Series</label>
+                        <input type="text" id="dispInvoiceNo" class="form-control" readonly style="color:var(--accent-amber); font-weight:700;">
+                    </div>
+                    <div class="form-group">
+                        <label>Dispatch Date</label>
+                        <input type="date" id="dispDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vehicle Number (e.g. BR-11-AB-1234)</label>
+                        <input type="text" id="dispVehicle" class="form-control" required placeholder="Enter Vehicle No">
+                    </div>
+                    <div class="form-group">
+                        <label>Driver Name</label>
+                        <input type="text" id="dispDriver" class="form-control" required placeholder="Driver Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Driver Mobile Number</label>
+                        <input type="tel" id="dispDriverMob" class="form-control" placeholder="10-digit Mobile No">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Cartons / Quantity</label>
+                        <input type="number" id="dispCartons" class="form-control" required placeholder="e.g. 150">
+                    </div>
+                    <div class="form-group">
+                        <label>Destination Location / PUC</label>
+                        <input type="text" id="dispDest" class="form-control" required placeholder="City / PUC Center Name">
+                    </div>
+                    <div class="form-group-full">
+                        <label>Remarks / Notes</label>
+                        <input type="text" id="dispRemarks" class="form-control" placeholder="Optional notes (e.g. On-time delivery)">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Vehicle Number</label>
-                    <input type="text" id="vehicleNo" placeholder="e.g., BR01-1234">
-                </div>
-                <div class="form-group">
-                    <label>Dispatch Through (Transport / Party)</label>
-                    <input type="text" id="dispatchThrough" required placeholder="e.g., Singh PUC Auto">
-                </div>
-                <div class="form-group">
-                    <label>Due / Excess Status</label>
-                    <select id="dueExcess">
-                        <option value="No Due/excess">No Due/excess</option>
-                        <option value="Due">Due</option>
-                        <option value="Excess">Excess</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Remark (If Any)</label>
-                    <input type="text" id="remark" placeholder="-">
-                </div>
-                <button type="submit" class="submit-btn" id="saveBtn">Submit Dispatch</button>
-                <p id="statusMsg" class="status-msg"></p>
+                <button type="submit" id="btnSubmitDispatch" class="btn-submit-dispatch">💾 Save Dispatch Record</button>
+                <p id="dispatchStatus" style="margin-top:0.8rem; font-size:0.88rem; font-weight:600;"></p>
             </form>
         </div>
 
-        <!-- Recent Dispatches Table -->
-        <div class="table-card">
-            <h2>Recent Dispatch Reports</h2>
-            <div id="tableContainer">
-                <p style="color: #94a3b8;">Loading records...</p>
+        <!-- 2. Records History Panel -->
+        <div id="recordsTab" class="glass-panel" style="display:none;">
+            <div class="panel-header">
+                <h3>📊 Dispatched Trucks History</h3>
+                <span id="dispCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 records</span>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Inv No</th>
+                            <th>Date</th>
+                            <th>Vehicle No</th>
+                            <th>Driver</th>
+                            <th>Cartons</th>
+                            <th>Destination</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispatchTableBody">
+                        <tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Staff List Panel -->
+        <div id="staffTab" class="glass-panel" style="display:none;">
+            <div class="panel-header">
+                <h3>👥 Staff Working in this Depot</h3>
+                <span id="staffCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 members</span>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Staff Code</th>
+                            <th>Name</th>
+                            <th>Mobile</th>
+                            <th>Joining Date</th>
+                            <th>Login ID</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="staffTableBody">
+                        <tr><td colspan="6" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading staff...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Password Modal -->
+    <div id="pwdModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>🔑 Change Depot Password</span>
+                <button class="modal-close-btn" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="depotPwdForm">
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password">
+                    </div>
+                    <button type="submit" id="btnDepotPwdSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1rem;">Update Password</button>
+                    <p id="depotPwdMsg" style="margin-top:0.8rem; font-size:0.85rem; text-align:center; font-weight:600;"></p>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
-        const depotName = sessionStorage.getItem("name") || "Depot";
-        const depotCode = sessionStorage.getItem("user") || "D000";
 
-        document.getElementById('depotInfo').textContent = `Logged in: ${depotName} (${depotCode.toUpperCase()})`;
+        let depotCode = (sessionStorage.getItem("user") || "").trim();
+        let depotNameStored = sessionStorage.getItem("depot") || sessionStorage.getItem("name") || "Depot";
+
+        if (!depotCode) {
+            window.location.href = "/";
+        }
+
+        let depotBundle = { depot: {}, dispatches: [], staffMembers: [] };
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
-                const callbackName = 'jsonp_cb_' + Math.round(100000 * Math.random());
-                window[callbackName] = function(data) {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
+                const cbName = 'depot_cb_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
+                
+                const timer = setTimeout(() => {
+                    cleanup();
+                    reject(new Error("Timeout loading depot data"));
+                }, 8000);
+
+                function cleanup() {
+                    clearTimeout(timer);
+                    if (window[cbName]) delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                window[cbName] = function(data) {
+                    cleanup();
                     resolve(data);
                 };
-                const script = document.createElement('script');
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
                 script.onerror = () => {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
+                    cleanup();
                     reject(new Error("Network Error"));
                 };
                 document.body.appendChild(script);
             });
         }
 
-        async function loadDispatches() {
-            const container = document.getElementById('tableContainer');
-            try {
-                const data = await jsonp(`${SCRIPT_URL}?action=getData&sheet=Invoice+Dispatch+Report`);
-                if (!Array.isArray(data) || data.length === 0) {
-                    container.innerHTML = `<p style="color: #94a3b8;">No dispatch entries found.</p>`;
-                    return;
-                }
-                const headers = ['ID', 'InvoIce Dispatch Date', 'Inoice No.  Last  Digit', 'Dispatch Throuch', 'Vehicle No', 'Due- Excexx Any Matter', 'Remark If Any'];
-                let html = `<table><thead><tr>`;
-                headers.forEach(h => html += `<th>${h}</th>`);
-                html += `</tr></thead><tbody>`;
+        function setSafeImage(containerId, rawUrl) {
+            const container = document.getElementById(containerId);
+            if (!container || !rawUrl) return;
 
-                data.slice(-15).reverse().forEach(row => {
-                    html += `<tr>`;
-                    headers.forEach(h => html += `<td>${row[h] !== undefined ? row[h] : '-'}</td>`);
-                    html += `</tr>`;
-                });
-                html += `</tbody></table>`;
-                container.innerHTML = html;
+            let u = rawUrl.trim();
+            if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
+                u = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
+            }
+
+            const img = new Image();
+            img.onload = () => {
+                container.innerHTML = '';
+                container.appendChild(img);
+            };
+            img.onerror = () => {
+                container.innerHTML = `<img src="https://images.weserv.nl/?url=${encodeURIComponent(u)}" alt="Logo">`;
+            };
+            img.src = u;
+        }
+
+        function getField(obj, ...keys) {
+            if (!obj) return '';
+            for (let k of keys) {
+                if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
+                    return String(obj[k]).trim();
+                }
+            }
+            const objKeys = Object.keys(obj);
+            for (let k of keys) {
+                const found = objKeys.find(ok => ok.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, ''));
+                if (found && obj[found]) return String(obj[found]).trim();
+            }
+            return '';
+        }
+
+        async function loadDepotData() {
+            document.getElementById('dispDate').value = new Date().toISOString().split('T')[0];
+
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
+                if (!res || !res.success) throw new Error("Failed to load depot data");
+
+                depotBundle = res;
+                const depot = res.depot || {};
+                const dispatches = res.dispatches || [];
+                const staff = res.staffMembers || [];
+
+                // 1. Render Logos
+                setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
+                setSafeImage('depotLogoBox', res.depotLogo || 'https://ibb.co/MkJwfsf8');
+
+                // 2. Header Info
+                const dName = getField(depot, 'Depot Name') || depotNameStored;
+                const addr = getField(depot, 'Depot Address');
+                const dist = getField(depot, 'Dristric', 'District');
+                const state = getField(depot, 'State Name');
+                const pin = getField(depot, 'Pin Code', 'Pincode');
+                const fssai = getField(depot, 'FSSAI');
+                const gstin = getField(depot, 'GSTIN');
+
+                document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
+                if (addr) document.getElementById('topDepotAddress').textContent = `${addr}, ${dist}, ${state} - ${pin}`;
+                document.getElementById('topDepotFssai').textContent = fssai || '-';
+                document.getElementById('topDepotGstin').textContent = gstin || '-';
+
+                // 3. Form fields
+                document.getElementById('dispDepotName').value = dName;
+                document.getElementById('dispInvoiceNo').value = res.nextInvoice || '70001';
+
+                // 4. Stats
+                document.getElementById('statTotalDispatch').textContent = dispatches.length;
+                let totalC = 0;
+                dispatches.forEach(d => { totalC += Number(getField(d, 'Total Carton', 'Cartons') || 0); });
+                document.getElementById('statTotalCartons').textContent = totalC.toLocaleString('en-IN');
+                document.getElementById('statTotalStaff').textContent = staff.length;
+
+                // 5. Render Dispatch Table
+                renderDispatchTable(dispatches);
+
+                // 6. Render Staff Table
+                renderStaffTable(staff);
+
             } catch (err) {
-                container.innerHTML = `<p style="color: #f87171;">Failed to load dispatches.</p>`;
+                console.error(err);
             }
         }
 
-        document.getElementById('dispatchForm').addEventListener('submit', async function(e) {
+        function renderDispatchTable(list) {
+            const tbody = document.getElementById('dispatchTableBody');
+            document.getElementById('dispCountBadge').textContent = `${list.length} records`;
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches recorded yet.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            list.slice().reverse().forEach(r => {
+                html += `<tr>
+                    <td style="color:var(--accent-amber); font-weight:700;">#${getField(r, 'Invoice No', 'Invoice No.')}</td>
+                    <td>${getField(r, 'Invoice Date', 'Date')}</td>
+                    <td style="color:var(--accent-cyan); font-weight:600;">${getField(r, 'Vehicle No', 'Vehicle')}</td>
+                    <td>${getField(r, 'Driver Name', 'Driver')}</td>
+                    <td style="color:var(--accent-green); font-weight:700;">${getField(r, 'Total Carton', 'Carton')}</td>
+                    <td>${getField(r, 'Destination Location', 'Destination')}</td>
+                    <td style="color:#94a3b8;">${getField(r, 'Remarks', 'Notes') || '-'}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function renderStaffTable(list) {
+            const tbody = document.getElementById('staffTableBody');
+            document.getElementById('staffCountBadge').textContent = `${list.length} members`;
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No staff assigned to this depot.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            list.forEach(s => {
+                const st = getField(s, 'Status') || 'Active';
+                const stColor = st.toLowerCase() === 'active' ? 'var(--accent-green)' : 'var(--accent-red)';
+                html += `<tr>
+                    <td style="color:var(--accent-cyan); font-weight:700;">${getField(s, 'Staff Code')}</td>
+                    <td><strong>${getField(s, 'Staff Name')}</strong></td>
+                    <td>${getField(s, 'Staff Mob.')}</td>
+                    <td>${getField(s, 'Staff Joining Date')}</td>
+                    <td>${getField(s, 'Staff Login Id')}</td>
+                    <td style="color:${stColor}; font-weight:700;">${st}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.depot-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
+            document.getElementById('recordsTab').style.display = (tabId === 'recordsTab') ? 'block' : 'none';
+            document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
+        }
+
+        // Save Invoice Dispatch Form
+        document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const btn = document.getElementById('saveBtn');
-            const msg = document.getElementById('statusMsg');
+
+            const btn = document.getElementById('btnSubmitDispatch');
+            const statusMsg = document.getElementById('dispatchStatus');
+
+            const payload = {
+                action: 'saveInvoiceDispatch',
+                depotCode: depotCode,
+                depotName: document.getElementById('dispDepotName').value,
+                invoiceNo: document.getElementById('dispInvoiceNo').value,
+                invoiceDate: document.getElementById('dispDate').value,
+                vehicleNo: document.getElementById('dispVehicle').value,
+                driverName: document.getElementById('dispDriver').value,
+                driverMob: document.getElementById('dispDriverMob').value,
+                totalCarton: document.getElementById('dispCartons').value,
+                destination: document.getElementById('dispDest').value,
+                remarks: document.getElementById('dispRemarks').value
+            };
+
             btn.disabled = true;
-            btn.textContent = "Saving to Google Sheets...";
-            msg.textContent = "";
-
-            const invoiceNo = document.getElementById('invoiceNo').value;
-            const vehicleNo = document.getElementById('vehicleNo').value;
-            const dispatchThrough = document.getElementById('dispatchThrough').value;
-            const dueExcess = document.getElementById('dueExcess').value;
-            const remark = document.getElementById('remark').value;
-
-            const url = `${SCRIPT_URL}?action=addDispatch&depotCode=${encodeURIComponent(depotCode)}&depotName=${encodeURIComponent(depotName)}&invoiceNo=${encodeURIComponent(invoiceNo)}&vehicleNo=${encodeURIComponent(vehicleNo)}&dispatchThrough=${encodeURIComponent(dispatchThrough)}&dueExcess=${encodeURIComponent(dueExcess)}&remark=${encodeURIComponent(remark)}`;
+            btn.textContent = 'Saving to Google Sheet...';
+            statusMsg.textContent = '';
 
             try {
-                const res = await jsonp(url);
-                if (res.success) {
-                    msg.style.color = "#4ade80";
-                    msg.textContent = "Entry added to Google Sheet!";
-                    document.getElementById('dispatchForm').reset();
-                    loadDispatches();
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+
+                if (res && res.success) {
+                    statusMsg.style.color = 'var(--accent-green)';
+                    statusMsg.textContent = '✅ ' + res.message;
+                    
+                    document.getElementById('dispVehicle').value = '';
+                    document.getElementById('dispDriver').value = '';
+                    document.getElementById('dispDriverMob').value = '';
+                    document.getElementById('dispCartons').value = '';
+                    document.getElementById('dispDest').value = '';
+                    document.getElementById('dispRemarks').value = '';
+
+                    setTimeout(loadDepotData, 1200);
                 } else {
-                    msg.style.color = "#f87171";
-                    msg.textContent = res.message || "Failed to save.";
+                    statusMsg.style.color = 'var(--accent-red)';
+                    statusMsg.textContent = '⚠️ ' + (res.message || 'Failed to save.');
                 }
             } catch (err) {
-                msg.style.color = "#f87171";
-                msg.textContent = "Error saving data.";
+                statusMsg.style.color = 'var(--accent-red)';
+                statusMsg.textContent = '⚠️ Network error saving dispatch.';
             } finally {
                 btn.disabled = false;
-                btn.textContent = "Submit Dispatch";
+                btn.textContent = '💾 Save Dispatch Record';
             }
         });
 
-        window.onload = loadDispatches;
+        // Password Change
+        function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
+        function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
+
+        document.getElementById('depotPwdForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('oldDepotPass').value.trim();
+            const newPass = document.getElementById('newDepotPass').value.trim();
+            const confirmPass = document.getElementById('confirmDepotPass').value.trim();
+            const msg = document.getElementById('depotPwdMsg');
+            const btn = document.getElementById('btnDepotPwdSubmit');
+
+            if (newPass !== confirmPass) {
+                msg.style.color = 'var(--accent-red)';
+                msg.textContent = 'New passwords do not match!';
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
+            msg.textContent = '';
+
+            try {
+                const url = `${SCRIPT_URL}?action=changeDepotPassword&username=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
+                const res = await jsonp(url);
+
+                if (res && res.success) {
+                    msg.style.color = 'var(--accent-green)';
+                    msg.textContent = 'Password changed successfully!';
+                    setTimeout(closePasswordModal, 1800);
+                } else {
+                    msg.style.color = 'var(--accent-red)';
+                    msg.textContent = res.message || 'Failed to update password.';
+                }
+            } catch (err) {
+                msg.style.color = 'var(--accent-red)';
+                msg.textContent = 'Error updating password.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Update Password';
+            }
+        });
+
+        window.onload = loadDepotData;
     </script>
 </body>
 </html>

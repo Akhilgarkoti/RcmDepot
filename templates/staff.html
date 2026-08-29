@@ -25,26 +25,43 @@
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 0.85rem 1rem; border-bottom: 1px solid #334155; font-size: 0.9rem; white-space: nowrap; }
         th { color: #94a3b8; background: #131c31; font-weight: 600; }
-        
-        /* Modal Styles for Print Preview */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); overflow-y: auto; }
-        .modal-content { background: #ffffff; color: #1e293b; margin: 2rem auto; padding: 2.5rem; max-width: 850px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .modal-header h2 { color: #0f172a; font-size: 1.4rem; }
-        .modal-actions { display: flex; gap: 0.8rem; }
-        .modal-close { background: #64748b; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-        .modal-print-btn { background: #0284c7; color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        
-        .print-statement table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        .print-statement th, .print-statement td { border: 1px solid #cbd5e1; padding: 0.6rem 0.8rem; text-align: left; font-size: 0.85rem; color: #1e293b; }
-        .print-statement th { background: #f1f5f9; color: #0f172a; font-weight: 600; }
-        
-        /* Print Media Query */
+
+        /* Modal Overlay */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(5, 10, 24, 0.85); backdrop-filter: blur(4px); overflow-y: auto; }
+        .modal-box { background: #1c2541; margin: 2rem auto; max-width: 500px; border-radius: 12px; border: 1px solid #334155; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1.2rem; background: #131c31; border-bottom: 1px solid #334155; }
+        .modal-top-bar span { color: #f8fafc; font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        .modal-close-btn { background: none; border: none; color: #94a3b8; font-size: 1.3rem; cursor: pointer; line-height: 1; }
+        .modal-close-btn:hover { color: #fff; }
+
+        /* White Paper Statement (Exact Receipt Style) */
+        .receipt-container { background: #ffffff; color: #000000; padding: 1.5rem; font-family: 'Courier New', Courier, monospace; font-size: 0.82rem; }
+        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
+        .receipt-header h2 { font-size: 0.95rem; font-weight: bold; margin-bottom: 0.2rem; color: #000; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .receipt-header p { font-size: 0.75rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: bold; margin-top: 0.3rem; display: block; font-size: 0.85rem; letter-spacing: 1px; }
+
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.78rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
+
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.6rem; }
+        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 2px; font-weight: bold; background: none; color: #000; font-size: 0.78rem; }
+        .receipt-table td { padding: 4px 2px; font-size: 0.78rem; border: none; color: #000; vertical-align: top; }
+        .receipt-table .desc-sub { font-size: 0.7rem; color: #444; display: block; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.5rem 0; font-size: 0.8rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary .sum-row { display: flex; justify-content: space-between; }
+
+        .receipt-actions { padding: 1rem 1.2rem; background: #131c31; }
+        .print-green-btn { width: 100%; background: #10b981; color: white; border: none; padding: 0.75rem; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .print-green-btn:hover { background: #059669; }
+
         @media print {
             body * { visibility: hidden; }
-            #printableArea, #printableArea * { visibility: visible; }
-            #printableArea { position: absolute; left: 0; top: 0; width: 100%; padding: 0; margin: 0; color: #000; background: #fff; }
-            .modal-actions, .modal-close { display: none !important; }
+            #printableReceipt, #printableReceipt * { visibility: visible; }
+            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 480px; margin: 0 auto; padding: 10px; background: #fff; color: #000; }
+            .modal-top-bar, .receipt-actions { display: none !important; }
         }
     </style>
 </head>
@@ -84,32 +101,70 @@
         </div>
     </div>
 
-    <!-- Print Preview Modal -->
+    <!-- Print Preview Modal (Receipt Style) -->
     <div id="printModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Ledger Statement Preview</h2>
-                <div class="modal-actions">
-                    <button class="modal-print-btn" onclick="window.print()">Print / Save PDF</button>
-                    <button class="modal-close" onclick="closePrintPreview()">Close</button>
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>📄 Account Statement</span>
+                <button class="modal-close-btn" onclick="closePrintPreview()">&times;</button>
+            </div>
+            
+            <div id="printableReceipt" class="receipt-container">
+                <!-- Depot Master Header Details -->
+                <div class="receipt-header">
+                    <h2 id="depotCompanyName">RCM Consumer Products Private Limited</h2>
+                    <p id="depotFullAddress">Loading Depot Address...</p>
+                    <p id="depotContact">Mob: -</p>
+                    <p><span id="depotStateCode">Code: -</span> | <span id="depotGstin">GSTIN: -</span></p>
+                    <span class="receipt-title">** ACCOUNT STATEMENT **</span>
+                </div>
+
+                <!-- Staff Meta Details -->
+                <div class="receipt-meta">
+                    <div>
+                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                        <p><strong>Joined:</strong> <span id="rcptJoinedDate">-</span></p>
+                    </div>
+                    <div class="text-right">
+                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
+                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                    </div>
+                </div>
+
+                <!-- Receipt Table -->
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">Date/Desc</th>
+                            <th class="text-right" style="width: 16%;">Dr</th>
+                            <th class="text-right" style="width: 16%;">Cr</th>
+                            <th class="text-right" style="width: 18%;">Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcptTableBody">
+                        <tr><td colspan="4" class="text-center">Loading transactions...</td></tr>
+                    </tbody>
+                </table>
+
+                <!-- Summary Total -->
+                <div class="receipt-summary">
+                    <div class="sum-row">
+                        <span>TOTAL DEBIT:</span>
+                        <span id="rcptTotalDebit">Rs.0.00</span>
+                    </div>
+                    <div class="sum-row">
+                        <span>TOTAL CREDIT:</span>
+                        <span id="rcptTotalCredit">Rs.0.00</span>
+                    </div>
+                    <div class="sum-row" style="margin-top: 4px; font-size: 0.85rem;">
+                        <span>NET BALANCE:</span>
+                        <span id="rcptNetBalance">Rs.0.00</span>
+                    </div>
                 </div>
             </div>
-            <div id="printableArea" class="print-statement">
-                <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid #0284c7; padding-bottom: 0.8rem;">
-                    <h1 style="font-size: 1.6rem; color: #0284c7; margin-bottom: 0.2rem;">RCM DEPOT MANAGEMENT</h1>
-                    <p style="font-size: 1rem; font-weight: bold; color: #334155;">Staff Ledger Statement</p>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 0.9rem;">
-                    <div>
-                        <p><strong>Staff Name:</strong> <span id="printStaffName">-</span></p>
-                        <p><strong>Staff Code:</strong> <span id="printStaffCode">-</span></p>
-                    </div>
-                    <div style="text-align: right;">
-                        <p><strong>Date Generated:</strong> <span id="printDate">-</span></p>
-                        <p><strong>Net Balance:</strong> <span id="printNetBalance" style="font-weight:bold;">-</span></p>
-                    </div>
-                </div>
-                <div id="printTableContainer"></div>
+
+            <div class="receipt-actions">
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Statement</button>
             </div>
         </div>
     </div>
@@ -122,6 +177,8 @@
         document.getElementById('staffInfo').textContent = `Logged in: ${staffName} (${staffCode.toUpperCase()})`;
 
         let globalStaffRecords = [];
+        let globalStaffInfo = {};
+        let globalDepotInfo = {};
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
@@ -149,17 +206,34 @@
             return s;
         }
 
-        async function loadLedger() {
+        async function loadAllDetails() {
             const container = document.getElementById('tableContainer');
             try {
-                const data = await jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Ledger+Entry`);
-                if (!Array.isArray(data) || data.length === 0) {
+                // 1. Fetch Staff Master & Depot Master for Header Details
+                const [staffList, depotList, ledgerData] = await Promise.all([
+                    jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Master`),
+                    jsonp(`${SCRIPT_URL}?action=getData&sheet=Depot+Master`),
+                    jsonp(`${SCRIPT_URL}?action=getData&sheet=Staff+Ledger+Entry`)
+                ]);
+
+                // Find logged-in staff info
+                if (Array.isArray(staffList)) {
+                    globalStaffInfo = staffList.find(s => String(s['Staff Login Id'] || s['Staff Code'] || '').trim().toLowerCase() === staffCode.toLowerCase()) || {};
+                }
+
+                // Find corresponding depot info
+                if (Array.isArray(depotList) && depotList.length > 0) {
+                    const assignedDepot = globalStaffInfo['Depot Name'] || '';
+                    globalDepotInfo = depotList.find(d => String(d['Depot Name'] || '').trim().toLowerCase() === assignedDepot.toLowerCase()) || depotList[0];
+                }
+
+                // 2. Process Ledger Records
+                if (!Array.isArray(ledgerData) || ledgerData.length === 0) {
                     container.innerHTML = `<p style="color: #94a3b8; text-align: center; padding: 2rem;">No ledger entries found.</p>`;
                     return;
                 }
 
-                // STRICT FILTER: Only show logged-in staff member's entries
-                globalStaffRecords = data.filter(row => {
+                globalStaffRecords = ledgerData.filter(row => {
                     const code = String(row['Staff Code'] || '').trim().toLowerCase();
                     return code === staffCode.toLowerCase();
                 });
@@ -207,39 +281,63 @@
                 html += `</tbody></table>`;
                 container.innerHTML = html;
             } catch (err) {
-                container.innerHTML = `<p style="color: #f87171; text-align: center; padding: 2rem;">Failed to load transactions: ${err.message}</p>`;
+                container.innerHTML = `<p style="color: #f87171; text-align: center; padding: 2rem;">Failed to load data: ${err.message}</p>`;
             }
         }
 
         function openPrintPreview() {
-            document.getElementById('printStaffName').textContent = staffName;
-            document.getElementById('printStaffCode').textContent = staffCode.toUpperCase();
-            document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-GB');
-            document.getElementById('printNetBalance').textContent = document.getElementById('netBalance').textContent;
-
-            const printContainer = document.getElementById('printTableContainer');
-            if (globalStaffRecords.length === 0) {
-                printContainer.innerHTML = "<p>No ledger transactions to print.</p>";
-            } else {
-                let html = `<table><thead><tr>
-                    <th>ID</th><th>Date</th><th>Particular</th><th>Payment Mode</th><th>Debit (₹)</th><th>Credit (₹)</th><th>Status</th>
-                </tr></thead><tbody>`;
-
-                globalStaffRecords.forEach(row => {
-                    html += `<tr>
-                        <td>${row['ID'] || '-'}</td>
-                        <td>${formatDate(row['Transaction Date'])}</td>
-                        <td>${row['Particular'] || '-'}</td>
-                        <td>${row['Payment Mode'] || '-'}</td>
-                        <td style="color:#dc2626; font-weight:bold;">${row['Debit'] || '0'}</td>
-                        <td style="color:#16a34a; font-weight:bold;">${row['Credit'] || '0'}</td>
-                        <td>${row['Entry Approvel Status (Admin)'] || '-'}</td>
-                    </tr>`;
-                });
-
-                html += `</tbody></table>`;
-                printContainer.innerHTML = html;
+            // Fill Depot Details
+            if (globalDepotInfo) {
+                document.getElementById('depotFullAddress').textContent = globalDepotInfo['Depot Address'] || globalDepotInfo['Depot Name'] || 'Depot Address';
+                document.getElementById('depotContact').textContent = `Mob: ${globalDepotInfo['Mobile Number'] || '-'}`;
+                document.getElementById('depotStateCode').textContent = `Code: ${globalDepotInfo['State Code'] || '10 State: Bihar'}`;
+                document.getElementById('depotGstin').textContent = `GSTIN: ${globalDepotInfo['GST NO'] || '-'}`;
             }
+
+            // Fill Staff Details
+            document.getElementById('rcptStaffName').textContent = globalStaffInfo['Staff Name'] || staffName;
+            document.getElementById('rcptStaffCode').textContent = staffCode.toUpperCase();
+            document.getElementById('rcptJoinedDate').textContent = formatDate(globalStaffInfo['Staff Joining Date'] || '2025-01-01');
+            document.getElementById('rcptDepotName').textContent = globalStaffInfo['Depot Name'] || globalDepotInfo['Depot Name'] || '-';
+
+            // Build Running Balance Rows
+            const tbody = document.getElementById('rcptTableBody');
+            if (globalStaffRecords.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No transactions available.</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            let runningBal = 0;
+            let totalDr = 0;
+            let totalCr = 0;
+
+            globalStaffRecords.forEach(row => {
+                const date = formatDate(row['Transaction Date']);
+                const desc = row['Particular'] || '-';
+                const dr = Number(row['Debit'] || 0);
+                const cr = Number(row['Credit'] || 0);
+
+                totalDr += dr;
+                totalCr += cr;
+                runningBal += (cr - dr);
+
+                html += `<tr>
+                    <td>
+                        <strong>${date}</strong>
+                        <span class="desc-sub">${desc}</span>
+                    </td>
+                    <td class="text-right">${dr > 0 ? dr : '-'}</td>
+                    <td class="text-right">${cr > 0 ? cr : '-'}</td>
+                    <td class="text-right"><strong>${runningBal}</strong></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${runningBal.toFixed(2)}`;
+
             document.getElementById('printModal').style.display = 'block';
         }
 
@@ -247,7 +345,7 @@
             document.getElementById('printModal').style.display = 'none';
         }
 
-        window.onload = loadLedger;
+        window.onload = loadAllDetails;
     </script>
 </body>
 </html>

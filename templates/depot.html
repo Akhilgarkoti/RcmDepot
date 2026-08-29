@@ -10,7 +10,7 @@
     <style>
         :root {
             --bg-main: #060919;
-            --bg-card: rgba(17, 24, 39, 0.6);
+            --bg-card: rgba(17, 24, 39, 0.65);
             --border-color: rgba(255, 255, 255, 0.12);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
@@ -223,7 +223,7 @@
         
         .form-control {
             width: 100%;
-            padding: 0.78rem 0.95rem;
+            padding: 0.8rem 1rem;
             background: rgba(10, 15, 29, 0.7);
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -234,6 +234,8 @@
         }
         .form-control:focus { border-color: var(--accent-cyan); }
         .form-control:read-only { background: rgba(15, 23, 42, 0.5); color: #94a3b8; }
+        select.form-control { cursor: pointer; }
+        select.form-control option { background: #0f172a; color: #fff; }
 
         .btn-submit-dispatch {
             background: linear-gradient(135deg, #10b981, #059669);
@@ -318,7 +320,7 @@
             </div>
         </div>
 
-        <!-- Right: Actions -->
+        <!-- Right: Password & Logout -->
         <div class="nav-actions">
             <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
             <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
@@ -330,12 +332,12 @@
         <!-- Stats Overview Cards -->
         <div class="stats-grid">
             <div class="glass-stat-card">
-                <h4>Total Dispatched Trucks</h4>
+                <h4>Total Dispatched Entries</h4>
                 <p id="statTotalDispatch">0</p>
             </div>
             <div class="glass-stat-card">
-                <h4>Total Cartons Shipped</h4>
-                <p id="statTotalCartons">0</p>
+                <h4>Last Recorded Invoice</h4>
+                <p id="statLastInvoice" style="color:var(--accent-amber);">-</p>
             </div>
             <div class="glass-stat-card">
                 <h4>Active Staff Members</h4>
@@ -353,50 +355,71 @@
         <!-- 1. Invoice Dispatch Form Panel -->
         <div id="dispatchTab" class="glass-panel">
             <div class="panel-header">
-                <h3>📦 Record Invoice / Vehicle Dispatch</h3>
+                <h3>📦 Record Invoice Dispatch Entry</h3>
                 <span style="color:var(--accent-cyan); font-size:0.85rem; font-weight:700;">Live Google Sheet Sync</span>
             </div>
 
             <form id="invoiceDispatchForm">
+                <!-- Hidden Depot Code & Name -->
+                <input type="hidden" id="hiddenDepotCode">
+                <input type="hidden" id="hiddenDepotName">
+
                 <div class="form-grid">
+                    <!-- 1. Auto Today Date -->
                     <div class="form-group">
-                        <label>Assigned Depot</label>
-                        <input type="text" id="dispDepotName" class="form-control" readonly>
+                        <label>Invoice Dispatch Date</label>
+                        <input type="text" id="dispDate" class="form-control" readonly style="color:var(--accent-cyan); font-weight:700;">
                     </div>
+
+                    <!-- 2. Live Time -->
                     <div class="form-group">
-                        <label>Invoice Number Series</label>
-                        <input type="text" id="dispInvoiceNo" class="form-control" readonly style="color:var(--accent-amber); font-weight:700;">
+                        <label>Entry Time (Live)</label>
+                        <input type="text" id="dispTime" class="form-control" readonly style="color:var(--accent-amber); font-weight:700;">
                     </div>
+
+                    <!-- 3. Vehicle Type (Default: Auto) -->
                     <div class="form-group">
-                        <label>Dispatch Date</label>
-                        <input type="date" id="dispDate" class="form-control" required>
+                        <label>Vehicle Type</label>
+                        <select id="dispVehicleType" class="form-control" required>
+                            <option value="Auto" selected>Auto</option>
+                            <option value="Pic-Up">Pic-Up</option>
+                            <option value="Toto">Toto</option>
+                            <option value="Bike">Bike</option>
+                        </select>
                     </div>
+
+                    <!-- 4. Vehicle No -->
                     <div class="form-group">
-                        <label>Vehicle Number (e.g. BR-11-AB-1234)</label>
-                        <input type="text" id="dispVehicle" class="form-control" required placeholder="Enter Vehicle No">
+                        <label>Vehicle Number (Optional / If Any)</label>
+                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234">
                     </div>
+
+                    <!-- 5. Dispatch Through -->
                     <div class="form-group">
-                        <label>Driver Name</label>
-                        <input type="text" id="dispDriver" class="form-control" required placeholder="Driver Name">
+                        <label>Dispatch Through</label>
+                        <input type="text" id="dispThrough" class="form-control" required placeholder="e.g. Singh PUC Auto, Monir Auto, Self">
                     </div>
+
+                    <!-- 6. Due-Excess (Default: No Due/excess) -->
                     <div class="form-group">
-                        <label>Driver Mobile Number</label>
-                        <input type="tel" id="dispDriverMob" class="form-control" placeholder="10-digit Mobile No">
+                        <label>Due- Excess Matter If Any</label>
+                        <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
                     </div>
+
+                    <!-- 7. Invoice No. Last 5 Digits -->
                     <div class="form-group">
-                        <label>Total Cartons / Quantity</label>
-                        <input type="number" id="dispCartons" class="form-control" required placeholder="e.g. 150">
+                        <label>Invoice No. Last Digit(s)</label>
+                        <input type="text" id="dispInvoiceDigits" class="form-control" required placeholder="e.g. 25815 or 76287" style="color:var(--accent-amber); font-weight:700;">
                     </div>
+
+                    <!-- 8. Remark If Any (Default: -) -->
                     <div class="form-group">
-                        <label>Destination Location / PUC</label>
-                        <input type="text" id="dispDest" class="form-control" required placeholder="City / PUC Center Name">
-                    </div>
-                    <div class="form-group-full">
-                        <label>Remarks / Notes</label>
-                        <input type="text" id="dispRemarks" class="form-control" placeholder="Optional notes (e.g. On-time delivery)">
+                        <label>Remark If Any</label>
+                        <input type="text" id="dispRemarks" class="form-control" value="-">
                     </div>
                 </div>
-                <button type="submit" id="btnSubmitDispatch" class="btn-submit-dispatch">💾 Save Dispatch Record</button>
+
+                <button type="submit" id="btnSubmitDispatch" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
                 <p id="dispatchStatus" style="margin-top:0.8rem; font-size:0.88rem; font-weight:600;"></p>
             </form>
         </div>
@@ -404,24 +427,26 @@
         <!-- 2. Records History Panel -->
         <div id="recordsTab" class="glass-panel" style="display:none;">
             <div class="panel-header">
-                <h3>📊 Dispatched Trucks History</h3>
+                <h3>📊 Dispatched Trucks & Invoices History</h3>
                 <span id="dispCountBadge" style="font-size:0.85rem; color:var(--text-secondary); font-weight:700;">0 records</span>
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Inv No</th>
-                            <th>Date</th>
+                            <th>ID</th>
+                            <th>Dispatch Date</th>
+                            <th>Vehicle Type</th>
+                            <th>Dispatch Through</th>
+                            <th>Due-Excess</th>
+                            <th>Invoice Digits</th>
                             <th>Vehicle No</th>
-                            <th>Driver</th>
-                            <th>Cartons</th>
-                            <th>Destination</th>
-                            <th>Remarks</th>
+                            <th>Entry Time</th>
+                            <th>Remark</th>
                         </tr>
                     </thead>
                     <tbody id="dispatchTableBody">
-                        <tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading records...</td></tr>
+                        <tr><td colspan="9" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">Loading records...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -492,7 +517,25 @@
             window.location.href = "/";
         }
 
-        let depotBundle = { depot: {}, dispatches: [], staffMembers: [] };
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        // Live Clock and Auto Date
+        function updateLiveClockAndDate() {
+            const now = new Date();
+            
+            // Format dd-MMM-yy (e.g. 30/Aug/26)
+            const d = String(now.getDate()).padStart(2, '0');
+            const m = monthNames[now.getMonth()];
+            const y = String(now.getFullYear()).slice(2);
+            document.getElementById('dispDate').value = `${d}/${m}/${y}`;
+
+            // Live Time HH:mm:ss
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('dispTime').value = `${hh}:${mm}:${ss}`;
+        }
+        setInterval(updateLiveClockAndDate, 1000);
 
         function jsonp(url) {
             return new Promise((resolve, reject) => {
@@ -560,23 +603,23 @@
         }
 
         async function loadDepotData() {
-            document.getElementById('dispDate').value = new Date().toISOString().split('T')[0];
+            updateLiveClockAndDate();
 
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load depot data");
 
-                depotBundle = res;
                 const depot = res.depot || {};
                 const dispatches = res.dispatches || [];
                 const staff = res.staffMembers || [];
 
-                // 1. Render Logos
+                // 1. Logos
                 setSafeImage('companyLogoBox', res.companyLogo || 'https://ibb.co/nNKFfhtR');
                 setSafeImage('depotLogoBox', res.depotLogo || 'https://ibb.co/MkJwfsf8');
 
-                // 2. Header Info
+                // 2. Header Details
                 const dName = getField(depot, 'Depot Name') || depotNameStored;
+                const dCode = getField(depot, 'Depot Code') || depotCode;
                 const addr = getField(depot, 'Depot Address');
                 const dist = getField(depot, 'Dristric', 'District');
                 const state = getField(depot, 'State Name');
@@ -589,21 +632,18 @@
                 document.getElementById('topDepotFssai').textContent = fssai || '-';
                 document.getElementById('topDepotGstin').textContent = gstin || '-';
 
-                // 3. Form fields
-                document.getElementById('dispDepotName').value = dName;
-                document.getElementById('dispInvoiceNo').value = res.nextInvoice || '70001';
+                // 3. Hidden Fields & Invoice Digits prefill
+                document.getElementById('hiddenDepotCode').value = dCode;
+                document.getElementById('hiddenDepotName').value = dName;
+                document.getElementById('dispInvoiceDigits').value = res.nextInvoice || '25815';
 
                 // 4. Stats
                 document.getElementById('statTotalDispatch').textContent = dispatches.length;
-                let totalC = 0;
-                dispatches.forEach(d => { totalC += Number(getField(d, 'Total Carton', 'Cartons') || 0); });
-                document.getElementById('statTotalCartons').textContent = totalC.toLocaleString('en-IN');
+                document.getElementById('statLastInvoice').textContent = dispatches.length > 0 ? ('#' + getField(dispatches[dispatches.length - 1], 'Inoice No. Last Digit', 'Invoice No')) : (res.nextInvoice || '-');
                 document.getElementById('statTotalStaff').textContent = staff.length;
 
-                // 5. Render Dispatch Table
+                // 5. Render Tables
                 renderDispatchTable(dispatches);
-
-                // 6. Render Staff Table
                 renderStaffTable(staff);
 
             } catch (err) {
@@ -616,20 +656,22 @@
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
 
             if (list.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches recorded yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center" style="padding:2.5rem; color:var(--text-secondary);">No dispatches recorded yet.</td></tr>`;
                 return;
             }
 
             let html = '';
             list.slice().reverse().forEach(r => {
                 html += `<tr>
-                    <td style="color:var(--accent-amber); font-weight:700;">#${getField(r, 'Invoice No', 'Invoice No.')}</td>
-                    <td>${getField(r, 'Invoice Date', 'Date')}</td>
-                    <td style="color:var(--accent-cyan); font-weight:600;">${getField(r, 'Vehicle No', 'Vehicle')}</td>
-                    <td>${getField(r, 'Driver Name', 'Driver')}</td>
-                    <td style="color:var(--accent-green); font-weight:700;">${getField(r, 'Total Carton', 'Carton')}</td>
-                    <td>${getField(r, 'Destination Location', 'Destination')}</td>
-                    <td style="color:#94a3b8;">${getField(r, 'Remarks', 'Notes') || '-'}</td>
+                    <td style="color:var(--accent-cyan); font-weight:700;">#${getField(r, 'ID')}</td>
+                    <td>${getField(r, 'Invoice Dispatch Date', 'Date')}</td>
+                    <td style="color:var(--accent-amber); font-weight:700;">${getField(r, 'Vehicle Type')}</td>
+                    <td>${getField(r, 'Dispatch Throuch', 'Dispatch Through')}</td>
+                    <td>${getField(r, 'Due- Excess Matter If Any', 'Due-Excess')}</td>
+                    <td style="color:var(--accent-green); font-weight:800;">${getField(r, 'Inoice No. Last Digit', 'Invoice No')}</td>
+                    <td style="color:#ffffff; font-weight:600;">${getField(r, 'Vehicle No') || '-'}</td>
+                    <td style="color:var(--accent-cyan);">${getField(r, 'Entry Time')}</td>
+                    <td style="color:#94a3b8;">${getField(r, 'Remark If Any', 'Remark') || '-'}</td>
                 </tr>`;
             });
             tbody.innerHTML = html;
@@ -678,15 +720,15 @@
 
             const payload = {
                 action: 'saveInvoiceDispatch',
-                depotCode: depotCode,
-                depotName: document.getElementById('dispDepotName').value,
-                invoiceNo: document.getElementById('dispInvoiceNo').value,
+                depotCode: document.getElementById('hiddenDepotCode').value,
+                depotName: document.getElementById('hiddenDepotName').value,
                 invoiceDate: document.getElementById('dispDate').value,
-                vehicleNo: document.getElementById('dispVehicle').value,
-                driverName: document.getElementById('dispDriver').value,
-                driverMob: document.getElementById('dispDriverMob').value,
-                totalCarton: document.getElementById('dispCartons').value,
-                destination: document.getElementById('dispDest').value,
+                entryTime: document.getElementById('dispTime').value,
+                vehicleType: document.getElementById('dispVehicleType').value,
+                vehicleNo: document.getElementById('dispVehicleNo').value,
+                dispatchThrough: document.getElementById('dispThrough').value,
+                dueExcess: document.getElementById('dispDueExcess').value,
+                invoiceDigits: document.getElementById('dispInvoiceDigits').value,
                 remarks: document.getElementById('dispRemarks').value
             };
 
@@ -702,12 +744,10 @@
                     statusMsg.style.color = 'var(--accent-green)';
                     statusMsg.textContent = '✅ ' + res.message;
                     
-                    document.getElementById('dispVehicle').value = '';
-                    document.getElementById('dispDriver').value = '';
-                    document.getElementById('dispDriverMob').value = '';
-                    document.getElementById('dispCartons').value = '';
-                    document.getElementById('dispDest').value = '';
-                    document.getElementById('dispRemarks').value = '';
+                    document.getElementById('dispThrough').value = '';
+                    document.getElementById('dispVehicleNo').value = '';
+                    document.getElementById('dispRemarks').value = '-';
+                    document.getElementById('dispDueExcess').value = 'No Due/excess';
 
                     setTimeout(loadDepotData, 1200);
                 } else {
@@ -719,11 +759,11 @@
                 statusMsg.textContent = '⚠️ Network error saving dispatch.';
             } finally {
                 btn.disabled = false;
-                btn.textContent = '💾 Save Dispatch Record';
+                btn.textContent = '💾 Save Dispatch Entry';
             }
         });
 
-        // Password Change
+        // Password Modal Handlers
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
         function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 

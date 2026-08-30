@@ -626,6 +626,7 @@
         let activeLedgerDepotName = "";
         let activeLedgerList = [];
         let globalIsViewOnlyLedger = false;
+        let globalIsViewOnlyDispatch = false;
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -701,7 +702,7 @@
             return s === 'yes' || s === 'true' || s === '1';
         }
 
-        // Exact Permission Match Engine
+        // Exact Permission Match Engine based on User Profile in Admin Master
         function applyAdminPermissions(admins) {
             const currentAdmin = admins.find(a => {
                 const u = (getField(a, 'Admin Login ID') || '').toLowerCase();
@@ -721,16 +722,29 @@
             const viewOnlyLedger = getField(currentAdmin, 'View Onlt Staff Ledger', 'View Only Staff Ledger');
             const viewOnlyDispatch = getField(currentAdmin, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report');
 
-            // 1. Hide Tabs if permission is 'No'
-            if (checkValNo(canLedger)) document.getElementById('tabBtnLedger').style.display = 'none';
+            globalIsViewOnlyLedger = checkValYes(viewOnlyLedger);
+            globalIsViewOnlyDispatch = checkValYes(viewOnlyDispatch);
+
+            // 1. Hide Tabs if permission is explicitly 'No' AND 'View Only' is NOT Yes
             if (checkValNo(canDepot)) document.getElementById('tabBtnDepot').style.display = 'none';
             if (checkValNo(canStaff)) document.getElementById('tabBtnStaff').style.display = 'none';
-            if (checkValNo(canDispatch)) document.getElementById('tabBtnDispatch').style.display = 'none';
             if (checkValNo(canAdmin)) document.getElementById('tabBtnAdminMaster').style.display = 'none';
 
-            // 2. Hide Action Buttons if View Only or No Permission
-            globalIsViewOnlyLedger = checkValYes(viewOnlyLedger);
+            // Show Ledger tab if View Only is Yes even if Access is No
+            if (checkValNo(canLedger) && !globalIsViewOnlyLedger) {
+                document.getElementById('tabBtnLedger').style.display = 'none';
+            } else {
+                document.getElementById('tabBtnLedger').style.display = 'inline-flex';
+            }
 
+            // Show Dispatch tab if View Only is Yes even if Access is No
+            if (checkValNo(canDispatch) && !globalIsViewOnlyDispatch) {
+                document.getElementById('tabBtnDispatch').style.display = 'none';
+            } else {
+                document.getElementById('tabBtnDispatch').style.display = 'inline-flex';
+            }
+
+            // 2. Hide Action Buttons if View Only or No Permission
             if (checkValNo(canDepot) || globalIsViewOnlyLedger) {
                 const btn = document.getElementById('btnNewDepot');
                 if (btn) btn.style.display = 'none';
@@ -1270,7 +1284,7 @@
             } catch (err) { showToast("Error updating transaction"); }
         });
 
-        // Print Statement Preview: Strictly Filter Approved Only
+        // Print Statement: Excludes Pending Transactions & Real Depot Address
         function openAdminPrintPreview() {
             const depotMatch = (adminBundle.depots || []).find(d => {
                 const dName = (getField(d, 'Depot Name') || '').toLowerCase();
@@ -1408,6 +1422,9 @@
             let html = '';
             list.slice().reverse().forEach(d => {
                 const invId = getField(d, 'ID', 'Invoice No');
+                let delBtn = `<button class="btn-action-delete" onclick="deleteRow('Invoice Dispatch Report', 0, '${invId}')">🗑️ Delete</button>`;
+                if (globalIsViewOnlyDispatch) delBtn = `<span style="color:var(--text-secondary);font-size:0.8rem;">View Only</span>`;
+
                 html += `<tr>
                     <td>${formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date'))}</td>
                     <td style="color:var(--accent-green); font-weight:700;">#${getField(d, 'Inoice No. Last Digit', 'Invoice No')}</td>
@@ -1417,9 +1434,7 @@
                     <td>${getField(d, 'Dispatch Throuch', 'Dispatch Through')}</td>
                     <td>${getField(d, 'Vehicle No') || '-'}</td>
                     <td>${getField(d, 'Due- Excess Matter If Any')}</td>
-                    <td>
-                        <button class="btn-action-delete" onclick="deleteRow('Invoice Dispatch Report', 0, '${invId}')">🗑️ Delete</button>
-                    </td>
+                    <td>${delBtn}</td>
                 </tr>`;
             });
             document.getElementById('adminDispatchBody').innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;

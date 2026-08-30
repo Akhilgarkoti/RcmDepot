@@ -178,7 +178,7 @@
             <button class="tab-btn" id="tabBtnAdminMaster" onclick="switchAdminTab('adminMasterTab', this)">🛡️ Admin Master</button>
         </div>
 
-        <!-- 1. Pending Approvals Panel with Bulk Actions -->
+        <!-- 1. Pending Approvals Panel -->
         <div id="pendingTab" class="panel-card">
             <div class="panel-header">
                 <h3>⚡ Pending Staff & Transaction Approvals</h3>
@@ -378,7 +378,7 @@
         <!-- 6. Admin Master Panel -->
         <div id="adminMasterTab" class="panel-card" style="display:none;">
             <div class="panel-header">
-                <h3>🛡️ Admin Master (All 12 Permission Options)</h3>
+                <h3>🛡️ Admin Master (All 13 Columns)</h3>
                 <button class="btn-new-item perm-action-admin" id="btnNewAdmin" onclick="openNewAdminModal()">➕ Add New Admin</button>
             </div>
             <div class="table-responsive">
@@ -396,6 +396,7 @@
                             <th>Admin Master</th>
                             <th>View Only Staff Ledger</th>
                             <th>View Only Dispatch</th>
+                            <th>Pending Approvals</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -585,7 +586,7 @@
         </div>
     </div>
 
-    <!-- Modal 8: Add/Edit Admin (All 12 Columns) -->
+    <!-- Modal 8: Add/Edit Admin (All 13 Columns Including Col M) -->
     <div id="adminMasterModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span id="adminModalTitle">🛡️ Admin Master & Permissions</span><button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button></div>
@@ -604,6 +605,7 @@
                         <div class="form-group"><label>J: Can Access Admin Master</label><select id="admColJ" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
                         <div class="form-group"><label>K: View Only Staff Ledger</label><select id="admColK" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
                         <div class="form-group"><label>L: View Only Invoice Dispatch Report</label><select id="admColL" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group-full"><label>M: Can Access Pending Approvals</label><select id="admColM" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
                     </div>
                     <button type="submit" class="btn-submit-modal">💾 Save Admin to Google Sheet</button>
                 </form>
@@ -702,7 +704,7 @@
             return s === 'yes' || s === 'true' || s === '1';
         }
 
-        // Exact Permission Match Engine based on User Profile in Admin Master
+        // Exact Permission Match Engine based on User Profile in Admin Master (Col A to M)
         function applyAdminPermissions(admins) {
             const currentAdmin = admins.find(a => {
                 const u = (getField(a, 'Admin Login ID') || '').toLowerCase();
@@ -721,27 +723,38 @@
             const canAdmin = getField(currentAdmin, 'Can Access Admin Master', 'Admin Master');
             const viewOnlyLedger = getField(currentAdmin, 'View Onlt Staff Ledger', 'View Only Staff Ledger');
             const viewOnlyDispatch = getField(currentAdmin, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report');
+            const canPending = getField(currentAdmin, 'Pending Approvals', 'Can Access Pending Approvals');
 
             globalIsViewOnlyLedger = checkValYes(viewOnlyLedger);
             globalIsViewOnlyDispatch = checkValYes(viewOnlyDispatch);
 
-            // 1. Hide Tabs if permission is explicitly 'No' AND 'View Only' is NOT Yes
+            // 1. Hide Tabs if permission is 'No'
+            if (checkValNo(canPending)) document.getElementById('tabBtnPending').style.display = 'none';
             if (checkValNo(canDepot)) document.getElementById('tabBtnDepot').style.display = 'none';
             if (checkValNo(canStaff)) document.getElementById('tabBtnStaff').style.display = 'none';
             if (checkValNo(canAdmin)) document.getElementById('tabBtnAdminMaster').style.display = 'none';
 
-            // Show Ledger tab if View Only is Yes even if Access is No
+            // Show Ledger tab if View Only is Yes or Access is not No
             if (checkValNo(canLedger) && !globalIsViewOnlyLedger) {
                 document.getElementById('tabBtnLedger').style.display = 'none';
             } else {
                 document.getElementById('tabBtnLedger').style.display = 'inline-flex';
             }
 
-            // Show Dispatch tab if View Only is Yes even if Access is No
+            // Show Dispatch tab if View Only is Yes or Access is not No
             if (checkValNo(canDispatch) && !globalIsViewOnlyDispatch) {
                 document.getElementById('tabBtnDispatch').style.display = 'none';
             } else {
                 document.getElementById('tabBtnDispatch').style.display = 'inline-flex';
+            }
+
+            // If active tab was hidden, automatically switch to first visible tab
+            if (checkValNo(canPending)) {
+                if (document.getElementById('tabBtnLedger').style.display !== 'none') {
+                    switchAdminTab('ledgerTab', document.getElementById('tabBtnLedger'));
+                } else if (document.getElementById('tabBtnDispatch').style.display !== 'none') {
+                    switchAdminTab('dispatchTab', document.getElementById('tabBtnDispatch'));
+                }
             }
 
             // 2. Hide Action Buttons if View Only or No Permission
@@ -1284,7 +1297,7 @@
             } catch (err) { showToast("Error updating transaction"); }
         });
 
-        // Print Statement: Excludes Pending Transactions & Real Depot Address
+        // Print Statement Preview: Strictly Filter Approved Only
         function openAdminPrintPreview() {
             const depotMatch = (adminBundle.depots || []).find(d => {
                 const dName = (getField(d, 'Depot Name') || '').toLowerCase();
@@ -1440,7 +1453,7 @@
             document.getElementById('adminDispatchBody').innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
         }
 
-        // Admin Master Handlers
+        // Admin Master Handlers (All 13 Columns)
         function renderAdminMaster(list) {
             let html = '';
             list.forEach(a => {
@@ -1455,6 +1468,7 @@
                 const j = getField(a, 'Can Access Admin Master', 'Admin Master') || 'Deafult';
                 const k = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
                 const l = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
+                const m = getField(a, 'Pending Approvals', 'Can Access Pending Approvals') || 'Deafult';
 
                 let actionBtns = `
                     <button class="btn-action-edit" onclick="openEditAdmin('${id}')">✏️ Edit</button>
@@ -1474,6 +1488,7 @@
                     <td>${j}</td>
                     <td>${k}</td>
                     <td>${l}</td>
+                    <td>${m}</td>
                     <td>${actionBtns}</td>
                 </tr>`;
             });
@@ -1483,7 +1498,7 @@
         function openNewAdminModal() {
             document.getElementById('adminMasterForm').reset();
             document.getElementById('admId').readOnly = false;
-            document.getElementById('adminModalTitle').textContent = '🛡️ Add New Admin (All 12 Columns)';
+            document.getElementById('adminModalTitle').textContent = '🛡️ Add New Admin (All 13 Columns)';
             document.getElementById('adminMasterModal').style.display = 'block';
         }
 
@@ -1504,6 +1519,7 @@
             document.getElementById('admColJ').value = getField(a, 'Can Access Admin Master', 'Admin Master') || 'Deafult';
             document.getElementById('admColK').value = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
             document.getElementById('admColL').value = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
+            document.getElementById('admColM').value = getField(a, 'Pending Approvals', 'Can Access Pending Approvals') || 'Deafult';
 
             document.getElementById('adminModalTitle').textContent = `✏️ Edit Admin (${id})`;
             document.getElementById('adminMasterModal').style.display = 'block';
@@ -1526,7 +1542,8 @@
                 colI: document.getElementById('admColI').value,
                 colJ: document.getElementById('admColJ').value,
                 colK: document.getElementById('admColK').value,
-                colL: document.getElementById('admColL').value
+                colL: document.getElementById('admColL').value,
+                colM: document.getElementById('admColM').value
             };
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');

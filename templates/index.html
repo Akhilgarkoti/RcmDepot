@@ -180,7 +180,6 @@
         .btn-submit:active { transform: scale(0.99); }
         .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        /* Error Box Banner */
         .status-msg {
             margin-top: 1rem;
             font-size: 0.88rem;
@@ -477,7 +476,7 @@
             });
         }
 
-        // Handle Login Submit
+        // Handle Login Submit with Permissions Storage
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -503,6 +502,11 @@
                     sessionStorage.setItem("name", res.name || "User");
                     sessionStorage.setItem("role", res.role || role);
                     sessionStorage.setItem("depot", res.depot || "");
+                    
+                    // Store permissions object immediately to eliminate flicker
+                    if (res.permissions) {
+                        sessionStorage.setItem("permissions", JSON.stringify(res.permissions));
+                    }
 
                     btn.textContent = "Success! Redirecting...";
 
@@ -510,7 +514,6 @@
                     else if (role === "depot") window.location.href = "/depot";
                     else if (role === "admin") window.location.href = "/admin";
                 } else {
-                    // Show error message clearly
                     msgBox.textContent = (res && res.message) ? ("⚠️ " + res.message) : "⚠️ Invalid username or password.";
                     msgBox.style.display = 'block';
                     btn.disabled = false;

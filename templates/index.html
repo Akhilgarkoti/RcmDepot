@@ -43,7 +43,7 @@
 
         .auth-card {
             width: 100%;
-            max-width: 450px;
+            max-width: 440px;
             background: var(--glass-card);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -55,7 +55,7 @@
             z-index: 10;
         }
 
-        .auth-header { text-align: center; margin-bottom: 1.6rem; }
+        .auth-header { text-align: center; margin-bottom: 1.5rem; }
         
         .company-logo-wrap {
             width: 222px;
@@ -74,12 +74,12 @@
         }
         .company-logo-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        .auth-header h2 { font-size: 1.4rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 0.2rem; }
+        .auth-header h2 { font-size: 1.38rem; font-weight: 800; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 0.2rem; }
         .auth-header h2 span { color: var(--accent-cyan); text-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
         .auth-header p { font-size: 0.84rem; color: var(--text-secondary); }
 
         .role-selector-title {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             font-weight: 700;
             color: var(--text-secondary);
             margin-bottom: 0.5rem;
@@ -87,18 +87,20 @@
             letter-spacing: 0.8px;
             text-align: center;
         }
+
+        /* 2-Column Grid for 1. Depot, 2. Staff */
         .role-options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 0.65rem;
-            margin-bottom: 1.4rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.3rem;
         }
         .role-btn {
             background: rgba(15, 23, 42, 0.55);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            padding: 0.75rem 0.4rem;
+            padding: 0.75rem 0.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s ease;
@@ -109,7 +111,7 @@
             gap: 0.3rem;
         }
         .role-btn .role-icon { font-size: 1.35rem; }
-        .role-btn .role-label { font-size: 0.82rem; font-weight: 700; }
+        .role-btn .role-label { font-size: 0.84rem; font-weight: 700; }
 
         .role-btn:hover {
             border-color: rgba(56, 189, 248, 0.5);
@@ -118,23 +120,17 @@
             transform: translateY(-2px);
         }
 
-        .role-btn.active[data-role="staff"] {
-            border-color: #facc15;
-            background: rgba(250, 204, 21, 0.15);
-            color: #fde047;
-            box-shadow: 0 0 16px rgba(250, 204, 21, 0.3);
-        }
         .role-btn.active[data-role="depot"] {
             border-color: #38bdf8;
             background: rgba(56, 189, 248, 0.15);
             color: #7dd3fc;
             box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
         }
-        .role-btn.active[data-role="admin"] {
-            border-color: #f43f5e;
-            background: rgba(244, 63, 94, 0.15);
-            color: #fda4af;
-            box-shadow: 0 0 16px rgba(244, 63, 94, 0.3);
+        .role-btn.active[data-role="staff"] {
+            border-color: #facc15;
+            background: rgba(250, 204, 21, 0.15);
+            color: #fde047;
+            box-shadow: 0 0 16px rgba(250, 204, 21, 0.3);
         }
 
         .form-group { margin-bottom: 1.15rem; }
@@ -169,7 +165,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.25s;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
             box-shadow: 0 4px 18px rgba(2, 132, 199, 0.4);
         }
         .btn-submit:hover {
@@ -212,6 +208,34 @@
             transition: all 0.2s;
         }
         .auth-link:hover { color: #bae6fd; text-shadow: 0 0 8px rgba(56, 189, 248, 0.6); }
+
+        /* Admin Master Access Link below Forgot/Register */
+        .admin-access-box {
+            margin-top: 1rem;
+            text-align: center;
+            padding-top: 0.7rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+        .btn-admin-switch {
+            background: rgba(244, 63, 94, 0.1);
+            color: #fda4af;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            padding: 0.45rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .btn-admin-switch:hover {
+            background: rgba(244, 63, 94, 0.25);
+            border-color: #f43f5e;
+            color: #ffffff;
+            box-shadow: 0 0 14px rgba(244, 63, 94, 0.3);
+        }
 
         .dev-footer {
             margin-top: 1.4rem;
@@ -317,31 +341,28 @@
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><polyline points="16 11 18 13 22 9"></polyline></svg>
             </div>
             <h2>RCM Depot <span>Portal</span></h2>
-            <p id="portalSubText">Staff Portal Login</p>
+            <p id="portalSubText">Depot Management Login</p>
         </div>
 
         <div class="role-selector-title">Select Portal Role</div>
+        <!-- 1. Depot, 2. Staff in Grid -->
         <div class="role-options-grid">
-            <div class="role-btn active" data-role="staff" onclick="selectRole('staff', true)">
-                <span class="role-icon">👤</span>
-                <span class="role-label">Staff</span>
-            </div>
-            <div class="role-btn" data-role="depot" onclick="selectRole('depot', true)">
+            <div class="role-btn active" data-role="depot" onclick="selectRole('depot', true)">
                 <span class="role-icon">🏬</span>
-                <span class="role-label">Depot</span>
+                <span class="role-label">1. Depot</span>
             </div>
-            <div class="role-btn" data-role="admin" onclick="selectRole('admin', true)">
-                <span class="role-icon">🛡️</span>
-                <span class="role-label">Admin</span>
+            <div class="role-btn" data-role="staff" onclick="selectRole('staff', true)">
+                <span class="role-icon">👤</span>
+                <span class="role-label">2. Staff</span>
             </div>
         </div>
 
         <form id="loginForm">
-            <input type="hidden" id="selectedRoleInput" value="staff">
+            <input type="hidden" id="selectedRoleInput" value="depot">
 
             <div class="form-group">
-                <label for="userName" id="userLabel">Staff Code / Login ID</label>
-                <input type="text" id="userName" class="form-control" required placeholder="Enter Login ID (e.g. EMP001)" autocomplete="username">
+                <label for="userName" id="userLabel">Depot Code / Username</label>
+                <input type="text" id="userName" class="form-control" required placeholder="Enter Depot Code (e.g. D121)" autocomplete="username">
             </div>
 
             <div class="form-group">
@@ -349,13 +370,20 @@
                 <input type="password" id="userPassword" class="form-control" required placeholder="••••" autocomplete="current-password">
             </div>
 
-            <button type="submit" id="loginBtn" class="btn-submit">Login to Staff Portal</button>
+            <button type="submit" id="loginBtn" class="btn-submit">Login to Depot Portal</button>
             <div id="loginMsg" class="status-msg"></div>
         </form>
 
         <div class="auth-footer-links">
             <a class="auth-link" onclick="openContactModal('Password Reset Assistance')">🔑 Forgot Password?</a>
             <a class="auth-link" onclick="openContactModal('New User Account Registration')">📝 Register User</a>
+        </div>
+
+        <!-- Admin Master Portal Switch under Forgot/Register -->
+        <div class="admin-access-box">
+            <button type="button" class="btn-admin-switch" onclick="selectRole('admin', true)">
+                🛡️ Switch to Master Admin Login
+            </button>
         </div>
     </div>
 
@@ -400,7 +428,7 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
-        let currentRole = "staff";
+        let currentRole = "depot";
 
         function selectRole(role, clearError = false) {
             currentRole = role;
@@ -425,22 +453,22 @@
                 errBox.textContent = '';
             }
 
-            if (role === "staff") {
-                userLabel.textContent = "Staff Code / Login ID";
-                userNameInput.placeholder = "Enter Login ID (e.g. EMP001)";
-                loginBtn.textContent = "Login to Staff Portal";
-                loginBtn.style.background = "linear-gradient(135deg, #0284c7, #0369a1)";
-                subText.textContent = "Staff Portal Login";
-            } else if (role === "depot") {
+            if (role === "depot") {
                 userLabel.textContent = "Depot Code / Username";
                 userNameInput.placeholder = "Enter Depot Code (e.g. D121)";
                 loginBtn.textContent = "Login to Depot Portal";
                 loginBtn.style.background = "linear-gradient(135deg, #0284c7, #0369a1)";
                 subText.textContent = "Depot Management Login";
+            } else if (role === "staff") {
+                userLabel.textContent = "Staff Code / Login ID";
+                userNameInput.placeholder = "Enter Login ID (e.g. EMP001)";
+                loginBtn.textContent = "Login to Staff Portal";
+                loginBtn.style.background = "linear-gradient(135deg, #0284c7, #0369a1)";
+                subText.textContent = "Staff Portal Login";
             } else if (role === "admin") {
                 userLabel.textContent = "Admin Username";
                 userNameInput.placeholder = "Enter Admin Username";
-                loginBtn.textContent = "Login to Admin Portal";
+                loginBtn.textContent = "Login to Master Admin";
                 loginBtn.style.background = "linear-gradient(135deg, #e11d48, #be123c)";
                 subText.textContent = "Master Admin Portal Login";
             }
@@ -503,15 +531,14 @@
                     sessionStorage.setItem("role", res.role || role);
                     sessionStorage.setItem("depot", res.depot || "");
                     
-                    // Store permissions object immediately to eliminate flicker
                     if (res.permissions) {
                         sessionStorage.setItem("permissions", JSON.stringify(res.permissions));
                     }
 
                     btn.textContent = "Success! Redirecting...";
 
-                    if (role === "staff") window.location.href = "/staff";
-                    else if (role === "depot") window.location.href = "/depot";
+                    if (role === "depot") window.location.href = "/depot";
+                    else if (role === "staff") window.location.href = "/staff";
                     else if (role === "admin") window.location.href = "/admin";
                 } else {
                     msgBox.textContent = (res && res.message) ? ("⚠️ " + res.message) : "⚠️ Invalid username or password.";

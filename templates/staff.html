@@ -72,7 +72,6 @@
         table.custom-table th { position: sticky; top: 0; z-index: 10; padding: 0.85rem 1rem; color: #fff; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; background: #111a2e; border-bottom: 2px solid var(--accent-blue); }
         table.custom-table td { padding: 0.85rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #1a273e; white-space: nowrap; }
 
-        /* Compact 380px Print Modal */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
         .modal-box-compact { background: #111a2e; margin: 3rem auto; width: 100%; max-width: 400px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.2rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
@@ -231,17 +230,25 @@
         </div>
     </div>
 
-    <!-- Password Modal -->
+    <!-- Secure Password Modal with Current Password -->
     <div id="pwdModal" class="modal">
         <div class="modal-box-compact">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
             <div style="padding:1.2rem;">
                 <form id="staffPwdForm">
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">New Password</label>
-                        <input type="password" id="newStaffPass" class="form-control" style="width:100%;padding:0.7rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required>
+                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">Current Password</label>
+                        <input type="password" id="oldStaffPass" class="form-control" style="width:100%;padding:0.75rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required placeholder="Enter current password">
                     </div>
-                    <button type="submit" style="width:100%;padding:0.75rem;background:var(--accent-blue);color:#000;font-weight:800;border:none;border-radius:8px;cursor:pointer;">Update Password</button>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">New Password</label>
+                        <input type="password" id="newStaffPass" class="form-control" style="width:100%;padding:0.75rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required placeholder="Enter new password">
+                    </div>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">Confirm New Password</label>
+                        <input type="password" id="confirmStaffPass" class="form-control" style="width:100%;padding:0.75rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required placeholder="Confirm new password">
+                    </div>
+                    <button type="submit" id="btnStaffPwdSubmit" style="width:100%;padding:0.8rem;background:var(--accent-blue);color:#000;font-weight:800;border:none;border-radius:8px;cursor:pointer;margin-top:0.4rem;">Update Password</button>
                 </form>
             </div>
         </div>
@@ -356,7 +363,6 @@
                     avatarBox.textContent = sName.charAt(0).toUpperCase();
                 }
 
-                // Depot address header
                 const addr = getField(depotDataGlobal, 'Depot Address');
                 const dist = getField(depotDataGlobal, 'Dristric', 'District');
                 const state = getField(depotDataGlobal, 'State Name');
@@ -385,7 +391,6 @@
                 const part = getField(r, 'Particular', 'particular');
                 const mode = getField(r, 'Payment Mode', 'mode') || '-';
 
-                // Accurate check from Col K: only approved transactions add to balance
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
                 const isApproved = appRaw.toLowerCase() === 'approved';
 
@@ -416,7 +421,6 @@
             document.getElementById('staffNetBalance').textContent = `₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
         }
 
-        // Print Statement Preview: Strictly Filter Approved Only
         function openPrintModal() {
             const addr = getField(depotDataGlobal, 'Depot Address');
             const dist = getField(depotDataGlobal, 'Dristric', 'District');
@@ -438,7 +442,6 @@
             staffLedgerRows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
                 
-                // Strictly exclude pending transactions from print preview
                 if (appRaw.toLowerCase() === 'approved') {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
@@ -468,17 +471,43 @@
         }
         function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
 
-        function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
+        function openPasswordModal() {
+            document.getElementById('staffPwdForm').reset();
+            document.getElementById('pwdModal').style.display = 'block';
+        }
         function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 
+        // Secure Password Change Verification
         document.getElementById('staffPwdForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const oldPass = document.getElementById('oldStaffPass').value.trim();
             const newPass = document.getElementById('newStaffPass').value.trim();
+            const confirmPass = document.getElementById('confirmStaffPass').value.trim();
+
+            if (newPass !== confirmPass) {
+                showToast("New passwords do not match!");
+                return;
+            }
+
+            const btn = document.getElementById('btnStaffPwdSubmit');
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
+
             try {
-                const res = await jsonp(`${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&newPass=${encodeURIComponent(newPass)}`);
-                showToast(res.message || "Password updated!");
-                closePasswordModal();
-            } catch (err) { showToast("Error updating password"); }
+                const url = `${SCRIPT_URL}?action=changeStaffPassword&username=${encodeURIComponent(staffCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
+                const res = await jsonp(url);
+                if (res && res.success) {
+                    showToast(res.message);
+                    closePasswordModal();
+                } else {
+                    showToast(res.message || "Failed to update password");
+                }
+            } catch (err) {
+                showToast("Error updating password");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Update Password';
+            }
         });
 
         window.onload = loadStaffData;

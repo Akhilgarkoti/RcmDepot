@@ -224,6 +224,51 @@
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
 
+        /* COMPACT / A5 HALF-PAGE PRINT CONTAINER */
+        #printableReceipt {
+            display: none;
+            background: #ffffff;
+            color: #000000;
+            padding: 10px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 8pt;
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+        }
+        .text-right { text-align: right !important; }
+        .text-center { text-align: center !important; }
+
+        @media print {
+            @page {
+                size: A5 portrait;
+                margin: 5mm 6mm;
+            }
+            body { 
+                background: #ffffff !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+            body * { visibility: hidden !important; }
+            #printableReceipt, #printableReceipt * { 
+                visibility: visible !important; 
+            }
+            #printableReceipt { 
+                display: block !important;
+                position: absolute !important; 
+                left: 0 !important; 
+                top: 0 !important; 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                font-size: 7.5pt !important;
+                line-height: 1.2 !important;
+            }
+        }
+
         .global-loading-overlay {
             display: none;
             position: fixed;
@@ -263,6 +308,44 @@
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="global-spinner"></div>
         <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
+    </div>
+
+    <!-- Hidden Compact Print Template -->
+    <div id="printableReceipt">
+        <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+            <h2 style="font-size:9pt; font-weight:800; margin:0 0 2px 0;">RCM Consumer Products Private Limited</h2>
+            <p id="rcptFullAddress" style="font-size:6.8pt; margin:0; line-height:1.2;">Depot Address</p>
+            <p id="rcptContact" style="font-size:6.8pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
+            <span style="font-weight:800; margin-top:3px; display:block; font-size:7.8pt;">** MONTH ACCOUNT STATEMENT **</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:7pt; border-bottom:1px solid #000; padding-bottom:3px; margin-bottom:3px;">
+            <div>
+                <p style="margin:0;"><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                <p style="margin:0;"><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
+            </div>
+            <div class="text-right">
+                <p style="margin:0;"><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                <p style="margin:0;"><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p>
+            </div>
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:4px; font-size:7pt;">
+            <thead>
+                <tr>
+                    <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Date</th>
+                    <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Particulars</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Dr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Cr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Bal</th>
+                </tr>
+            </thead>
+            <tbody id="rcptTableBody"></tbody>
+        </table>
+        <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 0; font-size:7.2pt; font-weight:bold;">
+            <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between; margin-top:2px; border-top:1px dashed #000; padding-top:2px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+        </div>
     </div>
 
     <div id="toastContainer" class="toast-container"></div>
@@ -335,7 +418,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History (FY Monthly Summary + Detail View Support) -->
+        <!-- 2. Records History -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
             <div class="table-toolbar">
@@ -349,7 +432,6 @@
                 </div>
             </div>
 
-            <!-- FY Month-wise Summary Table (Displayed when FY is selected) -->
             <div id="dispFySummaryContainer" class="table-responsive" style="display:none; max-height: 640px;">
                 <table class="custom-table">
                     <thead>
@@ -364,7 +446,6 @@
                 </table>
             </div>
 
-            <!-- Standard Transaction History Table -->
             <div id="dispRawTableContainer">
                 <div id="dispMonthBackBar" style="display:none; margin-bottom:0.6rem; justify-content:space-between; align-items:center;">
                     <h4 id="dispMonthBackTitle" style="font-size:0.92rem; font-weight:800; color:#0369a1;">📅 Month Dispatch Records</h4>
@@ -441,7 +522,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal with Year Filter & Full Details Export -->
+    <!-- Modal 3: Statement View Modal with Compact Month Printing -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -450,7 +531,6 @@
             </div>
             <div class="modal-body">
                 
-                <!-- Filter & Action Controls -->
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                     <div style="display:flex; align-items:center; gap:0.6rem;">
                         <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
@@ -461,7 +541,7 @@
                     </div>
                 </div>
 
-                <!-- Monthly Summary Table (Zero Months Hidden) -->
+                <!-- Monthly Summary Table -->
                 <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
@@ -478,11 +558,14 @@
                     </table>
                 </div>
 
-                <!-- Detailed Month-wise Breakdown -->
+                <!-- Detailed Month-wise Breakdown (With Compact Print Option) -->
                 <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                         <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
-                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
+                        <div style="display:flex; gap:0.5rem;">
+                            <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="printActiveMonthStatement()">🖨️ Print Month Statement</button>
+                            <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
+                        </div>
                     </div>
                     <div class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                         <table class="custom-table">
@@ -548,6 +631,7 @@
         let currentActiveStaffLedger = [];
         let annualSummaryData = [];
         let dispatchFySummaryList = [];
+        let activeViewingMonthData = null;
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
@@ -726,7 +810,6 @@
             }
         }
 
-        // Clean FY Filter for Dispatch History
         function populateHistoryMonthDropdown(dispatches) {
             const selectBox = document.getElementById('historyPeriodFilter');
             const now = new Date();
@@ -789,7 +872,6 @@
             } catch (err) { console.error(err); }
         }
 
-        // Handle Dispatch History Filter Trigger
         function handleDispatchFilterChange() {
             const periodVal = document.getElementById('historyPeriodFilter').value;
             const fySummaryContainer = document.getElementById('dispFySummaryContainer');
@@ -814,7 +896,6 @@
             }
         }
 
-        // Render FY Month-wise Dispatch Summary Table
         function renderDispatchFySummary(startYear) {
             const fyStart = new Date(startYear, 3, 1);
             const fyEnd = new Date(startYear + 1, 2, 31, 23, 59, 59);
@@ -841,13 +922,12 @@
 
             fyMonthSequence.forEach(mIndex => {
                 const mData = monthlyMap[mIndex];
-                if (mData.count === 0) return; // Skip zero months
+                if (mData.count === 0) return;
 
                 totalFyCount += mData.count;
                 const mLabel = monthNames[mIndex];
                 const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
 
-                // Determine most frequent vehicle type
                 let topVType = '-';
                 let maxVCount = 0;
                 Object.keys(mData.vTypes).forEach(vt => {
@@ -881,7 +961,6 @@
             document.getElementById('dispCountBadge').textContent = `${totalFyCount} records (FY Summary)`;
         }
 
-        // View single month dispatches from FY Summary
         function viewDispatchMonthDetails(mIndex) {
             const mData = dispatchFySummaryList.find(d => d.monthIndex === mIndex);
             if (!mData) return;
@@ -1206,7 +1285,6 @@
             yearSelect.innerHTML = optionsHtml;
         }
 
-        // Render Annual Summary - Skips inactive months (Debit=0 and Credit=0)
         function renderAnnualSummaryLedger() {
             hideMonthDetails();
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
@@ -1253,7 +1331,6 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            // 1. OPN Row
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({
@@ -1275,7 +1352,6 @@
                 <td style="text-align:center;">-</td>
             </tr>`;
 
-            // 2. Active Months Only
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
                 const mLabel = monthNames[mIndex];
@@ -1340,6 +1416,7 @@
             });
 
             let runningBal = opnBalMonth;
+            let totalDr = 0, totalCr = 0;
             let html = '';
 
             let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
@@ -1366,6 +1443,8 @@
                 const isApproved = appRaw.toLowerCase() === 'approved';
 
                 if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
                     runningBal += (cr - dr);
                 }
 
@@ -1380,9 +1459,87 @@
                 </tr>`;
             });
 
+            activeViewingMonthData = {
+                monthLabel: `${monthName} ${actualYear}`,
+                openingBal: opnBalMonth,
+                rows: mData.rows,
+                totalDr: totalDr,
+                totalCr: totalCr,
+                closingBal: runningBal
+            };
+
             document.getElementById('monthDetailTbody').innerHTML = html;
             document.getElementById('annualSummaryContainer').style.display = 'none';
             document.getElementById('monthDetailContainer').style.display = 'block';
+        }
+
+        // Print Month Statement in Compact Slip Format
+        function printActiveMonthStatement() {
+            if (!activeViewingMonthData) {
+                showToast('No active month data to print.');
+                return;
+            }
+
+            const depot = depotGlobalInfo || {};
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile');
+            const gstin = getField(depot, 'GSTIN');
+
+            document.getElementById('rcptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            document.getElementById('rcptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
+            document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode;
+            document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
+            document.getElementById('rcptPrintPeriod').textContent = activeViewingMonthData.monthLabel;
+
+            let html = '';
+            let runningBal = activeViewingMonthData.openingBal;
+
+            let opCr = runningBal > 0 ? runningBal : 0;
+            let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+
+            html += `<tr style="font-weight:bold; background:#f8fafc;">
+                <td style="padding:2px 1px;">01-B/F</td>
+                <td style="padding:2px 1px;">Opening Balance</td>
+                <td class="text-right" style="padding:2px 1px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:2px 1px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:2px 1px;">${runningBal.toFixed(2)}</td>
+            </tr>`;
+
+            activeViewingMonthData.rows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
+                if (appRaw.toLowerCase() === 'approved') {
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                    const part = getField(r, 'Particular', 'particular');
+                    runningBal += (cr - dr);
+
+                    html += `<tr>
+                        <td style="padding:2px 1px;">${dt}</td>
+                        <td style="padding:2px 1px; word-break:break-word;">${part}</td>
+                        <td class="text-right" style="padding:2px 1px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:2px 1px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:2px 1px;">${runningBal.toFixed(2)}</td>
+                    </tr>`;
+                }
+            });
+
+            document.getElementById('rcptTableBody').innerHTML = html;
+
+            const opBal = activeViewingMonthData.openingBal;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
+            const finalNet = activeViewingMonthData.closingBal;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            setTimeout(() => {
+                window.print();
+            }, 100);
         }
 
         function hideMonthDetails() {
@@ -1406,7 +1563,6 @@
         }
         function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
 
-        // Export Full Detailed Statement for Selected FY
         function exportFullDetailedLedgerToCSV() {
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);

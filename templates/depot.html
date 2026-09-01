@@ -3,49 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCM Depot Manager Portal - SAP GUI Style</title>
+    <title>RCM Depot Manager Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --sap-top-blue: #32567f;
-            --sap-mid-blue: #446e9b;
-            --sap-light-blue: #dde7f0;
-            --sap-bg: #eaeff5;
-            --sap-panel-bg: #f5f8fb;
-            --sap-border: #9fb3c8;
-            --sap-border-dark: #6382a1;
-            --sap-border-light: #ffffff;
+            --theme-top-blue: #32567f;
+            --theme-mid-blue: #446e9b;
+            --theme-light-blue: #dde7f0;
+            --theme-bg: #eaeff5;
+            --theme-panel-bg: #f5f8fb;
+            --theme-border: #9fb3c8;
+            --theme-border-dark: #6382a1;
             --text-dark: #1b2e4b;
             --text-muted: #475569;
-            --sap-input-bg: #ffffff;
-            --sap-input-readonly: #f1f5f9;
+            --input-bg: #ffffff;
+            --input-readonly: #f1f5f9;
             --accent-dr: #c5221f;
             --accent-cr: #0f766e;
             --accent-bal: #0284c7;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--sap-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* SAP System Top Bar */
-        .sap-system-bar {
-            background: linear-gradient(180deg, #5b84b1 0%, #3a628d 100%);
-            border-bottom: 2px solid #203f63;
-            color: #ffffff;
-            padding: 0.35rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
-        }
+        body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
 
         .navbar {
             background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
-            border-bottom: 1px solid var(--sap-border-dark);
-            padding: 0.6rem 1.4rem;
+            border-bottom: 2px solid var(--theme-mid-blue);
+            padding: 0.65rem 1.4rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -54,20 +40,20 @@
         }
 
         .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 220px; }
-        .depot-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--sap-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
+        .depot-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
         .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex: 1; text-align: left; }
-        .company-logo-badge { width: 190px; height: 46px; border-radius: 4px; background: #fff; border: 1px solid var(--sap-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
+        .company-logo-badge { width: 190px; height: 46px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
         .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
-        .sap-btn-action { 
+        .btn-action-nav { 
             background: linear-gradient(180deg, #ffffff 0%, #e2eaf1 100%); 
             color: var(--text-dark); 
-            border: 1px solid var(--sap-border-dark); 
-            padding: 0.4rem 0.85rem; 
-            border-radius: 3px; 
+            border: 1px solid var(--theme-border-dark); 
+            padding: 0.45rem 0.9rem; 
+            border-radius: 4px; 
             font-weight: 700; 
             font-size: 0.82rem; 
             cursor: pointer;
@@ -77,16 +63,15 @@
             align-items: center;
             gap: 4px;
         }
-        .sap-btn-action:hover { background: #f8fafc; border-color: #1e3a5f; }
-        .sap-btn-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
+        .btn-action-nav:hover { background: #f8fafc; border-color: #1e3a5f; }
+        .btn-nav-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
 
         .main-container { width: 100%; max-width: 1560px; margin: 1rem auto; padding: 0 1rem; }
 
-        /* SAP Tabs */
-        .depot-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--sap-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; }
+        .depot-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--theme-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; }
         .tab-btn { 
             background: linear-gradient(180deg, #e7edf4 0%, #cfdde9 100%); 
-            border: 1px solid var(--sap-border); 
+            border: 1px solid var(--theme-border); 
             border-bottom: none;
             color: var(--text-dark); 
             padding: 0.55rem 1.3rem; 
@@ -97,16 +82,16 @@
         }
         .tab-btn.active { 
             background: #ffffff; 
-            color: var(--sap-top-blue); 
-            border: 2px solid var(--sap-mid-blue); 
+            color: var(--theme-top-blue); 
+            border: 2px solid var(--theme-mid-blue); 
             border-bottom: 2px solid #ffffff; 
             margin-bottom: -2px;
             font-weight: 800;
         }
 
         .comfort-panel { 
-            background: var(--sap-panel-bg); 
-            border: 1px solid var(--sap-border); 
+            background: var(--theme-panel-bg); 
+            border: 1px solid var(--theme-border); 
             border-radius: 4px; 
             padding: 1.4rem; 
             box-shadow: 0 3px 10px rgba(0,0,0,0.06); 
@@ -117,10 +102,10 @@
             justify-content: space-between; 
             align-items: center; 
             margin-bottom: 1rem; 
-            border-bottom: 2px solid var(--sap-light-blue); 
+            border-bottom: 2px solid var(--theme-light-blue); 
             padding-bottom: 0.5rem; 
         }
-        .panel-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--sap-top-blue); }
+        .panel-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--theme-top-blue); }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .form-group-full { grid-column: span 2; }
@@ -130,15 +115,15 @@
         .form-control { 
             width: 100%; 
             padding: 0.6rem 0.85rem; 
-            background: var(--sap-input-bg); 
-            border: 1px solid var(--sap-border); 
+            background: var(--input-bg); 
+            border: 1px solid var(--theme-border); 
             border-radius: 3px; 
             color: #111827; 
             font-size: 0.88rem; 
             outline: none; 
         }
-        .form-control:focus { border-color: var(--sap-top-blue); box-shadow: 0 0 0 2px rgba(68,110,155,0.2); }
-        .form-control:read-only { background: var(--sap-input-readonly); color: #1e3a8a; font-weight: 700; border-style: dashed; }
+        .form-control:focus { border-color: var(--theme-top-blue); box-shadow: 0 0 0 2px rgba(68,110,155,0.2); }
+        .form-control:read-only { background: var(--input-readonly); color: #1e3a8a; font-weight: 700; border-style: dashed; }
         textarea.form-control { resize: vertical; min-height: 80px; font-family: 'Consolas', monospace; }
 
         .btn-submit-dispatch { 
@@ -157,19 +142,18 @@
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
-        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--sap-border); border-radius: 3px; color: var(--sap-top-blue); font-size: 0.84rem; font-weight: 700; }
+        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: var(--theme-top-blue); font-size: 0.84rem; font-weight: 700; }
         .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
-        .search-input { width: 100%; padding: 0.45rem 0.8rem 0.45rem 2rem; background: #fff; border: 1px solid var(--sap-border); border-radius: 3px; color: #111; font-size: 0.86rem; }
+        .search-input { width: 100%; padding: 0.45rem 0.8rem 0.45rem 2rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: #111; font-size: 0.86rem; }
         .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; }
 
-        .btn-tool { padding: 0.45rem 0.9rem; border-radius: 3px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--sap-border); }
+        .btn-tool { padding: 0.45rem 0.9rem; border-radius: 3px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--theme-border); }
         .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
         .btn-action-ledger:hover { background: #0284c7; color: #fff; }
         .btn-action-trx { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; }
         .btn-action-trx:hover { background: #d97706; color: #fff; }
 
-        /* SAP Grid Table */
-        .table-responsive { width: 100%; max-height: 540px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--sap-border); border-radius: 2px; background: #ffffff; }
+        .table-responsive { width: 100%; max-height: 540px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
             position: sticky; top: 0; z-index: 20; 
@@ -187,12 +171,11 @@
         table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
         table.custom-table tr:hover { background-color: #e9f2fb; }
 
-        .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--sap-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--sap-top-blue); }
+        .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--theme-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--theme-top-blue); }
 
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
-        .btn-load-older { background: #e2e8f0; color: var(--sap-top-blue); border: 1px solid var(--sap-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
+        .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
-        /* Full SAP Modal System with Wide Resolution */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 1rem; }
         
         .modal-box { 
@@ -201,12 +184,11 @@
             width: 95%; 
             max-width: 540px; 
             border-radius: 5px; 
-            border: 2px solid var(--sap-mid-blue); 
+            border: 2px solid var(--theme-mid-blue); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
             overflow: hidden; 
         }
         
-        /* EXPANDED EXTRA WIDE MODAL FOR FULL SCREEN VISIBILITY */
         .modal-box-large { 
             width: 95% !important; 
             max-width: 1380px !important; 
@@ -228,8 +210,7 @@
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
         .modal-body { padding: 1.2rem; background: #f8fafc; }
 
-        /* SAP Stats Banner */
-        .sap-stat-banner {
+        .stat-banner {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
             gap: 0.8rem;
@@ -237,7 +218,7 @@
             background: #ffffff;
             padding: 0.8rem 1.2rem;
             border-radius: 4px;
-            border: 1px solid var(--sap-border);
+            border: 1px solid var(--theme-border);
             margin-bottom: 1rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
@@ -279,28 +260,22 @@
     <datalist id="dispatchThroughList"></datalist>
     <datalist id="vehicleNoList"></datalist>
 
-    <!-- SAP Top Title Bar -->
-    <div class="sap-system-bar">
-        <span>SAP Easy Access - RCM Multi-Depot Portal</span>
-        <span>System: <strong>PRD_RCM</strong> | Client: <strong>100</strong> | User: <strong id="sapUserBadge">DEPOT</strong></span>
-    </div>
-
     <!-- Main Navigation Bar -->
     <div class="navbar">
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox"><svg width="32" height="26" viewBox="0 0 24 24" fill="#32567f"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
-            <div><h3 style="color:var(--sap-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT ERP</h3><span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">Manager Control Panel</span></div>
+            <div><h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3><span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">Manager Portal</span></div>
         </div>
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox"></div>
             <div>
-                <h1 style="font-size:1.1rem;font-weight:800;color:var(--sap-top-blue);"><span id="headerDepotTitle">Depot Management</span></h1>
+                <h1 style="font-size:1.1rem;font-weight:800;color:var(--theme-top-blue);"><span id="headerDepotTitle">Depot Management</span></h1>
                 <p id="topDepotAddress" style="font-size:0.78rem;color:var(--text-muted);">Loading depot details...</p>
             </div>
         </div>
         <div class="nav-actions">
-            <button class="sap-btn-action" onclick="openPasswordModal()">🔑 Change Password</button>
-            <a href="/" onclick="sessionStorage.clear()" class="sap-btn-action sap-btn-logout">🚪 Logout</a>
+            <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
         </div>
     </div>
 
@@ -378,7 +353,7 @@
         <div id="staffTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>👥 Assigned Staff and Ledger Details</h3>
-                <button class="sap-btn-action" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
+                <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
@@ -432,19 +407,19 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal (SAP Extra-Wide Layout) -->
+    <!-- Modal 3: Statement View Modal (Extra-Wide Layout) -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
-                <span id="ledgerStaffTitle">📄 SAP General Ledger Statement</span>
+                <span id="ledgerStaffTitle">📄 Staff Ledger Statement</span>
                 <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="sap-stat-banner">
+                <div class="stat-banner">
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL CREDIT</span><strong id="modTotalCredit" style="color:var(--accent-cr);font-size:1.15rem;">₹0</strong></div>
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL DEBIT</span><strong id="modTotalDebit" style="color:var(--accent-dr);font-size:1.15rem;">₹0</strong></div>
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">CURRENT NET BALANCE</span><strong id="modNetBalance" style="color:var(--accent-bal);font-size:1.15rem;">₹0</strong></div>
-                    <div><button class="sap-btn-action" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.6rem 1.2rem;font-size:0.9rem;" onclick="openPrintPreview()">🖨️ View Statement & Print</button></div>
+                    <div><button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.6rem 1.2rem;font-size:0.9rem;" onclick="openPrintPreview()">🖨️ View Statement & Print</button></div>
                 </div>
                 <div class="table-responsive" style="max-height: 520px;">
                     <table class="custom-table">
@@ -528,8 +503,6 @@
         let depotCode = (sessionStorage.getItem("user") || "").trim();
         let depotNameStored = sessionStorage.getItem("depot") || sessionStorage.getItem("name") || "Depot";
         if (!depotCode) window.location.href = "/";
-
-        document.getElementById('sapUserBadge').textContent = depotCode.toUpperCase();
 
         let depotPrefix = "76287";
         let globalNextEmpCode = "EMP012";
@@ -952,9 +925,9 @@
         async function openStaffLedger(code, name) {
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
-            document.getElementById('ledgerStaffTitle').textContent = `📄 SAP General Ledger: ${name} (${code})`;
+            document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
             const tbody = document.getElementById('modalLedgerTableBody');
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2rem;">Reading ledger records from SAP Database...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2rem;">Reading ledger records...</td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {

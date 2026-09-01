@@ -6,249 +6,327 @@
     <title>RCM Staff Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #0c1322;
-            --bg-card: #131d31;
-            --border-color: #22324f;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --accent-blue: #38bdf8;
-            --accent-green: #34d399;
-            --accent-amber: #fbbf24;
-            --accent-red: #fb7185;
-            --input-bg: #090e1a;
+            --theme-top-blue: #32567f;
+            --theme-mid-blue: #446e9b;
+            --theme-light-blue: #dde7f0;
+            --theme-bg: #eaeff5;
+            --theme-panel-bg: #f5f8fb;
+            --theme-border: #9fb3c8;
+            --theme-border-dark: #6382a1;
+            --text-dark: #1b2e4b;
+            --text-muted: #475569;
+            --input-bg: #ffffff;
+            --input-readonly: #f1f5f9;
+            --accent-dr: #c5221f;
+            --accent-cr: #0f766e;
+            --accent-bal: #0284c7;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; flex-direction: column; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
 
         .navbar {
-            position: sticky; top: 0; z-index: 1000; background: rgba(13, 20, 36, 0.95);
-            backdrop-filter: blur(20px); border-bottom: 2px solid var(--accent-blue);
-            padding: 0.75rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.2rem;
+            background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
+            border-bottom: 2px solid var(--theme-mid-blue);
+            padding: 0.65rem 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
-        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
-        .staff-logo-box { width: 50px; height: 50px; border-radius: 12px; background: #fff; border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
+        .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 200px; }
+        .staff-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .staff-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
         .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex: 1; text-align: left; }
-        .company-logo-badge { width: 200px; height: 52px; border-radius: 10px; background: #fff; border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px 10px; }
+        .company-logo-badge { width: 190px; height: 46px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .nav-actions { display: flex; align-items: center; gap: 0.7rem; }
-        .btn-pwd { background: rgba(251, 191, 36, 0.12); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.35); padding: 0.5rem 0.95rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; cursor: pointer; }
-        .btn-logout { background: rgba(251, 113, 133, 0.12); color: var(--accent-red); border: 1px solid rgba(251, 113, 133, 0.35); padding: 0.5rem 1.1rem; border-radius: 8px; font-weight: 600; font-size: 0.82rem; text-decoration: none; }
+        .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .btn-action-nav { 
+            background: linear-gradient(180deg, #ffffff 0%, #e2eaf1 100%); 
+            color: var(--text-dark); 
+            border: 1px solid var(--theme-border-dark); 
+            padding: 0.45rem 0.9rem; 
+            border-radius: 4px; 
+            font-weight: 700; 
+            font-size: 0.82rem; 
+            cursor: pointer;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-action-nav:hover { background: #f8fafc; border-color: #1e3a5f; }
+        .btn-nav-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
 
-        .main-container { width: 100%; max-width: 1060px; margin: 1.6rem auto; padding: 0 1.5rem; }
+        .main-container { width: 100%; max-width: 1400px; margin: 1rem auto; padding: 0 1rem; }
 
         .profile-card {
-            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px;
-            padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 1.4rem; flex-wrap: wrap; gap: 1rem;
+            background: var(--theme-panel-bg);
+            border: 1px solid var(--theme-border);
+            border-radius: 4px;
+            padding: 1.2rem 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
         }
         .profile-left { display: flex; align-items: center; gap: 1.2rem; }
         .staff-avatar-large {
-            width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
-            border: 2.5px solid var(--accent-blue); background: #1e293b; display: flex;
-            align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: var(--accent-blue);
+            width: 54px; height: 54px; border-radius: 4px; object-fit: cover;
+            border: 1px solid var(--theme-border-dark); background: #e2e8f0; display: flex;
+            align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; color: var(--theme-top-blue);
         }
 
-        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.4rem; }
-        .sum-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 1.2rem; text-align: center; }
-        .sum-card span { font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; display: block; margin-bottom: 0.3rem; }
-        .sum-card h2 { font-size: 1.4rem; font-weight: 800; }
-
-        .btn-statement-view {
-            background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; border: none;
-            padding: 0.65rem 1.2rem; border-radius: 8px; font-weight: 800; font-size: 0.88rem; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 0.4rem;
+        .comfort-panel { 
+            background: var(--theme-panel-bg); 
+            border: 1px solid var(--theme-border); 
+            border-radius: 4px; 
+            padding: 1.4rem; 
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06); 
+            margin-bottom: 1.2rem; 
         }
 
-        .table-responsive { width: 100%; max-height: 520px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--border-color); border-radius: 10px; background: #0c1424; }
+        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: var(--theme-top-blue); font-size: 0.84rem; font-weight: 700; }
+        .btn-tool { padding: 0.35rem 0.7rem; border-radius: 3px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--theme-border); }
+        .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
+        .btn-action-ledger:hover { background: #0284c7; color: #fff; }
+
+        .table-responsive { width: 100%; max-height: 720px; min-height: 380px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.custom-table th { position: sticky; top: 0; z-index: 10; padding: 0.85rem 1rem; color: #fff; font-size: 0.78rem; font-weight: 800; text-transform: uppercase; background: #111a2e; border-bottom: 2px solid var(--accent-blue); }
-        table.custom-table td { padding: 0.85rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #1a273e; white-space: nowrap; }
+        table.custom-table th { 
+            position: sticky; top: 0; z-index: 20; 
+            padding: 0.75rem 0.95rem; 
+            color: #ffffff; 
+            font-size: 0.82rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
+            border-right: 1px solid #284464; 
+            border-bottom: 2px solid #1a304a; 
+            letter-spacing: 0.3px;
+        }
+        table.custom-table td { padding: 0.7rem 0.95rem; font-size: 0.86rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
+        table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
+        table.custom-table tr:hover { background-color: #e9f2fb; }
 
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(10px); overflow-y: auto; padding: 1.5rem; }
-        .modal-box-compact { background: #111a2e; margin: 3rem auto; width: 100%; max-width: 400px; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.2rem; background: #0c1424; border-bottom: 1px solid var(--border-color); }
-        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.92rem; }
-        .modal-close-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.4rem; cursor: pointer; }
+        .row-opening-balance { background-color: #eff6ff !important; font-weight: bold; }
+        .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #0284c7 !important; }
 
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.2rem; font-family: 'Courier New', monospace; font-size: 0.76rem; width: 100%; max-width: 380px; margin: 0 auto; }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
-        .receipt-company-logo { width: 160px; height: 44px; margin: 0 auto 0.3rem auto; display: flex; align-items: center; justify-content: center; }
-        .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .receipt-header h2 { font-size: 0.9rem; font-weight: 800; color: #000; margin-bottom: 0.15rem; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .receipt-header p { font-size: 0.7rem; line-height: 1.3; color: #222; }
-        .receipt-title { font-weight: 800; margin-top: 0.3rem; display: block; font-size: 0.8rem; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
+        .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 500px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
+        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
+        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+        .modal-body { padding: 1.2rem; background: #f8fafc; }
 
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.72rem; line-height: 1.4; border-bottom: 1px dashed #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.4rem; }
-        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 3px 2px; font-weight: bold; color: #000; font-size: 0.72rem; text-align: left; }
-        .receipt-table td { padding: 3px 2px; font-size: 0.72rem; color: #000; }
+        .preview-slip-box { background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem; border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
-        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.35rem 0; font-size: 0.74rem; line-height: 1.4; font-weight: bold; }
-        .receipt-summary .sum-row { display: flex; justify-content: space-between; }
-        .print-green-btn { width: 100%; background: #059669; color: white; border: none; padding: 0.65rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
+        #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
-            body * { visibility: hidden; }
-            #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 360px; margin: 0 auto; background: #fff; color: #000; }
-            .modal-top-bar, .modal-actions { display: none !important; }
+            @page { size: A5 portrait; margin: 6mm 8mm; }
+            body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body * { visibility: hidden !important; }
+            #printableReceipt, #printableReceipt * { visibility: visible !important; }
+            #printableReceipt { 
+                display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
+                width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; 
+                font-size: 8pt !important; line-height: 1.25 !important; border: none !important; background: #fff !important; 
+            }
+            .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
-        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #10b981; color: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
     </style>
 </head>
 <body>
 
+    <!-- Hidden Raw Print Node for Browser Print -->
+    <div id="printableReceipt">
+        <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
+            <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
+            <p id="rcptFullAddress" style="font-size:7.5pt; margin:0; line-height:1.2;">Depot Address</p>
+            <p id="rcptContact" style="font-size:7.5pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
+            <span style="font-weight:800; margin-top:4px; display:block; font-size:8.5pt;">** MONTH ACCOUNT STATEMENT **</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:8pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+            <div>
+                <p style="margin:0;"><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                <p style="margin:0;"><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
+            </div>
+            <div class="text-right">
+                <p style="margin:0;"><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                <p style="margin:0;"><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p>
+            </div>
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8pt;">
+            <thead>
+                <tr>
+                    <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Date</th>
+                    <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Particulars</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Dr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Cr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Bal</th>
+                </tr>
+            </thead>
+            <tbody id="rcptTableBody"></tbody>
+        </table>
+        <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 0; font-size:8pt; font-weight:bold;">
+            <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between; margin-top:2px; border-top:1px dashed #000; padding-top:2px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+        </div>
+    </div>
+
+    <!-- On-Screen Clean Preview Modal Dialog -->
+    <div id="printPreviewModal" class="modal" style="z-index: 2500;">
+        <div class="modal-box modal-box-compact">
+            <div class="modal-top-bar">
+                <span>📄 Month Statement Print Preview</span>
+                <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="background:#f8fafc;">
+                <div class="preview-slip-box" id="previewSlipDisplay"></div>
+                <div style="margin-top:1rem; text-align:center;">
+                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="toastContainer" class="toast-container"></div>
 
+    <!-- Top Navigation Bar -->
     <div class="navbar">
         <div class="brand-section">
             <div class="staff-logo-box" id="staffLogoBox"></div>
             <div>
-                <h3 style="color:#fff;font-size:1rem;font-weight:800;">RCM DEPOT</h3>
-                <span style="font-size:0.74rem;color:var(--accent-blue);font-weight:700;">STAFF PORTAL</span>
+                <h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3>
+                <span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">STAFF PORTAL</span>
             </div>
         </div>
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox"></div>
             <div>
-                <h1 style="font-size:1.1rem;font-weight:800;color:#fff;"><span id="headerDepotTitle">RCM Depot</span></h1>
-                <p id="topDepotAddress" style="font-size:0.78rem;color:var(--text-secondary);">Loading address...</p>
+                <h1 style="font-size:1.1rem;font-weight:800;color:var(--theme-top-blue);"><span id="headerDepotTitle">RCM Depot</span></h1>
+                <p id="topDepotAddress" style="font-size:0.78rem;color:var(--text-muted);">Loading address...</p>
             </div>
         </div>
         <div class="nav-actions">
-            <button class="btn-pwd" onclick="openPasswordModal()">🔑 Password</button>
-            <a href="/" onclick="sessionStorage.clear()" class="btn-logout">Logout</a>
+            <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
         </div>
     </div>
 
     <div class="main-container">
-        <!-- Profile Banner -->
+        <!-- Staff Profile Banner -->
         <div class="profile-card">
             <div class="profile-left">
                 <div id="staffAvatarBox" class="staff-avatar-large">U</div>
                 <div>
-                    <h2 id="staffDisplayName" style="font-size:1.3rem;font-weight:800;">Staff Name</h2>
-                    <p style="color:var(--text-secondary);font-size:0.86rem;">
-                        Employee ID: <strong id="staffDisplayCode" style="color:var(--accent-blue);">-</strong> | Assigned Depot: <strong id="staffDisplayDepot" style="color:#fff;">-</strong>
+                    <h2 id="staffDisplayName" style="font-size:1.25rem;font-weight:800;color:#0f172a;">Staff Name</h2>
+                    <p style="color:var(--text-muted);font-size:0.86rem;margin-top:2px;">
+                        Employee ID: <strong id="staffDisplayCode" style="color:#0284c7;">-</strong> | Assigned Depot: <strong id="staffDisplayDepot" style="color:#0f172a;">-</strong>
                     </p>
                 </div>
             </div>
-            <button class="btn-statement-view" onclick="openPrintModal()">📄 View Statement & Print</button>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="summary-grid">
-            <div class="sum-card">
-                <span>Total Credit (₹)</span>
-                <h2 id="staffTotalCredit" style="color:var(--accent-green);">₹0</h2>
+        <!-- Ledger Main Panel -->
+        <div class="comfort-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
+                    <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
+                </div>
+                <div>
+                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
+                </div>
             </div>
-            <div class="sum-card">
-                <span>Total Debit (₹)</span>
-                <h2 id="staffTotalDebit" style="color:var(--accent-red);">₹0</h2>
-            </div>
-            <div class="sum-card">
-                <span>Net Balance</span>
-                <h2 id="staffNetBalance" style="color:var(--accent-blue);">₹0</h2>
-            </div>
-        </div>
 
-        <!-- Ledger Table -->
-        <div class="panel-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:14px;padding:1.4rem;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-                <h3 style="font-size:1.05rem;font-weight:800;">📜 Ledger Transactions</h3>
-                <span id="trxCountBadge" style="color:var(--text-secondary);font-size:0.82rem;">0 entries</span>
-            </div>
-            <div class="table-responsive">
-                <table class="custom-table">
+            <!-- 1. Month-wise Summary Table (Zero Months Hidden) -->
+            <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                <table class="custom-table" id="annualSummaryTable">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Particular</th>
-                            <th>Mode</th>
-                            <th>Debit (₹)</th>
-                            <th>Credit (₹)</th>
-                            <th>Balance (₹)</th>
-                            <th>Status</th>
+                            <th style="width:14%;">Month</th>
+                            <th style="width:20%; text-align:right;">Debit</th>
+                            <th style="width:20%; text-align:right;">Credit</th>
+                            <th style="width:20%; text-align:right;">Balance</th>
+                            <th style="width:12%; text-align:center;">Type</th>
+                            <th style="width:14%; text-align:center;">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="staffLedgerBody"></tbody>
+                    <tbody id="annualSummaryTbody"></tbody>
                 </table>
+            </div>
+
+            <!-- 2. Detailed Month-wise Breakdown -->
+            <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="openPrintPreviewModal()">🖨️ Print Month Statement</button>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width:110px;">Date</th>
+                                <th style="min-width:320px;">Particular / Transaction Description</th>
+                                <th style="width:90px;">Mode</th>
+                                <th style="width:110px;text-align:right;">Debit (₹)</th>
+                                <th style="width:110px;text-align:right;">Credit (₹)</th>
+                                <th style="width:130px;text-align:right;">Balance (₹)</th>
+                                <th style="width:100px;text-align:center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthDetailTbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Compact Print Modal (Width: 380px) -->
-    <div id="printModal" class="modal">
-        <div class="modal-box-compact">
-            <div class="modal-top-bar">
-                <span>📄 Full Account Statement</span>
-                <button class="modal-close-btn" onclick="closePrintModal()">&times;</button>
-            </div>
-            <div id="printableReceipt" class="receipt-container">
-                <div class="receipt-header">
-                    <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
-                    <h2>RCM Consumer Products Private Limited</h2>
-                    <p id="receiptFullAddress">Depot Address</p>
-                    <p id="receiptContact">Mob: - | GSTIN: -</p>
-                    <span class="receipt-title">** FULL ACCOUNT STATEMENT **</span>
-                </div>
-                <div class="receipt-meta">
-                    <div>
-                        <p><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
-                        <p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
-                    </div>
-                    <div class="text-right">
-                        <p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
-                        <p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p>
-                    </div>
-                </div>
-                <table class="receipt-table">
-                    <thead><tr><th>Date/Desc</th><th class="text-right">Dr</th><th class="text-right">Cr</th><th class="text-right">Bal</th></tr></thead>
-                    <tbody id="rcptTableBody"></tbody>
-                </table>
-                <div class="receipt-summary">
-                    <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
-                    <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
-                    <div class="sum-row" style="margin-top:3px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
-                </div>
-            </div>
-            <div style="padding:0.8rem; background:#0c1322;" class="modal-actions">
-                <button class="print-green-btn" onclick="window.print()">🖨️ Print Full Statement</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Secure Password Modal with Current Password -->
+    <!-- Password Modal -->
     <div id="pwdModal" class="modal">
-        <div class="modal-box-compact">
+        <div class="modal-box">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
             <div style="padding:1.2rem;">
                 <form id="staffPwdForm">
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">Current Password</label>
-                        <input type="password" id="oldStaffPass" class="form-control" style="width:100%;padding:0.75rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required placeholder="Enter current password">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">Current Password</label>
+                        <input type="password" id="oldStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;background:#fff;" required placeholder="Enter current password">
                     </div>
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">New Password</label>
-                        <input type="password" id="newStaffPass" class="form-control" style="width:100%;padding:0.75rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required placeholder="Enter new password">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">New Password</label>
+                        <input type="password" id="newStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;background:#fff;" required placeholder="Enter new password">
                     </div>
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.3rem;">Confirm New Password</label>
-                        <input type="password" id="confirmStaffPass" class="form-control" style="width:100%;padding:0.75rem;background:var(--input-bg);border:1px solid var(--border-color);border-radius:8px;color:#fff;" required placeholder="Confirm new password">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">Confirm New Password</label>
+                        <input type="password" id="confirmStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;background:#fff;" required placeholder="Confirm new password">
                     </div>
-                    <button type="submit" id="btnStaffPwdSubmit" style="width:100%;padding:0.8rem;background:var(--accent-blue);color:#000;font-weight:800;border:none;border-radius:8px;cursor:pointer;margin-top:0.4rem;">Update Password</button>
+                    <button type="submit" id="btnStaffPwdSubmit" class="btn-action-nav" style="width:100%;justify-content:center;background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);color:#fff;border:none;padding:0.7rem;font-size:0.9rem;margin-top:0.4rem;">Update Password</button>
                 </form>
             </div>
         </div>
@@ -263,9 +341,12 @@
 
         let staffDataGlobal = {};
         let depotDataGlobal = {};
-        let staffLedgerRows = [];
+        let currentActiveStaffLedger = [];
+        let annualSummaryData = [];
+        let activeViewingMonthData = null;
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
         function showToast(msg) {
             const container = document.getElementById('toastContainer');
@@ -276,18 +357,29 @@
             setTimeout(() => { toast.remove(); }, 2500);
         }
 
-        function formatCleanDate(raw) {
-            if (!raw) return '-';
+        function parseDateObj(raw) {
+            if (!raw) return null;
             let str = String(raw).trim();
-            if (str === '-' || str === '') return '-';
-            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) return str.replace(/\//g, '-');
-            let d = new Date(raw);
-            if (isNaN(d.getTime())) {
-                let parts = str.split('T')[0].split(' ')[0].split('-');
-                if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+            if (str === '-' || str === '') return null;
+            let parts = str.match(/^(\d{1,2})[\/\-]([a-zA-Z]{3})[\/\-](\d{2,4})$/);
+            if (parts) {
+                let mIndex = monthNames.findIndex(m => m.toLowerCase() === parts[2].toLowerCase());
+                let yr = parseInt(parts[3], 10);
+                if (yr < 100) yr += 2000;
+                if (mIndex !== -1) return new Date(yr, mIndex, parseInt(parts[1], 10));
             }
-            if (!isNaN(d.getTime())) return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
-            return str.split(' 05:')[0].split('T')[0];
+            let d = new Date(raw);
+            if (!isNaN(d.getTime())) return d;
+            return null;
+        }
+
+        function formatCleanDate(raw) {
+            let d = parseDateObj(raw);
+            if (d && !isNaN(d.getTime())) {
+                return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
+            }
+            let str = String(raw || '').trim();
+            return str.split(' 05:')[0].split('T')[0] || '-';
         }
 
         function getTodayFormatted() {
@@ -299,7 +391,7 @@
             return new Promise((resolve, reject) => {
                 const cbName = 'staff_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 8000);
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 12000);
                 function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
                 window[cbName] = function(data) { cleanup(); resolve(data); };
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
@@ -341,11 +433,10 @@
 
                 staffDataGlobal = res.staff || {};
                 depotDataGlobal = res.depot || {};
-                staffLedgerRows = res.ledger || [];
+                currentActiveStaffLedger = res.ledger || [];
 
                 setSafeImage('companyLogoBox', res.companyLogo);
                 setSafeImage('staffLogoBox', res.staffLogo);
-                setSafeImage('receiptCompanyLogoBox', res.companyLogo);
 
                 const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
                 const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
@@ -358,7 +449,7 @@
 
                 const avatarBox = document.getElementById('staffAvatarBox');
                 if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
-                    avatarBox.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+                    avatarBox.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:4px;object-fit:cover;">`;
                 } else {
                     avatarBox.textContent = sName.charAt(0).toUpperCase();
                 }
@@ -372,19 +463,188 @@
                 document.getElementById('headerDepotTitle').textContent = `${dTitle} Depot`;
                 document.getElementById('topDepotAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
 
-                renderLedgerTable(staffLedgerRows);
+                populateYearDropdown(currentActiveStaffLedger);
+                renderAnnualSummaryLedger();
             } catch (err) {
                 console.error(err);
             }
         }
 
-        function renderLedgerTable(list) {
-            const tbody = document.getElementById('staffLedgerBody');
-            document.getElementById('trxCountBadge').textContent = `${list.length} entries`;
+        function populateYearDropdown(rows) {
+            const yearSelect = document.getElementById('ledgerYearFilter');
+            const yearsSet = new Set();
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            
+            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
+            yearsSet.add(curFyStart);
 
-            let totalDr = 0, totalCr = 0, runningBal = 0, html = '';
+            rows.forEach(r => {
+                let d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                if (d) {
+                    let fyStart = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
+                    yearsSet.add(fyStart);
+                }
+            });
 
-            list.forEach(r => {
+            const sortedYears = Array.from(yearsSet).sort((a,b) => b - a);
+            let optionsHtml = '';
+            sortedYears.forEach(y => {
+                let isSel = (y === curFyStart) ? 'selected' : '';
+                optionsHtml += `<option value="${y}" ${isSel}>FY: ${y}-${String(y+1).slice(2)}</option>`;
+            });
+            yearSelect.innerHTML = optionsHtml;
+        }
+
+        function renderAnnualSummaryLedger() {
+            hideMonthDetails();
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0;
+            const monthlyData = {};
+
+            fyMonthSequence.forEach(mIndex => {
+                monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] };
+            });
+
+            validRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+
+                if (d < fyStartDate) {
+                    if (isApproved) openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    const m = d.getMonth();
+                    if (monthlyData[m]) {
+                        monthlyData[m].rows.push(r);
+                        if (isApproved) {
+                            monthlyData[m].debit += dr;
+                            monthlyData[m].credit += cr;
+                        }
+                    }
+                }
+            });
+
+            annualSummaryData = [];
+            let runningBal = openingBalance;
+            let tbodyHtml = '';
+
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
+            let opnType = openingBalance >= 0 ? 'CR' : 'DR';
+            annualSummaryData.push({
+                monthLabel: 'OPN',
+                debit: 0,
+                credit: openingBalance > 0 ? openingBalance : 0,
+                balance: runningBal,
+                type: opnType,
+                rows: []
+            });
+
+            tbodyHtml += `
+            <tr style="background:#ffffff; font-weight:700;">
+                <td style="color:#0f172a;">OPN</td>
+                <td style="text-align:right;">0</td>
+                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
+                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
+                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
+                <td style="text-align:center;">-</td>
+            </tr>`;
+
+            fyMonthSequence.forEach(mIndex => {
+                const mObj = monthlyData[mIndex];
+                const mLabel = monthNames[mIndex];
+                const mDr = mObj.debit;
+                const mCr = mObj.credit;
+
+                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
+                    return;
+                }
+
+                runningBal += (mCr - mDr);
+                const balType = runningBal >= 0 ? 'CR' : 'DR';
+                const balFormatted = Math.abs(runningBal).toFixed(2);
+
+                annualSummaryData.push({
+                    monthLabel: mLabel,
+                    monthIndex: mIndex,
+                    year: (mIndex >= 3) ? startYear : startYear + 1,
+                    debit: mDr,
+                    credit: mCr,
+                    balance: runningBal,
+                    type: balType,
+                    rows: mObj.rows
+                });
+
+                tbodyHtml += `
+                <tr style="background:#ffffff;">
+                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
+                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
+                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
+                    <td style="text-align:center;">
+                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
+        }
+
+        function viewMonthDetails(mIndex) {
+            const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+            const monthName = monthNames[mIndex];
+
+            const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+            document.getElementById('monthDetailHeader').textContent = `📅 Detailed Ledger: ${monthName} ${actualYear} (${sName})`;
+
+            let opnBalMonth = 0;
+            const firstOfThisMonth = new Date(actualYear, mIndex, 1);
+
+            currentActiveStaffLedger.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                if (d && d < firstOfThisMonth && isApproved) {
+                    opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
+                }
+            });
+
+            let runningBal = opnBalMonth;
+            let totalDr = 0, totalCr = 0;
+            let html = '';
+
+            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
+            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
+
+            html += `<tr class="row-opening-balance">
+                <td><strong>01 ${monthName}</strong></td>
+                <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
+                <td>-</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
+            </tr>`;
+
+            mData.rows.forEach(r => {
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
@@ -400,76 +660,236 @@
                     runningBal += (cr - dr);
                 }
 
-                const statusColor = isApproved ? 'var(--accent-green)' : 'var(--accent-amber)';
-                const statusText = isApproved ? 'Approved' : 'Pending';
-
                 html += `<tr>
                     <td><strong>${dt}</strong></td>
-                    <td>${part}</td>
+                    <td style="white-space:normal;min-width:320px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-red)' : '#64748b'};font-weight:bold;">${dr > 0 ? '₹' + dr : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-green)' : '#64748b'};font-weight:bold;">${cr > 0 ? '₹' + cr : '-'}</td>
-                    <td style="color:var(--accent-blue);font-weight:bold;">${isApproved ? '₹' + runningBal : 'Pending'}</td>
-                    <td style="color:${statusColor};font-weight:bold;">${statusText}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
 
-            tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transactions found.</td></tr>`;
-            document.getElementById('staffTotalCredit').textContent = `₹${totalCr.toLocaleString('en-IN')}`;
-            document.getElementById('staffTotalDebit').textContent = `₹${totalDr.toLocaleString('en-IN')}`;
-            const net = totalCr - totalDr;
-            document.getElementById('staffNetBalance').textContent = `₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+            activeViewingMonthData = {
+                monthLabel: `${monthName} ${actualYear}`,
+                openingBal: opnBalMonth,
+                rows: mData.rows,
+                totalDr: totalDr,
+                totalCr: totalCr,
+                closingBal: runningBal
+            };
+
+            document.getElementById('monthDetailTbody').innerHTML = html;
+            document.getElementById('annualSummaryContainer').style.display = 'none';
+            document.getElementById('monthDetailContainer').style.display = 'block';
         }
 
-        function openPrintModal() {
-            const addr = getField(depotDataGlobal, 'Depot Address');
-            const dist = getField(depotDataGlobal, 'Dristric', 'District');
-            const state = getField(depotDataGlobal, 'State Name');
-            const pin = getField(depotDataGlobal, 'Pin Code', 'Pincode');
-            const mob = getField(depotDataGlobal, 'Mob. No.', 'Mobile');
-            const gstin = getField(depotDataGlobal, 'GSTIN');
+        function openPrintPreviewModal() {
+            if (!activeViewingMonthData) {
+                showToast('No active month data to preview.');
+                return;
+            }
 
-            document.getElementById('receiptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
-            document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            const depot = depotDataGlobal || {};
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile');
+            const gstin = getField(depot, 'GSTIN');
 
-            document.getElementById('rcptStaffName').textContent = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
-            document.getElementById('rcptStaffCode').textContent = getField(staffDataGlobal, 'Staff Code') || staffCode;
-            document.getElementById('rcptDepotName').textContent = getField(depotDataGlobal, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
-            document.getElementById('rcptPrintDate').textContent = getTodayFormatted();
+            const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            const contact = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            const dName = getField(depot, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
+            const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+            const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
+            const period = activeViewingMonthData.monthLabel;
 
-            let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
+            document.getElementById('rcptFullAddress').textContent = fullAddr;
+            document.getElementById('rcptContact').textContent = contact;
+            document.getElementById('rcptStaffName').textContent = sName;
+            document.getElementById('rcptStaffCode').textContent = sCode;
+            document.getElementById('rcptDepotName').textContent = dName;
+            document.getElementById('rcptPrintPeriod').textContent = period;
 
-            staffLedgerRows.forEach(r => {
+            let html = '';
+            let runningBal = activeViewingMonthData.openingBal;
+
+            let opCr = runningBal > 0 ? runningBal : 0;
+            let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+
+            html += `<tr style="font-weight:bold; background:#f8fafc;">
+                <td style="padding:4px 2px;">01-B/F</td>
+                <td style="padding:4px 2px;">Opening Balance</td>
+                <td class="text-right" style="padding:4px 2px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:4px 2px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
+            </tr>`;
+
+            activeViewingMonthData.rows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
-                
                 if (appRaw.toLowerCase() === 'approved') {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
-
-                    totalDr += dr;
-                    totalCr += cr;
                     runningBal += (cr - dr);
 
                     html += `<tr>
-                        <td><strong>${dt}</strong><br><span style="font-size:0.68rem;color:#444;">${part}</span></td>
-                        <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                        <td style="padding:4px 2px;">${dt}</td>
+                        <td style="padding:4px 2px; word-break:break-word;">${part}</td>
+                        <td class="text-right" style="padding:4px 2px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:4px 2px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
             });
 
-            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="4" class="text-center">No approved transactions.</td></tr>`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
-            const finalNet = totalCr - totalDr;
+            document.getElementById('rcptTableBody').innerHTML = html;
+
+            const opBal = activeViewingMonthData.openingBal;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
+            const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            document.getElementById('printModal').style.display = 'block';
+            const displayEl = document.getElementById('previewSlipDisplay');
+            displayEl.innerHTML = `
+                <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
+                    <h2 style="font-size:11pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
+                    <p style="font-size:8pt; margin:0; line-height:1.2;">${fullAddr}</p>
+                    <p style="font-size:8pt; margin:2px 0 0 0;">${contact}</p>
+                    <span style="font-weight:800; margin-top:4px; display:block; font-size:9pt;">** MONTH ACCOUNT STATEMENT **</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:8.5pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+                    <div>
+                        <p style="margin:0;"><strong>Name:</strong> ${sName}</p>
+                        <p style="margin:0;"><strong>Code:</strong> ${sCode}</p>
+                    </div>
+                    <div class="text-right">
+                        <p style="margin:0;"><strong>Depot:</strong> ${dName}</p>
+                        <p style="margin:0;"><strong>Period:</strong> ${period}</p>
+                    </div>
+                </div>
+                <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8.5pt;">
+                    <thead>
+                        <tr>
+                            <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Date</th>
+                            <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Particulars</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Dr</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Cr</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody>${html}</tbody>
+                </table>
+                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; font-size:8.5pt; font-weight:bold;">
+                    <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span>Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span>Rs.${activeViewingMonthData.totalDr.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span>Rs.${activeViewingMonthData.totalCr.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-top:3px; border-top:1px dashed #000; padding-top:3px;"><span>CLOSING BALANCE:</span><span>Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                </div>
+            `;
+
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
-        function closePrintModal() { document.getElementById('printModal').style.display = 'none'; }
+
+        function closePrintPreviewModal() {
+            document.getElementById('printPreviewModal').style.display = 'none';
+        }
+
+        function triggerDirectBrowserPrint() {
+            window.print();
+        }
+
+        function hideMonthDetails() {
+            document.getElementById('annualSummaryContainer').style.display = 'block';
+            document.getElementById('monthDetailContainer').style.display = 'none';
+        }
+
+        function exportFullDetailedLedgerToCSV() {
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
+            const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+            const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
+            const dName = getField(depotDataGlobal, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
+
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0;
+            let currentFYRows = [];
+
+            validRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+
+                if (d < fyStartDate) {
+                    if (isApproved) openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    currentFYRows.push(r);
+                }
+            });
+
+            if (currentFYRows.length === 0 && openingBalance === 0) {
+                showToast('No ledger transactions to export for this FY.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `Staff Name,${sName},Staff Code,${sCode}\n`;
+            csvContent += `Depot,${dName},Period,FY ${startYear}-${startYear + 1}\n\n`;
+            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
+
+            let runningBal = openingBalance;
+            let totalDr = 0, totalCr = 0;
+
+            let opCr = openingBalance > 0 ? openingBalance : 0;
+            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
+
+            currentFYRows.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+                }
+
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+            });
+
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Full_Ledger_${sCode}_${periodLabel}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
+        }
 
         function openPasswordModal() {
             document.getElementById('staffPwdForm').reset();
@@ -477,7 +897,6 @@
         }
         function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 
-        // Secure Password Change Verification
         document.getElementById('staffPwdForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const oldPass = document.getElementById('oldStaffPass').value.trim();

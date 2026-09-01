@@ -334,7 +334,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History -->
+        <!-- 2. Records History (With Year/Period Filter & Export Excel) -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
             <div class="table-toolbar">
@@ -431,7 +431,7 @@
                         <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
                         <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
                     </div>
-                    <div class="ledger-actions-group">
+                    <div>
                         <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
                     </div>
                 </div>
@@ -700,19 +700,44 @@
             }
         }
 
+        // Populate Dispatch History Filter with Today + Financial Years + Months
         function populateHistoryMonthDropdown(dispatches) {
             const selectBox = document.getElementById('historyPeriodFilter');
-            const monthSet = new Set();
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
+
+            const fySet = new Set();
+            fySet.add(curFyStart);
+
+            const monthMap = new Map();
+
             dispatches.forEach(r => {
-                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'));
-                const parts = cleanDate.split('-');
-                if (parts.length === 3) monthSet.add(`${parts[1]}-${parts[2]}`);
+                const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
+                if (d) {
+                    const fy = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
+                    fySet.add(fy);
+
+                    const mKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                    monthMap.set(mKey, `${monthNames[d.getMonth()]} ${d.getFullYear()}`);
+                }
             });
 
-            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
-            Array.from(monthSet).forEach(mKey => {
-                optionsHtml += `<option value="${mKey}">🗓️ ${mKey} Month</option>`;
+            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option>`;
+            optionsHtml += `<option value="ALL">🌐 All Records</option>`;
+
+            // Add Financial Years
+            const sortedFys = Array.from(fySet).sort((a, b) => b - a);
+            sortedFys.forEach(fy => {
+                optionsHtml += `<option value="FY_${fy}">💼 FY ${fy}-${String(fy+1).slice(2)}</option>`;
             });
+
+            // Add Individual Months
+            const sortedMonths = Array.from(monthMap.keys()).sort().reverse();
+            sortedMonths.forEach(mKey => {
+                optionsHtml += `<option value="${mKey}">🗓️ ${monthMap.get(mKey)}</option>`;
+            });
+
             selectBox.innerHTML = optionsHtml;
         }
 
@@ -801,6 +826,7 @@
             tbody.innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
         }
 
+        // Filter Table with Support for Today, Financial Years & Specific Months
         function filterHistoryTable() {
             const periodFilter = document.getElementById('historyPeriodFilter').value;
             const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
@@ -810,7 +836,9 @@
             if (loadOlderBtn) loadOlderBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
 
             const filtered = loadedDispatches.filter(r => {
-                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')).toLowerCase();
+                const rawDate = getField(r, 'Invoice Dispatch Date', 'Date');
+                const cleanDate = formatCleanDate(rawDate).toLowerCase();
+                const d = parseDateObj(rawDate);
 
                 if (query) {
                     const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
@@ -823,8 +851,18 @@
 
                 if (periodFilter === "TODAY") {
                     if (cleanDate !== todayStr) return false;
+                } else if (periodFilter.startsWith("FY_")) {
+                    if (!d) return false;
+                    const startYear = parseInt(periodFilter.replace("FY_", ""), 10);
+                    const fyStart = new Date(startYear, 3, 1);
+                    const fyEnd = new Date(startYear + 1, 2, 31, 23, 59, 59);
+                    if (d < fyStart || d > fyEnd) return false;
                 } else if (periodFilter !== "ALL") {
-                    if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
+                    if (!d) return false;
+                    const parts = periodFilter.split('-');
+                    const targetYear = parseInt(parts[0], 10);
+                    const targetMonth = parseInt(parts[1], 10);
+                    if (d.getFullYear() !== targetYear || (d.getMonth() + 1) !== targetMonth) return false;
                 }
                 return true;
             });

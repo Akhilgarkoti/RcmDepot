@@ -215,7 +215,7 @@
 
         .stat-banner {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto;
             gap: 0.8rem;
             align-items: center;
             background: #ffffff;
@@ -224,6 +224,12 @@
             border: 1px solid var(--theme-border);
             margin-bottom: 1rem;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .ledger-actions-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.84rem; width: 100%; max-width: 680px; margin: 0 auto; border: 1px solid #ddd; }
@@ -295,7 +301,7 @@
     <!-- Anti Double-Click / Saving Loading Screen -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="global-spinner"></div>
-        <div class="global-loading-text" id="globalLoadingMsg">Saving Data to Google Sheets... Please wait!</div>
+        <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
     </div>
 
     <div id="toastContainer" class="toast-container"></div>
@@ -472,7 +478,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal (Extra-Wide Layout) -->
+    <!-- Modal 3: Statement View Modal (With Separate View, Print & Excel Export Buttons) -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -484,7 +490,12 @@
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL CREDIT</span><strong id="modTotalCredit" style="color:var(--accent-cr);font-size:1.15rem;">₹0</strong></div>
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL DEBIT</span><strong id="modTotalDebit" style="color:var(--accent-dr);font-size:1.15rem;">₹0</strong></div>
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">CURRENT NET BALANCE</span><strong id="modNetBalance" style="color:var(--accent-bal);font-size:1.15rem;">₹0</strong></div>
-                    <div><button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.6rem 1.2rem;font-size:0.9rem;" onclick="openPrintPreview()">🖨️ View Statement & Print</button></div>
+                    
+                    <div class="ledger-actions-group">
+                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.5rem 0.85rem;" onclick="openPrintPreview()">👁️ View Statement</button>
+                        <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.5rem 0.85rem;" onclick="directPrintStatement()">🖨️ Print</button>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.5rem 0.85rem;" onclick="exportLedgerToCSV()">📥 Export Excel</button>
+                    </div>
                 </div>
                 <div class="table-responsive" style="max-height: 520px;">
                     <table class="custom-table">
@@ -506,7 +517,7 @@
         </div>
     </div>
 
-    <!-- Modal 4: Statement Print Modal -->
+    <!-- Modal 4: Statement Print & Preview Modal -->
     <div id="printModal" class="modal">
         <div class="modal-box" style="max-width: 720px;">
             <div class="modal-top-bar"><span>📄 Printable Statement View</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
@@ -794,19 +805,16 @@
             } catch (err) { console.error(err); }
         }
 
-        // Render Dispatch Table with Duplicate Sorting (Duplicates Appear at the Top)
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
 
-            // Count frequency of each invoice
             const counts = {};
             list.forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
                 if (inv) counts[inv] = (counts[inv] || 0) + 1;
             });
 
-            // Partition list into Duplicates (top) and Standard (chronological reverse)
             const duplicates = [];
             const regulars = [];
 
@@ -900,7 +908,6 @@
             document.getElementById('editDispatchModal').style.display = 'none';
         }
 
-        // Edit Dispatch Form Submit
         document.getElementById('editDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const id = document.getElementById('editDispId').value;
@@ -912,7 +919,7 @@
             const rem = document.getElementById('editDispRemark').value.trim();
 
             closeEditDispatchModal();
-            showScreenBlocker('Updating dispatch record in sheet...');
+            showScreenBlocker('Updating dispatch record...');
 
             const payload = {
                 action: 'editDispatchRow',
@@ -1199,6 +1206,59 @@
         }
         function closePrintPreview() { document.getElementById('printModal').style.display = 'none'; }
 
+        function directPrintStatement() {
+            openPrintPreview();
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        // Export Ledger Directly to CSV/Excel
+        function exportLedgerToCSV() {
+            if (!currentActiveStaffLedger || currentActiveStaffLedger.length === 0) {
+                showToast('No ledger data available to export.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `Staff Name,${currentActiveStaffName},Staff Code,${currentActiveStaffCode}\n`;
+            csvContent += `Depot,${depotNameStored},Generated On,${getTodayFormatted()}\n\n`;
+            csvContent += "Date,Particular / Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
+
+            let totalDr = 0, totalCr = 0, runningBal = 0;
+
+            currentActiveStaffLedger.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+                }
+
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+            });
+
+            const net = totalCr - totalDr;
+            csvContent += `\nTOTALS,,,"${totalDr.toFixed(2)}","${totalCr.toFixed(2)}","Net: ${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Ledger_${currentActiveStaffCode}_${currentActiveStaffName.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Ledger Excel (.csv) downloaded successfully!');
+        }
+
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
         function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 
@@ -1235,7 +1295,6 @@
             }
         });
 
-        // 1. SAVE DISPATCH ENTRY WITH GLOBAL SCREEN BLOCKER
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const rawInput = document.getElementById('dispInvoiceDigits').value.trim();

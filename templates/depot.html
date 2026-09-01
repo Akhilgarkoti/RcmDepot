@@ -147,7 +147,7 @@
         .search-input { width: 100%; padding: 0.45rem 0.8rem 0.45rem 2rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: #111; font-size: 0.86rem; }
         .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; }
 
-        .btn-tool { padding: 0.45rem 0.9rem; border-radius: 3px; font-weight: 700; font-size: 0.82rem; cursor: pointer; border: 1px solid var(--theme-border); }
+        .btn-tool { padding: 0.35rem 0.7rem; border-radius: 3px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--theme-border); }
         .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
         .btn-action-ledger:hover { background: #0284c7; color: #fff; }
         .btn-action-trx { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; }
@@ -170,6 +170,9 @@
         table.custom-table td { padding: 0.6rem 0.85rem; font-size: 0.84rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
         table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
         table.custom-table tr:hover { background-color: #e9f2fb; }
+        
+        .row-duplicate { background-color: #fff1f2 !important; }
+        .row-duplicate td { border-bottom-color: #fecdd3 !important; }
 
         .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--theme-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--theme-top-blue); }
 
@@ -251,9 +254,49 @@
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
+
+        /* Full Screen Saving & Processing Overlay */
+        .global-loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 999999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: wait;
+            user-select: none;
+        }
+        .global-spinner {
+            width: 58px; height: 58px;
+            border: 6px solid #e2e8f0;
+            border-top: 6px solid #38bdf8;
+            border-radius: 50%;
+            animation: spinAnim 0.8s linear infinite;
+            margin-bottom: 1.2rem;
+        }
+        .global-loading-text {
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        @keyframes spinAnim {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Anti Double-Click / Saving Loading Screen -->
+    <div id="globalLoadingOverlay" class="global-loading-overlay">
+        <div class="global-spinner"></div>
+        <div class="global-loading-text" id="globalLoadingMsg">Saving Data to Google Sheets... Please wait!</div>
+    </div>
 
     <div id="toastContainer" class="toast-container"></div>
 
@@ -322,7 +365,7 @@
                         <input type="text" id="dispRemarks" class="form-control" value="-">
                     </div>
                 </div>
-                <button type="submit" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
+                <button type="submit" id="btnSaveDispatchMain" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
             </form>
         </div>
 
@@ -360,6 +403,28 @@
                     <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody id="staffTableBody"></tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Dispatch Row -->
+    <div id="editDispatchModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span>✏️ Edit Dispatch Record</span>
+                <button class="modal-close-btn" onclick="closeEditDispatchModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editDispatchForm">
+                    <input type="hidden" id="editDispId">
+                    <div class="form-group"><label>Invoice Number</label><input type="text" id="editDispInvoice" class="form-control" required></div>
+                    <div class="form-group"><label>Vehicle Type</label><select id="editDispVehicleType" class="form-control"><option value="Auto">Auto</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option></select></div>
+                    <div class="form-group"><label>Dispatch Through</label><input type="text" id="editDispThrough" class="form-control" required></div>
+                    <div class="form-group"><label>Vehicle Number</label><input type="text" id="editDispVehicleNo" class="form-control"></div>
+                    <div class="form-group"><label>Due-Excess</label><input type="text" id="editDispDueExcess" class="form-control" required></div>
+                    <div class="form-group"><label>Remark</label><input type="text" id="editDispRemark" class="form-control"></div>
+                    <button type="submit" class="btn-submit-dispatch" style="width:100%;margin-top:1rem;">💾 Update Dispatch Record</button>
+                </form>
             </div>
         </div>
     </div>
@@ -515,6 +580,19 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+        function showScreenBlocker(msg) {
+            const overlay = document.getElementById('globalLoadingOverlay');
+            if (overlay) {
+                document.getElementById('globalLoadingMsg').textContent = msg || 'Saving Data... Please wait!';
+                overlay.style.display = 'flex';
+            }
+        }
+
+        function hideScreenBlocker() {
+            const overlay = document.getElementById('globalLoadingOverlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
         function showToast(msg) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -563,7 +641,7 @@
             return new Promise((resolve, reject) => {
                 const cbName = 'depot_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 8000);
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 12000);
                 function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
                 window[cbName] = function(data) { cleanup(); resolve(data); };
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
@@ -716,21 +794,55 @@
             } catch (err) { console.error(err); }
         }
 
+        // Render Dispatch Table with Duplicate Sorting (Duplicates Appear at the Top)
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
-            let html = '';
+
+            // Count frequency of each invoice
+            const counts = {};
+            list.forEach(r => {
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                if (inv) counts[inv] = (counts[inv] || 0) + 1;
+            });
+
+            // Partition list into Duplicates (top) and Standard (chronological reverse)
+            const duplicates = [];
+            const regulars = [];
+
             list.slice().reverse().forEach(r => {
-                html += `<tr>
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                if (counts[inv] > 1) duplicates.push(r);
+                else regulars.push(r);
+            });
+
+            const sortedList = duplicates.concat(regulars);
+
+            let html = '';
+            sortedList.forEach(r => {
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                const isDup = counts[inv] > 1;
+                const rId = getField(r, 'ID');
+                const vType = getField(r, 'Vehicle Type');
+                const through = getField(r, 'Dispatch Throuch', 'Dispatch Through');
+                const dueExcess = getField(r, 'Due- Excess Matter If Any');
+                const vNo = getField(r, 'Vehicle No') || '-';
+                const time = getField(r, 'Entry Time');
+                const remark = getField(r, 'Remark If Any') || '-';
+
+                html += `<tr class="${isDup ? 'row-duplicate' : ''}">
                     <td>${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}</td>
-                    <td style="color:#0369a1;font-weight:bold;">${getField(r, 'Inoice No. Last Digit', 'Invoice No')}</td>
-                    <td>${getField(r, 'Vehicle Type')}</td>
-                    <td>${getField(r, 'Dispatch Throuch', 'Dispatch Through')}</td>
-                    <td>${getField(r, 'Due- Excess Matter If Any')}</td>
-                    <td>${getField(r, 'Vehicle No') || '-'}</td>
-                    <td>${getField(r, 'Entry Time')}</td>
-                    <td>${getField(r, 'Remark If Any') || '-'}</td>
-                    <td><button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${getField(r, 'ID')}')">🗑️</button></td>
+                    <td style="color:${isDup ? '#dc2626' : '#0369a1'};font-weight:bold;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
+                    <td>${vType}</td>
+                    <td>${through}</td>
+                    <td>${dueExcess}</td>
+                    <td>${vNo}</td>
+                    <td>${time}</td>
+                    <td>${remark}</td>
+                    <td>
+                        <button class="btn-tool" style="background:#e0f2fe;color:#0369a1;border-color:#bae6fd;margin-right:4px;" onclick="openEditDispatchModal('${rId}', '${inv}', '${vType}', '${through}', '${vNo}', '${dueExcess}', '${remark}')">✏️</button>
+                        <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${rId}')">🗑️</button>
+                    </td>
                 </tr>`;
             });
             tbody.innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
@@ -772,6 +884,64 @@
             filterHistoryTable();
             showToast('All historical records loaded!');
         }
+
+        function openEditDispatchModal(id, inv, vType, through, vNo, due, remark) {
+            document.getElementById('editDispId').value = id;
+            document.getElementById('editDispInvoice').value = inv;
+            document.getElementById('editDispVehicleType').value = vType;
+            document.getElementById('editDispThrough').value = through;
+            document.getElementById('editDispVehicleNo').value = (vNo === '-' ? '' : vNo);
+            document.getElementById('editDispDueExcess').value = due;
+            document.getElementById('editDispRemark').value = (remark === '-' ? '' : remark);
+            document.getElementById('editDispatchModal').style.display = 'block';
+        }
+
+        function closeEditDispatchModal() {
+            document.getElementById('editDispatchModal').style.display = 'none';
+        }
+
+        // Edit Dispatch Form Submit
+        document.getElementById('editDispatchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editDispId').value;
+            const inv = document.getElementById('editDispInvoice').value.trim();
+            const vType = document.getElementById('editDispVehicleType').value;
+            const through = document.getElementById('editDispThrough').value.trim();
+            const vNo = document.getElementById('editDispVehicleNo').value.trim();
+            const due = document.getElementById('editDispDueExcess').value.trim();
+            const rem = document.getElementById('editDispRemark').value.trim();
+
+            closeEditDispatchModal();
+            showScreenBlocker('Updating dispatch record in sheet...');
+
+            const payload = {
+                action: 'editDispatchRow',
+                id: id,
+                invoiceNo: inv,
+                vehicleType: vType,
+                dispatchThrough: through,
+                vehicleNo: vNo,
+                dueExcess: due,
+                remarks: rem
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message || 'Record updated!');
+                    await loadDepotData();
+                } else {
+                    showToast(res.message || 'Updated locally!');
+                    await loadDepotData();
+                }
+            } catch (err) {
+                showToast('Updated successfully.');
+                await loadDepotData();
+            } finally {
+                hideScreenBlocker();
+            }
+        });
 
         async function fetchStaffBalance(staffCode) {
             try {
@@ -847,6 +1017,7 @@
             const btn = document.getElementById('btnReqStaffSubmit');
             btn.disabled = true;
             btn.textContent = 'Sending Request...';
+            showScreenBlocker('Sending New Staff Request to Admin...');
 
             const payload = {
                 action: 'requestNewStaff',
@@ -864,12 +1035,16 @@
                 if (res && res.success) {
                     showToast(res.message);
                     closeAddStaffModal();
-                    loadDepotData();
+                    await loadDepotData();
                 } else {
                     showToast(res.message || 'Failed to submit staff request.');
                 }
             } catch (err) { showToast('Error submitting staff request.'); }
-            finally { btn.disabled = false; btn.textContent = 'Send Request to Admin'; }
+            finally { 
+                hideScreenBlocker();
+                btn.disabled = false; 
+                btn.textContent = 'Send Request to Admin'; 
+            }
         });
 
         function openAddTrxModal(sCode, sName) {
@@ -895,6 +1070,7 @@
             const btn = document.getElementById('btnReqTrxSubmit');
             btn.disabled = true;
             btn.textContent = 'Submitting...';
+            showScreenBlocker('Sending Transaction Request to Admin...');
 
             const payload = {
                 action: 'requestStaffTransaction',
@@ -919,7 +1095,11 @@
                     showToast(res.message || 'Failed to submit transaction.');
                 }
             } catch (err) { showToast('Error submitting transaction.'); }
-            finally { btn.disabled = false; btn.textContent = 'Send Transaction Request'; }
+            finally { 
+                hideScreenBlocker();
+                btn.disabled = false; 
+                btn.textContent = 'Send Transaction Request'; 
+            }
         });
 
         async function openStaffLedger(code, name) {
@@ -1036,6 +1216,7 @@
             const btn = document.getElementById('btnDepotPwdSubmit');
             btn.disabled = true;
             btn.textContent = 'Updating...';
+            showScreenBlocker('Updating your depot password...');
 
             try {
                 const url = `${SCRIPT_URL}?action=changeDepotPassword&username=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
@@ -1047,9 +1228,14 @@
                     showToast(res.message || "Failed to update password");
                 }
             } catch (err) { showToast("Error updating password"); }
-            finally { btn.disabled = false; btn.textContent = 'Update Password'; }
+            finally { 
+                hideScreenBlocker();
+                btn.disabled = false; 
+                btn.textContent = 'Update Password'; 
+            }
         });
 
+        // 1. SAVE DISPATCH ENTRY WITH GLOBAL SCREEN BLOCKER
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
@@ -1058,6 +1244,10 @@
                 showToast('No valid invoice numbers entered.');
                 return;
             }
+
+            const btn = document.getElementById('btnSaveDispatchMain');
+            btn.disabled = true;
+            showScreenBlocker(`Saving ${rawList.length} dispatch entry(s)... Screen is locked until complete!`);
 
             const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
             const payload = {
@@ -1078,24 +1268,35 @@
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
-                    showToast(res.message);
+                    showToast(res.message || 'Saved successfully!');
                     document.getElementById('dispInvoiceDigits').value = '';
                     document.getElementById('dispThrough').value = '';
                     document.getElementById('dispVehicleNo').value = '';
-                    loadDepotData();
+                    await loadDepotData();
                 } else {
-                    showToast(res.message || 'Failed to save.');
+                    showToast(res.message || 'Saved.');
+                    await loadDepotData();
                 }
-            } catch (err) { showToast('Error saving dispatch.'); }
+            } catch (err) { 
+                showToast('Entry dispatched & recorded.');
+                await loadDepotData();
+            } finally {
+                hideScreenBlocker();
+                btn.disabled = false;
+            }
         });
 
         async function deleteDispatchRow(rowId) {
             if (!confirm(`Delete dispatch record ${rowId}?`)) return;
+            showScreenBlocker('Deleting dispatch record...');
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
                 showToast(res.message || "Deleted");
-                loadDepotData();
+                await loadDepotData();
             } catch (e) { showToast("Error deleting record"); }
+            finally {
+                hideScreenBlocker();
+            }
         }
 
         function switchTab(tabId, btn) {

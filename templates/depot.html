@@ -156,13 +156,14 @@
         .btn-action-trx { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; }
         .btn-action-trx:hover { background: #d97706; color: #fff; }
 
-        .table-responsive { width: 100%; max-height: 540px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
+        /* Increased Height / Length for All Tables */
+        .table-responsive { width: 100%; max-height: 720px; min-height: 380px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
             position: sticky; top: 0; z-index: 20; 
-            padding: 0.65rem 0.9rem; 
+            padding: 0.75rem 0.95rem; 
             color: #ffffff; 
-            font-size: 0.78rem; 
+            font-size: 0.82rem; 
             font-weight: 700; 
             text-transform: uppercase; 
             background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
@@ -170,7 +171,7 @@
             border-bottom: 2px solid #1a304a; 
             letter-spacing: 0.3px;
         }
-        table.custom-table td { padding: 0.6rem 0.85rem; font-size: 0.84rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
+        table.custom-table td { padding: 0.7rem 0.95rem; font-size: 0.86rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
         table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
         table.custom-table tr:hover { background-color: #e9f2fb; }
         
@@ -185,24 +186,24 @@
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
         .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
-        /* Modal Dialogs */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 1rem; }
+        /* Modal Dialogs (Expanded Vertical Height & Length) */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
         
         .modal-box { 
             background: #ffffff; 
-            margin: 1.5rem auto; 
+            margin: 1rem auto; 
             width: 95%; 
             max-width: 540px; 
-            border-radius: 5px; 
+            border-radius: 6px; 
             border: 2px solid var(--theme-mid-blue); 
             box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
             overflow: hidden; 
         }
         
         .modal-box-large { 
-            width: 95% !important; 
-            max-width: 1250px !important; 
-            margin: 1rem auto !important; 
+            width: 96% !important; 
+            max-width: 1350px !important; 
+            margin: 0.8rem auto !important; 
         }
 
         .modal-box-compact { max-width: 440px !important; }
@@ -211,7 +212,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 0.65rem 1.2rem; 
+            padding: 0.75rem 1.3rem; 
             background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
             border-bottom: 1px solid #1a304a; 
             color: #ffffff;
@@ -334,7 +335,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History (With Year/Period Filter & Export Excel) -->
+        <!-- 2. Records History (High Length Table) -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
             <div class="table-toolbar">
@@ -347,7 +348,7 @@
                     <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.85rem;" onclick="exportDispatchToCSV()">📥 Export Excel</button>
                 </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 640px;">
                 <table class="custom-table" id="historyTable">
                     <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
                     <tbody id="dispatchTableBody"></tbody>
@@ -364,7 +365,7 @@
                 <h3>👥 Assigned Staff and Ledger Details</h3>
                 <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height: 640px;">
                 <table class="custom-table">
                     <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody id="staffTableBody"></tbody>
@@ -416,7 +417,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal with Year Filter & Full Details Export -->
+    <!-- Modal 3: Statement View Modal (Increased Length/Height) -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -436,8 +437,8 @@
                     </div>
                 </div>
 
-                <!-- Monthly Summary Table (Zero Months Hidden) -->
-                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 480px; background:#fff;">
+                <!-- Monthly Summary Table (Increased Length / Max Height to 620px) -->
+                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
                             <tr>
@@ -453,13 +454,13 @@
                     </table>
                 </div>
 
-                <!-- Detailed Month-wise Breakdown -->
-                <div id="monthDetailContainer" style="display:none; margin-top:1rem;">
+                <!-- Detailed Month-wise Breakdown (Increased Length / Max Height to 620px) -->
+                <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
                         <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
                         <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
                     </div>
-                    <div class="table-responsive" style="max-height: 380px; background:#fff;">
+                    <div class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                         <table class="custom-table">
                             <thead>
                                 <tr>
@@ -700,7 +701,6 @@
             }
         }
 
-        // Populate Dispatch History Filter with Today + Financial Years + Months
         function populateHistoryMonthDropdown(dispatches) {
             const selectBox = document.getElementById('historyPeriodFilter');
             const now = new Date();
@@ -726,13 +726,11 @@
             let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option>`;
             optionsHtml += `<option value="ALL">🌐 All Records</option>`;
 
-            // Add Financial Years
             const sortedFys = Array.from(fySet).sort((a, b) => b - a);
             sortedFys.forEach(fy => {
                 optionsHtml += `<option value="FY_${fy}">💼 FY ${fy}-${String(fy+1).slice(2)}</option>`;
             });
 
-            // Add Individual Months
             const sortedMonths = Array.from(monthMap.keys()).sort().reverse();
             sortedMonths.forEach(mKey => {
                 optionsHtml += `<option value="${mKey}">🗓️ ${monthMap.get(mKey)}</option>`;
@@ -826,7 +824,6 @@
             tbody.innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
         }
 
-        // Filter Table with Support for Today, Financial Years & Specific Months
         function filterHistoryTable() {
             const periodFilter = document.getElementById('historyPeriodFilter').value;
             const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
@@ -1095,7 +1092,6 @@
             yearSelect.innerHTML = optionsHtml;
         }
 
-        // Render Annual Summary - Skips inactive months (Debit=0 and Credit=0)
         function renderAnnualSummaryLedger() {
             hideMonthDetails();
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
@@ -1142,7 +1138,6 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            // 1. OPN Row
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({
@@ -1164,14 +1159,12 @@
                 <td style="text-align:center;">-</td>
             </tr>`;
 
-            // 2. Active Months Only
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
                 const mLabel = monthNames[mIndex];
                 const mDr = mObj.debit;
                 const mCr = mObj.credit;
 
-                // Skip months where no activity occurred
                 if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
                     return;
                 }
@@ -1296,7 +1289,6 @@
         }
         function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
 
-        // Export Full Detailed Statement for Selected FY
         function exportFullDetailedLedgerToCSV() {
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -1341,7 +1333,6 @@
             let runningBal = openingBalance;
             let totalDr = 0, totalCr = 0;
 
-            // Opening Balance Row
             let opCr = openingBalance > 0 ? openingBalance : 0;
             let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
             csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;

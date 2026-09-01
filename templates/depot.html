@@ -3,435 +3,565 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCM Depot Manager - POS Style Portal</title>
+    <title>RCM Depot Manager Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --pos-bg: #f5f7fa;
-            --pos-sidebar-bg: #ffffff;
-            --pos-card-bg: #ffffff;
-            --pos-primary: #0284c7;
-            --pos-primary-light: #e0f2fe;
-            --pos-text-main: #1e293b;
-            --pos-text-muted: #64748b;
-            --pos-border: #e2e8f0;
-            --pos-dr: #ef4444;
-            --pos-cr: #059669;
+            --theme-top-blue: #32567f;
+            --theme-mid-blue: #446e9b;
+            --theme-light-blue: #dde7f0;
+            --theme-bg: #eaeff5;
+            --theme-panel-bg: #f5f8fb;
+            --theme-border: #9fb3c8;
+            --theme-border-dark: #6382a1;
+            --text-dark: #1b2e4b;
+            --text-muted: #475569;
+            --input-bg: #ffffff;
+            --input-readonly: #f1f5f9;
+            --accent-dr: #c5221f;
+            --accent-cr: #0f766e;
+            --accent-bal: #0284c7;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Public Sans', sans-serif; }
-        body { background-color: var(--pos-bg); color: var(--pos-text-main); min-height: 100vh; display: flex; overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Left Side Navigation Bar (RCM POS Theme) */
-        .pos-sidebar {
-            width: 250px;
-            background: var(--pos-sidebar-bg);
-            border-right: 1px solid var(--pos-border);
+        /* Top Navbar */
+        .navbar {
+            background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
+            border-bottom: 2px solid var(--theme-mid-blue);
+            padding: 0.65rem 1.4rem;
             display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-            height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
-        .pos-sidebar-brand {
+
+        .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 220px; }
+        .btn-hamburger {
+            background: #ffffff;
+            border: 1px solid var(--theme-border-dark);
+            border-radius: 6px;
+            padding: 0.4rem 0.6rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--theme-top-blue);
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+        .btn-hamburger:hover { background: #f1f5f9; }
+
+        .depot-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
+        .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+
+        .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex: 1; text-align: left; }
+        .company-logo-badge { width: 190px; height: 46px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
+        .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
+
+        .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .btn-action-nav { 
+            background: linear-gradient(180deg, #ffffff 0%, #e2eaf1 100%); 
+            color: var(--text-dark); 
+            border: 1px solid var(--theme-border-dark); 
+            padding: 0.45rem 0.9rem; 
+            border-radius: 4px; 
+            font-weight: 700; 
+            font-size: 0.82rem; 
+            cursor: pointer;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-action-nav:hover { background: #f8fafc; border-color: #1e3a5f; }
+        .btn-nav-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
+
+        /* RCM POS Style Side Navigation Drawer */
+        .pos-sidebar-drawer {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #cbd5e1;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.2);
+            z-index: 2100;
+            display: flex;
+            flex-direction: column;
+            transition: left 0.3s ease;
+        }
+        .pos-sidebar-drawer.open { left: 0; }
+        .pos-sidebar-header {
             padding: 1rem 1.2rem;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            border-bottom: 1px solid var(--pos-border);
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
         }
-        .pos-brand-logo {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            background: #fff;
-            border: 1px solid var(--pos-border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        .pos-brand-logo img { width: 100%; height: 100%; object-fit: contain; }
-
-        .pos-nav-menu {
+        .pos-sidebar-menu {
             list-style: none;
-            padding: 1rem 0.75rem;
+            padding: 1rem 0.8rem;
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
+            gap: 0.4rem;
+            overflow-y: auto;
             flex: 1;
         }
-        .pos-nav-item {
+        .pos-sidebar-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.65rem 0.9rem;
-            border-radius: 8px;
-            color: var(--pos-text-muted);
+            gap: 0.8rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 6px;
+            color: #475569;
             font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
+            text-decoration: none;
             transition: all 0.2s;
-            text-decoration: none;
         }
-        .pos-nav-item:hover { background: #f1f5f9; color: var(--pos-text-main); }
-        .pos-nav-item.active { background: var(--pos-primary-light); color: var(--pos-primary); font-weight: 700; }
-        .pos-nav-item svg { width: 18px; height: 18px; }
-
-        /* Main Workspace Container */
-        .pos-main-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            height: 100vh;
-            overflow-y: auto;
+        .pos-sidebar-item:hover { background: #f1f5f9; color: #0f172a; }
+        .pos-sidebar-item.active { background: #e0f2fe; color: #0284c7; font-weight: 700; }
+        .pos-sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(2px);
+            z-index: 2050;
         }
 
-        /* Top Bar */
-        .pos-topbar {
+        .main-container { width: 100%; max-width: 1560px; margin: 1rem auto; padding: 0 1rem; }
+
+        /* Tabs */
+        .depot-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--theme-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; }
+        .tab-btn { 
+            background: linear-gradient(180deg, #e7edf4 0%, #cfdde9 100%); 
+            border: 1px solid var(--theme-border); 
+            border-bottom: none;
+            color: var(--text-dark); 
+            padding: 0.55rem 1.3rem; 
+            border-radius: 4px 4px 0 0; 
+            font-weight: 700; 
+            font-size: 0.86rem; 
+            cursor: pointer; 
+        }
+        .tab-btn.active { 
+            background: #ffffff; 
+            color: var(--theme-top-blue); 
+            border: 2px solid var(--theme-mid-blue); 
+            border-bottom: 2px solid #ffffff; 
+            margin-bottom: -2px;
+            font-weight: 800;
+        }
+
+        .comfort-panel { 
+            background: var(--theme-panel-bg); 
+            border: 1px solid var(--theme-border); 
+            border-radius: 4px; 
+            padding: 1.4rem; 
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06); 
+            margin-bottom: 1.2rem; 
+        }
+        .panel-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 1rem; 
+            border-bottom: 2px solid var(--theme-light-blue); 
+            padding-bottom: 0.5rem; 
+        }
+        .panel-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--theme-top-blue); }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group-full { grid-column: span 2; }
+        .form-group { margin-bottom: 0.2rem; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #2c4263; margin-bottom: 0.35rem; }
+        
+        .form-control { 
+            width: 100%; 
+            padding: 0.6rem 0.85rem; 
+            background: var(--input-bg); 
+            border: 1px solid var(--theme-border); 
+            border-radius: 3px; 
+            color: #111827; 
+            font-size: 0.88rem; 
+            outline: none; 
+        }
+        .form-control:focus { border-color: var(--theme-top-blue); box-shadow: 0 0 0 2px rgba(68,110,155,0.2); }
+        .form-control:read-only { background: var(--input-readonly); color: #1e3a8a; font-weight: 700; border-style: dashed; }
+        textarea.form-control { resize: vertical; min-height: 80px; font-family: 'Consolas', monospace; }
+
+        .btn-submit-dispatch { 
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); 
+            color: #fff; 
+            border: 1px solid #1e40af; 
+            padding: 0.7rem 1.6rem; 
+            border-radius: 4px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-top: 1rem; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .btn-submit-dispatch:hover { background: #1d4ed8; }
+
+        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+        .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
+        
+        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: var(--theme-top-blue); font-size: 0.84rem; font-weight: 700; }
+        .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
+        .search-input { width: 100%; padding: 0.45rem 0.8rem 0.45rem 2rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: #111; font-size: 0.86rem; }
+        .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; }
+
+        .btn-tool { padding: 0.35rem 0.7rem; border-radius: 3px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--theme-border); }
+        .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
+        .btn-action-ledger:hover { background: #0284c7; color: #fff; }
+        .btn-action-trx { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; }
+        .btn-action-trx:hover { background: #d97706; color: #fff; }
+
+        .table-responsive { width: 100%; max-height: 540px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
+        table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
+        table.custom-table th { 
+            position: sticky; top: 0; z-index: 20; 
+            padding: 0.65rem 0.9rem; 
+            color: #ffffff; 
+            font-size: 0.78rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
+            border-right: 1px solid #284464; 
+            border-bottom: 2px solid #1a304a; 
+            letter-spacing: 0.3px;
+        }
+        table.custom-table td { padding: 0.6rem 0.85rem; font-size: 0.84rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
+        table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
+        table.custom-table tr:hover { background-color: #e9f2fb; }
+        
+        .row-duplicate { background-color: #fff1f2 !important; }
+        .row-duplicate td { border-bottom-color: #fecdd3 !important; }
+
+        .row-opening-balance { background-color: #eff6ff !important; font-weight: bold; }
+        .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #0284c7 !important; }
+
+        .row-closing-balance { background-color: #ecfdf5 !important; font-weight: bold; }
+        .row-closing-balance td { border-top: 2px solid #6ee7b7 !important; border-bottom: 2px solid #6ee7b7 !important; color: #065f46 !important; }
+
+        .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--theme-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--theme-top-blue); }
+
+        .load-more-bar { text-align: center; padding-top: 0.8rem; }
+        .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
+
+        /* Modal Dialogs */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 1rem; }
+        
+        .modal-box { 
+            background: #ffffff; 
+            margin: 1.5rem auto; 
+            width: 95%; 
+            max-width: 540px; 
+            border-radius: 5px; 
+            border: 2px solid var(--theme-mid-blue); 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
+            overflow: hidden; 
+        }
+        
+        .modal-box-large { 
+            width: 95% !important; 
+            max-width: 1380px !important; 
+            margin: 1rem auto !important; 
+        }
+
+        .modal-box-compact { max-width: 440px !important; }
+
+        .modal-top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0.65rem 1.2rem; 
+            background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
+            border-bottom: 1px solid #1a304a; 
+            color: #ffffff;
+        }
+        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
+        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+        .modal-body { padding: 1.2rem; background: #f8fafc; }
+
+        .stat-banner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) auto;
+            gap: 0.7rem;
+            align-items: center;
             background: #ffffff;
-            border-bottom: 1px solid var(--pos-border);
-            padding: 0.65rem 1.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 90;
-        }
-        .topbar-left { display: flex; align-items: center; gap: 1rem; }
-        .topbar-company-logo { width: 160px; height: 42px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .topbar-company-logo img { width: 100%; height: 100%; object-fit: contain; }
-
-        .topbar-right { display: flex; align-items: center; gap: 0.8rem; }
-        .btn-pos-pill {
-            background: #f8fafc;
-            border: 1px solid var(--pos-border);
-            padding: 0.45rem 0.9rem;
-            border-radius: 6px;
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: var(--pos-text-main);
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            text-decoration: none;
-        }
-        .btn-pos-pill:hover { background: #f1f5f9; border-color: #cbd5e1; }
-        .btn-pos-logout { color: #dc2626; border-color: #fecaca; background: #fff5f5; }
-
-        .pos-content-container {
-            padding: 1.5rem 1.8rem;
-            max-width: 1540px;
-            width: 100%;
-            margin: 0 auto;
+            padding: 0.75rem 1.1rem;
+            border-radius: 4px;
+            border: 1px solid var(--theme-border);
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .breadcrumb-bar {
+        .ledger-actions-group {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--pos-text-muted);
-            margin-bottom: 0.8rem;
-        }
-        .breadcrumb-bar a { color: var(--pos-text-muted); text-decoration: none; }
-        .breadcrumb-bar span { color: var(--pos-text-main); font-weight: 600; }
-
-        /* Card Container (RCM POS White Box) */
-        .pos-card {
-            background: var(--pos-card-bg);
-            border: 1px solid var(--pos-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-            margin-bottom: 1.5rem;
-        }
-        .pos-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid var(--pos-border);
-        }
-        .pos-card-title { font-size: 1.05rem; font-weight: 800; color: var(--pos-text-main); }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
-        .form-group-full { grid-column: span 2; }
-        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #475569; margin-bottom: 0.35rem; }
-        .form-control {
-            width: 100%;
-            padding: 0.65rem 0.9rem;
-            background: #ffffff;
-            border: 1px solid var(--pos-border);
-            border-radius: 6px;
-            color: var(--pos-text-main);
-            font-size: 0.88rem;
-            outline: none;
-        }
-        .form-control:focus { border-color: var(--pos-primary); box-shadow: 0 0 0 3px rgba(2,132,199,0.12); }
-        .form-control:read-only { background: #f8fafc; color: #0284c7; font-weight: 700; }
-        textarea.form-control { resize: vertical; min-height: 85px; font-family: monospace; }
-
-        .btn-pos-primary {
-            background: var(--pos-primary);
-            color: #ffffff;
-            border: none;
-            padding: 0.75rem 1.8rem;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(2,132,199,0.2);
-        }
-        .btn-pos-primary:hover { background: #0369a1; }
-
-        /* Tables & Data Grid */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid var(--pos-border);
-            border-radius: 8px;
-            background: #ffffff;
-        }
-        table.pos-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.pos-table th {
-            padding: 0.8rem 1rem;
-            background: #f8fafc;
-            color: var(--pos-text-muted);
-            font-size: 0.78rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--pos-border);
-            white-space: nowrap;
-        }
-        table.pos-table td {
-            padding: 0.75rem 1rem;
-            font-size: 0.85rem;
-            color: var(--pos-text-main);
-            border-bottom: 1px solid var(--pos-border);
-            white-space: nowrap;
-        }
-        table.pos-table tr:hover { background-color: #f8fafc; }
-        .row-duplicate { background-color: #fff1f2 !important; }
-        .row-opening-balance { background-color: #eff6ff !important; font-weight: 800; }
-        .row-opening-balance td { color: #0369a1 !important; }
-
-        .staff-avatar-cell {
-            width: 34px; height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #e2e8f0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: var(--pos-primary);
+            flex-wrap: wrap;
         }
 
-        /* Modal Dialogs */
-        .modal {
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); overflow-y: auto; padding: 1rem;
+        /* Screen Preview for Modal */
+        .receipt-container { 
+            background: #ffffff; 
+            color: #000000; 
+            padding: 1.2rem; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            font-size: 0.82rem; 
+            width: 100%; 
+            max-width: 650px; 
+            margin: 0 auto; 
+            border: 1px solid #ddd; 
         }
-        .modal-box {
-            background: #ffffff; margin: 2rem auto; width: 95%; max-width: 520px;
-            border-radius: 12px; border: 1px solid var(--pos-border); box-shadow: 0 20px 40px rgba(0,0,0,0.15); overflow: hidden;
-        }
-        .modal-box-large { max-width: 1100px !important; }
-        .modal-top-bar {
-            display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.4rem;
-            background: #ffffff; border-bottom: 1px solid var(--pos-border);
-        }
-        .modal-top-bar span { font-weight: 800; font-size: 1.05rem; color: var(--pos-text-main); }
-        .modal-close-btn { background: none; border: none; font-size: 1.5rem; color: var(--pos-text-muted); cursor: pointer; }
-        .modal-body { padding: 1.4rem; background: #ffffff; }
+        .receipt-header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-company-logo { width: 160px; height: 44px; margin: 0 auto 0.2rem auto; display: flex; align-items: center; justify-content: center; }
+        .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .receipt-header h2 { font-size: 0.95rem; font-weight: 800; color: #000; margin-bottom: 0.1rem; }
+        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: 800; margin-top: 0.25rem; display: block; font-size: 0.82rem; }
 
-        /* Monthly Summary Cards */
-        .pos-stat-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) auto; gap: 0.8rem;
-            background: #f8fafc; padding: 1rem 1.2rem; border-radius: 8px; border: 1px solid var(--pos-border);
-            margin-bottom: 1.2rem; align-items: center;
-        }
-
-        /* Print formatting */
-        .receipt-container { background: #ffffff; color: #000; padding: 1.2rem; font-size: 0.82rem; width: 100%; max-width: 650px; margin: 0 auto; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.76rem; line-height: 1.4; border-bottom: 1px solid #000; padding-bottom: 0.35rem; margin-bottom: 0.35rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.35rem; }
+        .receipt-table th { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 2px; font-weight: bold; color: #000; font-size: 0.76rem; text-align: left; }
+        .receipt-table td { padding: 3px 2px; font-size: 0.75rem; color: #000; border-bottom: 1px solid #e2e8f0; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
+        .receipt-summary { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.4; font-weight: bold; }
+        .receipt-summary .sum-row { display: flex; justify-content: space-between; }
+        .print-green-btn { width: 100%; background: linear-gradient(180deg, #059669 0%, #047857 100%); color: white; border: 1px solid #065f46; padding: 0.75rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.92rem; }
+
+        /* EXACT A4 HALF / A5 PAGE PRINT STYLES */
         @media print {
-            @page { size: A5 portrait; margin: 6mm 8mm; }
-            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+            @page {
+                size: A5 portrait;
+                margin: 6mm 8mm;
+            }
+            body { 
+                background: #ffffff !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt {
-                position: absolute; left: 0; top: 0; width: 100% !important; max-width: 100% !important;
-                margin: 0 !important; padding: 0 !important; background: #fff !important; font-size: 8pt !important;
+            #printableReceipt { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                background: #fff !important; 
+                color: #000 !important; 
+                border: none !important;
+                font-size: 8pt !important;
+                line-height: 1.2 !important;
             }
             .modal-top-bar, .receipt-actions, .modal-box { display: none !important; border: none !important; }
-            .pos-sidebar, .pos-topbar { display: none !important; }
+            
+            .receipt-header h2 { font-size: 10pt !important; margin-bottom: 2px !important; }
+            .receipt-header p { font-size: 7pt !important; line-height: 1.15 !important; }
+            .receipt-company-logo { width: 140px !important; height: 35px !important; margin-bottom: 2px !important; }
+            .receipt-title { font-size: 8.5pt !important; margin-top: 3px !important; }
+            .receipt-meta { font-size: 7.5pt !important; padding-bottom: 3px !important; margin-bottom: 3px !important; }
+            .receipt-table th { font-size: 7.5pt !important; padding: 2px 1px !important; }
+            .receipt-table td { font-size: 7pt !important; padding: 2px 1px !important; border-bottom: 0.5px solid #ccc !important; }
+            .receipt-summary { font-size: 7.5pt !important; padding: 3px 0 !important; }
         }
-
-        /* Loading Blocker */
-        .global-loading-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 999999;
-            flex-direction: column; align-items: center; justify-content: center; cursor: wait;
-        }
-        .global-spinner {
-            width: 50px; height: 50px; border: 5px solid #e2e8f0; border-top: 5px solid #0284c7;
-            border-radius: 50%; animation: spinAnim 0.8s linear infinite; margin-bottom: 1rem;
-        }
-        @keyframes spinAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
-        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; background: #0284c7; color: #fff; }
+        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
+
+        .global-loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 999999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: wait;
+            user-select: none;
+        }
+        .global-spinner {
+            width: 58px; height: 58px;
+            border: 6px solid #e2e8f0;
+            border-top: 6px solid #38bdf8;
+            border-radius: 50%;
+            animation: spinAnim 0.8s linear infinite;
+            margin-bottom: 1.2rem;
+        }
+        .global-loading-text {
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        @keyframes spinAnim {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="global-spinner"></div>
-        <div style="color:#fff;font-weight:700;" id="globalLoadingMsg">Saving Data... Please wait!</div>
+        <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
     </div>
+
+    <!-- Collapsible Side Navigation Drawer (RCM POS Theme) -->
+    <div id="posSidebarOverlay" class="pos-sidebar-overlay" onclick="toggleSidebar(false)"></div>
+    <aside id="posSidebarDrawer" class="pos-sidebar-drawer">
+        <div class="pos-sidebar-header">
+            <div style="display:flex;align-items:center;gap:0.6rem;">
+                <div style="width:32px;height:32px;border-radius:6px;background:#0284c7;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">R</div>
+                <div><h4 style="font-size:0.92rem;font-weight:800;color:#0f172a;">RCM POS</h4><span style="font-size:0.72rem;color:#64748b;">Depot Management</span></div>
+            </div>
+            <button onclick="toggleSidebar(false)" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#64748b;">&times;</button>
+        </div>
+        <ul class="pos-sidebar-menu">
+            <li><a href="javascript:void(0)" class="pos-sidebar-item" onclick="switchTabAndClose('dispatchTab')"><span>📦</span> <span>Invoice Dispatch</span></a></li>
+            <li><a href="javascript:void(0)" class="pos-sidebar-item" onclick="switchTabAndClose('recordsTab')"><span>📊</span> <span>Dispatch History</span></a></li>
+            <li><a href="javascript:void(0)" class="pos-sidebar-item active" onclick="switchTabAndClose('staffTab')"><span>👥</span> <span>Staff & Ledger</span></a></li>
+            <li style="border-top:1px solid #e2e8f0;margin:0.5rem 0;"></li>
+            <li><a href="javascript:void(0)" class="pos-sidebar-item" onclick="openPasswordModal(); toggleSidebar(false);"><span>🔑</span> <span>Change Password</span></a></li>
+            <li><a href="/" onclick="sessionStorage.clear()" class="pos-sidebar-item" style="color:#ef4444;"><span>🚪</span> <span>Logout</span></a></li>
+        </ul>
+    </aside>
 
     <div id="toastContainer" class="toast-container"></div>
     <datalist id="dispatchThroughList"></datalist>
     <datalist id="vehicleNoList"></datalist>
 
-    <!-- 1. Left Side Navigation Bar (RCM POS Theme) -->
-    <aside class="pos-sidebar">
-        <div class="pos-sidebar-brand">
-            <div class="pos-brand-logo" id="depotLogoBox"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0284c7"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
-            <div><h3 style="font-size:0.92rem;font-weight:800;color:var(--pos-text-main);">RCM DEPOT</h3><span style="font-size:0.72rem;color:var(--pos-text-muted);">Manager Portal</span></div>
+    <!-- Main Navigation Bar -->
+    <div class="navbar">
+        <div class="brand-section">
+            <button class="btn-hamburger" onclick="toggleSidebar(true)" title="Open Menu">☰</button>
+            <div class="depot-logo-box" id="depotLogoBox"><svg width="32" height="26" viewBox="0 0 24 24" fill="#32567f"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+            <div><h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3><span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">Manager Portal</span></div>
         </div>
-        <ul class="pos-nav-menu">
-            <li>
-                <a href="javascript:void(0)" class="pos-nav-item active" id="navDispatchBtn" onclick="switchSidebarTab('dispatchTab', this)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                    <span>Invoice Dispatch</span>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" class="pos-nav-item" id="navHistoryBtn" onclick="switchSidebarTab('recordsTab', this)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    <span>Dispatch Reports</span>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" class="pos-nav-item" id="navStaffBtn" onclick="switchSidebarTab('staffTab', this)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    <span>Staff & Ledger</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
-
-    <!-- 2. Main Workspace -->
-    <div class="pos-main-wrapper">
-        <!-- Top Navigation Header -->
-        <header class="pos-topbar">
-            <div class="topbar-left">
-                <div class="topbar-company-logo" id="companyLogoBox"></div>
-                <div>
-                    <h1 style="font-size:1.05rem;font-weight:800;color:var(--pos-text-main);"><span id="headerDepotTitle">Depot Management</span></h1>
-                    <p id="topDepotAddress" style="font-size:0.75rem;color:var(--pos-text-muted);">Loading details...</p>
-                </div>
+        <div class="depot-center-section">
+            <div class="company-logo-badge" id="companyLogoBox"></div>
+            <div>
+                <h1 style="font-size:1.1rem;font-weight:800;color:var(--theme-top-blue);"><span id="headerDepotTitle">Depot Management</span></h1>
+                <p id="topDepotAddress" style="font-size:0.78rem;color:var(--text-muted);">Loading depot details...</p>
             </div>
-            <div class="topbar-right">
-                <button class="btn-pos-pill" onclick="openPasswordModal()">🔑 Password</button>
-                <a href="/" onclick="sessionStorage.clear()" class="btn-pos-pill btn-pos-logout">🚪 Logout</a>
-            </div>
-        </header>
-
-        <main class="pos-content-container">
-            <div class="breadcrumb-bar">
-                <span>Dashboard</span> / <span id="breadcrumbCurrent">Invoice Dispatch</span>
-            </div>
-
-            <!-- Tab 1: New Invoice Dispatch -->
-            <div id="dispatchTab" class="pos-card">
-                <div class="pos-card-header">
-                    <h2 class="pos-card-title">📦 New Invoice Dispatch Entry</h2>
-                </div>
-                <form id="invoiceDispatchForm">
-                    <input type="hidden" id="hiddenDepotCode"><input type="hidden" id="hiddenDepotName">
-                    <div class="form-grid">
-                        <div class="form-group"><label>Date</label><input type="text" id="dispDate" class="form-control" readonly></div>
-                        <div class="form-group"><label>Live Running Time</label><input type="text" id="dispTime" class="form-control" readonly style="color:#b45309;font-weight:bold;"></div>
-                        <div class="form-group"><label>Depot Prefix</label><input type="text" id="dispPrefixSeries" class="form-control" readonly></div>
-                        <div class="form-group"><label>Vehicle Type</label><select id="dispVehicleType" class="form-control"><option value="Auto">Auto</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option></select></div>
-                        
-                        <div class="form-group">
-                            <label>Dispatch Through</label>
-                            <input type="text" id="dispThrough" class="form-control" required placeholder="Type name (e.g. Singh PUC Auto)" list="dispatchThroughList" oninput="handleThroughInput(this.value)">
-                        </div>
-                        <div class="form-group">
-                            <label>Vehicle Number</label>
-                            <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234" list="vehicleNoList" oninput="handleVehicleInput(this.value)">
-                        </div>
-                        <div class="form-group-full">
-                            <label>Invoice Last 5 Digits</label>
-                            <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667..."></textarea>
-                        </div>
-                        <div class="form-group-full">
-                            <label>Due-Excess Matter If Any</label>
-                            <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
-                        </div>
-                        <div class="form-group-full">
-                            <label>Remark If Any</label>
-                            <input type="text" id="dispRemarks" class="form-control" value="-">
-                        </div>
-                    </div>
-                    <button type="submit" id="btnSaveDispatchMain" class="btn-pos-primary" style="margin-top:1.2rem;">💾 Save Dispatch Entry</button>
-                </form>
-            </div>
-
-            <!-- Tab 2: Dispatch History -->
-            <div id="recordsTab" class="pos-card" style="display:none;">
-                <div class="pos-card-header">
-                    <h2 class="pos-card-title">📊 Dispatch History</h2>
-                    <span id="dispCountBadge" style="font-size:0.85rem;color:var(--pos-text-muted);font-weight:700;">0 records</span>
-                </div>
-                <div style="display:flex;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap;">
-                    <select id="historyPeriodFilter" class="form-control" style="width:auto;" onchange="filterHistoryTable()">
-                        <option value="TODAY" selected>📅 Today's Entries</option>
-                        <option value="ALL">🌐 All Records</option>
-                    </select>
-                    <input type="text" id="historySearchInput" class="form-control" placeholder="Search by Invoice, Vehicle, Driver..." style="max-width:320px;" oninput="filterHistoryTable()">
-                </div>
-                <div class="table-responsive">
-                    <table class="pos-table" id="historyTable">
-                        <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
-                        <tbody id="dispatchTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Tab 3: Staff & Ledger -->
-            <div id="staffTab" class="pos-card" style="display:none;">
-                <div class="pos-card-header">
-                    <h2 class="pos-card-title">👥 Assigned Staff and Ledger Details</h2>
-                    <button class="btn-pos-pill" style="color:var(--pos-primary);border-color:var(--pos-primary);" onclick="openAddStaffModal()">➕ Request New Staff</button>
-                </div>
-                <div class="table-responsive">
-                    <table class="pos-table">
-                        <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody id="staffTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
+        </div>
     </div>
 
-    <!-- Modal: Request New Staff -->
+    <div class="main-container">
+        <div class="depot-nav-tabs">
+            <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
+            <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
+            <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
+        </div>
+
+        <!-- 1. Dispatch Entry Form -->
+        <div id="dispatchTab" class="comfort-panel">
+            <div class="panel-header"><h3>📦 Record Invoice Dispatch Entry</h3></div>
+            <form id="invoiceDispatchForm">
+                <input type="hidden" id="hiddenDepotCode"><input type="hidden" id="hiddenDepotName">
+                <div class="form-grid">
+                    <div class="form-group"><label>Date</label><input type="text" id="dispDate" class="form-control" readonly></div>
+                    <div class="form-group"><label>Live Time (Running)</label><input type="text" id="dispTime" class="form-control" readonly style="color:#b45309;font-weight:bold;"></div>
+                    <div class="form-group"><label>Depot Prefix</label><input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:#1e40af;"></div>
+                    <div class="form-group"><label>Vehicle Type</label><select id="dispVehicleType" class="form-control"><option value="Auto">Auto</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option></select></div>
+                    
+                    <div class="form-group">
+                        <label>Dispatch Through</label>
+                        <input type="text" id="dispThrough" class="form-control" required placeholder="Type name (e.g. Singh PUC Auto)" list="dispatchThroughList" oninput="handleThroughInput(this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="e.g. BR-11-AB-1234" list="vehicleNoList" oninput="handleVehicleInput(this.value)">
+                    </div>
+
+                    <div class="form-group-full">
+                        <label>Invoice Last 5 Digits</label>
+                        <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667..."></textarea>
+                    </div>
+
+                    <div class="form-group-full">
+                        <label>Due-Excess Matter If Any</label>
+                        <input type="text" id="dispDueExcess" class="form-control" value="No Due/excess" required>
+                    </div>
+
+                    <div class="form-group-full">
+                        <label>Remark If Any</label>
+                        <input type="text" id="dispRemarks" class="form-control" value="-">
+                    </div>
+                </div>
+                <button type="submit" id="btnSaveDispatchMain" class="btn-submit-dispatch">💾 Save Dispatch Entry</button>
+            </form>
+        </div>
+
+        <!-- 2. Records History -->
+        <div id="recordsTab" class="comfort-panel" style="display:none;">
+            <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()">
+                        <option value="TODAY" selected>📅 Today</option>
+                        <option value="ALL">🌐 All</option>
+                    </select>
+                    <div class="search-box-wrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search..." oninput="filterHistoryTable()"></div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table" id="historyTable">
+                    <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
+                    <tbody id="dispatchTableBody"></tbody>
+                </table>
+            </div>
+            <div class="load-more-bar" id="loadOlderBar">
+                <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load All Older Records</button>
+            </div>
+        </div>
+
+        <!-- 3. Staff & Ledger -->
+        <div id="staffTab" class="comfort-panel" style="display:none;">
+            <div class="panel-header">
+                <h3>👥 Assigned Staff and Ledger Details</h3>
+                <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
+            </div>
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="staffTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 1: Request New Staff -->
     <div id="addStaffModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -440,17 +570,17 @@
             </div>
             <div class="modal-body">
                 <form id="requestStaffForm">
-                    <div class="form-group"><label>Auto-Generated Code (Locked)</label><input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:#0284c7;font-weight:bold;"></div>
+                    <div class="form-group"><label>Auto-Generated Code (Locked)</label><input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:#1d4ed8;font-weight:bold;"></div>
                     <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" class="form-control" required placeholder="Enter full name"></div>
                     <div class="form-group"><label>Mobile Number</label><input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit mobile"></div>
                     <div class="form-group"><label>Photo (Optional)</label><input type="file" class="form-control" accept="image/*" onchange="compressPhoto(this, 'newStaffPhotoBase64')"><input type="hidden" id="newStaffPhotoBase64"></div>
-                    <button type="submit" id="btnReqStaffSubmit" class="btn-pos-primary" style="width:100%;margin-top:1rem;">Send Request to Admin</button>
+                    <button type="submit" id="btnReqStaffSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Send Request to Admin</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Add Transaction Request -->
+    <!-- Modal 2: Add Transaction Request -->
     <div id="addTrxModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
@@ -460,44 +590,43 @@
             <div class="modal-body">
                 <form id="requestTrxForm">
                     <input type="hidden" id="trxStaffCode"><input type="hidden" id="trxStaffName">
-                    <div class="form-group"><label>Selected Staff</label><input type="text" id="trxStaffDisplay" class="form-control" readonly style="color:#0284c7;font-weight:bold;"></div>
+                    <div class="form-group"><label>Selected Staff</label><input type="text" id="trxStaffDisplay" class="form-control" readonly style="color:#1d4ed8;font-weight:bold;"></div>
                     <div class="form-group"><label>Date</label><input type="date" id="trxDate" class="form-control" required></div>
                     <div class="form-group"><label>Particular / Purpose</label><input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Advance, Salary, Unloading"></div>
                     <div class="form-group"><label>Payment Mode</label><select id="trxMode" class="form-control"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Transfer">Bank Transfer</option><option value="-">-</option></select></div>
                     <div class="form-grid">
-                        <div class="form-group"><label style="color:#ef4444;">Debit Amount (₹)</label><input type="number" id="trxDebitAmount" class="form-control" value="0"></div>
-                        <div class="form-group"><label style="color:#059669;">Credit Amount (₹)</label><input type="number" id="trxCreditAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--accent-dr);">Debit Amount (₹)</label><input type="number" id="trxDebitAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--accent-cr);">Credit Amount (₹)</label><input type="number" id="trxCreditAmount" class="form-control" value="0"></div>
                     </div>
-                    <button type="submit" id="btnReqTrxSubmit" class="btn-pos-primary" style="width:100%;margin-top:1rem;">Send Transaction Request</button>
+                    <button type="submit" id="btnReqTrxSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Send Transaction Request</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Staff Ledger (Photo 2 RCM POS Style Monthly Table + Daily View) -->
+    <!-- Modal 3: Statement View Modal with POS Style Opening/Closing Balances -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
-                <span id="ledgerStaffTitle">Ledger Statement</span>
+                <span id="ledgerStaffTitle">📄 Staff Ledger Statement</span>
                 <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="pos-stat-grid">
-                    <div><span style="font-size:0.75rem;color:var(--pos-text-muted);display:block;">OPENING BAL.</span><strong id="modOpeningBalance" style="color:#0284c7;font-size:1.05rem;">₹0</strong></div>
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL DEBIT</span><strong id="modTotalDebit" style="color:var(--pos-dr);font-size:1.05rem;">₹0</strong></div>
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL CREDIT</span><strong id="modTotalCredit" style="color:var(--pos-cr);font-size:1.05rem;">₹0</strong></div>
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">CLOSING BALANCE</span><strong id="modNetBalance" style="color:#0284c7;font-size:1.15rem;">₹0</strong></div>
+                <div class="stat-banner">
+                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">OPENING BAL.</span><strong id="modOpeningBalance" style="color:var(--accent-bal);font-size:1.05rem;">₹0</strong></div>
+                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL CREDIT</span><strong id="modTotalCredit" style="color:var(--accent-cr);font-size:1.05rem;">₹0</strong></div>
+                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL DEBIT</span><strong id="modTotalDebit" style="color:var(--accent-dr);font-size:1.05rem;">₹0</strong></div>
+                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">CLOSING BALANCE</span><strong id="modNetBalance" style="color:var(--accent-bal);font-size:1.15rem;">₹0</strong></div>
                     
-                    <div style="display:flex;gap:0.5rem;align-items:center;">
-                        <select id="ledgerMonthYearFilter" class="form-control" style="width:auto;padding:0.4rem 0.6rem;font-weight:700;" onchange="renderFilteredLedger()"></select>
-                        <button class="btn-pos-pill" onclick="openPrintPreview()">👁️ View</button>
-                        <button class="btn-pos-pill" onclick="directPrintStatement()">🖨️ Print</button>
-                        <button class="btn-pos-pill" onclick="exportLedgerToCSV()">📥 Excel</button>
+                    <div class="ledger-actions-group">
+                        <select id="ledgerMonthYearFilter" class="filter-select-box" onchange="renderFilteredLedger()" style="padding:0.45rem 0.6rem;font-weight:bold;"></select>
+                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.45rem 0.8rem;" onclick="openPrintPreview()">👁️ View Statement</button>
+                        <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.45rem 0.8rem;" onclick="directPrintStatement()">🖨️ Print</button>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.8rem;" onclick="exportLedgerToCSV()">📥 Export Excel</button>
                     </div>
                 </div>
-
-                <div class="table-responsive" style="max-height: 500px;">
-                    <table class="pos-table">
+                <div class="table-responsive" style="max-height: 520px;">
+                    <table class="custom-table">
                         <thead>
                             <tr>
                                 <th style="width:110px;">Date</th>
@@ -516,49 +645,58 @@
         </div>
     </div>
 
-    <!-- Modal: Statement Print & Preview -->
+    <!-- Modal 4: A4 Half (A5) Formatted Statement View -->
     <div id="printModal" class="modal">
         <div class="modal-box" style="max-width: 680px;">
             <div class="modal-top-bar"><span>📄 Statement Preview (A4 Half Size)</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
             <div id="printableReceipt" class="receipt-container">
-                <div style="text-align:center;border-bottom:1px solid #000;padding-bottom:0.4rem;margin-bottom:0.4rem;">
-                    <div style="width:150px;height:40px;margin:0 auto 0.2rem auto;" id="receiptCompanyLogoBox"></div>
-                    <h2 style="font-size:0.95rem;font-weight:800;margin-bottom:2px;">RCM Consumer Products Private Limited</h2>
-                    <p id="receiptFullAddress" style="font-size:0.72rem;line-height:1.2;">Depot Address</p>
-                    <p id="receiptContact" style="font-size:0.72rem;">Mob: - | GSTIN: -</p>
-                    <span style="font-weight:800;margin-top:0.25rem;display:block;font-size:0.82rem;">** OFFICIAL ACCOUNT STATEMENT **</span>
+                <div class="receipt-header">
+                    <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
+                    <h2>RCM Consumer Products Private Limited</h2>
+                    <p id="receiptFullAddress">Depot Address</p>
+                    <p id="receiptContact">Mob: - | GSTIN: -</p>
+                    <span class="receipt-title">** OFFICIAL ACCOUNT STATEMENT **</span>
                 </div>
-                <div style="display:flex;justify-content:space-between;font-size:0.76rem;border-bottom:1px solid #000;padding-bottom:0.35rem;margin-bottom:0.35rem;">
+                <div class="receipt-meta">
                     <div><p><strong>Name:</strong> <span id="rcptStaffName">-</span></p><p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p></div>
                     <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p></div>
                 </div>
-                <table style="width:100%;border-collapse:collapse;margin-bottom:0.35rem;">
-                    <thead><tr><th style="width:18%;text-align:left;border-top:1px solid #000;border-bottom:1px solid #000;padding:3px 2px;">Date</th><th style="width:46%;text-align:left;border-top:1px solid #000;border-bottom:1px solid #000;padding:3px 2px;">Particulars</th><th class="text-right" style="width:12%;border-top:1px solid #000;border-bottom:1px solid #000;padding:3px 2px;">Dr</th><th class="text-right" style="width:12%;border-top:1px solid #000;border-bottom:1px solid #000;padding:3px 2px;">Cr</th><th class="text-right" style="width:12%;border-top:1px solid #000;border-bottom:1px solid #000;padding:3px 2px;">Bal</th></tr></thead>
+                <table class="receipt-table">
+                    <thead><tr><th style="width:17%;">Date</th><th style="width:47%;">Particulars</th><th class="text-right" style="width:12%;">Dr</th><th class="text-right" style="width:12%;">Cr</th><th class="text-right" style="width:12%;">Bal</th></tr></thead>
                     <tbody id="rcptTableBody"></tbody>
                 </table>
-                <div style="border-top:1px solid #000;border-bottom:1px solid #000;padding:0.4rem 0;font-size:0.78rem;font-weight:bold;">
-                    <div style="display:flex;justify-content:space-between;"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
-                    <div style="display:flex;justify-content:space-between;"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
-                    <div style="display:flex;justify-content:space-between;margin-top:2px;border-top:1px dashed #000;padding-top:2px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+                <div class="receipt-summary">
+                    <div class="sum-row"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
+                    <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+                    <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+                    <div class="sum-row" style="margin-top:3px;border-top:1px dashed #000;padding-top:3px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
                 </div>
             </div>
-            <div style="padding:1rem; background:#f8fafc; text-align:center;" class="receipt-actions">
-                <button class="btn-pos-primary" onclick="window.print()">🖨️ Print Statement (A4 Half)</button>
+            <div style="padding:1rem; background:#f1f5f9; text-align:center;" class="receipt-actions">
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Statement (A4 Half)</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Password -->
+    <!-- Modal 5: Password Modal -->
     <div id="pwdModal" class="modal">
-        <div class="modal-box">
+        <div class="modal-box modal-box-compact">
             <div class="modal-top-bar"><span>🔑 Change Depot Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
-            <div class="modal-body">
+            <div style="padding:1.2rem;">
                 <form id="depotPwdForm">
-                    <div class="form-group"><label>Current Password</label><input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password"></div>
-                    <div class="form-group"><label>New Password</label><input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password"></div>
-                    <div class="form-group"><label>Confirm New Password</label><input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password"></div>
-                    <button type="submit" id="btnDepotPwdSubmit" class="btn-pos-primary" style="width:100%;margin-top:1rem;">Update Password</button>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">Current Password</label>
+                        <input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password">
+                    </div>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">New Password</label>
+                        <input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password">
+                    </div>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">Confirm New Password</label>
+                        <input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password">
+                    </div>
+                    <button type="submit" id="btnDepotPwdSubmit" class="btn-submit-dispatch" style="width:100%;">Update Password</button>
                 </form>
             </div>
         </div>
@@ -583,6 +721,25 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+        function toggleSidebar(open) {
+            const sidebar = document.getElementById('posSidebarDrawer');
+            const overlay = document.getElementById('posSidebarOverlay');
+            if (open) {
+                sidebar.classList.add('open');
+                overlay.style.display = 'block';
+            } else {
+                sidebar.classList.remove('open');
+                overlay.style.display = 'none';
+            }
+        }
+
+        function switchTabAndClose(tabId) {
+            toggleSidebar(false);
+            if (tabId === 'dispatchTab') switchTab('dispatchTab', document.getElementById('tabBtnDispatch'));
+            else if (tabId === 'recordsTab') switchTab('recordsTab', document.getElementById('tabBtnRecords'));
+            else if (tabId === 'staffTab') switchTab('staffTab', document.getElementById('tabBtnStaff'));
+        }
+
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
             if (overlay) {
@@ -590,6 +747,7 @@
                 overlay.style.display = 'flex';
             }
         }
+
         function hideScreenBlocker() {
             const overlay = document.getElementById('globalLoadingOverlay');
             if (overlay) overlay.style.display = 'none';
@@ -642,6 +800,7 @@
                 const secs = String(now.getSeconds()).padStart(2, '0');
                 const timeField = document.getElementById('dispTime');
                 if (timeField) timeField.value = `${hrs}:${mins}:${secs}`;
+                
                 const dateField = document.getElementById('dispDate');
                 if (dateField && !dateField.value) dateField.value = getTodayFormatted();
             }
@@ -670,7 +829,7 @@
             }
             const img = new Image();
             img.onload = () => { container.innerHTML = ''; container.appendChild(img); };
-            img.onerror = () => { container.innerHTML = `<img src="${u}" alt="Logo" style="max-width:100%;max-height:100%;object-fit:contain;">`; };
+            img.onerror = () => { container.innerHTML = `<img src="${u}" alt="Logo">`; };
             img.src = u;
         }
 
@@ -714,14 +873,19 @@
         function buildHistoricalDataLists(dispatches) {
             const throughSet = new Set();
             const vehicleSet = new Set();
+
             dispatches.forEach(d => {
                 const th = getField(d, 'Dispatch Throuch', 'Dispatch Through');
                 const vn = getField(d, 'Vehicle No');
                 if (th && th !== '-') throughSet.add(th);
                 if (vn && vn !== '-') vehicleSet.add(vn);
             });
-            document.getElementById('dispatchThroughList').innerHTML = Array.from(throughSet).map(item => `<option value="${item}">`).join('');
-            document.getElementById('vehicleNoList').innerHTML = Array.from(vehicleSet).map(item => `<option value="${item}">`).join('');
+
+            const throughDList = document.getElementById('dispatchThroughList');
+            throughDList.innerHTML = Array.from(throughSet).map(item => `<option value="${item}">`).join('');
+
+            const vehicleDList = document.getElementById('vehicleNoList');
+            vehicleDList.innerHTML = Array.from(vehicleSet).map(item => `<option value="${item}">`).join('');
         }
 
         function handleThroughInput(val) {
@@ -748,6 +912,22 @@
                     document.getElementById('dispThrough').value = th;
                 }
             }
+        }
+
+        function populateHistoryMonthDropdown(dispatches) {
+            const selectBox = document.getElementById('historyPeriodFilter');
+            const monthSet = new Set();
+            dispatches.forEach(r => {
+                const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'));
+                const parts = cleanDate.split('-');
+                if (parts.length === 3) monthSet.add(`${parts[1]}-${parts[2]}`);
+            });
+
+            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
+            Array.from(monthSet).forEach(mKey => {
+                optionsHtml += `<option value="${mKey}">🗓️ ${mKey} Month</option>`;
+            });
+            selectBox.innerHTML = optionsHtml;
         }
 
         async function loadDepotData() {
@@ -779,6 +959,7 @@
                 document.getElementById('dispPrefixSeries').value = depotPrefix;
 
                 buildHistoricalDataLists(loadedDispatches);
+                populateHistoryMonthDropdown(loadedDispatches);
                 filterHistoryTable();
                 renderStaffTable(loadedStaffList);
             } catch (err) { console.error(err); }
@@ -796,6 +977,7 @@
 
             const duplicates = [];
             const regulars = [];
+
             list.slice().reverse().forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
                 if (counts[inv] > 1) duplicates.push(r);
@@ -803,6 +985,7 @@
             });
 
             const sortedList = duplicates.concat(regulars);
+
             let html = '';
             sortedList.forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
@@ -817,7 +1000,7 @@
 
                 html += `<tr class="${isDup ? 'row-duplicate' : ''}">
                     <td>${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}</td>
-                    <td style="color:${isDup ? '#dc2626' : '#0284c7'};font-weight:bold;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
+                    <td style="color:${isDup ? '#dc2626' : '#0369a1'};font-weight:bold;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
                     <td>${vType}</td>
                     <td>${through}</td>
                     <td>${dueExcess}</td>
@@ -825,7 +1008,7 @@
                     <td>${time}</td>
                     <td>${remark}</td>
                     <td>
-                        <button class="btn-pos-pill" style="color:#ef4444;border-color:#fecaca;padding:0.25rem 0.5rem;" onclick="deleteDispatchRow('${rId}')">🗑️</button>
+                        <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${rId}')">🗑️</button>
                     </td>
                 </tr>`;
             });
@@ -836,22 +1019,37 @@
             const periodFilter = document.getElementById('historyPeriodFilter').value;
             const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
             const todayStr = getTodayFormatted().toLowerCase();
+            const loadOlderBtn = document.getElementById('loadOlderBar');
+
+            if (loadOlderBtn) loadOlderBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
 
             const filtered = loadedDispatches.filter(r => {
                 const cleanDate = formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')).toLowerCase();
+
                 if (query) {
                     const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
                     const vType = getField(r, 'Vehicle Type').toLowerCase();
                     const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
                     const vNo = getField(r, 'Vehicle No').toLowerCase();
-                    return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query);
+                    const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
+                    return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
                 }
+
                 if (periodFilter === "TODAY") {
                     if (cleanDate !== todayStr) return false;
+                } else if (periodFilter !== "ALL") {
+                    if (!cleanDate.includes(periodFilter.toLowerCase())) return false;
                 }
                 return true;
             });
+
             renderDispatchTable(filtered);
+        }
+
+        function loadAllOlderRecords() {
+            document.getElementById('historyPeriodFilter').value = "ALL";
+            filterHistoryTable();
+            showToast('All historical records loaded!');
         }
 
         async function fetchStaffBalance(staffCode) {
@@ -868,7 +1066,9 @@
                 });
                 const net = totalCr - totalDr;
                 return `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
-            } catch (e) { return '-'; }
+            } catch (e) {
+                return '-';
+            }
         }
 
         function renderStaffTable(list) {
@@ -887,15 +1087,15 @@
 
                 html += `<tr>
                     <td style="text-align:center;">${avatarHtml}</td>
-                    <td style="color:#0284c7;font-weight:bold;">${code}</td>
+                    <td style="color:#0369a1;font-weight:bold;">${code}</td>
                     <td><strong>${name}</strong></td>
                     <td>${getField(s, 'Staff Mob.')}</td>
                     <td>${formatCleanDate(getField(s, 'Staff Joining Date'))}</td>
-                    <td id="bal-${code}" style="color:#059669;font-weight:bold;">Loading...</td>
-                    <td style="color:${st.toLowerCase()==='active'?'#059669':'#ef4444'};font-weight:bold;">${st}</td>
+                    <td id="bal-${code}" style="color:#0f766e;font-weight:bold;">Loading...</td>
+                    <td style="color:${st.toLowerCase()==='active'?'#059669':'#dc2626'};font-weight:bold;">${st}</td>
                     <td>
-                        <button class="btn-pos-pill" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
-                        <button class="btn-pos-pill" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
+                        <button class="btn-action-ledger" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
+                        <button class="btn-action-trx" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
                     </td>
                 </tr>`;
             });
@@ -907,7 +1107,7 @@
                 const el = document.getElementById(`bal-${code}`);
                 if (el) {
                     el.textContent = bal;
-                    if (bal.includes('(Dr)')) el.style.color = '#ef4444';
+                    if (bal.includes('(Dr)')) el.style.color = '#dc2626';
                     else if (bal.includes('(Cr)')) el.style.color = '#059669';
                 }
             });
@@ -925,6 +1125,7 @@
             e.preventDefault();
             const btn = document.getElementById('btnReqStaffSubmit');
             btn.disabled = true;
+            btn.textContent = 'Sending Request...';
             showScreenBlocker('Sending New Staff Request to Admin...');
 
             const payload = {
@@ -944,9 +1145,15 @@
                     showToast(res.message);
                     closeAddStaffModal();
                     await loadDepotData();
-                } else { showToast(res.message || 'Failed to submit staff request.'); }
+                } else {
+                    showToast(res.message || 'Failed to submit staff request.');
+                }
             } catch (err) { showToast('Error submitting staff request.'); }
-            finally { hideScreenBlocker(); btn.disabled = false; }
+            finally { 
+                hideScreenBlocker();
+                btn.disabled = false; 
+                btn.textContent = 'Send Request to Admin'; 
+            }
         });
 
         function openAddTrxModal(sCode, sName) {
@@ -963,13 +1170,15 @@
             e.preventDefault();
             const debit = Number(document.getElementById('trxDebitAmount').value) || 0;
             const credit = Number(document.getElementById('trxCreditAmount').value) || 0;
+
             if (debit === 0 && credit === 0) {
-                showToast('Please enter Debit or Credit amount.');
+                showToast('Please enter either Debit or Credit amount.');
                 return;
             }
 
             const btn = document.getElementById('btnReqTrxSubmit');
             btn.disabled = true;
+            btn.textContent = 'Submitting...';
             showScreenBlocker('Sending Transaction Request to Admin...');
 
             const payload = {
@@ -991,9 +1200,15 @@
                 if (res && res.success) {
                     showToast(res.message);
                     closeAddTrxModal();
-                } else { showToast(res.message || 'Failed to submit transaction.'); }
+                } else {
+                    showToast(res.message || 'Failed to submit transaction.');
+                }
             } catch (err) { showToast('Error submitting transaction.'); }
-            finally { hideScreenBlocker(); btn.disabled = false; }
+            finally { 
+                hideScreenBlocker();
+                btn.disabled = false; 
+                btn.textContent = 'Send Transaction Request'; 
+            }
         });
 
         function populateLedgerMonthDropdown(rows) {
@@ -1006,7 +1221,8 @@
                 let d = parseDateObj(getField(r, 'Transaction Date', 'date'));
                 if (d) {
                     let key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    monthMap.set(key, `${monthNames[d.getMonth()]} ${d.getFullYear()}`);
+                    let label = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                    monthMap.set(key, label);
                 }
             });
 
@@ -1015,15 +1231,17 @@
             }
 
             const sortedKeys = Array.from(monthMap.keys()).sort();
-            let optionsHtml = `<option value="ALL">🌐 All Time</option>`;
+
+            let optionsHtml = `<option value="ALL">🌐 All Time Records</option>`;
             sortedKeys.forEach(k => {
                 let isSelected = (k === curMonthKey) ? 'selected' : '';
                 optionsHtml += `<option value="${k}" ${isSelected}>🗓️ ${monthMap.get(k)}</option>`;
             });
+
             filterEl.innerHTML = optionsHtml;
         }
 
-        // Render Ledger: Clean "01 Aug" & "Opening Balance"
+        // Render Ledger with exact POS Style "01 Aug" & "Opening Balance"
         function renderFilteredLedger() {
             const filterVal = document.getElementById('ledgerMonthYearFilter').value;
             const tbody = document.getElementById('modalLedgerTableBody');
@@ -1058,8 +1276,11 @@
                 } else {
                     let rYear = d.getFullYear();
                     let rMonth = d.getMonth() + 1;
+
                     if (rYear < filterYear || (rYear === filterYear && rMonth < filterMonth)) {
-                        if (isApproved) openingBalance += (cr - dr);
+                        if (isApproved) {
+                            openingBalance += (cr - dr);
+                        }
                     } else if (rYear === filterYear && rMonth === filterMonth) {
                         currentMonthRows.push(r);
                     }
@@ -1070,19 +1291,19 @@
             let monthDr = 0, monthCr = 0;
             let html = '';
 
-            // Clean Opening Balance Row: "01 Aug" + "Opening Balance"
+            // Clean Top Opening Balance Row: "01 Aug" + "Opening Balance"
             if (filterVal !== "ALL") {
                 let opCr = openingBalance > 0 ? openingBalance : 0;
                 let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
 
                 html += `<tr class="row-opening-balance">
                     <td><strong>01 ${monthShortName}</strong></td>
-                    <td><strong>Opening Balance</strong></td>
+                    <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
                     <td>-</td>
-                    <td style="color:${opDr > 0 ? '#ef4444' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                    <td style="color:${opCr > 0 ? '#059669' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                    <td style="color:#0284c7;font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
-                    <td style="text-align:center;"><span style="background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;">Opening</span></td>
+                    <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                    <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
                 </tr>`;
             }
 
@@ -1092,6 +1313,7 @@
                 const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
                 const part = getField(r, 'Particular', 'particular');
                 const mode = getField(r, 'Payment Mode', 'mode') || '-';
+
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
                 const isApproved = appRaw.toLowerCase() === 'approved';
 
@@ -1105,12 +1327,25 @@
                     <td><strong>${dt}</strong></td>
                     <td style="white-space:normal;min-width:320px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? '#ef4444' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:${cr > 0 ? '#059669' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:#0284c7;font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
-                    <td style="text-align:center;"><span style="background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;">${isApproved ? 'Approved' : 'Pending'}</span></td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
+
+            // Clean Bottom Closing Balance Row
+            if (filterVal !== "ALL") {
+                html += `<tr class="row-closing-balance">
+                    <td><strong>END</strong></td>
+                    <td style="white-space:normal;min-width:320px;"><strong>Closing Balance</strong></td>
+                    <td>-</td>
+                    <td style="font-weight:bold;text-align:right;color:var(--accent-dr);">${monthDr > 0 ? '₹' + monthDr.toFixed(2) : '-'}</td>
+                    <td style="font-weight:bold;text-align:right;color:var(--accent-cr);">${monthCr > 0 ? '₹' + monthCr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;font-size:0.95rem;">₹${runningBal.toFixed(2)}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#d1fae5;color:#065f46;">Closing</span></td>
+                </tr>`;
+            }
 
             tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transaction lines found for this period.</td></tr>`;
             
@@ -1133,7 +1368,7 @@
         async function openStaffLedger(code, name) {
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
-            document.getElementById('ledgerStaffTitle').textContent = `Ledger Statement: ${name} (${code})`;
+            document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
             const tbody = document.getElementById('modalLedgerTableBody');
             tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2rem;">Reading ledger records...</td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
@@ -1155,6 +1390,7 @@
             const pin = getField(depot, 'Pin Code', 'Pincode');
             const mob = getField(depot, 'Mob. No.', 'Mobile');
             const gstin = getField(depot, 'GSTIN');
+
             const filterSelect = document.getElementById('ledgerMonthYearFilter');
             const periodLabel = filterSelect ? filterSelect.options[filterSelect.selectedIndex].text : getTodayFormatted();
 
@@ -1173,7 +1409,7 @@
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
                 html += `<tr style="background:#f1f5f9;font-weight:bold;">
                     <td><strong>01 ${currentProcessedViewData.monthShortName}</strong></td>
-                    <td><strong>Opening Balance</strong></td>
+                    <td style="white-space:normal;"><strong>Opening Balance</strong></td>
                     <td class="text-right">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
                     <td class="text-right">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
                     <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
@@ -1182,15 +1418,17 @@
 
             currentProcessedViewData.rows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
+
                 if (appRaw.toLowerCase() === 'approved') {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
+
                     runningBal += (cr - dr);
                     html += `<tr>
                         <td><strong>${dt}</strong></td>
-                        <td>${part}</td>
+                        <td style="white-space:normal;">${part}</td>
                         <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
                         <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
                         <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
@@ -1198,7 +1436,18 @@
                 }
             });
 
+            if (currentProcessedViewData.filterVal !== "ALL") {
+                html += `<tr style="background:#ecfdf5;font-weight:bold;border-top:1px solid #000;">
+                    <td><strong>END</strong></td>
+                    <td style="white-space:normal;"><strong>Closing Balance</strong></td>
+                    <td class="text-right">${currentProcessedViewData.totalDr > 0 ? currentProcessedViewData.totalDr.toFixed(2) : '-'}</td>
+                    <td class="text-right">${currentProcessedViewData.totalCr > 0 ? currentProcessedViewData.totalCr.toFixed(2) : '-'}</td>
+                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                </tr>`;
+            }
+
             document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="5" class="text-center">No approved records.</td></tr>`;
+            
             const opBal = currentProcessedViewData.openingBalance || 0;
             document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
             document.getElementById('rcptTotalDebit').textContent = `Rs.${currentProcessedViewData.totalDr.toFixed(2)}`;
@@ -1212,7 +1461,9 @@
 
         function directPrintStatement() {
             openPrintPreview();
-            setTimeout(() => { window.print(); }, 300);
+            setTimeout(() => {
+                window.print();
+            }, 300);
         }
 
         function exportLedgerToCSV() {
@@ -1220,6 +1471,7 @@
                 showToast('No ledger data available to export.');
                 return;
             }
+
             const filterSelect = document.getElementById('ledgerMonthYearFilter');
             const periodLabel = filterSelect ? filterSelect.options[filterSelect.selectedIndex].text : "All Time";
 
@@ -1229,6 +1481,7 @@
             csvContent += "Date,Particular / Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
 
             let runningBal = currentProcessedViewData.openingBalance || 0;
+
             if (currentProcessedViewData.filterVal !== "ALL") {
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
@@ -1243,10 +1496,18 @@
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
                 const isApproved = appRaw.toLowerCase() === 'approved';
-                if (isApproved) runningBal += (cr - dr);
+
+                if (isApproved) {
+                    runningBal += (cr - dr);
+                }
+
                 const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
                 csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
             });
+
+            if (currentProcessedViewData.filterVal !== "ALL") {
+                csvContent += `"END","Closing Balance","-",${currentProcessedViewData.totalDr.toFixed(2)},${currentProcessedViewData.totalCr.toFixed(2)},${runningBal.toFixed(2)},"Closing"\n`;
+            }
 
             const finalNet = currentProcessedViewData.closingBalance;
             csvContent += `\nSUMMARY,,,"Total Debit: ${currentProcessedViewData.totalDr.toFixed(2)}","Total Credit: ${currentProcessedViewData.totalCr.toFixed(2)}","Closing Net: ${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}",\n`;
@@ -1269,13 +1530,16 @@
             const oldPass = document.getElementById('oldDepotPass').value.trim();
             const newPass = document.getElementById('newDepotPass').value.trim();
             const confirmPass = document.getElementById('confirmDepotPass').value.trim();
+
             if (newPass !== confirmPass) {
                 showToast("New passwords do not match!");
                 return;
             }
+
             const btn = document.getElementById('btnDepotPwdSubmit');
             btn.disabled = true;
-            showScreenBlocker('Updating password...');
+            btn.textContent = 'Updating...';
+            showScreenBlocker('Updating your depot password...');
 
             try {
                 const url = `${SCRIPT_URL}?action=changeDepotPassword&username=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`;
@@ -1283,9 +1547,15 @@
                 if (res && res.success) {
                     showToast(res.message);
                     closePasswordModal();
-                } else { showToast(res.message || "Failed to update password"); }
+                } else {
+                    showToast(res.message || "Failed to update password");
+                }
             } catch (err) { showToast("Error updating password"); }
-            finally { hideScreenBlocker(); btn.disabled = false; }
+            finally { 
+                hideScreenBlocker();
+                btn.disabled = false; 
+                btn.textContent = 'Update Password'; 
+            }
         });
 
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
@@ -1299,7 +1569,7 @@
 
             const btn = document.getElementById('btnSaveDispatchMain');
             btn.disabled = true;
-            showScreenBlocker(`Saving ${rawList.length} dispatch entry(s)... Screen is locked!`);
+            showScreenBlocker(`Saving ${rawList.length} dispatch entry(s)... Screen is locked until complete!`);
 
             const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
             const payload = {
@@ -1325,9 +1595,17 @@
                     document.getElementById('dispThrough').value = '';
                     document.getElementById('dispVehicleNo').value = '';
                     await loadDepotData();
-                } else { showToast(res.message || 'Saved.'); await loadDepotData(); }
-            } catch (err) { showToast('Entry recorded.'); await loadDepotData(); }
-            finally { hideScreenBlocker(); btn.disabled = false; }
+                } else {
+                    showToast(res.message || 'Saved.');
+                    await loadDepotData();
+                }
+            } catch (err) { 
+                showToast('Entry dispatched & recorded.');
+                await loadDepotData();
+            } finally {
+                hideScreenBlocker();
+                btn.disabled = false;
+            }
         });
 
         async function deleteDispatchRow(rowId) {
@@ -1338,20 +1616,17 @@
                 showToast(res.message || "Deleted");
                 await loadDepotData();
             } catch (e) { showToast("Error deleting record"); }
-            finally { hideScreenBlocker(); }
+            finally {
+                hideScreenBlocker();
+            }
         }
 
-        function switchSidebarTab(tabId, btn) {
-            document.querySelectorAll('.pos-nav-item').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.depot-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
             document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
             document.getElementById('recordsTab').style.display = (tabId === 'recordsTab') ? 'block' : 'none';
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
-
-            const breadcrumb = document.getElementById('breadcrumbCurrent');
-            if (tabId === 'dispatchTab') breadcrumb.textContent = 'Invoice Dispatch';
-            else if (tabId === 'recordsTab') breadcrumb.textContent = 'Dispatch Reports';
-            else if (tabId === 'staffTab') breadcrumb.textContent = 'Staff & Ledger Details';
         }
 
         window.onload = () => {

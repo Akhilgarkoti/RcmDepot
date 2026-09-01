@@ -28,7 +28,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Top Navbar */
         .navbar {
             background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
             border-bottom: 2px solid var(--theme-mid-blue);
@@ -44,21 +43,6 @@
         }
 
         .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 220px; }
-        .btn-hamburger {
-            background: #ffffff;
-            border: 1px solid var(--theme-border-dark);
-            border-radius: 6px;
-            padding: 0.4rem 0.6rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--theme-top-blue);
-            font-size: 1.1rem;
-            font-weight: 800;
-        }
-        .btn-hamburger:hover { background: #f1f5f9; }
-
         .depot-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
@@ -85,66 +69,8 @@
         .btn-action-nav:hover { background: #f8fafc; border-color: #1e3a5f; }
         .btn-nav-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
 
-        /* RCM POS Style Side Navigation Drawer */
-        .pos-sidebar-drawer {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 280px;
-            height: 100vh;
-            background: #ffffff;
-            border-right: 1px solid #cbd5e1;
-            box-shadow: 5px 0 25px rgba(0,0,0,0.2);
-            z-index: 2100;
-            display: flex;
-            flex-direction: column;
-            transition: left 0.3s ease;
-        }
-        .pos-sidebar-drawer.open { left: 0; }
-        .pos-sidebar-header {
-            padding: 1rem 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #e2e8f0;
-            background: #f8fafc;
-        }
-        .pos-sidebar-menu {
-            list-style: none;
-            padding: 1rem 0.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-            overflow-y: auto;
-            flex: 1;
-        }
-        .pos-sidebar-item {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 0.7rem 0.9rem;
-            border-radius: 6px;
-            color: #475569;
-            font-size: 0.88rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .pos-sidebar-item:hover { background: #f1f5f9; color: #0f172a; }
-        .pos-sidebar-item.active { background: #e0f2fe; color: #0284c7; font-weight: 700; }
-        .pos-sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.45);
-            backdrop-filter: blur(2px);
-            z-index: 2050;
-        }
-
         .main-container { width: 100%; max-width: 1560px; margin: 1rem auto; padding: 0 1rem; }
 
-        /* Tabs */
         .depot-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--theme-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; }
         .tab-btn { 
             background: linear-gradient(180deg, #e7edf4 0%, #cfdde9 100%); 
@@ -254,9 +180,6 @@
         .row-opening-balance { background-color: #eff6ff !important; font-weight: bold; }
         .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #0284c7 !important; }
 
-        .row-closing-balance { background-color: #ecfdf5 !important; font-weight: bold; }
-        .row-closing-balance td { border-top: 2px solid #6ee7b7 !important; border-bottom: 2px solid #6ee7b7 !important; color: #065f46 !important; }
-
         .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--theme-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--theme-top-blue); }
 
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
@@ -278,7 +201,7 @@
         
         .modal-box-large { 
             width: 95% !important; 
-            max-width: 1380px !important; 
+            max-width: 1250px !important; 
             margin: 1rem auto !important; 
         }
 
@@ -432,26 +355,6 @@
         <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
     </div>
 
-    <!-- Collapsible Side Navigation Drawer (RCM POS Theme) -->
-    <div id="posSidebarOverlay" class="pos-sidebar-overlay" onclick="toggleSidebar(false)"></div>
-    <aside id="posSidebarDrawer" class="pos-sidebar-drawer">
-        <div class="pos-sidebar-header">
-            <div style="display:flex;align-items:center;gap:0.6rem;">
-                <div style="width:32px;height:32px;border-radius:6px;background:#0284c7;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;">R</div>
-                <div><h4 style="font-size:0.92rem;font-weight:800;color:#0f172a;">RCM POS</h4><span style="font-size:0.72rem;color:#64748b;">Depot Management</span></div>
-            </div>
-            <button onclick="toggleSidebar(false)" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:#64748b;">&times;</button>
-        </div>
-        <ul class="pos-sidebar-menu">
-            <li><a href="javascript:void(0)" class="pos-sidebar-item" onclick="switchTabAndClose('dispatchTab')"><span>📦</span> <span>Invoice Dispatch</span></a></li>
-            <li><a href="javascript:void(0)" class="pos-sidebar-item" onclick="switchTabAndClose('recordsTab')"><span>📊</span> <span>Dispatch History</span></a></li>
-            <li><a href="javascript:void(0)" class="pos-sidebar-item active" onclick="switchTabAndClose('staffTab')"><span>👥</span> <span>Staff & Ledger</span></a></li>
-            <li style="border-top:1px solid #e2e8f0;margin:0.5rem 0;"></li>
-            <li><a href="javascript:void(0)" class="pos-sidebar-item" onclick="openPasswordModal(); toggleSidebar(false);"><span>🔑</span> <span>Change Password</span></a></li>
-            <li><a href="/" onclick="sessionStorage.clear()" class="pos-sidebar-item" style="color:#ef4444;"><span>🚪</span> <span>Logout</span></a></li>
-        </ul>
-    </aside>
-
     <div id="toastContainer" class="toast-container"></div>
     <datalist id="dispatchThroughList"></datalist>
     <datalist id="vehicleNoList"></datalist>
@@ -459,7 +362,6 @@
     <!-- Main Navigation Bar -->
     <div class="navbar">
         <div class="brand-section">
-            <button class="btn-hamburger" onclick="toggleSidebar(true)" title="Open Menu">☰</button>
             <div class="depot-logo-box" id="depotLogoBox"><svg width="32" height="26" viewBox="0 0 24 24" fill="#32567f"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
             <div><h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3><span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">Manager Portal</span></div>
         </div>
@@ -604,43 +506,69 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal with POS Style Opening/Closing Balances -->
+    <!-- Modal 3: Statement View Modal with Year Filter & Monthly Summary Grid -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
-                <span id="ledgerStaffTitle">📄 Staff Ledger Statement</span>
+                <span id="ledgerStaffTitle">📄 Staff Ledger</span>
                 <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="stat-banner">
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">OPENING BAL.</span><strong id="modOpeningBalance" style="color:var(--accent-bal);font-size:1.05rem;">₹0</strong></div>
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL CREDIT</span><strong id="modTotalCredit" style="color:var(--accent-cr);font-size:1.05rem;">₹0</strong></div>
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">TOTAL DEBIT</span><strong id="modTotalDebit" style="color:var(--accent-dr);font-size:1.05rem;">₹0</strong></div>
-                    <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">CLOSING BALANCE</span><strong id="modNetBalance" style="color:var(--accent-bal);font-size:1.15rem;">₹0</strong></div>
-                    
+                
+                <!-- Filter & Action Controls -->
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
+                        <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
+                    </div>
                     <div class="ledger-actions-group">
-                        <select id="ledgerMonthYearFilter" class="filter-select-box" onchange="renderFilteredLedger()" style="padding:0.45rem 0.6rem;font-weight:bold;"></select>
-                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.45rem 0.8rem;" onclick="openPrintPreview()">👁️ View Statement</button>
+                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.45rem 0.8rem;" onclick="openPrintPreview()">👁️ View Full Statement</button>
                         <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.45rem 0.8rem;" onclick="directPrintStatement()">🖨️ Print</button>
-                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.8rem;" onclick="exportLedgerToCSV()">📥 Export Excel</button>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.8rem;" onclick="exportLedgerToCSV()">📥 Export As (Excel)</button>
                     </div>
                 </div>
-                <div class="table-responsive" style="max-height: 520px;">
-                    <table class="custom-table">
+
+                <!-- Monthly Summary Table (Photo Format) -->
+                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 480px; background:#fff;">
+                    <table class="custom-table" id="annualSummaryTable">
                         <thead>
                             <tr>
-                                <th style="width:110px;">Date</th>
-                                <th style="min-width:320px;">Particular / Transaction Description</th>
-                                <th style="width:90px;">Mode</th>
-                                <th style="width:110px;text-align:right;">Debit (₹)</th>
-                                <th style="width:110px;text-align:right;">Credit (₹)</th>
-                                <th style="width:130px;text-align:right;">Balance (₹)</th>
-                                <th style="width:100px;text-align:center;">Status</th>
+                                <th style="width:14%;">Month</th>
+                                <th style="width:20%; text-align:right;">Debit</th>
+                                <th style="width:20%; text-align:right;">Credit</th>
+                                <th style="width:20%; text-align:right;">Balance</th>
+                                <th style="width:12%; text-align:center;">Type</th>
+                                <th style="width:14%; text-align:center;">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="modalLedgerTableBody"></tbody>
+                        <tbody id="annualSummaryTbody"></tbody>
                     </table>
                 </div>
+
+                <!-- Detailed Month-wise Breakdown (Shown upon clicking "View") -->
+                <div id="monthDetailContainer" style="display:none; margin-top:1rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
+                        <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
+                    </div>
+                    <div class="table-responsive" style="max-height: 380px; background:#fff;">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:110px;">Date</th>
+                                    <th style="min-width:320px;">Particular / Transaction Description</th>
+                                    <th style="width:90px;">Mode</th>
+                                    <th style="width:110px;text-align:right;">Debit (₹)</th>
+                                    <th style="width:110px;text-align:right;">Credit (₹)</th>
+                                    <th style="width:130px;text-align:right;">Balance (₹)</th>
+                                    <th style="width:100px;text-align:center;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthDetailTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -717,28 +645,11 @@
         let currentActiveStaffCode = "";
         let currentActiveStaffName = "";
         let currentActiveStaffLedger = [];
-        let currentProcessedViewData = { openingBalance: 0, rows: [], totalDr: 0, totalCr: 0, closingBalance: 0, filterVal: "ALL" };
+        let annualSummaryData = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        function toggleSidebar(open) {
-            const sidebar = document.getElementById('posSidebarDrawer');
-            const overlay = document.getElementById('posSidebarOverlay');
-            if (open) {
-                sidebar.classList.add('open');
-                overlay.style.display = 'block';
-            } else {
-                sidebar.classList.remove('open');
-                overlay.style.display = 'none';
-            }
-        }
-
-        function switchTabAndClose(tabId) {
-            toggleSidebar(false);
-            if (tabId === 'dispatchTab') switchTab('dispatchTab', document.getElementById('tabBtnDispatch'));
-            else if (tabId === 'recordsTab') switchTab('recordsTab', document.getElementById('tabBtnRecords'));
-            else if (tabId === 'staffTab') switchTab('staffTab', document.getElementById('tabBtnStaff'));
-        }
+        // Financial Year Months Sequence (Apr to Mar)
+        const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
@@ -1211,52 +1122,40 @@
             }
         });
 
-        function populateLedgerMonthDropdown(rows) {
-            const filterEl = document.getElementById('ledgerMonthYearFilter');
+        // Populate Financial Year Dropdown
+        function populateYearDropdown(rows) {
+            const yearSelect = document.getElementById('ledgerYearFilter');
+            const yearsSet = new Set();
             const now = new Date();
-            const curMonthKey = `${String(now.getFullYear())}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-            const monthMap = new Map();
+            const currentYear = now.getFullYear();
+            
+            // Default current FY
+            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
+            yearsSet.add(curFyStart);
 
             rows.forEach(r => {
                 let d = parseDateObj(getField(r, 'Transaction Date', 'date'));
                 if (d) {
-                    let key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    let label = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
-                    monthMap.set(key, label);
+                    let fyStart = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
+                    yearsSet.add(fyStart);
                 }
             });
 
-            if (!monthMap.has(curMonthKey)) {
-                monthMap.set(curMonthKey, `${monthNames[now.getMonth()]} ${now.getFullYear()}`);
-            }
-
-            const sortedKeys = Array.from(monthMap.keys()).sort();
-
-            let optionsHtml = `<option value="ALL">🌐 All Time Records</option>`;
-            sortedKeys.forEach(k => {
-                let isSelected = (k === curMonthKey) ? 'selected' : '';
-                optionsHtml += `<option value="${k}" ${isSelected}>🗓️ ${monthMap.get(k)}</option>`;
+            const sortedYears = Array.from(yearsSet).sort((a,b) => b - a);
+            let optionsHtml = '';
+            sortedYears.forEach(y => {
+                let isSel = (y === curFyStart) ? 'selected' : '';
+                optionsHtml += `<option value="${y}" ${isSel}>FY: ${y}-${String(y+1).slice(2)}</option>`;
             });
-
-            filterEl.innerHTML = optionsHtml;
+            yearSelect.innerHTML = optionsHtml;
         }
 
-        // Render Ledger with exact POS Style "01 Aug" & "Opening Balance"
-        function renderFilteredLedger() {
-            const filterVal = document.getElementById('ledgerMonthYearFilter').value;
-            const tbody = document.getElementById('modalLedgerTableBody');
-
-            let openingBalance = 0;
-            let currentMonthRows = [];
-            let filterYear = 0, filterMonth = 0;
-            let monthShortName = "Aug";
-
-            if (filterVal !== "ALL") {
-                const parts = filterVal.split('-');
-                filterYear = parseInt(parts[0], 10);
-                filterMonth = parseInt(parts[1], 10);
-                monthShortName = monthNames[filterMonth - 1];
-            }
+        // Render Annual Summary (Photo 2 Table Style: OPN, Apr, May, Jun... with View Action)
+        function renderAnnualSummaryLedger() {
+            hideMonthDetails();
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1); // 1st April
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59); // 31st March
 
             const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
                 let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
@@ -1264,50 +1163,142 @@
                 return da - db;
             });
 
+            let openingBalance = 0;
+            const monthlyData = {};
+
+            fyMonthSequence.forEach(mIndex => {
+                monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] };
+            });
+
             validRows.forEach(r => {
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
                 const isApproved = appRaw.toLowerCase() === 'approved';
                 const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
 
-                if (!d || filterVal === "ALL") {
-                    currentMonthRows.push(r);
-                } else {
-                    let rYear = d.getFullYear();
-                    let rMonth = d.getMonth() + 1;
+                if (!d) return;
 
-                    if (rYear < filterYear || (rYear === filterYear && rMonth < filterMonth)) {
+                if (d < fyStartDate) {
+                    if (isApproved) openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    const m = d.getMonth();
+                    if (monthlyData[m]) {
+                        monthlyData[m].rows.push(r);
                         if (isApproved) {
-                            openingBalance += (cr - dr);
+                            monthlyData[m].debit += dr;
+                            monthlyData[m].credit += cr;
                         }
-                    } else if (rYear === filterYear && rMonth === filterMonth) {
-                        currentMonthRows.push(r);
                     }
                 }
             });
 
+            annualSummaryData = [];
             let runningBal = openingBalance;
-            let monthDr = 0, monthCr = 0;
+            let tbodyHtml = '';
+
+            // 1. OPN Row
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
+            let opnType = openingBalance >= 0 ? 'CR' : 'DR';
+            annualSummaryData.push({
+                monthLabel: 'OPN',
+                debit: 0,
+                credit: openingBalance > 0 ? openingBalance : 0,
+                balance: runningBal,
+                type: opnType,
+                rows: []
+            });
+
+            tbodyHtml += `
+            <tr style="background:#ffffff; font-weight:700;">
+                <td style="color:#0f172a;">OPN</td>
+                <td style="text-align:right;">0</td>
+                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
+                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
+                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
+                <td style="text-align:center;">-</td>
+            </tr>`;
+
+            // 2. Apr to Mar Months Rows
+            fyMonthSequence.forEach(mIndex => {
+                const mObj = monthlyData[mIndex];
+                const mLabel = monthNames[mIndex];
+                const mDr = mObj.debit;
+                const mCr = mObj.credit;
+
+                runningBal += (mCr - mDr);
+                const balType = runningBal >= 0 ? 'CR' : 'DR';
+                const balFormatted = Math.abs(runningBal).toFixed(2);
+
+                annualSummaryData.push({
+                    monthLabel: mLabel,
+                    monthIndex: mIndex,
+                    year: (mIndex >= 3) ? startYear : startYear + 1,
+                    debit: mDr,
+                    credit: mCr,
+                    balance: runningBal,
+                    type: balType,
+                    rows: mObj.rows
+                });
+
+                tbodyHtml += `
+                <tr style="background:#ffffff;">
+                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
+                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
+                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
+                    <td style="text-align:center;">
+                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
+        }
+
+        // View single month transaction details
+        function viewMonthDetails(mIndex) {
+            const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+            const monthName = monthNames[mIndex];
+
+            document.getElementById('monthDetailHeader').textContent = `📅 Detailed Ledger: ${monthName} ${actualYear} (${currentActiveStaffName})`;
+
+            // Calculate opening balance till 1st of this month
+            let opnBalMonth = 0;
+            const firstOfThisMonth = new Date(actualYear, mIndex, 1);
+
+            currentActiveStaffLedger.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                if (d && d < firstOfThisMonth && isApproved) {
+                    opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
+                }
+            });
+
+            let runningBal = opnBalMonth;
             let html = '';
 
-            // Clean Top Opening Balance Row: "01 Aug" + "Opening Balance"
-            if (filterVal !== "ALL") {
-                let opCr = openingBalance > 0 ? openingBalance : 0;
-                let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            // Clean Top Opening Balance Row: "01 Month" + "Opening Balance"
+            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
+            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
 
-                html += `<tr class="row-opening-balance">
-                    <td><strong>01 ${monthShortName}</strong></td>
-                    <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
-                    <td>-</td>
-                    <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                    <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
-                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
-                </tr>`;
-            }
+            html += `<tr class="row-opening-balance">
+                <td><strong>01 ${monthName}</strong></td>
+                <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
+                <td>-</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
+            </tr>`;
 
-            currentMonthRows.forEach(r => {
+            mData.rows.forEach(r => {
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
@@ -1318,8 +1309,6 @@
                 const isApproved = appRaw.toLowerCase() === 'approved';
 
                 if (isApproved) {
-                    monthDr += dr;
-                    monthCr += cr;
                     runningBal += (cr - dr);
                 }
 
@@ -1334,51 +1323,29 @@
                 </tr>`;
             });
 
-            // Clean Bottom Closing Balance Row
-            if (filterVal !== "ALL") {
-                html += `<tr class="row-closing-balance">
-                    <td><strong>END</strong></td>
-                    <td style="white-space:normal;min-width:320px;"><strong>Closing Balance</strong></td>
-                    <td>-</td>
-                    <td style="font-weight:bold;text-align:right;color:var(--accent-dr);">${monthDr > 0 ? '₹' + monthDr.toFixed(2) : '-'}</td>
-                    <td style="font-weight:bold;text-align:right;color:var(--accent-cr);">${monthCr > 0 ? '₹' + monthCr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;font-size:0.95rem;">₹${runningBal.toFixed(2)}</td>
-                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#d1fae5;color:#065f46;">Closing</span></td>
-                </tr>`;
-            }
+            document.getElementById('monthDetailTbody').innerHTML = html;
+            document.getElementById('annualSummaryContainer').style.display = 'none';
+            document.getElementById('monthDetailContainer').style.display = 'block';
+        }
 
-            tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transaction lines found for this period.</td></tr>`;
-            
-            document.getElementById('modOpeningBalance').textContent = `₹${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('modTotalCredit').textContent = `₹${monthCr.toFixed(2)}`;
-            document.getElementById('modTotalDebit').textContent = `₹${monthDr.toFixed(2)}`;
-            document.getElementById('modNetBalance').textContent = `₹${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}`;
-
-            currentProcessedViewData = {
-                openingBalance: openingBalance,
-                rows: currentMonthRows,
-                totalDr: monthDr,
-                totalCr: monthCr,
-                closingBalance: runningBal,
-                filterVal: filterVal,
-                monthShortName: monthShortName
-            };
+        function hideMonthDetails() {
+            document.getElementById('annualSummaryContainer').style.display = 'block';
+            document.getElementById('monthDetailContainer').style.display = 'none';
         }
 
         async function openStaffLedger(code, name) {
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
             document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
-            const tbody = document.getElementById('modalLedgerTableBody');
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:2rem;">Reading ledger records...</td></tr>`;
+            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2rem;">Reading ledger records from database...</td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(code)}`);
                 currentActiveStaffLedger = (res && res.ledger) ? res.ledger : [];
-                populateLedgerMonthDropdown(currentActiveStaffLedger);
-                renderFilteredLedger();
-            } catch (e) { tbody.innerHTML = `<tr><td colspan="7" class="text-center">Error communicating with server.</td></tr>`; }
+                populateYearDropdown(currentActiveStaffLedger);
+                renderAnnualSummaryLedger();
+            } catch (e) { document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center">Error reading database.</td></tr>`; }
         }
         function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
 
@@ -1391,8 +1358,8 @@
             const mob = getField(depot, 'Mob. No.', 'Mobile');
             const gstin = getField(depot, 'GSTIN');
 
-            const filterSelect = document.getElementById('ledgerMonthYearFilter');
-            const periodLabel = filterSelect ? filterSelect.options[filterSelect.selectedIndex].text : getTodayFormatted();
+            const yearSelect = document.getElementById('ledgerYearFilter');
+            const periodLabel = yearSelect ? yearSelect.options[yearSelect.selectedIndex].text : getTodayFormatted();
 
             document.getElementById('receiptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
             document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
@@ -1401,59 +1368,27 @@
             document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
             document.getElementById('rcptPrintPeriod').textContent = periodLabel;
 
-            let html = '';
-            let runningBal = currentProcessedViewData.openingBalance || 0;
-
-            if (currentProcessedViewData.filterVal !== "ALL") {
-                let opCr = runningBal > 0 ? runningBal : 0;
-                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-                html += `<tr style="background:#f1f5f9;font-weight:bold;">
-                    <td><strong>01 ${currentProcessedViewData.monthShortName}</strong></td>
-                    <td style="white-space:normal;"><strong>Opening Balance</strong></td>
-                    <td class="text-right">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                    <td class="text-right">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
-                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+            let html = '', totalDr = 0, totalCr = 0;
+            annualSummaryData.forEach(row => {
+                totalDr += row.debit;
+                totalCr += row.credit;
+                html += `<tr>
+                    <td><strong>${row.monthLabel}</strong></td>
+                    <td>Annual Summary</td>
+                    <td class="text-right">${row.debit > 0 ? row.debit.toFixed(2) : '-'}</td>
+                    <td class="text-right">${row.credit > 0 ? row.credit.toFixed(2) : '-'}</td>
+                    <td class="text-right"><strong>${Math.abs(row.balance).toFixed(2)} (${row.type})</strong></td>
                 </tr>`;
-            }
-
-            currentProcessedViewData.rows.forEach(r => {
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
-
-                if (appRaw.toLowerCase() === 'approved') {
-                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
-                    const part = getField(r, 'Particular', 'particular');
-
-                    runningBal += (cr - dr);
-                    html += `<tr>
-                        <td><strong>${dt}</strong></td>
-                        <td style="white-space:normal;">${part}</td>
-                        <td class="text-right">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td class="text-right">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
-                    </tr>`;
-                }
             });
 
-            if (currentProcessedViewData.filterVal !== "ALL") {
-                html += `<tr style="background:#ecfdf5;font-weight:bold;border-top:1px solid #000;">
-                    <td><strong>END</strong></td>
-                    <td style="white-space:normal;"><strong>Closing Balance</strong></td>
-                    <td class="text-right">${currentProcessedViewData.totalDr > 0 ? currentProcessedViewData.totalDr.toFixed(2) : '-'}</td>
-                    <td class="text-right">${currentProcessedViewData.totalCr > 0 ? currentProcessedViewData.totalCr.toFixed(2) : '-'}</td>
-                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
-                </tr>`;
-            }
+            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="5" class="text-center">No records.</td></tr>`;
+            const opn = annualSummaryData[0] ? annualSummaryData[0].balance : 0;
+            const finalBal = annualSummaryData[annualSummaryData.length - 1] ? annualSummaryData[annualSummaryData.length - 1].balance : 0;
 
-            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="5" class="text-center">No approved records.</td></tr>`;
-            
-            const opBal = currentProcessedViewData.openingBalance || 0;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${currentProcessedViewData.totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${currentProcessedViewData.totalCr.toFixed(2)}`;
-            const finalNet = currentProcessedViewData.closingBalance;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opn).toFixed(2)} ${opn >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalBal).toFixed(2)} ${finalBal >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('printModal').style.display = 'block';
         }
@@ -1461,61 +1396,32 @@
 
         function directPrintStatement() {
             openPrintPreview();
-            setTimeout(() => {
-                window.print();
-            }, 300);
+            setTimeout(() => { window.print(); }, 300);
         }
 
+        // Export Annual Summary to CSV (Excel)
         function exportLedgerToCSV() {
-            if (!currentProcessedViewData.rows || (currentProcessedViewData.rows.length === 0 && currentProcessedViewData.openingBalance === 0)) {
-                showToast('No ledger data available to export.');
+            if (!annualSummaryData || annualSummaryData.length === 0) {
+                showToast('No ledger summary available to export.');
                 return;
             }
 
-            const filterSelect = document.getElementById('ledgerMonthYearFilter');
-            const periodLabel = filterSelect ? filterSelect.options[filterSelect.selectedIndex].text : "All Time";
+            const yearSelect = document.getElementById('ledgerYearFilter');
+            const periodLabel = yearSelect ? yearSelect.options[yearSelect.selectedIndex].text : "FY Summary";
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `Staff Name,${currentActiveStaffName},Staff Code,${currentActiveStaffCode}\n`;
             csvContent += `Depot,${depotNameStored},Period,${periodLabel}\n\n`;
-            csvContent += "Date,Particular / Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
+            csvContent += "Month,Debit (INR),Credit (INR),Balance (INR),Type\n";
 
-            let runningBal = currentProcessedViewData.openingBalance || 0;
-
-            if (currentProcessedViewData.filterVal !== "ALL") {
-                let opCr = runningBal > 0 ? runningBal : 0;
-                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-                csvContent += `"01 ${currentProcessedViewData.monthShortName}","Opening Balance","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
-            }
-
-            currentProcessedViewData.rows.forEach(r => {
-                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
-                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-
-                if (isApproved) {
-                    runningBal += (cr - dr);
-                }
-
-                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
-                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+            annualSummaryData.forEach(r => {
+                csvContent += `"${r.monthLabel}",${r.debit.toFixed(2)},${r.credit.toFixed(2)},${Math.abs(r.balance).toFixed(2)},"${r.type}"\n`;
             });
-
-            if (currentProcessedViewData.filterVal !== "ALL") {
-                csvContent += `"END","Closing Balance","-",${currentProcessedViewData.totalDr.toFixed(2)},${currentProcessedViewData.totalCr.toFixed(2)},${runningBal.toFixed(2)},"Closing"\n`;
-            }
-
-            const finalNet = currentProcessedViewData.closingBalance;
-            csvContent += `\nSUMMARY,,,"Total Debit: ${currentProcessedViewData.totalDr.toFixed(2)}","Total Credit: ${currentProcessedViewData.totalCr.toFixed(2)}","Closing Net: ${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Ledger_${currentActiveStaffCode}_${periodLabel.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+            link.setAttribute("download", `Ledger_Summary_${currentActiveStaffCode}_${periodLabel.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

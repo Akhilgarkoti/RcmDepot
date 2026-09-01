@@ -236,30 +236,75 @@
             flex-wrap: wrap;
         }
 
-        .receipt-container { background: #ffffff; color: #000000; padding: 1.4rem; font-family: 'Consolas', 'Courier New', monospace; font-size: 0.84rem; width: 100%; max-width: 680px; margin: 0 auto; border: 1px solid #ddd; }
-        .receipt-header { text-align: center; border-bottom: 1px dashed #000; padding-bottom: 0.6rem; margin-bottom: 0.6rem; }
-        .receipt-company-logo { width: 180px; height: 50px; margin: 0 auto 0.4rem auto; display: flex; align-items: center; justify-content: center; }
+        /* Screen Preview for Modal */
+        .receipt-container { 
+            background: #ffffff; 
+            color: #000000; 
+            padding: 1.2rem; 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            font-size: 0.82rem; 
+            width: 100%; 
+            max-width: 650px; 
+            margin: 0 auto; 
+            border: 1px solid #ddd; 
+        }
+        .receipt-header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
+        .receipt-company-logo { width: 160px; height: 44px; margin: 0 auto 0.2rem auto; display: flex; align-items: center; justify-content: center; }
         .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .receipt-header h2 { font-size: 1.05rem; font-weight: 800; color: #000; margin-bottom: 0.2rem; font-family: 'Segoe UI', sans-serif; }
-        .receipt-header p { font-size: 0.76rem; line-height: 1.4; color: #222; }
-        .receipt-title { font-weight: 800; margin-top: 0.4rem; display: block; font-size: 0.88rem; }
+        .receipt-header h2 { font-size: 0.95rem; font-weight: 800; color: #000; margin-bottom: 0.1rem; }
+        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
+        .receipt-title { font-weight: 800; margin-top: 0.25rem; display: block; font-size: 0.82rem; }
 
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.8rem; line-height: 1.5; border-bottom: 1px dashed #000; padding-bottom: 0.5rem; margin-bottom: 0.5rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.5rem; }
-        .receipt-table th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 5px 3px; font-weight: bold; color: #000; font-size: 0.8rem; text-align: left; }
-        .receipt-table td { padding: 4px 3px; font-size: 0.8rem; color: #000; border-bottom: 1px dotted #ccc; }
+        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.76rem; line-height: 1.4; border-bottom: 1px solid #000; padding-bottom: 0.35rem; margin-bottom: 0.35rem; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.35rem; }
+        .receipt-table th { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 2px; font-weight: bold; color: #000; font-size: 0.76rem; text-align: left; }
+        .receipt-table td { padding: 3px 2px; font-size: 0.75rem; color: #000; border-bottom: 1px solid #e2e8f0; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
-        .receipt-summary { border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 0.5rem 0; font-size: 0.84rem; line-height: 1.5; font-weight: bold; }
+        .receipt-summary { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.4; font-weight: bold; }
         .receipt-summary .sum-row { display: flex; justify-content: space-between; }
         .print-green-btn { width: 100%; background: linear-gradient(180deg, #059669 0%, #047857 100%); color: white; border: 1px solid #065f46; padding: 0.75rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.92rem; }
 
+        /* EXACT A4 HALF / A5 PAGE PRINT STYLES */
         @media print {
+            @page {
+                size: A5 portrait; /* Exact A4 Half */
+                margin: 6mm 8mm;
+            }
+            body { 
+                background: #ffffff !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
             body * { visibility: hidden; }
             #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { position: absolute; left: 0; top: 0; width: 100%; max-width: 100%; margin: 0; background: #fff; color: #000; }
-            .modal-top-bar, .receipt-actions { display: none !important; }
+            #printableReceipt { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                background: #fff !important; 
+                color: #000 !important; 
+                border: none !important;
+                font-size: 8pt !important;
+                line-height: 1.2 !important;
+            }
+            .modal-top-bar, .receipt-actions, .modal-box { display: none !important; border: none !important; }
+            
+            .receipt-header h2 { font-size: 10pt !important; margin-bottom: 2px !important; }
+            .receipt-header p { font-size: 7pt !important; line-height: 1.15 !important; }
+            .receipt-company-logo { width: 140px !important; height: 35px !important; margin-bottom: 2px !important; }
+            .receipt-title { font-size: 8.5pt !important; margin-top: 3px !important; }
+            .receipt-meta { font-size: 7.5pt !important; padding-bottom: 3px !important; margin-bottom: 3px !important; }
+            .receipt-table th { font-size: 7.5pt !important; padding: 2px 1px !important; }
+            .receipt-table td { font-size: 7pt !important; padding: 2px 1px !important; border-bottom: 0.5px solid #ccc !important; }
+            .receipt-summary { font-size: 7.5pt !important; padding: 3px 0 !important; }
         }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
@@ -376,7 +421,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History (Only Delete Action) -->
+        <!-- 2. Records History -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
             <div class="table-toolbar">
@@ -457,7 +502,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal with Month-Year Filter and Opening Balance -->
+    <!-- Modal 3: Statement View Modal with Filter and Action Buttons -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -497,10 +542,10 @@
         </div>
     </div>
 
-    <!-- Modal 4: Statement Print & Preview Modal -->
+    <!-- Modal 4: A4 Half (A5) Formatted Statement View -->
     <div id="printModal" class="modal">
-        <div class="modal-box" style="max-width: 720px;">
-            <div class="modal-top-bar"><span>📄 Printable Statement View</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
+        <div class="modal-box" style="max-width: 680px;">
+            <div class="modal-top-bar"><span>📄 Statement Preview (A4 Half Size)</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
             <div id="printableReceipt" class="receipt-container">
                 <div class="receipt-header">
                     <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
@@ -514,17 +559,17 @@
                     <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p></div>
                 </div>
                 <table class="receipt-table">
-                    <thead><tr><th style="width:18%;">Date</th><th style="width:46%;">Particulars</th><th class="text-right" style="width:12%;">Dr</th><th class="text-right" style="width:12%;">Cr</th><th class="text-right" style="width:12%;">Bal</th></tr></thead>
+                    <thead><tr><th style="width:17%;">Date</th><th style="width:47%;">Particulars</th><th class="text-right" style="width:12%;">Dr</th><th class="text-right" style="width:12%;">Cr</th><th class="text-right" style="width:12%;">Bal</th></tr></thead>
                     <tbody id="rcptTableBody"></tbody>
                 </table>
                 <div class="receipt-summary">
                     <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
                     <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
-                    <div class="sum-row" style="margin-top:4px;border-top:1px dashed #000;padding-top:4px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+                    <div class="sum-row" style="margin-top:3px;border-top:1px dashed #000;padding-top:3px;"><span>NET BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
                 </div>
             </div>
             <div style="padding:1rem; background:#f1f5f9; text-align:center;" class="receipt-actions">
-                <button class="print-green-btn" onclick="window.print()">🖨️ Send to Printer / Save PDF</button>
+                <button class="print-green-btn" onclick="window.print()">🖨️ Print Statement (A4 Half)</button>
             </div>
         </div>
     </div>
@@ -1043,7 +1088,6 @@
             }
         });
 
-        // Populate Month-Year Filter with Current Month by Default
         function populateLedgerMonthDropdown(rows) {
             const filterEl = document.getElementById('ledgerMonthYearFilter');
             const now = new Date();
@@ -1074,7 +1118,6 @@
             filterEl.innerHTML = optionsHtml;
         }
 
-        // Render Ledger with Previous Month Old Balance on Top
         function renderFilteredLedger() {
             const filterVal = document.getElementById('ledgerMonthYearFilter').value;
             const tbody = document.getElementById('modalLedgerTableBody');
@@ -1089,7 +1132,6 @@
                 filterMonth = parseInt(parts[1], 10);
             }
 
-            // Chronologically sort approved records to accurately calculate running balance
             const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
                 let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
                 let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
@@ -1123,7 +1165,6 @@
             let totalDr = 0, totalCr = 0;
             let html = '';
 
-            // Render Opening Balance Top Row if filtered by specific month
             if (filterVal !== "ALL") {
                 let opCr = openingBalance > 0 ? openingBalance : 0;
                 let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
@@ -1174,7 +1215,6 @@
             const net = totalCr - totalDr;
             document.getElementById('modNetBalance').textContent = `₹${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            // Store current filtered dataset for Print and CSV export
             currentProcessedViewData = {
                 openingBalance: openingBalance,
                 rows: currentMonthRows,
@@ -1273,7 +1313,6 @@
             }, 300);
         }
 
-        // Export Filtered View to CSV (With Previous Balance Included)
         function exportLedgerToCSV() {
             if (!currentProcessedViewData.rows || (currentProcessedViewData.rows.length === 0 && currentProcessedViewData.openingBalance === 0)) {
                 showToast('No ledger data available to export.');

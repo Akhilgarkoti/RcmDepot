@@ -174,6 +174,9 @@
         .row-duplicate { background-color: #fff1f2 !important; }
         .row-duplicate td { border-bottom-color: #fecdd3 !important; }
 
+        .row-opening-balance { background-color: #eff6ff !important; font-weight: bold; }
+        .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #1e40af !important; }
+
         .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--theme-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--theme-top-blue); }
 
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
@@ -215,7 +218,7 @@
 
         .stat-banner {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)) auto;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) auto;
             gap: 0.8rem;
             align-items: center;
             background: #ffffff;
@@ -228,6 +231,7 @@
 
         .ledger-actions-group {
             display: flex;
+            align-items: center;
             gap: 0.5rem;
             flex-wrap: wrap;
         }
@@ -261,7 +265,6 @@
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
 
-        /* Full Screen Saving & Processing Overlay */
         .global-loading-overlay {
             display: none;
             position: fixed;
@@ -298,7 +301,6 @@
 </head>
 <body>
 
-    <!-- Anti Double-Click / Saving Loading Screen -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="global-spinner"></div>
         <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
@@ -309,7 +311,6 @@
     <datalist id="dispatchThroughList"></datalist>
     <datalist id="vehicleNoList"></datalist>
 
-    <!-- Main Navigation Bar -->
     <div class="navbar">
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox"><svg width="32" height="26" viewBox="0 0 24 24" fill="#32567f"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
@@ -375,7 +376,7 @@
             </form>
         </div>
 
-        <!-- 2. Records History -->
+        <!-- 2. Records History (Only Delete Action) -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
             <div class="table-toolbar">
@@ -409,28 +410,6 @@
                     <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody id="staffTableBody"></tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Edit Dispatch Row -->
-    <div id="editDispatchModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span>✏️ Edit Dispatch Record</span>
-                <button class="modal-close-btn" onclick="closeEditDispatchModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="editDispatchForm">
-                    <input type="hidden" id="editDispId">
-                    <div class="form-group"><label>Invoice Number</label><input type="text" id="editDispInvoice" class="form-control" required></div>
-                    <div class="form-group"><label>Vehicle Type</label><select id="editDispVehicleType" class="form-control"><option value="Auto">Auto</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option></select></div>
-                    <div class="form-group"><label>Dispatch Through</label><input type="text" id="editDispThrough" class="form-control" required></div>
-                    <div class="form-group"><label>Vehicle Number</label><input type="text" id="editDispVehicleNo" class="form-control"></div>
-                    <div class="form-group"><label>Due-Excess</label><input type="text" id="editDispDueExcess" class="form-control" required></div>
-                    <div class="form-group"><label>Remark</label><input type="text" id="editDispRemark" class="form-control"></div>
-                    <button type="submit" class="btn-submit-dispatch" style="width:100%;margin-top:1rem;">💾 Update Dispatch Record</button>
-                </form>
             </div>
         </div>
     </div>
@@ -478,7 +457,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal (With Separate View, Print & Excel Export Buttons) -->
+    <!-- Modal 3: Statement View Modal with Month-Year Filter and Opening Balance -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -492,9 +471,10 @@
                     <div><span style="font-size:0.75rem;color:var(--text-muted);display:block;">CURRENT NET BALANCE</span><strong id="modNetBalance" style="color:var(--accent-bal);font-size:1.15rem;">₹0</strong></div>
                     
                     <div class="ledger-actions-group">
-                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.5rem 0.85rem;" onclick="openPrintPreview()">👁️ View Statement</button>
-                        <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.5rem 0.85rem;" onclick="directPrintStatement()">🖨️ Print</button>
-                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.5rem 0.85rem;" onclick="exportLedgerToCSV()">📥 Export Excel</button>
+                        <select id="ledgerMonthYearFilter" class="filter-select-box" onchange="renderFilteredLedger()" style="padding:0.45rem 0.6rem;font-weight:bold;"></select>
+                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.45rem 0.8rem;" onclick="openPrintPreview()">👁️ View Statement</button>
+                        <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.45rem 0.8rem;" onclick="directPrintStatement()">🖨️ Print</button>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.8rem;" onclick="exportLedgerToCSV()">📥 Export Excel</button>
                     </div>
                 </div>
                 <div class="table-responsive" style="max-height: 520px;">
@@ -531,7 +511,7 @@
                 </div>
                 <div class="receipt-meta">
                     <div><p><strong>Name:</strong> <span id="rcptStaffName">-</span></p><p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p></div>
-                    <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Date:</strong> <span id="rcptPrintDate">-</span></p></div>
+                    <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p></div>
                 </div>
                 <table class="receipt-table">
                     <thead><tr><th style="width:18%;">Date</th><th style="width:46%;">Particulars</th><th class="text-right" style="width:12%;">Dr</th><th class="text-right" style="width:12%;">Cr</th><th class="text-right" style="width:12%;">Bal</th></tr></thead>
@@ -588,6 +568,7 @@
         let currentActiveStaffCode = "";
         let currentActiveStaffName = "";
         let currentActiveStaffLedger = [];
+        let currentProcessedViewData = { openingBalance: 0, rows: [], totalDr: 0, totalCr: 0, netBal: 0 };
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -613,18 +594,29 @@
             setTimeout(() => { toast.remove(); }, 2500);
         }
 
-        function formatCleanDate(raw) {
-            if (!raw) return '-';
+        function parseDateObj(raw) {
+            if (!raw) return null;
             let str = String(raw).trim();
-            if (str === '-' || str === '') return '-';
-            if (str.match(/^\d{1,2}[\/\-][a-zA-Z]{3}[\/\-]\d{2,4}$/)) return str.replace(/\//g, '-');
-            let d = new Date(raw);
-            if (isNaN(d.getTime())) {
-                let parts = str.split('T')[0].split(' ')[0].split('-');
-                if (parts.length === 3) d = new Date(parts[0], parseInt(parts[1], 10) - 1, parts[2]);
+            if (str === '-' || str === '') return null;
+            let parts = str.match(/^(\d{1,2})[\/\-]([a-zA-Z]{3})[\/\-](\d{2,4})$/);
+            if (parts) {
+                let mIndex = monthNames.findIndex(m => m.toLowerCase() === parts[2].toLowerCase());
+                let yr = parseInt(parts[3], 10);
+                if (yr < 100) yr += 2000;
+                if (mIndex !== -1) return new Date(yr, mIndex, parseInt(parts[1], 10));
             }
-            if (!isNaN(d.getTime())) return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
-            return str.split(' 05:')[0].split('T')[0];
+            let d = new Date(raw);
+            if (!isNaN(d.getTime())) return d;
+            return null;
+        }
+
+        function formatCleanDate(raw) {
+            let d = parseDateObj(raw);
+            if (d && !isNaN(d.getTime())) {
+                return `${String(d.getDate()).padStart(2, '0')}-${monthNames[d.getMonth()]}-${String(d.getFullYear()).slice(2)}`;
+            }
+            let str = String(raw || '').trim();
+            return str.split(' 05:')[0].split('T')[0] || '-';
         }
 
         function getTodayFormatted() {
@@ -848,7 +840,6 @@
                     <td>${time}</td>
                     <td>${remark}</td>
                     <td>
-                        <button class="btn-tool" style="background:#e0f2fe;color:#0369a1;border-color:#bae6fd;margin-right:4px;" onclick="openEditDispatchModal('${rId}', '${inv}', '${vType}', '${through}', '${vNo}', '${dueExcess}', '${remark}')">✏️</button>
                         <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${rId}')">🗑️</button>
                     </td>
                 </tr>`;
@@ -892,63 +883,6 @@
             filterHistoryTable();
             showToast('All historical records loaded!');
         }
-
-        function openEditDispatchModal(id, inv, vType, through, vNo, due, remark) {
-            document.getElementById('editDispId').value = id;
-            document.getElementById('editDispInvoice').value = inv;
-            document.getElementById('editDispVehicleType').value = vType;
-            document.getElementById('editDispThrough').value = through;
-            document.getElementById('editDispVehicleNo').value = (vNo === '-' ? '' : vNo);
-            document.getElementById('editDispDueExcess').value = due;
-            document.getElementById('editDispRemark').value = (remark === '-' ? '' : remark);
-            document.getElementById('editDispatchModal').style.display = 'block';
-        }
-
-        function closeEditDispatchModal() {
-            document.getElementById('editDispatchModal').style.display = 'none';
-        }
-
-        document.getElementById('editDispatchForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const id = document.getElementById('editDispId').value;
-            const inv = document.getElementById('editDispInvoice').value.trim();
-            const vType = document.getElementById('editDispVehicleType').value;
-            const through = document.getElementById('editDispThrough').value.trim();
-            const vNo = document.getElementById('editDispVehicleNo').value.trim();
-            const due = document.getElementById('editDispDueExcess').value.trim();
-            const rem = document.getElementById('editDispRemark').value.trim();
-
-            closeEditDispatchModal();
-            showScreenBlocker('Updating dispatch record...');
-
-            const payload = {
-                action: 'editDispatchRow',
-                id: id,
-                invoiceNo: inv,
-                vehicleType: vType,
-                dispatchThrough: through,
-                vehicleNo: vNo,
-                dueExcess: due,
-                remarks: rem
-            };
-
-            try {
-                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
-                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
-                if (res && res.success) {
-                    showToast(res.message || 'Record updated!');
-                    await loadDepotData();
-                } else {
-                    showToast(res.message || 'Updated locally!');
-                    await loadDepotData();
-                }
-            } catch (err) {
-                showToast('Updated successfully.');
-                await loadDepotData();
-            } finally {
-                hideScreenBlocker();
-            }
-        });
 
         async function fetchStaffBalance(staffCode) {
             try {
@@ -1109,6 +1043,148 @@
             }
         });
 
+        // Populate Month-Year Filter with Current Month by Default
+        function populateLedgerMonthDropdown(rows) {
+            const filterEl = document.getElementById('ledgerMonthYearFilter');
+            const now = new Date();
+            const curMonthKey = `${String(now.getFullYear())}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const monthMap = new Map();
+
+            rows.forEach(r => {
+                let d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                if (d) {
+                    let key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                    let label = `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+                    monthMap.set(key, label);
+                }
+            });
+
+            if (!monthMap.has(curMonthKey)) {
+                monthMap.set(curMonthKey, `${monthNames[now.getMonth()]} ${now.getFullYear()}`);
+            }
+
+            const sortedKeys = Array.from(monthMap.keys()).sort();
+
+            let optionsHtml = `<option value="ALL">🌐 All Time Records</option>`;
+            sortedKeys.forEach(k => {
+                let isSelected = (k === curMonthKey) ? 'selected' : '';
+                optionsHtml += `<option value="${k}" ${isSelected}>🗓️ ${monthMap.get(k)}</option>`;
+            });
+
+            filterEl.innerHTML = optionsHtml;
+        }
+
+        // Render Ledger with Previous Month Old Balance on Top
+        function renderFilteredLedger() {
+            const filterVal = document.getElementById('ledgerMonthYearFilter').value;
+            const tbody = document.getElementById('modalLedgerTableBody');
+
+            let openingBalance = 0;
+            let currentMonthRows = [];
+            let filterYear = 0, filterMonth = 0;
+
+            if (filterVal !== "ALL") {
+                const parts = filterVal.split('-');
+                filterYear = parseInt(parts[0], 10);
+                filterMonth = parseInt(parts[1], 10);
+            }
+
+            // Chronologically sort approved records to accurately calculate running balance
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            validRows.forEach(r => {
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+
+                if (!d || filterVal === "ALL") {
+                    currentMonthRows.push(r);
+                } else {
+                    let rYear = d.getFullYear();
+                    let rMonth = d.getMonth() + 1;
+
+                    if (rYear < filterYear || (rYear === filterYear && rMonth < filterMonth)) {
+                        if (isApproved) {
+                            openingBalance += (cr - dr);
+                        }
+                    } else if (rYear === filterYear && rMonth === filterMonth) {
+                        currentMonthRows.push(r);
+                    }
+                }
+            });
+
+            let runningBal = openingBalance;
+            let totalDr = 0, totalCr = 0;
+            let html = '';
+
+            // Render Opening Balance Top Row if filtered by specific month
+            if (filterVal !== "ALL") {
+                let opCr = openingBalance > 0 ? openingBalance : 0;
+                let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+                totalCr += opCr;
+                totalDr += opDr;
+
+                html += `<tr class="row-opening-balance">
+                    <td><strong>01-${filterVal.split('-')[1]}</strong></td>
+                    <td style="white-space:normal;min-width:320px;"><strong>Previous Balance b/f (Old Year / Old Months Balance)</strong></td>
+                    <td>-</td>
+                    <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                    <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dcfce7;color:#15803d;">Carried</span></td>
+                </tr>`;
+            }
+
+            currentMonthRows.forEach(r => {
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                const part = getField(r, 'Particular', 'particular');
+                const mode = getField(r, 'Payment Mode', 'mode') || '-';
+
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+                }
+
+                html += `<tr>
+                    <td><strong>${dt}</strong></td>
+                    <td style="white-space:normal;min-width:320px;">${part}</td>
+                    <td>${mode}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transaction lines found for this period.</td></tr>`;
+            document.getElementById('modTotalCredit').textContent = `₹${totalCr.toFixed(2)}`;
+            document.getElementById('modTotalDebit').textContent = `₹${totalDr.toFixed(2)}`;
+            const net = totalCr - totalDr;
+            document.getElementById('modNetBalance').textContent = `₹${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            // Store current filtered dataset for Print and CSV export
+            currentProcessedViewData = {
+                openingBalance: openingBalance,
+                rows: currentMonthRows,
+                totalDr: totalDr,
+                totalCr: totalCr,
+                netBal: net,
+                filterVal: filterVal
+            };
+        }
+
         async function openStaffLedger(code, name) {
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
@@ -1119,42 +1195,9 @@
 
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(code)}`);
-                const rows = (res && res.ledger) ? res.ledger : [];
-                currentActiveStaffLedger = rows;
-
-                let totalDr = 0, totalCr = 0, runningBal = 0, html = '';
-                rows.forEach(r => {
-                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
-                    const part = getField(r, 'Particular', 'particular');
-                    const mode = getField(r, 'Payment Mode', 'mode') || '-';
-
-                    const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                    const isApproved = appRaw.toLowerCase() === 'approved';
-
-                    if (isApproved) {
-                        totalDr += dr;
-                        totalCr += cr;
-                        runningBal += (cr - dr);
-                    }
-
-                    html += `<tr>
-                        <td><strong>${dt}</strong></td>
-                        <td style="white-space:normal;min-width:320px;">${part}</td>
-                        <td>${mode}</td>
-                        <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                        <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                        <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
-                        <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
-                    </tr>`;
-                });
-
-                tbody.innerHTML = html || `<tr><td colspan="7" class="text-center" style="padding:1.5rem;">No transaction lines found.</td></tr>`;
-                document.getElementById('modTotalCredit').textContent = `₹${totalCr.toFixed(2)}`;
-                document.getElementById('modTotalDebit').textContent = `₹${totalDr.toFixed(2)}`;
-                const net = totalCr - totalDr;
-                document.getElementById('modNetBalance').textContent = `₹${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+                currentActiveStaffLedger = (res && res.ledger) ? res.ledger : [];
+                populateLedgerMonthDropdown(currentActiveStaffLedger);
+                renderFilteredLedger();
             } catch (e) { tbody.innerHTML = `<tr><td colspan="7" class="text-center">Error communicating with server.</td></tr>`; }
         }
         function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
@@ -1168,15 +1211,32 @@
             const mob = getField(depot, 'Mob. No.', 'Mobile');
             const gstin = getField(depot, 'GSTIN');
 
+            const filterSelect = document.getElementById('ledgerMonthYearFilter');
+            const periodLabel = filterSelect ? filterSelect.options[filterSelect.selectedIndex].text : getTodayFormatted();
+
             document.getElementById('receiptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
             document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
             document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
             document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode;
             document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
-            document.getElementById('rcptPrintDate').textContent = getTodayFormatted();
+            document.getElementById('rcptPrintPeriod').textContent = periodLabel;
 
-            let html = '', totalDr = 0, totalCr = 0, runningBal = 0;
-            currentActiveStaffLedger.forEach(r => {
+            let html = '';
+            let runningBal = currentProcessedViewData.openingBalance || 0;
+
+            if (currentProcessedViewData.filterVal !== "ALL") {
+                let opCr = runningBal > 0 ? runningBal : 0;
+                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                html += `<tr>
+                    <td><strong>01-B/F</strong></td>
+                    <td style="white-space:normal;"><strong>Old Month / Previous Balance b/f</strong></td>
+                    <td class="text-right">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                    <td class="text-right">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                    <td class="text-right"><strong>${runningBal.toFixed(2)}</strong></td>
+                </tr>`;
+            }
+
+            currentProcessedViewData.rows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
 
                 if (appRaw.toLowerCase() === 'approved') {
@@ -1185,7 +1245,7 @@
                     const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+                    runningBal += (cr - dr);
                     html += `<tr>
                         <td><strong>${dt}</strong></td>
                         <td style="white-space:normal;">${part}</td>
@@ -1197,9 +1257,9 @@
             });
 
             document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="5" class="text-center">No approved records.</td></tr>`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
-            const finalNet = totalCr - totalDr;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${currentProcessedViewData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${currentProcessedViewData.totalCr.toFixed(2)}`;
+            const finalNet = currentProcessedViewData.netBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('printModal').style.display = 'block';
@@ -1213,21 +1273,30 @@
             }, 300);
         }
 
-        // Export Ledger Directly to CSV/Excel
+        // Export Filtered View to CSV (With Previous Balance Included)
         function exportLedgerToCSV() {
-            if (!currentActiveStaffLedger || currentActiveStaffLedger.length === 0) {
+            if (!currentProcessedViewData.rows || (currentProcessedViewData.rows.length === 0 && currentProcessedViewData.openingBalance === 0)) {
                 showToast('No ledger data available to export.');
                 return;
             }
 
+            const filterSelect = document.getElementById('ledgerMonthYearFilter');
+            const periodLabel = filterSelect ? filterSelect.options[filterSelect.selectedIndex].text : "All Time";
+
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `Staff Name,${currentActiveStaffName},Staff Code,${currentActiveStaffCode}\n`;
-            csvContent += `Depot,${depotNameStored},Generated On,${getTodayFormatted()}\n\n`;
+            csvContent += `Depot,${depotNameStored},Period,${periodLabel}\n\n`;
             csvContent += "Date,Particular / Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
 
-            let totalDr = 0, totalCr = 0, runningBal = 0;
+            let runningBal = currentProcessedViewData.openingBalance || 0;
 
-            currentActiveStaffLedger.forEach(r => {
+            if (currentProcessedViewData.filterVal !== "ALL") {
+                let opCr = runningBal > 0 ? runningBal : 0;
+                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                csvContent += `"01-B/F","Old Month / Previous Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Carried"\n`;
+            }
+
+            currentProcessedViewData.rows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
                 const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
                 const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
@@ -1237,8 +1306,6 @@
                 const isApproved = appRaw.toLowerCase() === 'approved';
 
                 if (isApproved) {
-                    totalDr += dr;
-                    totalCr += cr;
                     runningBal += (cr - dr);
                 }
 
@@ -1246,13 +1313,13 @@
                 csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
             });
 
-            const net = totalCr - totalDr;
-            csvContent += `\nTOTALS,,,"${totalDr.toFixed(2)}","${totalCr.toFixed(2)}","Net: ${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            const net = currentProcessedViewData.netBal;
+            csvContent += `\nTOTALS,,,"${currentProcessedViewData.totalDr.toFixed(2)}","${currentProcessedViewData.totalCr.toFixed(2)}","Net: ${Math.abs(net).toFixed(2)} ${net >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Ledger_${currentActiveStaffCode}_${currentActiveStaffName.replace(/\s+/g, '_')}.csv`);
+            link.setAttribute("download", `Ledger_${currentActiveStaffCode}_${periodLabel.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

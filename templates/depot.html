@@ -185,6 +185,7 @@
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
         .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
+        /* Modal Dialogs */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 1rem; }
         
         .modal-box { 
@@ -218,82 +219,6 @@
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
         .modal-body { padding: 1.2rem; background: #f8fafc; }
-
-        .ledger-actions-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .receipt-container { 
-            background: #ffffff; 
-            color: #000000; 
-            padding: 1.2rem; 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            font-size: 0.82rem; 
-            width: 100%; 
-            max-width: 650px; 
-            margin: 0 auto; 
-            border: 1px solid #ddd; 
-        }
-        .receipt-header { text-align: center; border-bottom: 1px solid #000; padding-bottom: 0.4rem; margin-bottom: 0.4rem; }
-        .receipt-company-logo { width: 160px; height: 44px; margin: 0 auto 0.2rem auto; display: flex; align-items: center; justify-content: center; }
-        .receipt-company-logo img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .receipt-header h2 { font-size: 0.95rem; font-weight: 800; color: #000; margin-bottom: 0.1rem; }
-        .receipt-header p { font-size: 0.72rem; line-height: 1.3; color: #222; }
-        .receipt-title { font-weight: 800; margin-top: 0.25rem; display: block; font-size: 0.82rem; }
-
-        .receipt-meta { display: flex; justify-content: space-between; font-size: 0.76rem; line-height: 1.4; border-bottom: 1px solid #000; padding-bottom: 0.35rem; margin-bottom: 0.35rem; }
-        .receipt-table { width: 100%; border-collapse: collapse; margin-bottom: 0.35rem; }
-        .receipt-table th { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 4px 2px; font-weight: bold; color: #000; font-size: 0.76rem; text-align: left; }
-        .receipt-table td { padding: 3px 2px; font-size: 0.75rem; color: #000; border-bottom: 1px solid #e2e8f0; }
-        .text-right { text-align: right !important; }
-        .text-center { text-align: center !important; }
-
-        .receipt-summary { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 0.4rem 0; font-size: 0.78rem; line-height: 1.4; font-weight: bold; }
-        .receipt-summary .sum-row { display: flex; justify-content: space-between; }
-        .print-green-btn { width: 100%; background: linear-gradient(180deg, #059669 0%, #047857 100%); color: white; border: 1px solid #065f46; padding: 0.75rem; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 0.92rem; }
-
-        @media print {
-            @page {
-                size: A5 portrait;
-                margin: 6mm 8mm;
-            }
-            body { 
-                background: #ffffff !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-            }
-            body * { visibility: hidden; }
-            #printableReceipt, #printableReceipt * { visibility: visible; }
-            #printableReceipt { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100% !important; 
-                max-width: 100% !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                background: #fff !important; 
-                color: #000 !important; 
-                border: none !important;
-                font-size: 8pt !important;
-                line-height: 1.2 !important;
-            }
-            .modal-top-bar, .receipt-actions, .modal-box { display: none !important; border: none !important; }
-            
-            .receipt-header h2 { font-size: 10pt !important; margin-bottom: 2px !important; }
-            .receipt-header p { font-size: 7pt !important; line-height: 1.15 !important; }
-            .receipt-company-logo { width: 140px !important; height: 35px !important; margin-bottom: 2px !important; }
-            .receipt-title { font-size: 8.5pt !important; margin-top: 3px !important; }
-            .receipt-meta { font-size: 7.5pt !important; padding-bottom: 3px !important; margin-bottom: 3px !important; }
-            .receipt-table th { font-size: 7.5pt !important; padding: 2px 1px !important; }
-            .receipt-table td { font-size: 7pt !important; padding: 2px 1px !important; border-bottom: 0.5px solid #ccc !important; }
-            .receipt-summary { font-size: 7.5pt !important; padding: 3px 0 !important; }
-        }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
@@ -491,7 +416,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal with Year Filter & Monthly Summary Grid -->
+    <!-- Modal 3: Statement View Modal with Year Filter & Full Details Export -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -507,9 +432,7 @@
                         <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
                     </div>
                     <div class="ledger-actions-group">
-                        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.45rem 0.8rem;" onclick="openPrintPreview()">👁️ View Full Statement</button>
-                        <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.45rem 0.8rem;" onclick="directPrintStatement()">🖨️ Print</button>
-                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.8rem;" onclick="exportLedgerToCSV()">📥 Export As (Excel)</button>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
                     </div>
                 </div>
 
@@ -554,39 +477,6 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal 4: A4 Half (A5) Formatted Statement View -->
-    <div id="printModal" class="modal">
-        <div class="modal-box" style="max-width: 680px;">
-            <div class="modal-top-bar"><span>📄 Statement Preview (A4 Half Size)</span><button class="modal-close-btn" onclick="closePrintPreview()">&times;</button></div>
-            <div id="printableReceipt" class="receipt-container">
-                <div class="receipt-header">
-                    <div class="receipt-company-logo" id="receiptCompanyLogoBox"></div>
-                    <h2>RCM Consumer Products Private Limited</h2>
-                    <p id="receiptFullAddress">Depot Address</p>
-                    <p id="receiptContact">Mob: - | GSTIN: -</p>
-                    <span class="receipt-title">** OFFICIAL ACCOUNT STATEMENT **</span>
-                </div>
-                <div class="receipt-meta">
-                    <div><p><strong>Name:</strong> <span id="rcptStaffName">-</span></p><p><strong>Code:</strong> <span id="rcptStaffCode">-</span></p></div>
-                    <div class="text-right"><p><strong>Depot:</strong> <span id="rcptDepotName">-</span></p><p><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p></div>
-                </div>
-                <table class="receipt-table">
-                    <thead><tr><th style="width:17%;">Date</th><th style="width:47%;">Particulars</th><th class="text-right" style="width:12%;">Dr</th><th class="text-right" style="width:12%;">Cr</th><th class="text-right" style="width:12%;">Bal</th></tr></thead>
-                    <tbody id="rcptTableBody"></tbody>
-                </table>
-                <div class="receipt-summary">
-                    <div class="sum-row"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
-                    <div class="sum-row"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
-                    <div class="sum-row"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
-                    <div class="sum-row" style="margin-top:3px;border-top:1px dashed #000;padding-top:3px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
-                </div>
-            </div>
-            <div style="padding:1rem; background:#f1f5f9; text-align:center;" class="receipt-actions">
-                <button class="print-green-btn" onclick="window.print()">🖨️ Print Statement (A4 Half)</button>
             </div>
         </div>
     </div>
@@ -839,7 +729,6 @@
 
                 setSafeImage('companyLogoBox', res.companyLogo);
                 setSafeImage('depotLogoBox', res.depotLogo);
-                setSafeImage('receiptCompanyLogoBox', res.companyLogo);
 
                 const dName = getField(depot, 'Depot Name') || depotNameStored;
                 const addr = getField(depot, 'Depot Address');
@@ -1168,7 +1057,7 @@
             yearSelect.innerHTML = optionsHtml;
         }
 
-        // Render Annual Summary - Filter out months with 0 debit & 0 credit
+        // Render Annual Summary - Skips inactive months (Debit=0 and Credit=0)
         function renderAnnualSummaryLedger() {
             hideMonthDetails();
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
@@ -1215,7 +1104,7 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            // 1. OPN Row (Always shown)
+            // 1. OPN Row
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({
@@ -1237,14 +1126,14 @@
                 <td style="text-align:center;">-</td>
             </tr>`;
 
-            // 2. Active Months Only (Exclude 0 debit & 0 credit months)
+            // 2. Active Months Only
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
                 const mLabel = monthNames[mIndex];
                 const mDr = mObj.debit;
                 const mCr = mObj.credit;
 
-                // If month has no debit and no credit, skip from display
+                // Skip months where no activity occurred
                 if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
                     return;
                 }
@@ -1369,82 +1258,85 @@
         }
         function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
 
-        function openPrintPreview() {
-            const depot = depotGlobalInfo || {};
-            const addr = getField(depot, 'Depot Address');
-            const dist = getField(depot, 'Dristric', 'District');
-            const state = getField(depot, 'State Name');
-            const pin = getField(depot, 'Pin Code', 'Pincode');
-            const mob = getField(depot, 'Mob. No.', 'Mobile');
-            const gstin = getField(depot, 'GSTIN');
+        // Export Full Detailed Statement for Selected FY
+        function exportFullDetailedLedgerToCSV() {
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
 
-            const yearSelect = document.getElementById('ledgerYearFilter');
-            const periodLabel = yearSelect ? yearSelect.options[yearSelect.selectedIndex].text : getTodayFormatted();
-
-            document.getElementById('receiptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
-            document.getElementById('receiptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
-            document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
-            document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode;
-            document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
-            document.getElementById('rcptPrintPeriod').textContent = periodLabel;
-
-            let html = '', totalDr = 0, totalCr = 0;
-            annualSummaryData.forEach(row => {
-                totalDr += row.debit;
-                totalCr += row.credit;
-                html += `<tr>
-                    <td><strong>${row.monthLabel}</strong></td>
-                    <td>Annual Summary</td>
-                    <td class="text-right">${row.debit > 0 ? row.debit.toFixed(2) : '-'}</td>
-                    <td class="text-right">${row.credit > 0 ? row.credit.toFixed(2) : '-'}</td>
-                    <td class="text-right"><strong>${Math.abs(row.balance).toFixed(2)} (${row.type})</strong></td>
-                </tr>`;
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
             });
 
-            document.getElementById('rcptTableBody').innerHTML = html || `<tr><td colspan="5" class="text-center">No records.</td></tr>`;
-            const opn = annualSummaryData[0] ? annualSummaryData[0].balance : 0;
-            const finalBal = annualSummaryData[annualSummaryData.length - 1] ? annualSummaryData[annualSummaryData.length - 1].balance : 0;
+            let openingBalance = 0;
+            let currentFYRows = [];
 
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opn).toFixed(2)} ${opn >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalBal).toFixed(2)} ${finalBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            validRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
 
-            document.getElementById('printModal').style.display = 'block';
-        }
-        function closePrintPreview() { document.getElementById('printModal').style.display = 'none'; }
+                if (!d) return;
 
-        function directPrintStatement() {
-            openPrintPreview();
-            setTimeout(() => { window.print(); }, 300);
-        }
+                if (d < fyStartDate) {
+                    if (isApproved) openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    currentFYRows.push(r);
+                }
+            });
 
-        function exportLedgerToCSV() {
-            if (!annualSummaryData || annualSummaryData.length === 0) {
-                showToast('No ledger summary available to export.');
+            if (currentFYRows.length === 0 && openingBalance === 0) {
+                showToast('No ledger transactions to export for this FY.');
                 return;
             }
 
-            const yearSelect = document.getElementById('ledgerYearFilter');
-            const periodLabel = yearSelect ? yearSelect.options[yearSelect.selectedIndex].text : "FY Summary";
-
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `Staff Name,${currentActiveStaffName},Staff Code,${currentActiveStaffCode}\n`;
-            csvContent += `Depot,${depotNameStored},Period,${periodLabel}\n\n`;
-            csvContent += "Month,Debit (INR),Credit (INR),Balance (INR),Type\n";
+            csvContent += `Depot,${depotNameStored},Period,FY ${startYear}-${startYear + 1}\n\n`;
+            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
 
-            annualSummaryData.forEach(r => {
-                csvContent += `"${r.monthLabel}",${r.debit.toFixed(2)},${r.credit.toFixed(2)},${Math.abs(r.balance).toFixed(2)},"${r.type}"\n`;
+            let runningBal = openingBalance;
+            let totalDr = 0, totalCr = 0;
+
+            // Opening Balance Row
+            let opCr = openingBalance > 0 ? openingBalance : 0;
+            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
+
+            currentFYRows.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+                }
+
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
             });
+
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Ledger_Summary_${currentActiveStaffCode}_${periodLabel.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+            link.setAttribute("download", `Full_Ledger_${currentActiveStaffCode}_${periodLabel}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('Ledger Excel (.csv) downloaded successfully!');
+            showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
         }
 
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }

@@ -335,25 +335,49 @@
             </form>
         </div>
 
-        <!-- 2. Records History (Clean FY Nesting) -->
+        <!-- 2. Records History (FY Monthly Summary + Detail View Support) -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
             <div class="table-toolbar">
                 <div class="toolbar-left">
-                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()">
+                    <select id="historyPeriodFilter" class="filter-select-box" onchange="handleDispatchFilterChange()">
                         <option value="TODAY" selected>📅 Today's Entries</option>
                         <option value="ALL">🌐 All Records</option>
                     </select>
-                    <div class="search-box-wrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search..." oninput="filterHistoryTable()"></div>
+                    <div class="search-box-wrap" id="dispSearchWrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search invoices, driver, vehicle..." oninput="filterHistoryTable()"></div>
                     <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.85rem;" onclick="exportDispatchToCSV()">📥 Export Excel</button>
                 </div>
             </div>
-            <div class="table-responsive" style="max-height: 640px;">
-                <table class="custom-table" id="historyTable">
-                    <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
-                    <tbody id="dispatchTableBody"></tbody>
+
+            <!-- FY Month-wise Summary Table (Displayed when FY is selected) -->
+            <div id="dispFySummaryContainer" class="table-responsive" style="display:none; max-height: 640px;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;">Month</th>
+                            <th style="width:30%; text-align:right;">Total Dispatches</th>
+                            <th style="width:30%;">Top Vehicle Type</th>
+                            <th style="width:20%; text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispFySummaryTbody"></tbody>
                 </table>
             </div>
+
+            <!-- Standard Transaction History Table -->
+            <div id="dispRawTableContainer">
+                <div id="dispMonthBackBar" style="display:none; margin-bottom:0.6rem; justify-content:space-between; align-items:center;">
+                    <h4 id="dispMonthBackTitle" style="font-size:0.92rem; font-weight:800; color:#0369a1;">📅 Month Dispatch Records</h4>
+                    <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="backToDispatchFySummary()">⬅️ Back to FY Summary</button>
+                </div>
+                <div class="table-responsive" style="max-height: 640px;">
+                    <table class="custom-table" id="historyTable">
+                        <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
+                        <tbody id="dispatchTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="load-more-bar" id="loadOlderBar">
                 <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load All Older Records</button>
             </div>
@@ -417,7 +441,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal -->
+    <!-- Modal 3: Statement View Modal with Year Filter & Full Details Export -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -437,7 +461,7 @@
                     </div>
                 </div>
 
-                <!-- Monthly Summary Table -->
+                <!-- Monthly Summary Table (Zero Months Hidden) -->
                 <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
@@ -523,6 +547,7 @@
         let currentActiveStaffName = "";
         let currentActiveStaffLedger = [];
         let annualSummaryData = [];
+        let dispatchFySummaryList = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
@@ -701,45 +726,30 @@
             }
         }
 
-        // Clean Nested Dropdown: Today & All on Top, and Months Grouped Under FY
+        // Clean FY Filter for Dispatch History
         function populateHistoryMonthDropdown(dispatches) {
             const selectBox = document.getElementById('historyPeriodFilter');
             const now = new Date();
             const currentYear = now.getFullYear();
             const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
 
-            const fyMonthMap = new Map();
-            fyMonthMap.set(curFyStart, new Set());
+            const fySet = new Set();
+            fySet.add(curFyStart);
 
             dispatches.forEach(r => {
                 const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
                 if (d) {
                     const fy = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
-                    if (!fyMonthMap.has(fy)) {
-                        fyMonthMap.set(fy, new Set());
-                    }
-                    const mKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    fyMonthMap.get(fy).add(mKey);
+                    fySet.add(fy);
                 }
             });
 
             let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option>`;
             optionsHtml += `<option value="ALL">🌐 All Records</option>`;
 
-            const sortedFys = Array.from(fyMonthMap.keys()).sort((a, b) => b - a);
+            const sortedFys = Array.from(fySet).sort((a, b) => b - a);
             sortedFys.forEach(fy => {
-                const fyLabel = `💼 FY ${fy}-${String(fy+1).slice(2)}`;
-                optionsHtml += `<optgroup label="${fyLabel}">`;
-                optionsHtml += `<option value="FY_${fy}">📁 All ${fyLabel}</option>`;
-
-                const mSet = fyMonthMap.get(fy);
-                const sortedMonths = Array.from(mSet).sort().reverse();
-                sortedMonths.forEach(mKey => {
-                    const parts = mKey.split('-');
-                    const mName = monthNames[parseInt(parts[1], 10) - 1];
-                    optionsHtml += `<option value="${mKey}">&nbsp;&nbsp;🗓️ ${mName} ${parts[0]}</option>`;
-                });
-                optionsHtml += `</optgroup>`;
+                optionsHtml += `<option value="FY_${fy}">💼 FY: ${fy}-${String(fy+1).slice(2)}</option>`;
             });
 
             selectBox.innerHTML = optionsHtml;
@@ -774,9 +784,120 @@
 
                 buildHistoricalDataLists(loadedDispatches);
                 populateHistoryMonthDropdown(loadedDispatches);
-                filterHistoryTable();
+                handleDispatchFilterChange();
                 renderStaffTable(loadedStaffList);
             } catch (err) { console.error(err); }
+        }
+
+        // Handle Dispatch History Filter Trigger
+        function handleDispatchFilterChange() {
+            const periodVal = document.getElementById('historyPeriodFilter').value;
+            const fySummaryContainer = document.getElementById('dispFySummaryContainer');
+            const rawTableContainer = document.getElementById('dispRawTableContainer');
+            const loadOlderBtn = document.getElementById('loadOlderBar');
+            const searchWrap = document.getElementById('dispSearchWrap');
+            const backBar = document.getElementById('dispMonthBackBar');
+
+            if (backBar) backBar.style.display = 'none';
+
+            if (periodVal.startsWith("FY_")) {
+                fySummaryContainer.style.display = 'block';
+                rawTableContainer.style.display = 'none';
+                if (loadOlderBtn) loadOlderBtn.style.display = 'none';
+                if (searchWrap) searchWrap.style.display = 'none';
+                renderDispatchFySummary(parseInt(periodVal.replace("FY_", ""), 10));
+            } else {
+                fySummaryContainer.style.display = 'none';
+                rawTableContainer.style.display = 'block';
+                if (searchWrap) searchWrap.style.display = 'flex';
+                filterHistoryTable();
+            }
+        }
+
+        // Render FY Month-wise Dispatch Summary Table
+        function renderDispatchFySummary(startYear) {
+            const fyStart = new Date(startYear, 3, 1);
+            const fyEnd = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const monthlyMap = {};
+            fyMonthSequence.forEach(mIndex => {
+                monthlyMap[mIndex] = { count: 0, vTypes: {}, rows: [] };
+            });
+
+            loadedDispatches.forEach(r => {
+                const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
+                if (d && d >= fyStart && d <= fyEnd) {
+                    const m = d.getMonth();
+                    monthlyMap[m].rows.push(r);
+                    monthlyMap[m].count++;
+                    const vt = getField(r, 'Vehicle Type') || 'Auto';
+                    monthlyMap[m].vTypes[vt] = (monthlyMap[m].vTypes[vt] || 0) + 1;
+                }
+            });
+
+            dispatchFySummaryList = [];
+            let tbodyHtml = '';
+            let totalFyCount = 0;
+
+            fyMonthSequence.forEach(mIndex => {
+                const mData = monthlyMap[mIndex];
+                if (mData.count === 0) return; // Skip zero months
+
+                totalFyCount += mData.count;
+                const mLabel = monthNames[mIndex];
+                const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+
+                // Determine most frequent vehicle type
+                let topVType = '-';
+                let maxVCount = 0;
+                Object.keys(mData.vTypes).forEach(vt => {
+                    if (mData.vTypes[vt] > maxVCount) {
+                        maxVCount = mData.vTypes[vt];
+                        topVType = vt;
+                    }
+                });
+
+                dispatchFySummaryList.push({
+                    monthIndex: mIndex,
+                    monthLabel: mLabel,
+                    year: actualYear,
+                    count: mData.count,
+                    topVType: topVType,
+                    rows: mData.rows
+                });
+
+                tbodyHtml += `
+                <tr style="background:#ffffff;">
+                    <td style="font-weight:700; color:#1e293b;">${mLabel} ${actualYear}</td>
+                    <td style="text-align:right; font-weight:800; color:#0369a1;">${mData.count}</td>
+                    <td style="color:#475569; font-weight:600;">${topVType}</td>
+                    <td style="text-align:center;">
+                        <button class="btn-action-ledger" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="viewDispatchMonthDetails(${mIndex})">View</button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('dispFySummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="4" class="text-center" style="padding:2rem;">No dispatch records found in this Financial Year.</td></tr>`;
+            document.getElementById('dispCountBadge').textContent = `${totalFyCount} records (FY Summary)`;
+        }
+
+        // View single month dispatches from FY Summary
+        function viewDispatchMonthDetails(mIndex) {
+            const mData = dispatchFySummaryList.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+
+            document.getElementById('dispFySummaryContainer').style.display = 'none';
+            document.getElementById('dispRawTableContainer').style.display = 'block';
+            document.getElementById('dispMonthBackBar').style.display = 'flex';
+            document.getElementById('dispSearchWrap').style.display = 'flex';
+            document.getElementById('dispMonthBackTitle').textContent = `📅 Dispatch Records: ${mData.monthLabel} ${mData.year}`;
+
+            renderDispatchTable(mData.rows);
+        }
+
+        function backToDispatchFySummary() {
+            document.getElementById('dispMonthBackBar').style.display = 'none';
+            handleDispatchFilterChange();
         }
 
         function renderDispatchTable(list) {
@@ -841,7 +962,6 @@
             const filtered = loadedDispatches.filter(r => {
                 const rawDate = getField(r, 'Invoice Dispatch Date', 'Date');
                 const cleanDate = formatCleanDate(rawDate).toLowerCase();
-                const d = parseDateObj(rawDate);
 
                 if (query) {
                     const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
@@ -854,18 +974,6 @@
 
                 if (periodFilter === "TODAY") {
                     if (cleanDate !== todayStr) return false;
-                } else if (periodFilter.startsWith("FY_")) {
-                    if (!d) return false;
-                    const startYear = parseInt(periodFilter.replace("FY_", ""), 10);
-                    const fyStart = new Date(startYear, 3, 1);
-                    const fyEnd = new Date(startYear + 1, 2, 31, 23, 59, 59);
-                    if (d < fyStart || d > fyEnd) return false;
-                } else if (periodFilter !== "ALL") {
-                    if (!d) return false;
-                    const parts = periodFilter.split('-');
-                    const targetYear = parseInt(parts[0], 10);
-                    const targetMonth = parseInt(parts[1], 10);
-                    if (d.getFullYear() !== targetYear || (d.getMonth() + 1) !== targetMonth) return false;
                 }
                 return true;
             });
@@ -875,7 +983,7 @@
 
         function loadAllOlderRecords() {
             document.getElementById('historyPeriodFilter').value = "ALL";
-            filterHistoryTable();
+            handleDispatchFilterChange();
             showToast('All historical records loaded!');
         }
 
@@ -1098,7 +1206,7 @@
             yearSelect.innerHTML = optionsHtml;
         }
 
-        // Render Annual Summary
+        // Render Annual Summary - Skips inactive months (Debit=0 and Credit=0)
         function renderAnnualSummaryLedger() {
             hideMonthDetails();
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);

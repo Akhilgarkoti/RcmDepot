@@ -206,7 +206,7 @@
             margin: 0.8rem auto !important; 
         }
 
-        .modal-box-compact { max-width: 520px !important; }
+        .modal-box-compact { max-width: 500px !important; }
 
         .modal-top-bar { 
             display: flex; 
@@ -228,14 +228,22 @@
         .preview-slip-box {
             background: #ffffff;
             border: 1px solid #cbd5e1;
-            padding: 1rem;
-            border-radius: 4px;
+            padding: 1.2rem;
+            border-radius: 6px;
             font-family: 'Segoe UI', Arial, sans-serif;
             font-size: 8.5pt;
             color: #000;
         }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
+
+        /* Completely Hidden on Screen so it never displays in background */
+        #printableReceipt {
+            display: none !important;
+            position: fixed;
+            left: -9999px;
+            top: -9999px;
+        }
 
         @media print {
             @page {
@@ -265,7 +273,9 @@
                 font-size: 8pt !important;
                 line-height: 1.25 !important;
                 border: none !important;
+                background: #fff !important;
             }
+            .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
         .global-loading-overlay {
@@ -309,54 +319,57 @@
         <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
     </div>
 
-    <!-- Printable & Preview Slip Modal -->
-    <div id="printPreviewModal" class="modal">
+    <!-- Hidden Raw Print Node (Activated ONLY upon window.print) -->
+    <div id="printableReceipt">
+        <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
+            <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
+            <p id="rcptFullAddress" style="font-size:7.5pt; margin:0; line-height:1.2;">Depot Address</p>
+            <p id="rcptContact" style="font-size:7.5pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
+            <span style="font-weight:800; margin-top:4px; display:block; font-size:8.5pt;">** MONTH ACCOUNT STATEMENT **</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:8pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+            <div>
+                <p style="margin:0;"><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
+                <p style="margin:0;"><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
+            </div>
+            <div class="text-right">
+                <p style="margin:0;"><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
+                <p style="margin:0;"><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p>
+            </div>
+        </div>
+        <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8pt;">
+            <thead>
+                <tr>
+                    <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Date</th>
+                    <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Particulars</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Dr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Cr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Bal</th>
+                </tr>
+            </thead>
+            <tbody id="rcptTableBody"></tbody>
+        </table>
+        <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 0; font-size:8pt; font-weight:bold;">
+            <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
+            <div style="display:flex; justify-content:space-between; margin-top:2px; border-top:1px dashed #000; padding-top:2px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
+        </div>
+    </div>
+
+    <!-- On-Screen Clean Preview Modal Dialog -->
+    <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
                 <span>📄 Month Statement Print Preview</span>
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
-            <div class="modal-body" style="background:#f1f5f9;">
+            <div class="modal-body" style="background:#f8fafc;">
                 
-                <!-- The Printable Document Container -->
-                <div id="printableReceipt" class="preview-slip-box">
-                    <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
-                        <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
-                        <p id="rcptFullAddress" style="font-size:7.5pt; margin:0; line-height:1.2;">Depot Address</p>
-                        <p id="rcptContact" style="font-size:7.5pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
-                        <span style="font-weight:800; margin-top:4px; display:block; font-size:8.5pt;">** MONTH ACCOUNT STATEMENT **</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; font-size:8pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
-                        <div>
-                            <p style="margin:0;"><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
-                            <p style="margin:0;"><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p style="margin:0;"><strong>Depot:</strong> <span id="rcptDepotName">-</span></p>
-                            <p style="margin:0;"><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p>
-                        </div>
-                    </div>
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8pt;">
-                        <thead>
-                            <tr>
-                                <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Date</th>
-                                <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Particulars</th>
-                                <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Dr</th>
-                                <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Cr</th>
-                                <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Bal</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rcptTableBody"></tbody>
-                    </table>
-                    <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 0; font-size:8pt; font-weight:bold;">
-                        <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
-                        <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
-                        <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
-                        <div style="display:flex; justify-content:space-between; margin-top:2px; border-top:1px dashed #000; padding-top:2px;"><span>CLOSING BALANCE:</span><span id="rcptNetBalance">Rs.0.00</span></div>
-                    </div>
+                <div class="preview-slip-box" id="previewSlipDisplay">
+                    <!-- Populated dynamically -->
                 </div>
 
-                <!-- Action Button Inside Preview Modal -->
                 <div style="margin-top:1rem; text-align:center;">
                     <button class="btn-submit-dispatch" style="width:100%; margin-top:0; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
                 </div>
@@ -1348,6 +1361,7 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
+            // 1. OPN Row
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({
@@ -1369,6 +1383,7 @@
                 <td style="text-align:center;">-</td>
             </tr>`;
 
+            // 2. Active Months Only
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
                 const mLabel = monthNames[mIndex];
@@ -1384,8 +1399,8 @@
                 const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 annualSummaryData.push({
-                    monthIndex: mIndex,
                     monthLabel: mLabel,
+                    monthIndex: mIndex,
                     year: (mIndex >= 3) ? startYear : startYear + 1,
                     debit: mDr,
                     credit: mCr,
@@ -1490,7 +1505,7 @@
             document.getElementById('monthDetailContainer').style.display = 'block';
         }
 
-        // Open Printable Slip Preview Modal
+        // Render On-Screen Clean Preview Dialog
         function openPrintPreviewModal() {
             if (!activeViewingMonthData) {
                 showToast('No active month data to preview.');
@@ -1505,12 +1520,18 @@
             const mob = getField(depot, 'Mob. No.', 'Mobile');
             const gstin = getField(depot, 'GSTIN');
 
-            document.getElementById('rcptFullAddress').textContent = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
-            document.getElementById('rcptContact').textContent = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            const contact = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            const dName = getField(depot, 'Depot Name') || depotNameStored;
+            const period = activeViewingMonthData.monthLabel;
+
+            // Sync hidden print template
+            document.getElementById('rcptFullAddress').textContent = fullAddr;
+            document.getElementById('rcptContact').textContent = contact;
             document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
             document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode;
-            document.getElementById('rcptDepotName').textContent = getField(depot, 'Depot Name') || depotNameStored;
-            document.getElementById('rcptPrintPeriod').textContent = activeViewingMonthData.monthLabel;
+            document.getElementById('rcptDepotName').textContent = dName;
+            document.getElementById('rcptPrintPeriod').textContent = period;
 
             let html = '';
             let runningBal = activeViewingMonthData.openingBal;
@@ -1519,11 +1540,11 @@
             let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
             html += `<tr style="font-weight:bold; background:#f8fafc;">
-                <td style="padding:3px 2px;">01-B/F</td>
-                <td style="padding:3px 2px;">Opening Balance</td>
-                <td class="text-right" style="padding:3px 2px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                <td class="text-right" style="padding:3px 2px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
-                <td class="text-right" style="padding:3px 2px;">${runningBal.toFixed(2)}</td>
+                <td style="padding:4px 2px;">01-B/F</td>
+                <td style="padding:4px 2px;">Opening Balance</td>
+                <td class="text-right" style="padding:4px 2px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:4px 2px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -1536,11 +1557,11 @@
                     runningBal += (cr - dr);
 
                     html += `<tr>
-                        <td style="padding:3px 2px;">${dt}</td>
-                        <td style="padding:3px 2px; word-break:break-word;">${part}</td>
-                        <td class="text-right" style="padding:3px 2px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td class="text-right" style="padding:3px 2px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td class="text-right" style="padding:3px 2px;">${runningBal.toFixed(2)}</td>
+                        <td style="padding:4px 2px;">${dt}</td>
+                        <td style="padding:4px 2px; word-break:break-word;">${part}</td>
+                        <td class="text-right" style="padding:4px 2px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:4px 2px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
             });
@@ -1553,6 +1574,45 @@
             document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            // Build clean on-screen UI preview inside modal box
+            const displayEl = document.getElementById('previewSlipDisplay');
+            displayEl.innerHTML = `
+                <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
+                    <h2 style="font-size:11pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
+                    <p style="font-size:8pt; margin:0; line-height:1.2;">${fullAddr}</p>
+                    <p style="font-size:8pt; margin:2px 0 0 0;">${contact}</p>
+                    <span style="font-weight:800; margin-top:4px; display:block; font-size:9pt;">** MONTH ACCOUNT STATEMENT **</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:8.5pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+                    <div>
+                        <p style="margin:0;"><strong>Name:</strong> ${currentActiveStaffName}</p>
+                        <p style="margin:0;"><strong>Code:</strong> ${currentActiveStaffCode}</p>
+                    </div>
+                    <div class="text-right">
+                        <p style="margin:0;"><strong>Depot:</strong> ${dName}</p>
+                        <p style="margin:0;"><strong>Period:</strong> ${period}</p>
+                    </div>
+                </div>
+                <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8.5pt;">
+                    <thead>
+                        <tr>
+                            <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Date</th>
+                            <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Particulars</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Dr</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Cr</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody>${html}</tbody>
+                </table>
+                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; font-size:8.5pt; font-weight:bold;">
+                    <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span>Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span>Rs.${activeViewingMonthData.totalDr.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span>Rs.${activeViewingMonthData.totalCr.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-top:3px; border-top:1px dashed #000; padding-top:3px;"><span>CLOSING BALANCE:</span><span>Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                </div>
+            `;
 
             document.getElementById('printPreviewModal').style.display = 'block';
         }

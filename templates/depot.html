@@ -185,11 +185,11 @@
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
         .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
-        /* Modal Dialogs */
+        /* Modal Dialogs - Expanded Width & Height */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
         .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 540px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
         .modal-box-large { width: 96% !important; max-width: 1350px !important; margin: 0.8rem auto !important; }
-        .modal-box-compact { max-width: 620px !important; }
+        .modal-box-compact { max-width: 900px !important; width: 95% !important; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
@@ -245,7 +245,7 @@
         <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;"></div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog -->
+    <!-- On-Screen Clean Preview Modal Dialog (Expanded size) -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -253,9 +253,9 @@
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
             <div class="modal-body" style="background:#f8fafc;">
-                <div style="background:#ffffff; border:1px solid #cbd5e1; padding:1rem; border-radius:6px; max-height:500px; overflow-y:auto;" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center;">
-                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #059669 0%, #047857 100%); color:#fff; border:none; padding:0.75rem; justify-content:center;" onclick="triggerDirectBrowserPrint()">🖨️ Print / Save as PDF</button>
+                <div style="background:#ffffff; border:1px solid #cbd5e1; padding:1.2rem; border-radius:6px; max-height:720px; overflow-y:auto;" id="previewSlipDisplay"></div>
+                <div style="margin-top:1.2rem; text-align:center;">
+                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #059669 0%, #047857 100%); color:#fff; border:none; padding:0.85rem; justify-content:center; font-size:1rem;" onclick="triggerDirectBrowserPrint()">🖨️ Print / Save as PDF</button>
                 </div>
             </div>
         </div>
@@ -2087,7 +2087,7 @@
             }
         }
 
-        // Option 1: Current FY Excel/CSV Export
+        // Option 1: Current FY Excel/CSV Export matching image layout (Month blocks with yellow headers)
         function exportCurrentFyExpensesToCSV() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2101,45 +2101,58 @@
             });
 
             let openingBalance = 0;
-            let currentFYRows = [];
+            validRows.forEach(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                let dr = Number(getField(r, 'Debit', 'debit') || 0);
+                let cr = Number(getField(r, 'Credit', 'credit') || 0);
+                if (d && d < fyStartDate) openingBalance += (cr - dr);
+            });
+
+            const monthlyGroups = {};
+            fyMonthSequence.forEach(mIndex => { monthlyGroups[mIndex] = []; });
 
             validRows.forEach(r => {
-                const d = parseDateObj(getField(r, 'Date', 'date'));
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                if (!d) return;
-                if (d < fyStartDate) {
-                    openingBalance += (cr - dr);
-                } else if (d >= fyStartDate && d <= fyEndDate) {
-                    currentFYRows.push(r);
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d && d >= fyStartDate && d <= fyEndDate) {
+                    monthlyGroups[d.getMonth()].push(r);
                 }
             });
 
             let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += `${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}\n\n`;
-            csvContent += "DATE,PARTICULAR,CREDIT,DEBIT,BALANCE\n";
+            csvContent += `"${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}"\n\n`;
 
             let runningBal = openingBalance;
-            let totalDr = 0, totalCr = 0;
 
-            let opCr = openingBalance > 0 ? openingBalance : 0;
-            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","OLD MONTH BALANCE",${opCr.toFixed(2)},${opDr.toFixed(2)},${runningBal.toFixed(2)}\n`;
+            fyMonthSequence.forEach(mIndex => {
+                const rowsInMonth = monthlyGroups[mIndex];
+                if (rowsInMonth.length === 0) return;
 
-            currentFYRows.forEach(r => {
-                const dt = `"${formatCleanDate(getField(r, 'Date', 'date'))}"`;
-                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const monthTitle = `${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
+                csvContent += `"${monthTitle}"\n`;
+                csvContent += "DATE,PARTICULAR,CREDIT,DEBIT,BALANCE\n";
 
-                totalDr += dr;
-                totalCr += cr;
-                runningBal += (cr - dr);
+                let opCr = runningBal > 0 ? runningBal : 0;
+                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                csvContent += `"01-${monthTitle}","OLD MONTH BALANCE",${opCr.toFixed(0)},${opDr.toFixed(0)},${runningBal.toFixed(0)}\n`;
 
-                csvContent += `${dt},${part},${cr.toFixed(2)},${dr.toFixed(2)},${runningBal.toFixed(2)}\n`;
+                let monthDr = opDr;
+                let monthCr = opCr;
+
+                rowsInMonth.forEach(r => {
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                    const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                    
+                    monthDr += dr;
+                    monthCr += cr;
+                    runningBal += (cr - dr);
+
+                    csvContent += `${dt},${part},${cr > 0 ? cr.toFixed(0) : ''},${dr > 0 ? dr.toFixed(0) : ''},${runningBal.toFixed(0)}\n`;
+                });
+
+                csvContent += `TOTAL,closing blance,${monthCr.toFixed(0)},${monthDr.toFixed(0)},${runningBal.toFixed(0)}\n\n`;
             });
-
-            csvContent += `TOTAL,,${totalCr.toFixed(2)},${totalDr.toFixed(2)},${runningBal.toFixed(2)}\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2151,7 +2164,7 @@
             showToast('Current FY Expenses downloaded!');
         }
 
-        // Option 2: All FY Excel Export (Multi-sheet style separated blocks)
+        // Option 2: All FY Excel Export (Multi-sheet separated blocks)
         function exportAllFyExpensesToCSV() {
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
@@ -2174,11 +2187,6 @@
                 const fyStartDate = new Date(startYear, 3, 1);
                 const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
 
-                const validRows = loadedDepotExpenses.filter(r => {
-                    let d = parseDateObj(getField(r, 'Date', 'date'));
-                    return d && d >= fyStartDate && d <= fyEndDate;
-                }).sort((a,b) => parseDateObj(getField(a, 'Date')) - parseDateObj(getField(b, 'Date')));
-
                 let openingBalance = 0;
                 loadedDepotExpenses.forEach(r => {
                     let d = parseDateObj(getField(r, 'Date', 'date'));
@@ -2187,28 +2195,52 @@
                     if (d && d < fyStartDate) openingBalance += (cr - dr);
                 });
 
-                combinedCsv += `*** SHEET / FINANCIAL YEAR: ${startYear}-${startYear + 1} ***\n`;
-                combinedCsv += `${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}\n`;
-                combinedCsv += "DATE,PARTICULAR,CREDIT,DEBIT,BALANCE\n";
+                const monthlyGroups = {};
+                fyMonthSequence.forEach(mIndex => { monthlyGroups[mIndex] = []; });
 
-                let runningBal = openingBalance;
-                let totalDr = 0, totalCr = 0;
-                let opCr = openingBalance > 0 ? openingBalance : 0;
-                let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-                combinedCsv += `"01-Apr-${String(startYear).slice(2)}","OLD MONTH BALANCE",${opCr.toFixed(2)},${opDr.toFixed(2)},${runningBal.toFixed(2)}\n`;
-
-                validRows.forEach(r => {
-                    const dt = `"${formatCleanDate(getField(r, 'Date', 'date'))}"`;
-                    const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    totalDr += dr;
-                    totalCr += cr;
-                    runningBal += (cr - dr);
-                    combinedCsv += `${dt},${part},${cr.toFixed(2)},${dr.toFixed(2)},${runningBal.toFixed(2)}\n`;
+                loadedDepotExpenses.forEach(r => {
+                    let d = parseDateObj(getField(r, 'Date', 'date'));
+                    if (d && d >= fyStartDate && d <= fyEndDate) {
+                        monthlyGroups[d.getMonth()].push(r);
+                    }
                 });
 
-                combinedCsv += `TOTAL,,${totalCr.toFixed(2)},${totalDr.toFixed(2)},${runningBal.toFixed(2)}\n\n\n`;
+                combinedCsv += `*** SHEET / FINANCIAL YEAR: ${startYear}-${startYear + 1} ***\n`;
+                combinedCsv += `"${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}"\n\n`;
+
+                let runningBal = openingBalance;
+
+                fyMonthSequence.forEach(mIndex => {
+                    const rowsInMonth = monthlyGroups[mIndex];
+                    if (rowsInMonth.length === 0) return;
+
+                    const monthTitle = `${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
+                    combinedCsv += `"${monthTitle}"\n`;
+                    combinedCsv += "DATE,PARTICULAR,CREDIT,DEBIT,BALANCE\n";
+
+                    let opCr = runningBal > 0 ? runningBal : 0;
+                    let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                    combinedCsv += `"01-${monthTitle}","OLD MONTH BALANCE",${opCr.toFixed(0)},${opDr.toFixed(0)},${runningBal.toFixed(0)}\n`;
+
+                    let monthDr = opDr;
+                    let monthCr = opCr;
+
+                    rowsInMonth.forEach(r => {
+                        const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                        const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                        const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                        const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                        
+                        monthDr += dr;
+                        monthCr += cr;
+                        runningBal += (cr - dr);
+
+                        combinedCsv += `${dt},${part},${cr > 0 ? cr.toFixed(0) : ''},${dr > 0 ? dr.toFixed(0) : ''},${runningBal.toFixed(0)}\n`;
+                    });
+
+                    combinedCsv += `TOTAL,closing blance,${monthCr.toFixed(0)},${monthDr.toFixed(0)},${runningBal.toFixed(0)}\n\n`;
+                });
+                combinedCsv += "\n\n";
             });
 
             const encodedUri = encodeURI(combinedCsv);
@@ -2241,15 +2273,11 @@
             });
 
             const monthlyGroups = {};
-            fyMonthSequence.forEach(mIndex => {
-                monthlyGroups[mIndex] = [];
-            });
+            fyMonthSequence.forEach(mIndex => { monthlyGroups[mIndex] = []; });
 
             validRows.forEach(r => {
                 let d = parseDateObj(getField(r, 'Date', 'date'));
-                if (d) {
-                    monthlyGroups[d.getMonth()].push(r);
-                }
+                if (d) { monthlyGroups[d.getMonth()].push(r); }
             });
 
             let runningBal = openingBalance;
@@ -2265,11 +2293,11 @@
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
                 monthRowsHtml += `<tr>
-                    <td style="border:1px solid #000; padding:3px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
-                    <td style="border:1px solid #000; padding:3px;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; padding:3px; text-align:right;">${opCr !== 0 ? opCr.toFixed(0) : ''}</td>
-                    <td style="border:1px solid #000; padding:3px; text-align:right;">${opDr !== 0 ? opDr.toFixed(0) : ''}</td>
-                    <td style="border:1px solid #000; padding:3px; text-align:right;">${runningBal.toFixed(0)}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                    <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(0) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(0) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(0)}</td>
                 </tr>`;
 
                 rowsInMonth.forEach(r => {
@@ -2283,37 +2311,37 @@
                     runningBal += (cr - dr);
 
                     monthRowsHtml += `<tr>
-                        <td style="border:1px solid #000; padding:3px; text-align:center;">${dt}</td>
-                        <td style="border:1px solid #000; padding:3px;">${part}</td>
-                        <td style="border:1px solid #000; padding:3px; text-align:right;">${cr > 0 ? cr.toFixed(0) : ''}</td>
-                        <td style="border:1px solid #000; padding:3px; text-align:right;">${dr > 0 ? dr.toFixed(0) : ''}</td>
-                        <td style="border:1px solid #000; padding:3px; text-align:right;">${runningBal.toFixed(0)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
+                        <td style="border:1px solid #000; padding:4px;">${part}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(0) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(0) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(0)}</td>
                     </tr>`;
                 });
 
                 fullHtmlBlocks += `
-                    <div style="margin-bottom: 15px;">
-                        <table style="width:100%; border-collapse:collapse; font-size:8.5pt; border:2px solid #000;">
+                    <div style="margin-bottom: 20px;">
+                        <table style="width:100%; border-collapse:collapse; font-size:9pt; border:2px solid #000;">
                             <thead>
                                 <tr style="background:#ffff00; text-align:center;">
-                                    <th colspan="5" style="border:1px solid #000; padding:4px; font-weight:bold; font-size:9.5pt;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                    <th colspan="5" style="border:1px solid #000; padding:5px; font-weight:bold; font-size:10pt;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                                 </tr>
                                 <tr style="background:#ffff00; text-align:center;">
-                                    <th style="border:1px solid #000; padding:3px; width:15%;">DATE</th>
-                                    <th style="border:1px solid #000; padding:3px; text-align:left; width:45%;">PARTICULAR</th>
-                                    <th style="border:1px solid #000; padding:3px; width:13%;">CREDIT</th>
-                                    <th style="border:1px solid #000; padding:3px; width:13%;">DEBIT</th>
-                                    <th style="border:1px solid #000; padding:3px; width:14%;">BALANCE</th>
+                                    <th style="border:1px solid #000; padding:4px; width:15%;">DATE</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">PARTICULAR</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%;">CREDIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%;">DEBIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:14%;">BALANCE</th>
                                 </tr>
                             </thead>
                             <tbody>${monthRowsHtml}</tbody>
                             <tfoot>
                                 <tr style="background:#ffff00; font-weight:bold;">
-                                    <td style="border:1px solid #000; padding:3px; text-align:center;">TOTAL</td>
-                                    <td style="border:1px solid #000; padding:3px; text-align:left;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:3px; text-align:right;">${(monthCr + (opCr)).toFixed(0)}</td>
-                                    <td style="border:1px solid #000; padding:3px; text-align:right;">${(monthDr + (opDr)).toFixed(0)}</td>
-                                    <td style="border:1px solid #000; padding:3px; text-align:right;">${runningBal.toFixed(0)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:center;">TOTAL</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:left;">closing blance</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right;">${(monthCr + (opCr)).toFixed(0)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right;">${(monthDr + (opDr)).toFixed(0)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(0)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -2323,7 +2351,7 @@
 
             const templateHTML = `
                 <div style="width:100%;">
-                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:6px; border:2px solid #000; margin-bottom:10px; font-size:10.5pt;">
+                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
                         ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                     </div>
                     ${fullHtmlBlocks}

@@ -205,7 +205,7 @@
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
 
-        /* Print/PDF Layout matching image formatting */
+        /* Print Template */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
@@ -581,7 +581,7 @@
         </div>
     </div>
 
-    <!-- Modal: Add Depot Expense -->
+    <!-- Modal: Add Depot Expense (With Top 5 Autocomplete Particulars) -->
     <div id="addExpenseModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -591,7 +591,11 @@
             <div class="modal-body">
                 <form id="addExpenseForm">
                     <div class="form-group"><label>Date</label><input type="date" id="expDate" class="form-control" required></div>
-                    <div class="form-group"><label>Particular</label><input type="text" id="expParticular" class="form-control" required placeholder="e.g. Office Rent, Electricity"></div>
+                    <div class="form-group" style="position:relative;">
+                        <label>Particular</label>
+                        <input type="text" id="expParticular" class="form-control" required placeholder="e.g. Office Rent, Electricity" autocomplete="off" oninput="handleExpenseParticularInput(this.value)">
+                        <div id="expenseSuggestionsBox" style="position:absolute; top:100%; left:0; width:100%; background:#fff; border:1px solid var(--theme-border); border-radius:3px; z-index:3000; display:none; max-height:160px; overflow-y:auto; box-shadow:0 4px 6px rgba(0,0,0,0.1);"></div>
+                    </div>
                     <div class="form-grid">
                         <div class="form-group"><label style="color:var(--accent-dr);">Debit (₹)</label><input type="number" id="expDebit" class="form-control" value="0" step="any"></div>
                         <div class="form-group"><label style="color:var(--accent-cr);">Credit (₹)</label><input type="number" id="expCredit" class="form-control" value="0" step="any"></div>
@@ -1688,11 +1692,9 @@
             document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
-
-            document.getElementById('printModal').style.display = 'block';
         }
 
-        function closeAdminPrintPreview() { document.getElementById('printModal').style.display = 'none'; }
+        function closeAdminPrintPreview() { document.getElementById('printPreviewModal').style.display = 'none'; }
         function triggerDirectBrowserPrint() { window.print(); }
 
         function exportFullDetailedLedgerToCSV() {
@@ -1774,7 +1776,7 @@
             showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
         }
 
-        // Depot Expenses Functions & 3 Export Options
+        // Depot Expenses Functions & Autocomplete & 3 Export Options
         async function loadDepotExpensesData() {
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getDepotExpenses&depotCode=${encodeURIComponent(depotCode)}`);
@@ -1832,6 +1834,53 @@
             } finally {
                 hideScreenBlocker();
                 btn.disabled = false;
+            }
+        });
+
+        function handleExpenseParticularInput(val) {
+            const box = document.getElementById('expenseSuggestionsBox');
+            if (!val || val.trim().length === 0) {
+                box.style.display = 'none';
+                box.innerHTML = '';
+                return;
+            }
+
+            const query = val.trim().toLowerCase();
+            const uniqueParticulars = new Set();
+            loadedDepotExpenses.forEach(r => {
+                const p = getField(r, 'Particular', 'particular');
+                if (p && p !== '-') uniqueParticulars.add(p);
+            });
+
+            const matches = Array.from(uniqueParticulars)
+                .filter(item => item.toLowerCase().includes(query))
+                .slice(0, 5); // Max 5 matches
+
+            if (matches.length > 0) {
+                let html = '';
+                matches.forEach(m => {
+                    html += `<div style="padding:0.5rem 0.8rem; cursor:pointer; font-size:0.86rem; border-bottom:1px solid #f1f5f9;" onmousedown="selectExpenseParticular('${m.replace(/'/g, "\\'")}')">${m}</div>`;
+                });
+                box.innerHTML = html;
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+                box.innerHTML = '';
+            }
+        }
+
+        function selectExpenseParticular(val) {
+            document.getElementById('expParticular').value = val;
+            const box = document.getElementById('expenseSuggestionsBox');
+            box.style.display = 'none';
+            box.innerHTML = '';
+        }
+
+        document.addEventListener('click', function(e) {
+            const box = document.getElementById('expenseSuggestionsBox');
+            const input = document.getElementById('expParticular');
+            if (box && input && !input.contains(e.target) && !box.contains(e.target)) {
+                box.style.display = 'none';
             }
         });
 
@@ -2038,7 +2087,7 @@
             }
         }
 
-        // Option 1: Current FY Excel/CSV Export matching template format
+        // Option 1: Current FY Excel/CSV Export
         function exportCurrentFyExpensesToCSV() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2191,7 +2240,6 @@
                 if (d && d < fyStartDate) openingBalance += (cr - dr);
             });
 
-            // Group rows by Month
             const monthlyGroups = {};
             fyMonthSequence.forEach(mIndex => {
                 monthlyGroups[mIndex] = [];

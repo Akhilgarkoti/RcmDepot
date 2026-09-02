@@ -71,7 +71,7 @@
 
         .main-container { width: 100%; max-width: 1560px; margin: 1rem auto; padding: 0 1rem; }
 
-        .depot-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--theme-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; }
+        .depot-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--theme-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; flex-wrap: wrap; }
         .tab-btn { 
             background: linear-gradient(180deg, #e7edf4 0%, #cfdde9 100%); 
             border: 1px solid var(--theme-border); 
@@ -148,7 +148,7 @@
         .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: var(--theme-top-blue); font-size: 0.84rem; font-weight: 700; }
         .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
         .search-input { width: 100%; padding: 0.45rem 0.8rem 0.45rem 2rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: #111; font-size: 0.86rem; }
-        .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; }
+        .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; pointer-events: none; }
 
         .btn-tool { padding: 0.35rem 0.7rem; border-radius: 3px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--theme-border); }
         .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
@@ -156,7 +156,6 @@
         .btn-action-trx { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; }
         .btn-action-trx:hover { background: #d97706; color: #fff; }
 
-        /* Tables Height */
         .table-responsive { width: 100%; max-height: 720px; min-height: 380px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
@@ -171,7 +170,7 @@
             border-bottom: 2px solid #1a304a; 
             letter-spacing: 0.3px;
         }
-        table.custom-table td { padding: 0.7rem 0.95rem; font-size: 0.86rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
+        table.custom-table td { padding: 0.7rem 0.95rem; font-size: 0.86rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; vertical-align: middle; }
         table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
         table.custom-table tr:hover { background-color: #e9f2fb; }
         
@@ -188,138 +187,63 @@
 
         /* Modal Dialogs */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
-        
-        .modal-box { 
-            background: #ffffff; 
-            margin: 1rem auto; 
-            width: 95%; 
-            max-width: 540px; 
-            border-radius: 6px; 
-            border: 2px solid var(--theme-mid-blue); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); 
-            overflow: hidden; 
-        }
-        
-        .modal-box-large { 
-            width: 96% !important; 
-            max-width: 1350px !important; 
-            margin: 0.8rem auto !important; 
-        }
-
+        .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 540px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
+        .modal-box-large { width: 96% !important; max-width: 1350px !important; margin: 0.8rem auto !important; }
         .modal-box-compact { max-width: 500px !important; }
-
-        .modal-top-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0.75rem 1.3rem; 
-            background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
-            border-bottom: 1px solid #1a304a; 
-            color: #ffffff;
-        }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
         .modal-body { padding: 1.2rem; background: #f8fafc; }
 
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+        .form-group-full { grid-column: span 2; }
+        .form-group { margin-bottom: 0.4rem; }
+        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #2c4263; margin-bottom: 0.3rem; }
+        .form-control { width: 100%; padding: 0.6rem 0.85rem; background: var(--input-bg); border: 1px solid var(--theme-border); border-radius: 3px; color: #111827; font-size: 0.88rem; outline: none; }
+        .form-control:focus { border-color: var(--theme-top-blue); box-shadow: 0 0 0 2px rgba(68,110,155,0.2); }
+
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
 
-        /* Compact Print Slip Style in Modal */
-        .preview-slip-box {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
-            padding: 1.2rem;
-            border-radius: 6px;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 8.5pt;
-            color: #000;
-        }
+        .preview-slip-box { background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem; border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
-        /* Completely Hidden on Screen so it never displays in background */
-        #printableReceipt {
-            display: none !important;
-            position: fixed;
-            left: -9999px;
-            top: -9999px;
-        }
+        #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
-            @page {
-                size: A5 portrait;
-                margin: 6mm 8mm;
-            }
-            body { 
-                background: #ffffff !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-            }
+            @page { size: A5 portrait; margin: 6mm 8mm; }
+            body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             body * { visibility: hidden !important; }
-            #printableReceipt, #printableReceipt * { 
-                visibility: visible !important; 
-            }
+            #printableReceipt, #printableReceipt * { visibility: visible !important; }
             #printableReceipt { 
-                display: block !important;
-                position: absolute !important; 
-                left: 0 !important; 
-                top: 0 !important; 
-                width: 100% !important; 
-                max-width: 100% !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                font-size: 8pt !important;
-                line-height: 1.25 !important;
-                border: none !important;
-                background: #fff !important;
+                display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
+                width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; 
+                font-size: 8pt !important; line-height: 1.25 !important; border: none !important; background: #fff !important; 
             }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
         .global-loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(5px);
-            z-index: 999999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: wait;
-            user-select: none;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); z-index: 999999;
+            flex-direction: column; align-items: center; justify-content: center; cursor: wait;
         }
         .global-spinner {
-            width: 58px; height: 58px;
-            border: 6px solid #e2e8f0;
-            border-top: 6px solid #38bdf8;
-            border-radius: 50%;
-            animation: spinAnim 0.8s linear infinite;
-            margin-bottom: 1.2rem;
+            width: 58px; height: 58px; border: 6px solid #e2e8f0; border-top: 6px solid #38bdf8;
+            border-radius: 50%; animation: spinAnim 0.8s linear infinite; margin-bottom: 1.2rem;
         }
-        .global-loading-text {
-            color: #ffffff;
-            font-size: 1.15rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-        }
-        @keyframes spinAnim {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spinAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="global-spinner"></div>
-        <div class="global-loading-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
+        <div style="color:#fff;font-weight:700;" id="globalLoadingMsg">Saving Data... Please wait!</div>
     </div>
 
-    <!-- Hidden Raw Print Node (Activated ONLY upon window.print) -->
+    <!-- Hidden Raw Print Node -->
     <div id="printableReceipt">
         <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
             <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
@@ -365,15 +289,10 @@
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
             <div class="modal-body" style="background:#f8fafc;">
-                
-                <div class="preview-slip-box" id="previewSlipDisplay">
-                    <!-- Populated dynamically -->
-                </div>
-
+                <div class="preview-slip-box" id="previewSlipDisplay"></div>
                 <div style="margin-top:1rem; text-align:center;">
-                    <button class="btn-submit-dispatch" style="width:100%; margin-top:0; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
+                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -382,7 +301,6 @@
     <datalist id="dispatchThroughList"></datalist>
     <datalist id="vehicleNoList"></datalist>
 
-    <!-- Main Navigation Bar -->
     <div class="navbar">
         <div class="brand-section">
             <div class="depot-logo-box" id="depotLogoBox"><svg width="32" height="26" viewBox="0 0 24 24" fill="#32567f"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
@@ -406,6 +324,7 @@
             <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
             <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
+            <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
         </div>
 
         <!-- 1. Dispatch Entry Form -->
@@ -430,7 +349,7 @@
                     </div>
 
                     <div class="form-group-full">
-                        <label>Invoice Last 5 Digits</label>
+                        <label>Invoice Last 5 Digits (Must be exact 5 digits each)</label>
                         <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667..."></textarea>
                     </div>
 
@@ -450,7 +369,13 @@
 
         <!-- 2. Records History -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
-            <div class="panel-header"><h3>📊 Dispatch History</h3><span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span></div>
+            <div class="panel-header">
+                <h3>📊 Dispatch History</h3>
+                <div style="display:flex; align-items:center; gap:0.8rem;">
+                    <button class="btn-action-nav" id="bulkDeleteDispatchBtn" style="display:none; background:#fee2e2; border-color:#ef4444; color:#b91c1c; padding:0.4rem 0.8rem;" onclick="deleteSelectedDispatches()">🗑️ Delete Selected (<span id="selectedCountBadge">0</span>)</button>
+                    <span id="dispCountBadge" style="color:var(--text-muted);font-weight:700;">0 records</span>
+                </div>
+            </div>
             <div class="table-toolbar">
                 <div class="toolbar-left">
                     <select id="historyPeriodFilter" class="filter-select-box" onchange="handleDispatchFilterChange()">
@@ -483,7 +408,20 @@
                 </div>
                 <div class="table-responsive" style="max-height: 640px;">
                     <table class="custom-table" id="historyTable">
-                        <thead><tr><th>Date</th><th>Invoice</th><th>Vehicle</th><th>Through</th><th>Due-Excess</th><th>Vehicle No</th><th>Time</th><th>Remark</th><th>Action</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th style="width:40px; text-align:center;"><input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAllDispatches(this)"></th>
+                                <th>Date</th>
+                                <th>Invoice</th>
+                                <th>Vehicle</th>
+                                <th>Through</th>
+                                <th>Due-Excess</th>
+                                <th>Vehicle No</th>
+                                <th>Time</th>
+                                <th>Remark</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                         <tbody id="dispatchTableBody"></tbody>
                     </table>
                 </div>
@@ -505,6 +443,65 @@
                     <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody id="staffTableBody"></tbody>
                 </table>
+            </div>
+        </div>
+
+        <!-- 4. Depot Expenses Tab -->
+        <div id="expensesTab" class="comfort-panel" style="display:none;">
+            <div class="panel-header">
+                <h3>💰 Depot Expenses Management</h3>
+                <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;" onclick="openAddExpenseModal()">➕ Add Expense Entry</button>
+            </div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
+                <div style="display:flex; align-items:center; gap:0.6rem;">
+                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
+                    <select id="expenseYearFilter" class="filter-select-box" onchange="renderAnnualSummaryExpenses()"></select>
+                </div>
+                <div>
+                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportFullDetailedExpensesToCSV()">📥 Export As (Excel)</button>
+                </div>
+            </div>
+
+            <!-- Monthly Summary Table for Expenses -->
+            <div id="expenseSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width:14%;">Month</th>
+                            <th style="width:20%; text-align:right;">Debit (₹)</th>
+                            <th style="width:20%; text-align:right;">Credit (₹)</th>
+                            <th style="width:20%; text-align:right;">Balance (₹)</th>
+                            <th style="width:12%; text-align:center;">Type</th>
+                            <th style="width:14%; text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseSummaryTbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Detailed Month-wise Breakdown for Expenses -->
+            <div id="expenseDetailContainer" style="display:none; margin-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="expenseDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Expenses</h4>
+                    <div>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideExpenseMonthDetails()">⬅️ Back to Annual Summary</button>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width:130px;">Date</th>
+                                <th style="min-width:380px;">Particular</th>
+                                <th style="width:130px;text-align:right;">Debit (₹)</th>
+                                <th style="width:130px;text-align:right;">Credit (₹)</th>
+                                <th style="width:150px;text-align:right;">Balance (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseDetailTbody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -552,7 +549,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal with Year Filter & Full Details Export -->
+    <!-- Modal 3: Statement View Modal -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -560,7 +557,6 @@
                 <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
             </div>
             <div class="modal-body">
-                
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                     <div style="display:flex; align-items:center; gap:0.6rem;">
                         <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
@@ -571,7 +567,6 @@
                     </div>
                 </div>
 
-                <!-- Monthly Summary Table -->
                 <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
@@ -588,7 +583,6 @@
                     </table>
                 </div>
 
-                <!-- Detailed Month-wise Breakdown -->
                 <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                         <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
@@ -614,12 +608,32 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <!-- Modal 5: Password Modal -->
+    <!-- Modal: Add Depot Expense -->
+    <div id="addExpenseModal" class="modal">
+        <div class="modal-box modal-box-compact">
+            <div class="modal-top-bar">
+                <span>➕ Add Depot Expense Entry</span>
+                <button class="modal-close-btn" onclick="closeAddExpenseModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addExpenseForm">
+                    <div class="form-group"><label>Date</label><input type="date" id="expDate" class="form-control" required></div>
+                    <div class="form-group"><label>Particular</label><input type="text" id="expParticular" class="form-control" required placeholder="e.g. Office Rent, Electricity"></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label style="color:var(--accent-dr);">Debit (₹)</label><input type="number" id="expDebit" class="form-control" value="0" step="any"></div>
+                        <div class="form-group"><label style="color:var(--accent-cr);">Credit (₹)</label><input type="number" id="expCredit" class="form-control" value="0" step="any"></div>
+                    </div>
+                    <button type="submit" id="btnSaveExpense" class="btn-submit-dispatch" style="width:100%;justify-content:center;margin-top:1rem;">Save Expense Entry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar"><span>🔑 Change Depot Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
@@ -662,6 +676,10 @@
         let annualSummaryData = [];
         let dispatchFySummaryList = [];
         let activeViewingMonthData = null;
+
+        // Depot Expenses State
+        let loadedDepotExpenses = [];
+        let expenseAnnualSummaryData = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
@@ -899,6 +917,9 @@
                 populateHistoryMonthDropdown(loadedDispatches);
                 handleDispatchFilterChange();
                 renderStaffTable(loadedStaffList);
+
+                // Load Depot Expenses
+                await loadDepotExpensesData();
             } catch (err) { console.error(err); }
         }
 
@@ -1044,6 +1065,7 @@
                 const remark = getField(r, 'Remark If Any') || '-';
 
                 html += `<tr class="${isDup ? 'row-duplicate' : ''}">
+                    <td style="text-align:center;"><input type="checkbox" class="dispatch-row-checkbox" value="${rId}" onclick="updateSelectedDispatchCount()"></td>
                     <td>${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}</td>
                     <td style="color:${isDup ? '#dc2626' : '#0369a1'};font-weight:bold;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
                     <td>${vType}</td>
@@ -1057,7 +1079,42 @@
                     </td>
                 </tr>`;
             });
-            tbody.innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
+            tbody.innerHTML = html || `<tr><td colspan="10" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
+            document.getElementById('selectAllCheckbox').checked = false;
+            updateSelectedDispatchCount();
+        }
+
+        function toggleSelectAllDispatches(masterCb) {
+            const checkboxes = document.querySelectorAll('.dispatch-row-checkbox');
+            checkboxes.forEach(cb => cb.checked = masterCb.checked);
+            updateSelectedDispatchCount();
+        }
+
+        function updateSelectedDispatchCount() {
+            const checked = document.querySelectorAll('.dispatch-row-checkbox:checked');
+            const count = checked.length;
+            const btn = document.getElementById('bulkDeleteDispatchBtn');
+            document.getElementById('selectedCountBadge').textContent = count;
+            btn.style.display = count > 0 ? 'inline-flex' : 'none';
+        }
+
+        async function deleteSelectedDispatches() {
+            const checked = document.querySelectorAll('.dispatch-row-checkbox:checked');
+            if (checked.length === 0) return;
+            if (!confirm(`Are you sure you want to delete ${checked.length} selected dispatch records?`)) return;
+
+            showScreenBlocker(`Deleting ${checked.length} records...`);
+            const ids = Array.from(checked).map(cb => cb.value);
+
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(ids.join(','))}`);
+                showToast(res.message || "Selected records deleted successfully!");
+                await loadDepotData();
+            } catch (e) {
+                showToast("Error deleting selected records");
+            } finally {
+                hideScreenBlocker();
+            }
         }
 
         function filterHistoryTable() {
@@ -1289,6 +1346,78 @@
             }
         });
 
+        // 5-Digit Validation Logic for Invoices
+        document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
+            const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
+            if (rawList.length === 0) {
+                showToast('No valid invoice numbers entered.');
+                return;
+            }
+
+            for (let num of rawList) {
+                if (num.length !== 5) {
+                    showToast(`⚠️ Error: "${num}" is not 5 digits! Each invoice must be exactly 5 digits.`);
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('btnSaveDispatchMain');
+            btn.disabled = true;
+            showScreenBlocker(`Saving ${rawList.length} dispatch entry(s)... Screen is locked until complete!`);
+
+            const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
+            const payload = {
+                action: 'saveInvoiceDispatch',
+                depotCode: document.getElementById('hiddenDepotCode').value,
+                depotName: document.getElementById('hiddenDepotName').value,
+                invoiceDate: document.getElementById('dispDate').value,
+                entryTime: document.getElementById('dispTime').value,
+                vehicleType: document.getElementById('dispVehicleType').value,
+                vehicleNo: document.getElementById('dispVehicleNo').value,
+                dispatchThrough: document.getElementById('dispThrough').value,
+                dueExcess: document.getElementById('dispDueExcess').value,
+                invoiceList: JSON.stringify(finalizedInvoices),
+                remarks: document.getElementById('dispRemarks').value
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message || 'Saved successfully!');
+                    document.getElementById('dispInvoiceDigits').value = '';
+                    document.getElementById('dispThrough').value = '';
+                    document.getElementById('dispVehicleNo').value = '';
+                    await loadDepotData();
+                } else {
+                    showToast(res.message || 'Saved.');
+                    await loadDepotData();
+                }
+            } catch (err) { 
+                showToast('Entry dispatched & recorded.');
+                await loadDepotData();
+            } finally {
+                hideScreenBlocker();
+                btn.disabled = false;
+            }
+        });
+
+        async function deleteDispatchRow(rowId) {
+            if (!confirm(`Delete dispatch record ${rowId}?`)) return;
+            showScreenBlocker('Deleting dispatch record...');
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
+                showToast(res.message || "Deleted");
+                await loadDepotData();
+            } catch (e) { showToast("Error deleting record"); }
+            finally {
+                hideScreenBlocker();
+            }
+        }
+
+        // Staff Ledger Modal Functions
         function populateYearDropdown(rows) {
             const yearSelect = document.getElementById('ledgerYearFilter');
             const yearsSet = new Set();
@@ -1361,7 +1490,6 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            // 1. OPN Row
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({
@@ -1383,7 +1511,6 @@
                 <td style="text-align:center;">-</td>
             </tr>`;
 
-            // 2. Active Months Only
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
                 const mLabel = monthNames[mIndex];
@@ -1505,7 +1632,27 @@
             document.getElementById('monthDetailContainer').style.display = 'block';
         }
 
-        // Render On-Screen Clean Preview Dialog
+        function hideMonthDetails() {
+            document.getElementById('annualSummaryContainer').style.display = 'block';
+            document.getElementById('monthDetailContainer').style.display = 'none';
+        }
+
+        async function openStaffLedger(code, name) {
+            currentActiveStaffCode = code;
+            currentActiveStaffName = name;
+            document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
+            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2rem;">Reading ledger records from database...</td></tr>`;
+            document.getElementById('staffLedgerModal').style.display = 'block';
+
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(code)}`);
+                currentActiveStaffLedger = (res && res.ledger) ? res.ledger : [];
+                populateYearDropdown(currentActiveStaffLedger);
+                renderAnnualSummaryLedger();
+            } catch (e) { document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center">Error reading database.</td></tr>`; }
+        }
+        function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
+
         function openPrintPreviewModal() {
             if (!activeViewingMonthData) {
                 showToast('No active month data to preview.');
@@ -1525,7 +1672,6 @@
             const dName = getField(depot, 'Depot Name') || depotNameStored;
             const period = activeViewingMonthData.monthLabel;
 
-            // Sync hidden print template
             document.getElementById('rcptFullAddress').textContent = fullAddr;
             document.getElementById('rcptContact').textContent = contact;
             document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
@@ -1575,7 +1721,6 @@
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            // Build clean on-screen UI preview inside modal box
             const displayEl = document.getElementById('previewSlipDisplay');
             displayEl.innerHTML = `
                 <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
@@ -1617,34 +1762,8 @@
             document.getElementById('printPreviewModal').style.display = 'block';
         }
 
-        function closePrintPreviewModal() {
-            document.getElementById('printPreviewModal').style.display = 'none';
-        }
-
-        function triggerDirectBrowserPrint() {
-            window.print();
-        }
-
-        function hideMonthDetails() {
-            document.getElementById('annualSummaryContainer').style.display = 'block';
-            document.getElementById('monthDetailContainer').style.display = 'none';
-        }
-
-        async function openStaffLedger(code, name) {
-            currentActiveStaffCode = code;
-            currentActiveStaffName = name;
-            document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
-            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2rem;">Reading ledger records from database...</td></tr>`;
-            document.getElementById('staffLedgerModal').style.display = 'block';
-
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getSpecificStaffLedger&staffCode=${encodeURIComponent(code)}`);
-                currentActiveStaffLedger = (res && res.ledger) ? res.ledger : [];
-                populateYearDropdown(currentActiveStaffLedger);
-                renderAnnualSummaryLedger();
-            } catch (e) { document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center">Error reading database.</td></tr>`; }
-        }
-        function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
+        function closePrintPreviewModal() { document.getElementById('printPreviewModal').style.display = 'none'; }
+        function triggerDirectBrowserPrint() { window.print(); }
 
         function exportFullDetailedLedgerToCSV() {
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
@@ -1725,6 +1844,323 @@
             showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
         }
 
+        // Depot Expenses Functions
+        async function loadDepotExpensesData() {
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=getDepotExpenses&depotCode=${encodeURIComponent(depotCode)}`);
+                loadedDepotExpenses = (res && res.expenses) ? res.expenses : [];
+                populateExpenseYearDropdown(loadedDepotExpenses);
+                renderAnnualSummaryExpenses();
+            } catch (e) {
+                console.error("Error loading expenses", e);
+            }
+        }
+
+        function openAddExpenseModal() {
+            document.getElementById('addExpenseForm').reset();
+            document.getElementById('expDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('addExpenseModal').style.display = 'block';
+        }
+        function closeAddExpenseModal() { document.getElementById('addExpenseModal').style.display = 'none'; }
+
+        document.getElementById('addExpenseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const debit = Number(document.getElementById('expDebit').value) || 0;
+            const credit = Number(document.getElementById('expCredit').value) || 0;
+
+            if (debit === 0 && credit === 0) {
+                showToast('Please enter either Debit or Credit amount.');
+                return;
+            }
+
+            const btn = document.getElementById('btnSaveExpense');
+            btn.disabled = true;
+            showScreenBlocker('Saving expense entry...');
+
+            const payload = {
+                action: 'saveDepotExpense',
+                depotCode: depotCode,
+                depotName: depotNameStored,
+                date: document.getElementById('expDate').value,
+                particular: document.getElementById('expParticular').value.trim(),
+                debit: debit,
+                credit: credit
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message || 'Saved successfully!');
+                    closeAddExpenseModal();
+                    await loadDepotExpensesData();
+                } else {
+                    showToast(res.message || 'Failed to save.');
+                }
+            } catch (err) {
+                showToast('Error saving expense.');
+            } finally {
+                hideScreenBlocker();
+                btn.disabled = false;
+            }
+        });
+
+        function populateExpenseYearDropdown(rows) {
+            const yearSelect = document.getElementById('expenseYearFilter');
+            const yearsSet = new Set();
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            
+            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
+            yearsSet.add(curFyStart);
+
+            rows.forEach(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d) {
+                    let fyStart = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
+                    yearsSet.add(fyStart);
+                }
+            });
+
+            const sortedYears = Array.from(yearsSet).sort((a,b) => b - a);
+            let optionsHtml = '';
+            sortedYears.forEach(y => {
+                let isSel = (y === curFyStart) ? 'selected' : '';
+                optionsHtml += `<option value="${y}" ${isSel}>FY: ${y}-${String(y+1).slice(2)}</option>`;
+            });
+            yearSelect.innerHTML = optionsHtml;
+        }
+
+        function renderAnnualSummaryExpenses() {
+            hideExpenseMonthDetails();
+            const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const validRows = loadedDepotExpenses.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0;
+            const monthlyData = {};
+
+            fyMonthSequence.forEach(mIndex => {
+                monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] };
+            });
+
+            validRows.forEach(r => {
+                const d = parseDateObj(getField(r, 'Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+
+                if (d < fyStartDate) {
+                    openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    const m = d.getMonth();
+                    if (monthlyData[m]) {
+                        monthlyData[m].rows.push(r);
+                        monthlyData[m].debit += dr;
+                        monthlyData[m].credit += cr;
+                    }
+                }
+            });
+
+            expenseAnnualSummaryData = [];
+            let runningBal = openingBalance;
+            let tbodyHtml = '';
+
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
+            let opnType = openingBalance >= 0 ? 'CR' : 'DR';
+            expenseAnnualSummaryData.push({
+                monthLabel: 'OPN',
+                debit: 0,
+                credit: openingBalance > 0 ? openingBalance : 0,
+                balance: runningBal,
+                type: opnType,
+                rows: []
+            });
+
+            tbodyHtml += `
+            <tr style="background:#ffffff; font-weight:700;">
+                <td style="color:#0f172a;">OPN</td>
+                <td style="text-align:right;">0</td>
+                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
+                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
+                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
+                <td style="text-align:center;">-</td>
+            </tr>`;
+
+            fyMonthSequence.forEach(mIndex => {
+                const mObj = monthlyData[mIndex];
+                const mLabel = monthNames[mIndex];
+                const mDr = mObj.debit;
+                const mCr = mObj.credit;
+
+                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
+                    return;
+                }
+
+                runningBal += (mCr - mDr);
+                const balType = runningBal >= 0 ? 'CR' : 'DR';
+                const balFormatted = Math.abs(runningBal).toFixed(2);
+
+                expenseAnnualSummaryData.push({
+                    monthLabel: mLabel,
+                    monthIndex: mIndex,
+                    year: (mIndex >= 3) ? startYear : startYear + 1,
+                    debit: mDr,
+                    credit: mCr,
+                    balance: runningBal,
+                    type: balType,
+                    rows: mObj.rows
+                });
+
+                tbodyHtml += `
+                <tr style="background:#ffffff;">
+                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
+                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
+                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
+                    <td style="text-align:center;">
+                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
+        }
+
+        function viewExpenseMonthDetails(mIndex) {
+            const mData = expenseAnnualSummaryData.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+
+            const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
+            const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+            const monthName = monthNames[mIndex];
+
+            document.getElementById('expenseDetailHeader').textContent = `📅 Detailed Expenses: ${monthName} ${actualYear}`;
+
+            let opnBalMonth = 0;
+            const firstOfThisMonth = new Date(actualYear, mIndex, 1);
+
+            loadedDepotExpenses.forEach(r => {
+                const d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d && d < firstOfThisMonth) {
+                    opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
+                }
+            });
+
+            let runningBal = opnBalMonth;
+            let html = '';
+
+            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
+            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
+
+            html += `<tr class="row-opening-balance">
+                <td><strong>01 ${monthName}</strong></td>
+                <td><strong>Opening Balance</strong></td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+            </tr>`;
+
+            mData.rows.forEach(r => {
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                const part = getField(r, 'Particular', 'particular');
+
+                runningBal += (cr - dr);
+
+                html += `<tr>
+                    <td><strong>${dt}</strong></td>
+                    <td>${part}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                </tr>`;
+            });
+
+            document.getElementById('expenseDetailTbody').innerHTML = html;
+            document.getElementById('expenseSummaryContainer').style.display = 'none';
+            document.getElementById('expenseDetailContainer').style.display = 'block';
+        }
+
+        function hideExpenseMonthDetails() {
+            document.getElementById('expenseSummaryContainer').style.display = 'block';
+            document.getElementById('expenseDetailContainer').style.display = 'none';
+        }
+
+        function exportFullDetailedExpensesToCSV() {
+            const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
+
+            const validRows = loadedDepotExpenses.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0;
+            let currentFYRows = [];
+
+            validRows.forEach(r => {
+                const d = parseDateObj(getField(r, 'Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+
+                if (d < fyStartDate) {
+                    openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    currentFYRows.push(r);
+                }
+            });
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `Depot,${depotNameStored},Period,FY ${startYear}-${startYear + 1}\n\n`;
+            csvContent += "Date,Particular,Debit (INR),Credit (INR),Running Balance (INR)\n";
+
+            let runningBal = openingBalance;
+            let totalDr = 0, totalCr = 0;
+
+            let opCr = openingBalance > 0 ? openingBalance : 0;
+            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)}\n`;
+
+            currentFYRows.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Date', 'date'))}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                totalDr += dr;
+                totalCr += cr;
+                runningBal += (cr - dr);
+
+                csvContent += `${dt},${part},${dr.toFixed(2)},${cr.toFixed(2)},${runningBal.toFixed(2)}\n`;
+            });
+
+            csvContent += `\nSUMMARY,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}"\n`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Depot_Expenses_${depotNameStored}_${periodLabel}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Expenses report downloaded as Excel (.csv)!');
+        }
+
         function openPasswordModal() { document.getElementById('pwdModal').style.display = 'block'; }
         function closePasswordModal() { document.getElementById('pwdModal').style.display = 'none'; }
 
@@ -1761,75 +2197,13 @@
             }
         });
 
-        document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
-            const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
-            if (rawList.length === 0) {
-                showToast('No valid invoice numbers entered.');
-                return;
-            }
-
-            const btn = document.getElementById('btnSaveDispatchMain');
-            btn.disabled = true;
-            showScreenBlocker(`Saving ${rawList.length} dispatch entry(s)... Screen is locked until complete!`);
-
-            const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
-            const payload = {
-                action: 'saveInvoiceDispatch',
-                depotCode: document.getElementById('hiddenDepotCode').value,
-                depotName: document.getElementById('hiddenDepotName').value,
-                invoiceDate: document.getElementById('dispDate').value,
-                entryTime: document.getElementById('dispTime').value,
-                vehicleType: document.getElementById('dispVehicleType').value,
-                vehicleNo: document.getElementById('dispVehicleNo').value,
-                dispatchThrough: document.getElementById('dispThrough').value,
-                dueExcess: document.getElementById('dispDueExcess').value,
-                invoiceList: JSON.stringify(finalizedInvoices),
-                remarks: document.getElementById('dispRemarks').value
-            };
-
-            try {
-                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
-                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
-                if (res && res.success) {
-                    showToast(res.message || 'Saved successfully!');
-                    document.getElementById('dispInvoiceDigits').value = '';
-                    document.getElementById('dispThrough').value = '';
-                    document.getElementById('dispVehicleNo').value = '';
-                    await loadDepotData();
-                } else {
-                    showToast(res.message || 'Saved.');
-                    await loadDepotData();
-                }
-            } catch (err) { 
-                showToast('Entry dispatched & recorded.');
-                await loadDepotData();
-            } finally {
-                hideScreenBlocker();
-                btn.disabled = false;
-            }
-        });
-
-        async function deleteDispatchRow(rowId) {
-            if (!confirm(`Delete dispatch record ${rowId}?`)) return;
-            showScreenBlocker('Deleting dispatch record...');
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
-                showToast(res.message || "Deleted");
-                await loadDepotData();
-            } catch (e) { showToast("Error deleting record"); }
-            finally {
-                hideScreenBlocker();
-            }
-        }
-
         function switchTab(tabId, btn) {
             document.querySelectorAll('.depot-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
             document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
             document.getElementById('recordsTab').style.display = (tabId === 'recordsTab') ? 'block' : 'none';
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
+            document.getElementById('expensesTab').style.display = (tabId === 'expensesTab') ? 'block' : 'none';
         }
 
         window.onload = () => {

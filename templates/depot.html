@@ -2087,7 +2087,7 @@
             }
         }
 
-        // Option 1: Current FY Styled Excel (.xls) Export matching yellow header block layout
+        // Option 1: Current FY Styled Excel (.xls) Export
         function exportCurrentFyExpensesToExcel() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2123,6 +2123,8 @@
 
             fyMonthSequence.forEach(mIndex => {
                 const rowsInMonth = monthlyGroups[mIndex];
+                if (rowsInMonth.length === 0) return; // Skip empty months
+
                 let monthDr = 0;
                 let monthCr = 0;
                 let monthRowsHtml = '';
@@ -2131,11 +2133,11 @@
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
                 monthRowsHtml += `<tr>
-                    <td style="border:1px solid #000; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
-                    <td style="border:1px solid #000;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                    <td style="border:1px solid #000; text-align:center; width:110px;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                    <td style="border:1px solid #000; width:380px;">OLD MONTH BALANCE</td>
+                    <td style="border:1px solid #000; text-align:right; width:110px; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; text-align:right; width:110px; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; text-align:right; width:130px; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
                 </tr>`;
 
                 rowsInMonth.forEach(r => {
@@ -2158,27 +2160,27 @@
                 });
 
                 fullHtmlBlocks += `
-                    <table style="border-collapse:collapse; width:100%; margin-bottom:20px; font-family:Calibri, sans-serif;">
+                    <table style="border-collapse:collapse; width:100%; margin-bottom:25px; font-family:Calibri, sans-serif;">
                         <thead>
                             <tr style="background:#ffff00; text-align:center;">
-                                <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:6px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                             </tr>
                             <tr style="background:#ffff00; text-align:center;">
-                                <th style="border:1px solid #000; padding:4px; width:15%;">DATE</th>
-                                <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">PARTICULAR</th>
-                                <th style="border:1px solid #000; padding:4px; width:13%;">CREDIT</th>
-                                <th style="border:1px solid #000; padding:4px; width:13%;">DEBIT</th>
-                                <th style="border:1px solid #000; padding:4px; width:14%;">BALANCE</th>
+                                <th style="border:1px solid #000; padding:5px; width:15%;">DATE</th>
+                                <th style="border:1px solid #000; padding:5px; text-align:left; width:45%;">PARTICULAR</th>
+                                <th style="border:1px solid #000; padding:5px; width:13%;">CREDIT</th>
+                                <th style="border:1px solid #000; padding:5px; width:13%;">DEBIT</th>
+                                <th style="border:1px solid #000; padding:5px; width:14%;">BALANCE</th>
                             </tr>
                         </thead>
                         <tbody>${monthRowsHtml}</tbody>
                         <tfoot>
                             <tr style="background:#ffff00; font-weight:bold;">
-                                <td style="border:1px solid #000; padding:4px; text-align:center;">TOTAL</td>
-                                <td style="border:1px solid #000; padding:4px; text-align:left;">closing blance</td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
-                                <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:center;">TOTAL</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:left;">closing blance</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:right; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:right; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -2189,7 +2191,7 @@
                 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
                 <head><meta charset="utf-8"></head>
                 <body>
-                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt; margin-bottom:10px;">
+                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:10px; border:2px solid #000; font-size:13pt; margin-bottom:15px; font-family:Calibri, sans-serif;">
                         ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                     </div>
                     ${fullHtmlBlocks}
@@ -2207,7 +2209,7 @@
             showToast('Current FY Expenses downloaded as Styled Excel (.xls)!');
         }
 
-        // Option 2: All FY Styled Excel Export (Multi-sheet blocks)
+        // Option 2: All FY Styled Excel Export
         function exportAllFyExpensesToExcel() {
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
@@ -2253,7 +2255,7 @@
 
                 fyMonthSequence.forEach(mIndex => {
                     const rowsInMonth = monthlyGroups[mIndex];
-                    if (rowsInMonth.length === 0) return;
+                    if (rowsInMonth.length === 0) return; // Skip empty months
 
                     let monthDr = 0;
                     let monthCr = 0;
@@ -2263,11 +2265,11 @@
                     let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
                     monthRowsHtml += `<tr>
-                        <td style="border:1px solid #000; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
-                        <td style="border:1px solid #000;">OLD MONTH BALANCE</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                        <td style="border:1px solid #000; text-align:center; width:110px;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                        <td style="border:1px solid #000; width:380px;">OLD MONTH BALANCE</td>
+                        <td style="border:1px solid #000; text-align:right; width:110px; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; text-align:right; width:110px; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; text-align:right; width:130px; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
                     </tr>`;
 
                     rowsInMonth.forEach(r => {
@@ -2318,11 +2320,11 @@
                 });
 
                 allYearsHtml += `
-                    <div style="margin-bottom: 40px;">
-                        <div style="text-align:center; font-weight:bold; background:#00ff00; padding:10px; border:2px solid #000; font-size:13pt; margin-bottom:15px;">
+                    <div style="margin-bottom: 50px;">
+                        <div style="text-align:center; font-weight:bold; background:#00ff00; padding:10px; border:2px solid #000; font-size:13pt; margin-bottom:15px; font-family:Calibri, sans-serif;">
                             FINANCIAL YEAR: ${startYear}-${startYear + 1}
                         </div>
-                        <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt; margin-bottom:10px;">
+                        <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt; margin-bottom:10px; font-family:Calibri, sans-serif;">
                             ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                         </div>
                         ${fyHtmlBlocks}
@@ -2347,19 +2349,7 @@
             showToast('All FY Expenses exported successfully as Styled Excel (.xls)!');
         }
 
-        // Redirect export mode call
-        function handleExpenseExportAction() {
-            const mode = document.getElementById('expenseExportMode').value;
-            if (mode === 'CURRENT_FY') {
-                exportCurrentFyExpensesToExcel();
-            } else if (mode === 'ALL_FY') {
-                exportAllFyExpensesToExcel();
-            } else if (mode === 'PDF_FY') {
-                openExpensePdfStatementModal();
-            }
-        }
-
-        // Option 3: PDF Statement matching exact month-wise block format with yellow headers
+        // Option 3: PDF Statement
         function openExpensePdfStatementModal() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2391,6 +2381,8 @@
 
             fyMonthSequence.forEach(mIndex => {
                 const rowsInMonth = monthlyGroups[mIndex];
+                if (rowsInMonth.length === 0) return; // Skip empty months
+
                 let monthDr = 0;
                 let monthCr = 0;
                 let monthRowsHtml = '';

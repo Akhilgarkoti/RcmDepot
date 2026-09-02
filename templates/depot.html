@@ -189,7 +189,7 @@
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
         .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 540px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
         .modal-box-large { width: 96% !important; max-width: 1350px !important; margin: 0.8rem auto !important; }
-        .modal-box-compact { max-width: 900px !important; width: 95% !important; }
+        .modal-box-compact { max-width: 960px !important; width: 96% !important; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
@@ -253,7 +253,7 @@
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
             <div class="modal-body" style="background:#f8fafc;">
-                <div style="background:#ffffff; border:1px solid #cbd5e1; padding:1.2rem; border-radius:6px; max-height:720px; overflow-y:auto;" id="previewSlipDisplay"></div>
+                <div style="background:#ffffff; border:1px solid #cbd5e1; padding:1.5rem; border-radius:6px; max-height:780px; overflow-y:auto;" id="previewSlipDisplay"></div>
                 <div style="margin-top:1.2rem; text-align:center;">
                     <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #059669 0%, #047857 100%); color:#fff; border:none; padding:0.85rem; justify-content:center; font-size:1rem;" onclick="triggerDirectBrowserPrint()">🖨️ Print / Save as PDF</button>
                 </div>
@@ -2079,16 +2079,16 @@
         function handleExpenseExportAction() {
             const mode = document.getElementById('expenseExportMode').value;
             if (mode === 'CURRENT_FY') {
-                exportCurrentFyExpensesToCSV();
+                exportCurrentFyExpensesToExcel();
             } else if (mode === 'ALL_FY') {
-                exportAllFyExpensesToCSV();
+                exportAllFyExpensesToExcel();
             } else if (mode === 'PDF_FY') {
                 openExpensePdfStatementModal();
             }
         }
 
-        // Option 1: Current FY Excel/CSV Export matching image layout (Month blocks with yellow headers)
-        function exportCurrentFyExpensesToCSV() {
+        // Option 1: Current FY Styled Excel (.xls) Export matching yellow header block layout
+        function exportCurrentFyExpensesToExcel() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
@@ -2118,54 +2118,97 @@
                 }
             });
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += `"${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}"\n\n`;
-
             let runningBal = openingBalance;
+            let fullHtmlBlocks = '';
 
             fyMonthSequence.forEach(mIndex => {
                 const rowsInMonth = monthlyGroups[mIndex];
-                if (rowsInMonth.length === 0) return;
-
-                const monthTitle = `${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
-                csvContent += `"${monthTitle}"\n`;
-                csvContent += "DATE,PARTICULAR,CREDIT,DEBIT,BALANCE\n";
+                let monthDr = 0;
+                let monthCr = 0;
+                let monthRowsHtml = '';
 
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-                csvContent += `"01-${monthTitle}","OLD MONTH BALANCE",${opCr.toFixed(0)},${opDr.toFixed(0)},${runningBal.toFixed(0)}\n`;
 
-                let monthDr = opDr;
-                let monthCr = opCr;
+                monthRowsHtml += `<tr>
+                    <td style="border:1px solid #000; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                    <td style="border:1px solid #000;">OLD MONTH BALANCE</td>
+                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                </tr>`;
 
                 rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
-                    const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                    
+                    const part = getField(r, 'Particular', 'particular');
+
                     monthDr += dr;
                     monthCr += cr;
                     runningBal += (cr - dr);
 
-                    csvContent += `${dt},${part},${cr > 0 ? cr.toFixed(0) : ''},${dr > 0 ? dr.toFixed(0) : ''},${runningBal.toFixed(0)}\n`;
+                    monthRowsHtml += `<tr>
+                        <td style="border:1px solid #000; text-align:center;">${dt}</td>
+                        <td style="border:1px solid #000;">${part}</td>
+                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                    </tr>`;
                 });
 
-                csvContent += `TOTAL,closing blance,${monthCr.toFixed(0)},${monthDr.toFixed(0)},${runningBal.toFixed(0)}\n\n`;
+                fullHtmlBlocks += `
+                    <table style="border-collapse:collapse; width:100%; margin-bottom:20px; font-family:Calibri, sans-serif;">
+                        <thead>
+                            <tr style="background:#ffff00; text-align:center;">
+                                <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                            </tr>
+                            <tr style="background:#ffff00; text-align:center;">
+                                <th style="border:1px solid #000; padding:4px; width:15%;">DATE</th>
+                                <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">PARTICULAR</th>
+                                <th style="border:1px solid #000; padding:4px; width:13%;">CREDIT</th>
+                                <th style="border:1px solid #000; padding:4px; width:13%;">DEBIT</th>
+                                <th style="border:1px solid #000; padding:4px; width:14%;">BALANCE</th>
+                            </tr>
+                        </thead>
+                        <tbody>${monthRowsHtml}</tbody>
+                        <tfoot>
+                            <tr style="background:#ffff00; font-weight:bold;">
+                                <td style="border:1px solid #000; padding:4px; text-align:center;">TOTAL</td>
+                                <td style="border:1px solid #000; padding:4px; text-align:left;">closing blance</td>
+                                <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                `;
             });
 
-            const encodedUri = encodeURI(csvContent);
+            const excelHTML = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="utf-8"></head>
+                <body>
+                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt; margin-bottom:10px;">
+                        ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
+                    </div>
+                    ${fullHtmlBlocks}
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel' });
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Depot_Expenses_${depotNameStored}_${periodLabel}.csv`);
+            link.href = URL.createObjectURL(blob);
+            link.download = `Depot_Expenses_${depotNameStored}_${periodLabel}.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('Current FY Expenses downloaded!');
+            showToast('Current FY Expenses downloaded as Styled Excel (.xls)!');
         }
 
-        // Option 2: All FY Excel Export (Multi-sheet separated blocks)
-        function exportAllFyExpensesToCSV() {
+        // Option 2: All FY Styled Excel Export (Multi-sheet blocks)
+        function exportAllFyExpensesToExcel() {
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
                 let d = parseDateObj(getField(r, 'Date', 'date'));
@@ -2180,8 +2223,8 @@
                 return;
             }
 
-            let combinedCsv = "data:text/csv;charset=utf-8,";
             const sortedYears = Array.from(yearsSet).sort((a,b) => a - b);
+            let allYearsHtml = '';
 
             sortedYears.forEach(startYear => {
                 const fyStartDate = new Date(startYear, 3, 1);
@@ -2205,52 +2248,115 @@
                     }
                 });
 
-                combinedCsv += `*** SHEET / FINANCIAL YEAR: ${startYear}-${startYear + 1} ***\n`;
-                combinedCsv += `"${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}"\n\n`;
-
                 let runningBal = openingBalance;
+                let fyHtmlBlocks = '';
 
                 fyMonthSequence.forEach(mIndex => {
                     const rowsInMonth = monthlyGroups[mIndex];
                     if (rowsInMonth.length === 0) return;
 
-                    const monthTitle = `${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
-                    combinedCsv += `"${monthTitle}"\n`;
-                    combinedCsv += "DATE,PARTICULAR,CREDIT,DEBIT,BALANCE\n";
+                    let monthDr = 0;
+                    let monthCr = 0;
+                    let monthRowsHtml = '';
 
                     let opCr = runningBal > 0 ? runningBal : 0;
                     let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-                    combinedCsv += `"01-${monthTitle}","OLD MONTH BALANCE",${opCr.toFixed(0)},${opDr.toFixed(0)},${runningBal.toFixed(0)}\n`;
 
-                    let monthDr = opDr;
-                    let monthCr = opCr;
+                    monthRowsHtml += `<tr>
+                        <td style="border:1px solid #000; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                        <td style="border:1px solid #000;">OLD MONTH BALANCE</td>
+                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                    </tr>`;
 
                     rowsInMonth.forEach(r => {
                         const dr = Number(getField(r, 'Debit', 'debit') || 0);
                         const cr = Number(getField(r, 'Credit', 'credit') || 0);
                         const dt = formatCleanDate(getField(r, 'Date', 'date'));
-                        const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                        
+                        const part = getField(r, 'Particular', 'particular');
+
                         monthDr += dr;
                         monthCr += cr;
                         runningBal += (cr - dr);
 
-                        combinedCsv += `${dt},${part},${cr > 0 ? cr.toFixed(0) : ''},${dr > 0 ? dr.toFixed(0) : ''},${runningBal.toFixed(0)}\n`;
+                        monthRowsHtml += `<tr>
+                            <td style="border:1px solid #000; text-align:center;">${dt}</td>
+                            <td style="border:1px solid #000;">${part}</td>
+                            <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                            <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                            <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                        </tr>`;
                     });
 
-                    combinedCsv += `TOTAL,closing blance,${monthCr.toFixed(0)},${monthDr.toFixed(0)},${runningBal.toFixed(0)}\n\n`;
+                    fyHtmlBlocks += `
+                        <table style="border-collapse:collapse; width:100%; margin-bottom:20px; font-family:Calibri, sans-serif;">
+                            <thead>
+                                <tr style="background:#ffff00; text-align:center;">
+                                    <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                </tr>
+                                <tr style="background:#ffff00; text-align:center;">
+                                    <th style="border:1px solid #000; padding:4px; width:15%;">DATE</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">PARTICULAR</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%;">CREDIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%;">DEBIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:14%;">BALANCE</th>
+                                </tr>
+                            </thead>
+                            <tbody>${monthRowsHtml}</tbody>
+                            <tfoot>
+                                <tr style="background:#ffff00; font-weight:bold;">
+                                    <td style="border:1px solid #000; padding:4px; text-align:center;">TOTAL</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:left;">closing blance</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    `;
                 });
-                combinedCsv += "\n\n";
+
+                allYearsHtml += `
+                    <div style="margin-bottom: 40px;">
+                        <div style="text-align:center; font-weight:bold; background:#00ff00; padding:10px; border:2px solid #000; font-size:13pt; margin-bottom:15px;">
+                            FINANCIAL YEAR: ${startYear}-${startYear + 1}
+                        </div>
+                        <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt; margin-bottom:10px;">
+                            ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
+                        </div>
+                        ${fyHtmlBlocks}
+                    </div>
+                `;
             });
 
-            const encodedUri = encodeURI(combinedCsv);
+            const excelHTML = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head><meta charset="utf-8"></head>
+                <body>${allYearsHtml}</body>
+                </html>
+            `;
+
+            const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel' });
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `All_FY_Depot_Expenses_${depotNameStored}.csv`);
+            link.href = URL.createObjectURL(blob);
+            link.download = `All_FY_Depot_Expenses_${depotNameStored}.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('All FY Expenses exported successfully!');
+            showToast('All FY Expenses exported successfully as Styled Excel (.xls)!');
+        }
+
+        // Redirect export mode call
+        function handleExpenseExportAction() {
+            const mode = document.getElementById('expenseExportMode').value;
+            if (mode === 'CURRENT_FY') {
+                exportCurrentFyExpensesToExcel();
+            } else if (mode === 'ALL_FY') {
+                exportAllFyExpensesToExcel();
+            } else if (mode === 'PDF_FY') {
+                openExpensePdfStatementModal();
+            }
         }
 
         // Option 3: PDF Statement matching exact month-wise block format with yellow headers

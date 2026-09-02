@@ -242,7 +242,39 @@
 
     <!-- Hidden Raw Print Node for PDF / Browser Print -->
     <div id="printableReceipt">
-        <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;"></div>
+        <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;">
+            <div style="padding: 10px;">
+                <div style="text-align:center; font-weight:bold; font-size:12pt; margin-bottom:2px;" id="rcptDepotName"></div>
+                <div style="text-align:center; font-size:8.5pt; margin-bottom:1px;" id="rcptFullAddress"></div>
+                <div style="text-align:center; font-size:8.5pt; margin-bottom:10px;" id="rcptContact"></div>
+                
+                <div style="margin-bottom:8px; font-size:9pt; border-bottom:1px solid #000; padding-bottom:5px;">
+                    <strong>Staff Name:</strong> <span id="rcptStaffName"></span> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    <strong>Staff Code:</strong> <span id="rcptStaffCode"></span> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    <strong>Period:</strong> <span id="rcptPrintPeriod"></span>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8px;">
+                    <thead>
+                        <tr style="background:#e0f2fe;">
+                            <th style="border:1px solid #000; padding:4px; width:15%;">Date</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">Particular / Description</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Debit</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Credit</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:14%;">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcptTableBody"></tbody>
+                </table>
+
+                <div style="font-size:8.5pt; margin-top:8px; border-top:1px solid #000; padding-top:5px; line-height: 1.4;">
+                    <div><strong>Opening Balance:</strong> <span id="rcptOpeningBalance"></span></div>
+                    <div><strong>Total Debit:</strong> <span id="rcptTotalDebit"></span></div>
+                    <div><strong>Total Credit:</strong> <span id="rcptTotalCredit"></span></div>
+                    <div><strong>Net Balance:</strong> <span id="rcptNetBalance"></span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- On-Screen Clean Preview Modal Dialog -->
@@ -1658,11 +1690,11 @@
             let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
             html += `<tr style="font-weight:bold; background:#f8fafc;">
-                <td style="padding:4px 2px;">01-B/F</td>
-                <td style="padding:4px 2px;">Opening Balance</td>
-                <td class="text-right" style="padding:4px 2px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                <td class="text-right" style="padding:4px 2px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
-                <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
+                <td style="border:1px solid #000; padding:4px;">01-B/F</td>
+                <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -1675,11 +1707,11 @@
                     runningBal += (cr - dr);
 
                     html += `<tr>
-                        <td style="padding:4px 2px;">${dt}</td>
-                        <td style="padding:4px 2px; word-break:break-word;">${part}</td>
-                        <td class="text-right" style="padding:4px 2px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td class="text-right" style="padding:4px 2px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
+                        <td style="border:1px solid #000; padding:4px;">${dt}</td>
+                        <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
             });
@@ -1692,6 +1724,10 @@
             document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            // Sync rendered template to preview modal
+            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
 
         function closeAdminPrintPreview() { document.getElementById('printPreviewModal').style.display = 'none'; }

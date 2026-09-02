@@ -581,7 +581,7 @@
         </div>
     </div>
 
-    <!-- Modal: Add Depot Expense (With Top 5 Autocomplete Particulars) -->
+    <!-- Modal: Add Depot Expense (With Autocomplete matching saved entries as you type) -->
     <div id="addExpenseModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -2087,7 +2087,7 @@
             }
         }
 
-        // Option 1: Current FY Styled Excel (.xls) Export
+        // Option 1: Current FY Styled Excel (.xls) Export with fully merged title row (col A to E) and active months only
         function exportCurrentFyExpensesToExcel() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2166,11 +2166,11 @@
                                 <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:6px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                             </tr>
                             <tr style="background:#ffff00; text-align:center;">
-                                <th style="border:1px solid #000; padding:5px; width:15%;">DATE</th>
-                                <th style="border:1px solid #000; padding:5px; text-align:left; width:45%;">PARTICULAR</th>
-                                <th style="border:1px solid #000; padding:5px; width:13%;">CREDIT</th>
-                                <th style="border:1px solid #000; padding:5px; width:13%;">DEBIT</th>
-                                <th style="border:1px solid #000; padding:5px; width:14%;">BALANCE</th>
+                                <th style="border:1px solid #000; padding:5px; width:110px;">DATE</th>
+                                <th style="border:1px solid #000; padding:5px; text-align:left; width:380px;">PARTICULAR</th>
+                                <th style="border:1px solid #000; padding:5px; width:110px;">CREDIT</th>
+                                <th style="border:1px solid #000; padding:5px; width:110px;">DEBIT</th>
+                                <th style="border:1px solid #000; padding:5px; width:130px;">BALANCE</th>
                             </tr>
                         </thead>
                         <tbody>${monthRowsHtml}</tbody>
@@ -2191,15 +2191,19 @@
                 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
                 <head><meta charset="utf-8"></head>
                 <body>
-                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:10px; border:2px solid #000; font-size:13pt; margin-bottom:15px; font-family:Calibri, sans-serif;">
-                        ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
-                    </div>
+                    <table style="border-collapse:collapse; font-family:Calibri, sans-serif; margin-bottom:15px; width:100%;">
+                        <tr>
+                            <th colspan="5" style="text-align:center; font-weight:bold; background:#ffff00; padding:10px; border:2px solid #000; font-size:13pt;">
+                                ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
+                            </th>
+                        </tr>
+                    </table>
                     ${fullHtmlBlocks}
                 </body>
                 </html>
             `;
 
-            const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel' });
+            const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `Depot_Expenses_${depotNameStored}_${periodLabel}.xls`;
@@ -2209,7 +2213,7 @@
             showToast('Current FY Expenses downloaded as Styled Excel (.xls)!');
         }
 
-        // Option 2: All FY Styled Excel Export
+        // Option 2: All FY Styled Excel Export (Multi-sheet blocks with merged title)
         function exportAllFyExpensesToExcel() {
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
@@ -2298,11 +2302,11 @@
                                     <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                                 </tr>
                                 <tr style="background:#ffff00; text-align:center;">
-                                    <th style="border:1px solid #000; padding:4px; width:15%;">DATE</th>
-                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">PARTICULAR</th>
-                                    <th style="border:1px solid #000; padding:4px; width:13%;">CREDIT</th>
-                                    <th style="border:1px solid #000; padding:4px; width:13%;">DEBIT</th>
-                                    <th style="border:1px solid #000; padding:4px; width:14%;">BALANCE</th>
+                                    <th style="border:1px solid #000; padding:4px; width:110px;">DATE</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:380px;">PARTICULAR</th>
+                                    <th style="border:1px solid #000; padding:4px; width:110px;">CREDIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:110px;">DEBIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:130px;">BALANCE</th>
                                 </tr>
                             </thead>
                             <tbody>${monthRowsHtml}</tbody>
@@ -2321,12 +2325,20 @@
 
                 allYearsHtml += `
                     <div style="margin-bottom: 50px;">
-                        <div style="text-align:center; font-weight:bold; background:#00ff00; padding:10px; border:2px solid #000; font-size:13pt; margin-bottom:15px; font-family:Calibri, sans-serif;">
-                            FINANCIAL YEAR: ${startYear}-${startYear + 1}
-                        </div>
-                        <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt; margin-bottom:10px; font-family:Calibri, sans-serif;">
-                            ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
-                        </div>
+                        <table style="border-collapse:collapse; font-family:Calibri, sans-serif; margin-bottom:10px; width:100%;">
+                            <tr>
+                                <th colspan="5" style="text-align:center; font-weight:bold; background:#00ff00; padding:10px; border:2px solid #000; font-size:13pt;">
+                                    FINANCIAL YEAR: ${startYear}-${startYear + 1}
+                                </th>
+                            </tr>
+                        </table>
+                        <table style="border-collapse:collapse; font-family:Calibri, sans-serif; margin-bottom:15px; width:100%;">
+                            <tr>
+                                <th colspan="5" style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt;">
+                                    ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
+                                </th>
+                            </tr>
+                        </table>
                         ${fyHtmlBlocks}
                     </div>
                 `;

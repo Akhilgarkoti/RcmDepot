@@ -185,7 +185,7 @@
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
         .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
-        /* Modal Dialogs - Expanded Width & Height */
+        /* Modal Dialogs */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
         .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 540px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
         .modal-box-large { width: 96% !important; max-width: 1350px !important; margin: 0.8rem auto !important; }
@@ -245,7 +245,7 @@
         <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;"></div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog (Expanded size) -->
+    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -2162,25 +2162,25 @@
                 fullHtmlBlocks += `
                     <table style="border-collapse:collapse; width:100%; margin-bottom:25px; font-family:Calibri, sans-serif;">
                         <thead>
-                            <tr style="background:#ffff00; text-align:center;">
-                                <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:6px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                            <tr style="background:#e0f2fe; text-align:center;">
+                                <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:6px; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                             </tr>
-                            <tr style="background:#ffff00; text-align:center;">
-                                <th style="border:1px solid #000; padding:5px; width:110px;">DATE</th>
-                                <th style="border:1px solid #000; padding:5px; text-align:left; width:380px;">PARTICULAR</th>
-                                <th style="border:1px solid #000; padding:5px; width:110px;">CREDIT</th>
-                                <th style="border:1px solid #000; padding:5px; width:110px;">DEBIT</th>
-                                <th style="border:1px solid #000; padding:5px; width:130px;">BALANCE</th>
+                            <tr style="background:#e0f2fe; text-align:center;">
+                                <th style="border:1px solid #000; padding:5px; width:110px; color:#0369a1;">DATE</th>
+                                <th style="border:1px solid #000; padding:5px; text-align:left; width:380px; color:#0369a1;">PARTICULAR</th>
+                                <th style="border:1px solid #000; padding:5px; width:110px; color:#0369a1;">CREDIT</th>
+                                <th style="border:1px solid #000; padding:5px; width:110px; color:#0369a1;">DEBIT</th>
+                                <th style="border:1px solid #000; padding:5px; width:130px; color:#0369a1;">BALANCE</th>
                             </tr>
                         </thead>
                         <tbody>${monthRowsHtml}</tbody>
                         <tfoot>
-                            <tr style="background:#ffff00; font-weight:bold;">
-                                <td style="border:1px solid #000; padding:5px; text-align:center;">TOTAL</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:left;">closing blance</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:right; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:right; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                            <tr style="background:#e0f2fe; font-weight:bold;">
+                                <td style="border:1px solid #000; padding:5px; text-align:center; color:#0369a1;">TOTAL</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:left; color:#0369a1;">closing blance</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:right; color:#0369a1; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:right; color:#0369a1; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
+                                <td style="border:1px solid #000; padding:5px; text-align:right; color:#0369a1; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -2189,11 +2189,14 @@
 
             const excelHTML = `
                 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head><meta charset="utf-8"></head>
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>FY ${startYear}-${startYear+1}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+                </head>
                 <body>
                     <table style="border-collapse:collapse; font-family:Calibri, sans-serif; margin-bottom:15px; width:100%;">
                         <tr>
-                            <th colspan="5" style="text-align:center; font-weight:bold; background:#ffff00; padding:10px; border:2px solid #000; font-size:13pt;">
+                            <th colspan="5" style="text-align:center; font-weight:bold; background:#e0f2fe; color:#0369a1; padding:10px; border:2px solid #000; font-size:13pt;">
                                 ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                             </th>
                         </tr>
@@ -2203,7 +2206,7 @@
                 </html>
             `;
 
-            const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel;charset=utf-8' });
+            const blob = new Blob(['\ufeff' + excelHTML], { type: 'application/vnd.ms-excel' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `Depot_Expenses_${depotNameStored}_${periodLabel}.xls`;
@@ -2213,7 +2216,7 @@
             showToast('Current FY Expenses downloaded as Styled Excel (.xls)!');
         }
 
-        // Option 2: All FY Styled Excel Export (Multi-sheet blocks with merged title)
+        // Option 2: All FY Styled Excel Export with separate worksheets (tabs) per Financial Year
         function exportAllFyExpensesToExcel() {
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
@@ -2230,7 +2233,7 @@
             }
 
             const sortedYears = Array.from(yearsSet).sort((a,b) => a - b);
-            let allYearsHtml = '';
+            let worksheetsHtml = '';
 
             sortedYears.forEach(startYear => {
                 const fyStartDate = new Date(startYear, 3, 1);
@@ -2298,43 +2301,36 @@
                     fyHtmlBlocks += `
                         <table style="border-collapse:collapse; width:100%; margin-bottom:20px; font-family:Calibri, sans-serif;">
                             <thead>
-                                <tr style="background:#ffff00; text-align:center;">
-                                    <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                <tr style="background:#e0f2fe; text-align:center;">
+                                    <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                                 </tr>
-                                <tr style="background:#ffff00; text-align:center;">
-                                    <th style="border:1px solid #000; padding:4px; width:110px;">DATE</th>
-                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:380px;">PARTICULAR</th>
-                                    <th style="border:1px solid #000; padding:4px; width:110px;">CREDIT</th>
-                                    <th style="border:1px solid #000; padding:4px; width:110px;">DEBIT</th>
-                                    <th style="border:1px solid #000; padding:4px; width:130px;">BALANCE</th>
+                                <tr style="background:#e0f2fe; text-align:center;">
+                                    <th style="border:1px solid #000; padding:4px; width:110px; color:#0369a1;">DATE</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:380px; color:#0369a1;">PARTICULAR</th>
+                                    <th style="border:1px solid #000; padding:4px; width:110px; color:#0369a1;">CREDIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:110px; color:#0369a1;">DEBIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:130px; color:#0369a1;">BALANCE</th>
                                 </tr>
                             </thead>
                             <tbody>${monthRowsHtml}</tbody>
                             <tfoot>
-                                <tr style="background:#ffff00; font-weight:bold;">
-                                    <td style="border:1px solid #000; padding:4px; text-align:center;">TOTAL</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:left;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
+                                <tr style="background:#e0f2fe; font-weight:bold;">
+                                    <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1; mso-number-format:'0.00';">${(monthCr + (opCr)).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1; mso-number-format:'0.00';">${(monthDr + (opDr)).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>
                     `;
                 });
 
-                allYearsHtml += `
-                    <div style="margin-bottom: 50px;">
-                        <table style="border-collapse:collapse; font-family:Calibri, sans-serif; margin-bottom:10px; width:100%;">
-                            <tr>
-                                <th colspan="5" style="text-align:center; font-weight:bold; background:#00ff00; padding:10px; border:2px solid #000; font-size:13pt;">
-                                    FINANCIAL YEAR: ${startYear}-${startYear + 1}
-                                </th>
-                            </tr>
-                        </table>
+                worksheetsHtml += `
+                    <div id="excel_sheet_${startYear}" x:publish="true">
                         <table style="border-collapse:collapse; font-family:Calibri, sans-serif; margin-bottom:15px; width:100%;">
                             <tr>
-                                <th colspan="5" style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; font-size:12pt;">
+                                <th colspan="5" style="text-align:center; font-weight:bold; background:#e0f2fe; color:#0369a1; padding:10px; border:2px solid #000; font-size:13pt;">
                                     ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                                 </th>
                             </tr>
@@ -2344,24 +2340,33 @@
                 `;
             });
 
-            const excelHTML = `
+            // Multi-sheet XML Workbook structure for Excel tabs
+            let sheetWorksheetsXmlTag = '';
+            sortedYears.forEach(y => {
+                sheetWorksheetsXmlTag += `<x:ExcelWorksheet><x:Name>FY ${y}-${String(y+1).slice(2)}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>`;
+            });
+
+            const multiSheetExcelHTML = `
                 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head><meta charset="utf-8"></head>
-                <body>${allYearsHtml}</body>
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    <!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets>${sheetWorksheetsXmlTag}</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+                </head>
+                <body>${worksheetsHtml}</body>
                 </html>
             `;
 
-            const blob = new Blob([excelHTML], { type: 'application/vnd.ms-excel' });
+            const blob = new Blob(['\ufeff' + multiSheetExcelHTML], { type: 'application/vnd.ms-excel' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `All_FY_Depot_Expenses_${depotNameStored}.xls`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('All FY Expenses exported successfully as Styled Excel (.xls)!');
+            showToast('All FY Expenses exported successfully as Multi-Sheet Excel (.xls)!');
         }
 
-        // Option 3: PDF Statement
+        // Option 3: PDF Statement with Asmani Month Headers
         function openExpensePdfStatementModal() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2405,9 +2410,9 @@
                 monthRowsHtml += `<tr>
                     <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
                     <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(0) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(0) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(0)}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                 </tr>`;
 
                 rowsInMonth.forEach(r => {
@@ -2423,9 +2428,9 @@
                     monthRowsHtml += `<tr>
                         <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(0) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(0) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(0)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 });
 
@@ -2433,25 +2438,25 @@
                     <div style="margin-bottom: 20px;">
                         <table style="width:100%; border-collapse:collapse; font-size:9pt; border:2px solid #000;">
                             <thead>
-                                <tr style="background:#ffff00; text-align:center;">
-                                    <th colspan="5" style="border:1px solid #000; padding:5px; font-weight:bold; font-size:10pt;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                <tr style="background:#e0f2fe; text-align:center;">
+                                    <th colspan="5" style="border:1px solid #000; padding:5px; font-weight:bold; font-size:10pt; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                                 </tr>
-                                <tr style="background:#ffff00; text-align:center;">
-                                    <th style="border:1px solid #000; padding:4px; width:15%;">DATE</th>
-                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">PARTICULAR</th>
-                                    <th style="border:1px solid #000; padding:4px; width:13%;">CREDIT</th>
-                                    <th style="border:1px solid #000; padding:4px; width:13%;">DEBIT</th>
-                                    <th style="border:1px solid #000; padding:4px; width:14%;">BALANCE</th>
+                                <tr style="background:#e0f2fe; text-align:center;">
+                                    <th style="border:1px solid #000; padding:4px; width:15%; color:#0369a1;">DATE</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:45%; color:#0369a1;">PARTICULAR</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%; color:#0369a1;">CREDIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%; color:#0369a1;">DEBIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:14%; color:#0369a1;">BALANCE</th>
                                 </tr>
                             </thead>
                             <tbody>${monthRowsHtml}</tbody>
                             <tfoot>
-                                <tr style="background:#ffff00; font-weight:bold;">
-                                    <td style="border:1px solid #000; padding:4px; text-align:center;">TOTAL</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:left;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right;">${(monthCr + (opCr)).toFixed(0)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right;">${(monthDr + (opDr)).toFixed(0)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(0)}</td>
+                                <tr style="background:#e0f2fe; font-weight:bold;">
+                                    <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + (opCr)).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthDr + (opDr)).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${runningBal.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -2461,7 +2466,7 @@
 
             const templateHTML = `
                 <div style="width:100%;">
-                    <div style="text-align:center; font-weight:bold; background:#ffff00; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
+                    <div style="text-align:center; font-weight:bold; background:#32567f; color:#fff; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
                         ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                     </div>
                     ${fullHtmlBlocks}

@@ -428,19 +428,27 @@
             </div>
         </div>
 
-        <!-- 3. Staff & Ledger -->
-        <div id="staffTab" class="comfort-panel" style="display:none;">
-            <div class="panel-header">
-                <h3>👥 Assigned Staff and Ledger Details</h3>
-                <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
-            </div>
-            <div class="table-responsive" style="max-height: 640px;">
-                <table class="custom-table">
-                    <thead><tr><th>Photo</th><th>Code</th><th>Name</th><th>Mobile</th><th>Joining</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
-                    <tbody id="staffTableBody"></tbody>
-                </table>
-            </div>
-        </div>
+       <!-- 3. Staff & Ledger -->
+<div id="staffTab" class="comfort-panel" style="display:none;">
+    <div class="panel-header">
+        <h3>👥 Assigned Staff and Ledger Details</h3>
+        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
+    </div>
+    <div class="table-responsive" style="max-height: 640px;">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th style="width: 120px;">Code</th>
+                    <th>Name</th>
+                    <th style="text-align: right; width: 140px;">Balance</th>
+                    <th style="text-align: center; width: 110px;">Status</th>
+                    <th style="text-align: center; width: 170px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="staffTableBody"></tbody>
+        </table>
+    </div>
+</div>
 
         <!-- 4. Depot Expenses Tab with 3 Export Options -->
         <div id="expensesTab" class="comfort-panel" style="display:none;">
@@ -1211,47 +1219,37 @@
         }
 
         function renderStaffTable(list) {
-            const tbody = document.getElementById('staffTableBody');
-            let html = '';
-            list.forEach(s => {
-                const code = getField(s, 'Staff Code');
-                const name = getField(s, 'Staff Name');
-                const st = getField(s, 'Status') || 'Active';
-                const photo = getField(s, 'Staff Photo', 'Photo');
+    const tbody = document.getElementById('staffTableBody');
+    let html = '';
+    list.forEach(s => {
+        const code = getField(s, 'Staff Code');
+        const name = getField(s, 'Staff Name');
+        const st = getField(s, 'Status') || 'Active';
 
-                let avatarHtml = `<div class="staff-avatar-cell">${name.charAt(0).toUpperCase()}</div>`;
-                if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
-                    avatarHtml = `<img src="${photo}" class="staff-avatar-cell" alt="${name}">`;
-                }
+        html += `<tr>
+            <td style="color:#0369a1;font-weight:bold;">${code}</td>
+            <td><strong>${name}</strong></td>
+            <td id="bal-${code}" style="color:#0f766e;font-weight:bold;text-align:right;">Loading...</td>
+            <td style="text-align:center;color:${st.toLowerCase()==='active'?'#059669':'#dc2626'};font-weight:bold;">${st}</td>
+            <td style="text-align:center;white-space:nowrap;">
+                <button class="btn-action-ledger" style="padding: 0.2rem 0.55rem; font-size: 0.76rem; border-radius: 3px;" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
+                <button class="btn-action-trx" style="padding: 0.2rem 0.55rem; font-size: 0.76rem; border-radius: 3px;" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
+            </td>
+        </tr>`;
+    });
+    tbody.innerHTML = html || `<tr><td colspan="5" class="text-center" style="padding:1.5rem;">No staff found.</td></tr>`;
 
-                html += `<tr>
-                    <td style="text-align:center;">${avatarHtml}</td>
-                    <td style="color:#0369a1;font-weight:bold;">${code}</td>
-                    <td><strong>${name}</strong></td>
-                    <td>${getField(s, 'Staff Mob.')}</td>
-                    <td>${formatCleanDate(getField(s, 'Staff Joining Date'))}</td>
-                    <td id="bal-${code}" style="color:#0f766e;font-weight:bold;">Loading...</td>
-                    <td style="color:${st.toLowerCase()==='active'?'#059669':'#dc2626'};font-weight:bold;">${st}</td>
-                    <td>
-                        <button class="btn-action-ledger" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
-                        <button class="btn-action-trx" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html || `<tr><td colspan="8" class="text-center" style="padding:1.5rem;">No staff found.</td></tr>`;
-
-            list.forEach(async (s) => {
-                const code = getField(s, 'Staff Code');
-                const bal = await fetchStaffBalance(code);
-                const el = document.getElementById(`bal-${code}`);
-                if (el) {
-                    el.textContent = bal;
-                    if (bal.includes('(Dr)')) el.style.color = '#dc2626';
-                    else if (bal.includes('(Cr)')) el.style.color = '#059669';
-                }
-            });
+    list.forEach(async (s) => {
+        const code = getField(s, 'Staff Code');
+        const bal = await fetchStaffBalance(code);
+        const el = document.getElementById(`bal-${code}`);
+        if (el) {
+            el.textContent = bal;
+            if (bal.includes('(Dr)')) el.style.color = '#dc2626';
+            else if (bal.includes('(Cr)')) el.style.color = '#059669';
         }
-
+    });
+}
         function openAddStaffModal() {
             document.getElementById('requestStaffForm').reset();
             document.getElementById('newStaffPhotoBase64').value = '';

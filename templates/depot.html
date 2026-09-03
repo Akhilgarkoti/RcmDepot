@@ -205,18 +205,18 @@
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
         .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
 
-        /* Print Template */
+        /* Thermal Print Template */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
-            @page { size: A4 portrait; margin: 10mm; }
-            body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            @page { size: 80mm auto; margin: 2mm; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             body * { visibility: hidden !important; }
             #printableReceipt, #printableReceipt * { visibility: visible !important; }
             #printableReceipt { 
                 display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
-                width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; 
-                font-size: 9pt !important; line-height: 1.3 !important; border: none !important; background: #fff !important; 
+                width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; 
+                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; line-height: 1.25 !important;
             }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
@@ -559,67 +559,63 @@
     </div>
 
     <!-- Modal 3: Statement View Modal -->
-    <div id="staffLedgerModal" class="modal">
-        <div class="modal-box modal-box-large">
-            <div class="modal-top-bar">
-                <span id="ledgerStaffTitle">📄 Staff Ledger</span>
-                <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
-                    <div style="display:flex; align-items:center; gap:0.6rem;">
-                        <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
-                        <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
-                    </div>
-                    <div>
-                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
-                    </div>
+<div id="staffLedgerModal" class="modal">
+    <div class="modal-box" style="max-width: 760px; width: 95%;">
+        <div class="modal-top-bar">
+            <span id="ledgerStaffTitle">📄 Staff Ledger</span>
+            <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 0.8rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.6rem 0.8rem; border:1px solid #cbd5e1; border-radius:4px; margin-bottom:0.8rem; flex-wrap:wrap; gap:0.5rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <label style="font-weight:700; font-size:0.82rem; color:#1e293b;">Financial Year:</label>
+                    <select id="ledgerYearFilter" class="filter-select-box" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onchange="renderAnnualSummaryLedger()"></select>
                 </div>
+                <div>
+                    <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.35rem 0.8rem;font-size:0.8rem;" onclick="openThermalFyPrintPreview()">🖨️ Print Preview</button>
+                </div>
+            </div>
 
-                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
-                    <table class="custom-table" id="annualSummaryTable">
+            <div id="annualSummaryContainer" class="table-responsive" style="max-height: 480px; min-height: 320px; background:#fff;">
+                <table class="custom-table" id="annualSummaryTable">
+                    <thead>
+                        <tr>
+                            <th style="width:16%;">Month</th>
+                            <th style="width:20%; text-align:right;">Debit</th>
+                            <th style="width:20%; text-align:right;">Credit</th>
+                            <th style="width:22%; text-align:right;">Balance</th>
+                            <th style="width:10%; text-align:center;">Type</th>
+                            <th style="width:12%; text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="annualSummaryTbody"></tbody>
+                </table>
+            </div>
+
+            <div id="monthDetailContainer" style="display:none; margin-top:0.4rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.4rem;">
+                    <h4 id="monthDetailHeader" style="font-size:0.86rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
+                    <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold; padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="hideMonthDetails()">⬅️ Back</button>
+                </div>
+                <div class="table-responsive" style="max-height: 480px; min-height: 320px; background:#fff;">
+                    <table class="custom-table">
                         <thead>
                             <tr>
-                                <th style="width:14%;">Month</th>
-                                <th style="width:20%; text-align:right;">Debit</th>
-                                <th style="width:20%; text-align:right;">Credit</th>
-                                <th style="width:20%; text-align:right;">Balance</th>
-                                <th style="width:12%; text-align:center;">Type</th>
-                                <th style="width:14%; text-align:center;">Action</th>
+                                <th style="width:90px;">Date</th>
+                                <th style="min-width:200px;">Particular</th>
+                                <th style="width:65px;">Mode</th>
+                                <th style="width:85px;text-align:right;">Debit (₹)</th>
+                                <th style="width:85px;text-align:right;">Credit (₹)</th>
+                                <th style="width:95px;text-align:right;">Balance (₹)</th>
                             </tr>
                         </thead>
-                        <tbody id="annualSummaryTbody"></tbody>
+                        <tbody id="monthDetailTbody"></tbody>
                     </table>
-                </div>
-
-                <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
-                        <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
-                        <div style="display:flex; gap:0.5rem;">
-                            <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="openPrintPreviewModal()">🖨️ Print Month Statement</button>
-                            <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
-                        </div>
-                    </div>
-                    <div class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
-                        <table class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th style="width:110px;">Date</th>
-                                    <th style="min-width:320px;">Particular / Transaction Description</th>
-                                    <th style="width:90px;">Mode</th>
-                                    <th style="width:110px;text-align:right;">Debit (₹)</th>
-                                    <th style="width:110px;text-align:right;">Credit (₹)</th>
-                                    <th style="width:130px;text-align:right;">Balance (₹)</th>
-                                    <th style="width:100px;text-align:center;">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="monthDetailTbody"></tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Modal: Add Depot Expense (With Autocomplete matching saved entries as you type) -->
     <div id="addExpenseModal" class="modal">
@@ -2527,6 +2523,129 @@
             document.getElementById('expensesTab').style.display = (tabId === 'expensesTab') ? 'block' : 'none';
         }
 
+        function openThermalFyPrintPreview() {
+    const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+    const fyStartDate = new Date(startYear, 3, 1);
+    const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+    const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+        let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+        let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+        return da - db;
+    });
+
+    let openingBalance = 0;
+    let fyRows = [];
+
+    validRows.forEach(r => {
+        const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+        const isApproved = appRaw.toLowerCase() === 'approved';
+        const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+        const dr = Number(getField(r, 'Debit', 'debit') || 0);
+        const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+        if (!d) return;
+
+        if (d < fyStartDate) {
+            if (isApproved) openingBalance += (cr - dr);
+        } else if (d >= fyStartDate && d <= fyEndDate) {
+            if (isApproved) fyRows.push(r);
+        }
+    });
+
+    const depot = depotGlobalInfo || {};
+    const dName = getField(depot, 'Depot Name') || depotNameStored;
+    const addr = getField(depot, 'Depot Address');
+    const dist = getField(depot, 'Dristric', 'District');
+    const state = getField(depot, 'State Name');
+    const pin = getField(depot, 'Pin Code', 'Pincode');
+    const mob = getField(depot, 'Mob. No.', 'Mobile');
+    const gstin = getField(depot, 'GSTIN');
+    const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+
+    let runningBal = openingBalance;
+    let totalDr = 0;
+    let totalCr = 0;
+
+    let rowsHtml = '';
+    let opCr = openingBalance > 0 ? openingBalance : 0;
+    let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+
+    rowsHtml += `
+        <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
+            <td style="padding: 3px 1px;">01-Apr</td>
+            <td style="padding: 3px 1px;">Opening Balance</td>
+            <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+            <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+            <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
+        </tr>
+    `;
+
+    fyRows.forEach(r => {
+        const dr = Number(getField(r, 'Debit', 'debit') || 0);
+        const cr = Number(getField(r, 'Credit', 'credit') || 0);
+        const dt = formatCleanDate(getField(r, 'Transaction Date', 'date')).slice(0, 6);
+        const part = getField(r, 'Particular', 'particular');
+
+        totalDr += dr;
+        totalCr += cr;
+        runningBal += (cr - dr);
+
+        rowsHtml += `
+            <tr style="border-bottom: 1px dotted #ccc;">
+                <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
+                <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
+                <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
+            </tr>
+        `;
+    });
+
+    const slipTemplate = `
+        <div style="width: 100%; max-width: 320px; margin: 0 auto; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #000; padding: 5px;">
+            <div style="text-align: center; font-weight: 800; font-size: 11pt; border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px;">
+                ${dName} Depot
+            </div>
+            <div style="text-align: center; font-size: 7.5pt; line-height: 1.2; margin-bottom: 6px;">
+                ${fullAddr}<br>
+                Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}
+            </div>
+            <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 0; font-size: 8pt; margin-bottom: 6px;">
+                <div><strong>Staff:</strong> ${currentActiveStaffName} (${currentActiveStaffCode})</div>
+                <div><strong>Period:</strong> FY ${startYear}-${startYear + 1}</div>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 7.8pt;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #000;">
+                        <th style="text-align: left; padding: 2px 1px; width: 16%;">Date</th>
+                        <th style="text-align: left; padding: 2px 1px; width: 38%;">Particular</th>
+                        <th style="text-align: right; padding: 2px 1px; width: 15%;">Dr</th>
+                        <th style="text-align: right; padding: 2px 1px; width: 15%;">Cr</th>
+                        <th style="text-align: right; padding: 2px 1px; width: 16%;">Bal</th>
+                    </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+            </table>
+            <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
+                <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
+                <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
+                <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
+                    <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">
+                *** Thank You ***
+            </div>
+        </div>
+    `;
+
+    document.getElementById('printableReceipt').innerHTML = slipTemplate;
+    document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+    document.getElementById('printPreviewModal').style.display = 'block';
+}
+        
         window.onload = () => {
             startLiveClock();
             loadDepotData();

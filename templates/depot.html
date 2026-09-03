@@ -429,27 +429,27 @@
         </div>
 
        <!-- 3. Staff & Ledger -->
-<div id="staffTab" class="comfort-panel" style="display:none;">
-    <div class="panel-header">
+<!-- 3. Staff & Ledger -->
+<div id="staffTab" class="comfort-panel" style="display:none; max-width: 860px; margin: 0 auto 1.2rem auto;">
+    <div class="panel-header" style="margin-bottom: 0.8rem;">
         <h3>👥 Assigned Staff and Ledger Details</h3>
-        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;" onclick="openAddStaffModal()">➕ Request New Staff</button>
+        <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1; padding:0.35rem 0.8rem;" onclick="openAddStaffModal()">➕ Request New Staff</button>
     </div>
-    <div class="table-responsive" style="max-height: 640px;">
+    <div class="table-responsive" style="max-height: 480px; min-height: auto; border-radius: 4px;">
         <table class="custom-table">
             <thead>
                 <tr>
-                    <th style="width: 120px;">Code</th>
+                    <th style="width: 155px; text-align: center;">Actions</th>
+                    <th style="width: 95px;">Code</th>
                     <th>Name</th>
-                    <th style="text-align: right; width: 140px;">Balance</th>
-                    <th style="text-align: center; width: 110px;">Status</th>
-                    <th style="text-align: center; width: 170px;">Actions</th>
+                    <th style="text-align: right; width: 130px;">Balance</th>
+                    <th style="text-align: center; width: 90px;">Status</th>
                 </tr>
             </thead>
             <tbody id="staffTableBody"></tbody>
         </table>
     </div>
 </div>
-
         <!-- 4. Depot Expenses Tab with 3 Export Options -->
         <div id="expensesTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
@@ -1218,7 +1218,7 @@
             }
         }
 
-        function renderStaffTable(list) {
+       function renderStaffTable(list) {
     const tbody = document.getElementById('staffTableBody');
     let html = '';
     list.forEach(s => {
@@ -1227,17 +1227,17 @@
         const st = getField(s, 'Status') || 'Active';
 
         html += `<tr>
-            <td style="color:#0369a1;font-weight:bold;">${code}</td>
-            <td><strong>${name}</strong></td>
-            <td id="bal-${code}" style="color:#0f766e;font-weight:bold;text-align:right;">Loading...</td>
-            <td style="text-align:center;color:${st.toLowerCase()==='active'?'#059669':'#dc2626'};font-weight:bold;">${st}</td>
-            <td style="text-align:center;white-space:nowrap;">
-                <button class="btn-action-ledger" style="padding: 0.2rem 0.55rem; font-size: 0.76rem; border-radius: 3px;" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
-                <button class="btn-action-trx" style="padding: 0.2rem 0.55rem; font-size: 0.76rem; border-radius: 3px;" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
+            <td style="text-align:center; white-space:nowrap; padding: 0.4rem 0.5rem;">
+                <button class="btn-action-ledger" style="padding: 2px 7px; font-size: 0.72rem; margin-right: 2px;" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
+                <button class="btn-action-trx" style="padding: 2px 7px; font-size: 0.72rem;" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
             </td>
+            <td style="color:#0369a1; font-weight:bold; font-size:0.82rem;">${code}</td>
+            <td style="font-weight:700; font-size:0.85rem;">${name}</td>
+            <td id="bal-${code}" style="color:#0f766e; font-weight:bold; text-align:right; font-size:0.85rem;">Loading...</td>
+            <td style="text-align:center; font-size:0.8rem; color:${st.toLowerCase()==='active'?'#059669':'#dc2626'}; font-weight:bold;">${st}</td>
         </tr>`;
     });
-    tbody.innerHTML = html || `<tr><td colspan="5" class="text-center" style="padding:1.5rem;">No staff found.</td></tr>`;
+    tbody.innerHTML = html || `<tr><td colspan="5" class="text-center" style="padding:1.2rem;">No staff found.</td></tr>`;
 
     list.forEach(async (s) => {
         const code = getField(s, 'Staff Code');

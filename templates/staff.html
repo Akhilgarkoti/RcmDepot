@@ -129,13 +129,13 @@
         .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #0284c7 !important; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
-        .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 500px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
+        .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 580px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
         .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
         .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
         .modal-body { padding: 1.2rem; background: #f8fafc; }
 
-        .preview-slip-box { background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem; border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; }
+        .preview-slip-box { background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem; border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; max-height: 420px; overflow-y: auto; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
@@ -160,12 +160,13 @@
 </head>
 <body>
 
+    <!-- Hidden Raw Print Node for Browser Print -->
     <div id="printableReceipt">
         <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
             <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
             <p id="rcptFullAddress" style="font-size:7.5pt; margin:0; line-height:1.2;">Depot Address</p>
             <p id="rcptContact" style="font-size:7.5pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
-            <span style="font-weight:800; margin-top:4px; display:block; font-size:8.5pt;">** MONTH ACCOUNT STATEMENT **</span>
+            <span id="rcptStatementTitle" style="font-weight:800; margin-top:4px; display:block; font-size:8.5pt;">** MONTH ACCOUNT STATEMENT **</span>
         </div>
         <div style="display:flex; justify-content:space-between; font-size:8pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
             <div>
@@ -197,28 +198,18 @@
         </div>
     </div>
 
+    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
-                <span>📄 Month Statement Print Preview</span>
+                <span id="printPreviewModalTitle">📄 Statement Print Preview</span>
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
             <div class="modal-body" style="background:#f8fafc;">
                 <div class="preview-slip-box" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center;">
-                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="fyModal" class="modal">
-        <div class="modal-box" style="max-width: 750px;">
-            <div class="modal-top-bar"><span>📊 Full Detailed FY Statement Summary</span><button class="modal-close-btn" onclick="closeFyModal()">&times;</button></div>
-            <div class="modal-body">
-                <div id="fyStatementContent" style="margin-bottom: 1rem;"></div>
-                <div style="text-align:center;">
-                    <button class="btn-action-nav" style="background:#3b82f6; color:#fff; border:none; padding:0.6rem 1.2rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Download Excel / CSV</button>
+                <div style="margin-top:1rem; text-align:center; display:flex; gap:0.5rem;">
+                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:#0284c7; color:#fff; border:none; padding:0.65rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Download Excel</button>
+                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.65rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
                 </div>
             </div>
         </div>
@@ -226,6 +217,7 @@
 
     <div id="toastContainer" class="toast-container"></div>
 
+    <!-- Top Navigation Bar -->
     <div class="navbar">
         <div class="left-header-group">
             <div class="nav-actions">
@@ -251,6 +243,7 @@
     </div>
 
     <div class="main-container">
+        <!-- Staff Profile Banner -->
         <div class="profile-card">
             <div class="profile-left">
                 <div id="staffAvatarBox" class="staff-avatar-large">U</div>
@@ -263,6 +256,7 @@
             </div>
         </div>
 
+        <!-- Ledger Main Panel -->
         <div class="comfort-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
@@ -270,10 +264,11 @@
                     <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
                 </div>
                 <div>
-                    <button class="btn-action-nav" style="background:#e0f2fe; border-color:#38bdf8; color:#0369a1; padding:0.45rem 1rem; font-size:0.85rem;" onclick="openFyModal()">👁️ View FY Statement</button>
+                    <button class="btn-action-nav" style="background:#e0f2fe; border-color:#38bdf8; color:#0369a1; padding:0.45rem 1rem; font-size:0.85rem;" onclick="openFyPrintPreview()">👁️ View FY Statement</button>
                 </div>
             </div>
 
+            <!-- 1. Month-wise Summary Table -->
             <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
                 <table class="custom-table" id="annualSummaryTable">
                     <thead>
@@ -290,11 +285,12 @@
                 </table>
             </div>
 
+            <!-- 2. Detailed Month-wise Breakdown -->
             <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                     <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
                     <div style="display:flex; gap:0.5rem;">
-                        <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="openPrintPreviewModal()">🖨️ Print Month Statement</button>
+                        <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="openMonthPrintPreview()">🖨️ Print Month Statement</button>
                         <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
                     </div>
                 </div>
@@ -318,6 +314,7 @@
         </div>
     </div>
 
+    <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
@@ -689,13 +686,26 @@
             document.getElementById('monthDetailContainer').style.display = 'block';
         }
 
-        function openFyModal() {
+        function openFyPrintPreview() {
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const depot = depotDataGlobal || {};
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile');
+            const gstin = getField(depot, 'GSTIN');
+
+            const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            const contact = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            const dName = getField(depot, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
             const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
             const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
-            
+            const periodStr = `FY: ${startYear}-${String(startYear + 1).slice(2)}`;
+
             const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
                 let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
                 let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
@@ -704,6 +714,7 @@
 
             let openingBalance = 0;
             let currentFYRows = [];
+            let totalDr = 0, totalCr = 0;
 
             validRows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
@@ -718,64 +729,64 @@
                     if (isApproved) openingBalance += (cr - dr);
                 } else if (d >= fyStartDate && d <= fyEndDate) {
                     currentFYRows.push(r);
+                    if (isApproved) {
+                        totalDr += dr;
+                        totalCr += cr;
+                    }
                 }
             });
 
-            let html = `<h4 style="margin-bottom:6px; font-weight:800; color:#0369a1;">Full Detailed FY Statement (${startYear}-${String(startYear+1).slice(2)})</h4>`;
-            html += `<p style="margin-bottom:8px; font-size:8.5pt;"><strong>Staff:</strong> ${sName} (${sCode})</p>`;
-            html += `<div style="max-height: 380px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 4px;">`;
-            html += `<table style="width:100%; border-collapse:collapse; font-size:8pt; background:#fff;">`;
-            html += `<tr style="background:#4b739e; color:#fff; font-weight:bold; position:sticky; top:0;"><th style="padding:6px; text-align:left;">Date</th><th style="padding:6px; text-align:left;">Particular</th><th style="padding:6px; text-align:center;">Mode</th><th style="padding:6px; text-align:right;">Debit</th><th style="padding:6px; text-align:right;">Credit</th><th style="padding:6px; text-align:right;">Balance</th><th style="padding:6px; text-align:center;">Status</th></tr>`;
-            
             let runningBal = openingBalance;
-            let opCr = openingBalance > 0 ? openingBalance : 0;
-            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            let opCr = runningBal > 0 ? runningBal : 0;
+            let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
-            html += `<tr style="background:#eff6ff; font-weight:bold;">
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1;">01-Apr-${String(startYear).slice(2)}</td>
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1;">Opening Balance b/f</td>
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1; text-align:center;">-</td>
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1; text-align:right; color:var(--accent-dr);">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1; text-align:right; color:var(--accent-cr);">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1; text-align:right; color:var(--accent-bal);">₹${runningBal.toFixed(2)}</td>
-                <td style="padding:5px; border-bottom:1px solid #cbd5e1; text-align:center;">Opening</td>
+            let html = `<tr style="font-weight:bold; background:#f8fafc;">
+                <td style="padding:4px 2px;">01-Apr-${String(startYear).slice(2)}</td>
+                <td style="padding:4px 2px;">Opening Balance b/f</td>
+                <td class="text-right" style="padding:4px 2px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:4px 2px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
             currentFYRows.forEach(r => {
-                const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
-                const part = getField(r, 'Particular', 'particular');
-                const mode = getField(r, 'Payment Mode', 'mode') || '-';
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-
-                if (isApproved) {
+                if (appRaw.toLowerCase() === 'approved') {
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                    const part = getField(r, 'Particular', 'particular');
                     runningBal += (cr - dr);
-                }
 
-                html += `<tr>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0;">${dt}</td>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0;">${part}</td>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0; text-align:center;">${mode}</td>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0; text-align:right; color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0; text-align:right; color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0; text-align:right; color:var(--accent-bal); font-weight:bold;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
-                    <td style="padding:5px; border-bottom:1px solid #e2e8f0; text-align:center;"><span style="padding:2px 6px; border-radius:3px; font-size:7pt; background:${isApproved ? '#dcfce7; color:#15803d' : '#fef3c7; color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
-                </tr>`;
+                    html += `<tr>
+                        <td style="padding:4px 2px;">${dt}</td>
+                        <td style="padding:4px 2px; word-break:break-word;">${part}</td>
+                        <td class="text-right" style="padding:4px 2px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:4px 2px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
+                    </tr>`;
+                }
             });
 
-            html += `</table></div>`;
-            
-            document.getElementById('fyStatementContent').innerHTML = html;
-            document.getElementById('fyModal').style.display = 'block';
+            document.getElementById('rcptFullAddress').textContent = fullAddr;
+            document.getElementById('rcptContact').textContent = contact;
+            document.getElementById('rcptStatementTitle').textContent = '** FINANCIAL YEAR ACCOUNT STATEMENT **';
+            document.getElementById('rcptStaffName').textContent = sName;
+            document.getElementById('rcptStaffCode').textContent = sCode;
+            document.getElementById('rcptDepotName').textContent = dName;
+            document.getElementById('rcptPrintPeriod').textContent = periodStr;
+            document.getElementById('rcptTableBody').innerHTML = html;
+
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${totalCr.toFixed(2)}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            document.getElementById('printPreviewModalTitle').textContent = '📄 Financial Year Statement Print Preview';
+            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
 
-        function closeFyModal() {
-            document.getElementById('fyModal').style.display = 'none';
-        }
-
-        function openPrintPreviewModal() {
+        function openMonthPrintPreview() {
             if (!activeViewingMonthData) {
                 showToast('No active month data to preview.');
                 return;
@@ -798,6 +809,7 @@
 
             document.getElementById('rcptFullAddress').textContent = fullAddr;
             document.getElementById('rcptContact').textContent = contact;
+            document.getElementById('rcptStatementTitle').textContent = '** MONTH ACCOUNT STATEMENT **';
             document.getElementById('rcptStaffName').textContent = sName;
             document.getElementById('rcptStaffCode').textContent = sCode;
             document.getElementById('rcptDepotName').textContent = dName;
@@ -805,7 +817,6 @@
 
             let html = '';
             let runningBal = activeViewingMonthData.openingBal;
-
             let opCr = runningBal > 0 ? runningBal : 0;
             let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
@@ -845,44 +856,8 @@
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            const displayEl = document.getElementById('previewSlipDisplay');
-            displayEl.innerHTML = `
-                <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
-                    <h2 style="font-size:11pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
-                    <p style="font-size:8pt; margin:0; line-height:1.2;">${fullAddr}</p>
-                    <p style="font-size:8pt; margin:2px 0 0 0;">${contact}</p>
-                    <span style="font-weight:800; margin-top:4px; display:block; font-size:9pt;">** MONTH ACCOUNT STATEMENT **</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:8.5pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
-                    <div>
-                        <p style="margin:0;"><strong>Name:</strong> ${sName}</p>
-                        <p style="margin:0;"><strong>Code:</strong> ${sCode}</p>
-                    </div>
-                    <div class="text-right">
-                        <p style="margin:0;"><strong>Depot:</strong> ${dName}</p>
-                        <p style="margin:0;"><strong>Period:</strong> ${period}</p>
-                    </div>
-                </div>
-                <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8.5pt;">
-                    <thead>
-                        <tr>
-                            <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Date</th>
-                            <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Particulars</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Dr</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Cr</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${html}</tbody>
-                </table>
-                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; font-size:8.5pt; font-weight:bold;">
-                    <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span>Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span>Rs.${activeViewingMonthData.totalDr.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span>Rs.${activeViewingMonthData.totalCr.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between; margin-top:3px; border-top:1px dashed #000; padding-top:3px;"><span>CLOSING BALANCE:</span><span>Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                </div>
-            `;
-
+            document.getElementById('printPreviewModalTitle').textContent = '📄 Month Statement Print Preview';
+            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
         }
 

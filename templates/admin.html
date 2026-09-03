@@ -204,9 +204,6 @@
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
-        /* Hidden Raw Print Node */
-        #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
-
         @media print {
             @page { size: A5 portrait; margin: 6mm 8mm; }
             body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -327,6 +324,7 @@
             <button class="tab-btn" id="tabBtnStaff" onclick="switchAdminTab('staffTab', this)">👥 Staff Master</button>
             <button class="tab-btn" id="tabBtnLedger" onclick="switchAdminTab('ledgerTab', this)">💳 Staff Ledgers</button>
             <button class="tab-btn" id="tabBtnDispatch" onclick="switchAdminTab('dispatchTab', this)">📦 Dispatch Reports</button>
+            <button class="tab-btn" id="tabBtnExpenses" onclick="switchAdminTab('expensesTab', this)">💰 Depot Expenses</button>
             <button class="tab-btn" id="tabBtnAdminMaster" onclick="switchAdminTab('adminMasterTab', this)">🛡️ Admin Master</button>
         </div>
 
@@ -479,7 +477,7 @@
             </div>
         </div>
 
-        <!-- 5. Dispatch Reports Panel (With FY Month Summary Support like Depot) -->
+        <!-- 5. Dispatch Reports Panel -->
         <div id="dispatchTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>📦 All Depot Dispatch Reports</h3>
@@ -552,7 +550,72 @@
             </div>
         </div>
 
-        <!-- 6. Admin Master Panel -->
+        <!-- 6. Depot Expenses Panel (Admin View) -->
+        <div id="expensesTab" class="panel-card" style="display:none;">
+            <div class="panel-header">
+                <h3>💰 Depot Expenses Oversight</h3>
+                <span id="adminExpCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">0 records</span>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
+                <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Depot:</label>
+                    <select id="adminExpDepotFilter" class="filter-select-box" onchange="renderAdminExpenseSummary()">
+                        <option value="ALL" selected>🏬 All Depots</option>
+                    </select>
+
+                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b; margin-left:0.5rem;">Financial Year:</label>
+                    <select id="adminExpYearFilter" class="filter-select-box" onchange="renderAdminExpenseSummary()"></select>
+                </div>
+                <div>
+                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportAdminExpensesToCSV()">📥 Export Filtered Excel</button>
+                </div>
+            </div>
+
+            <!-- Summary Table -->
+            <div id="adminExpSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width:14%;">Month</th>
+                            <th style="width:20%; text-align:right;">Debit (₹)</th>
+                            <th style="width:20%; text-align:right;">Credit (₹)</th>
+                            <th style="width:20%; text-align:right;">Balance (₹)</th>
+                            <th style="width:12%; text-align:center;">Type</th>
+                            <th style="width:14%; text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminExpSummaryTbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Detailed Breakdown -->
+            <div id="adminExpDetailContainer" style="display:none; margin-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="adminExpDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Expenses</h4>
+                    <div>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideAdminExpenseMonthDetails()">⬅️ Back to Summary</button>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width:110px;">Date</th>
+                                <th style="width:120px;">Depot</th>
+                                <th style="min-width:320px;">Particular</th>
+                                <th style="width:110px;text-align:right;">Debit (₹)</th>
+                                <th style="width:110px;text-align:right;">Credit (₹)</th>
+                                <th style="width:130px;text-align:right;">Balance (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminExpDetailTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Admin Master Panel -->
         <div id="adminMasterTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>🛡️ Admin Master (All 13 Columns)</h3>
@@ -584,6 +647,7 @@
 
     </div>
 
+    <!-- Modals (Depot, Staff, Ledger, Admin) -->
     <!-- Modal 1: Add New Depot -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
@@ -690,12 +754,11 @@
         </div>
     </div>
 
-    <!-- Modal 5: Staff Full Ledger Statement (Depot-Style FY Summary + Details) -->
+    <!-- Modal 5: Staff Full Ledger Statement -->
     <div id="staffLedgerDetailModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar"><span id="dtlLedgerTitle">📄 Staff Ledger</span><button class="modal-close-btn" onclick="closeLedgerDetailModal()">&times;</button></div>
             <div class="modal-body">
-                
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                     <div style="display:flex; align-items:center; gap:0.6rem;">
                         <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
@@ -706,7 +769,6 @@
                     </div>
                 </div>
 
-                <!-- Monthly Summary Table -->
                 <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
@@ -723,7 +785,6 @@
                     </table>
                 </div>
 
-                <!-- Detailed Month-wise Breakdown -->
                 <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                         <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
@@ -750,7 +811,6 @@
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -776,7 +836,7 @@
         </div>
     </div>
 
-    <!-- Modal 8: Add/Edit Admin (All 13 Columns) -->
+    <!-- Modal 8: Add/Edit Admin -->
     <div id="adminMasterModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span id="adminModalTitle">🛡️ Admin Master & Permissions</span><button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button></div>
@@ -822,6 +882,9 @@
         let activeViewingMonthData = null;
         let globalIsViewOnlyLedger = false;
         let globalIsViewOnlyDispatch = false;
+
+        // Admin Expenses State
+        let adminExpenseSummaryData = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
@@ -983,27 +1046,6 @@
             } else {
                 document.getElementById('tabBtnDispatch').style.display = 'inline-flex';
             }
-
-            if (checkValNo(canPending)) {
-                if (document.getElementById('tabBtnLedger').style.display !== 'none') {
-                    switchAdminTab('ledgerTab', document.getElementById('tabBtnLedger'));
-                } else if (document.getElementById('tabBtnDispatch').style.display !== 'none') {
-                    switchAdminTab('dispatchTab', document.getElementById('tabBtnDispatch'));
-                }
-            }
-
-            if (checkValNo(canDepot) || globalIsViewOnlyLedger) {
-                const btn = document.getElementById('btnNewDepot');
-                if (btn) btn.style.display = 'none';
-            }
-            if (checkValNo(canStaff) || globalIsViewOnlyLedger) {
-                const btn = document.getElementById('btnNewStaff');
-                if (btn) btn.style.display = 'none';
-            }
-            if (checkValNo(canAdmin)) {
-                const btn = document.getElementById('btnNewAdmin');
-                if (btn) btn.style.display = 'none';
-            }
         }
 
         async function loadAdminData() {
@@ -1031,6 +1073,10 @@
                 populateDispatchDepotFilter(res.depots || [], res.dispatches || []);
                 handleAdminDispatchFilterChange();
                 renderAdminMaster(res.admins || []);
+                
+                // Initialize Depot Expenses Module
+                populateAdminExpenseFilters(res.depots || [], res.expenses || []);
+                renderAdminExpenseSummary();
             } catch (err) {
                 showToast("Error loading data from Google Sheets.");
             } finally {
@@ -1038,6 +1084,261 @@
             }
         }
 
+        // --- Depot Expenses Functions (Admin View) ---
+        function populateAdminExpenseFilters(depots, expenses) {
+            const depotSelect = document.getElementById('adminExpDepotFilter');
+            let depotOpts = `<option value="ALL" selected>🏬 All Depots (${depots.length})</option>`;
+            depots.forEach(d => {
+                const code = getField(d, 'Depot Code');
+                const name = getField(d, 'Depot Name');
+                depotOpts += `<option value="${code}">${name} (${code})</option>`;
+            });
+            depotSelect.innerHTML = depotOpts;
+
+            const yearSelect = document.getElementById('adminExpYearFilter');
+            const yearsSet = new Set();
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
+            yearsSet.add(curFyStart);
+
+            expenses.forEach(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d) {
+                    let fyStart = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
+                    yearsSet.add(fyStart);
+                }
+            });
+
+            const sortedYears = Array.from(yearsSet).sort((a,b) => b - a);
+            let yearOpts = '';
+            sortedYears.forEach(y => {
+                let isSel = (y === curFyStart) ? 'selected' : '';
+                yearOpts += `<option value="${y}" ${isSel}>FY: ${y}-${String(y+1).slice(2)}</option>`;
+            });
+            yearSelect.innerHTML = yearOpts;
+        }
+
+        function renderAdminExpenseSummary() {
+            hideAdminExpenseMonthDetails();
+            const selectedDepot = document.getElementById('adminExpDepotFilter').value;
+            const startYear = parseInt(document.getElementById('adminExpYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const allExpenses = adminBundle.expenses || [];
+            const filteredExpenses = allExpenses.filter(r => {
+                const dCode = getField(r, 'Depot Code');
+                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return false;
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                return d && d >= fyStartDate && d <= fyEndDate;
+            }).sort((a, b) => parseDateObj(getField(a, 'Date')) - parseDateObj(getField(b, 'Date')));
+
+            document.getElementById('adminExpCount').textContent = `${filteredExpenses.length} records`;
+
+            let openingBalance = 0;
+            allExpenses.forEach(r => {
+                const dCode = getField(r, 'Depot Code');
+                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return;
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                let dr = Number(getField(r, 'Debit', 'debit') || 0);
+                let cr = Number(getField(r, 'Credit', 'credit') || 0);
+                if (d && d < fyStartDate) openingBalance += (cr - dr);
+            });
+
+            const monthlyData = {};
+            fyMonthSequence.forEach(mIndex => {
+                monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] };
+            });
+
+            filteredExpenses.forEach(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                let dr = Number(getField(r, 'Debit', 'debit') || 0);
+                let cr = Number(getField(r, 'Credit', 'credit') || 0);
+                if (d) {
+                    let m = d.getMonth();
+                    if (monthlyData[m]) {
+                        monthlyData[m].rows.push(r);
+                        monthlyData[m].debit += dr;
+                        monthlyData[m].credit += cr;
+                    }
+                }
+            });
+
+            adminExpenseSummaryData = [];
+            let runningBal = openingBalance;
+            let tbodyHtml = '';
+
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
+            let opnType = openingBalance >= 0 ? 'CR' : 'DR';
+            adminExpenseSummaryData.push({
+                monthLabel: 'OPN',
+                debit: 0,
+                credit: openingBalance > 0 ? openingBalance : 0,
+                balance: runningBal,
+                type: opnType,
+                rows: []
+            });
+
+            tbodyHtml += `
+            <tr style="background:#ffffff; font-weight:700;">
+                <td style="color:#0f172a;">OPN</td>
+                <td style="text-align:right;">0</td>
+                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
+                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
+                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
+                <td style="text-align:center;">-</td>
+            </tr>`;
+
+            fyMonthSequence.forEach(mIndex => {
+                const mObj = monthlyData[mIndex];
+                const mLabel = monthNames[mIndex];
+                const mDr = mObj.debit;
+                const mCr = mObj.credit;
+
+                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) return;
+
+                runningBal += (mCr - mDr);
+                const balType = runningBal >= 0 ? 'CR' : 'DR';
+                const balFormatted = Math.abs(runningBal).toFixed(2);
+
+                adminExpenseSummaryData.push({
+                    monthLabel: mLabel,
+                    monthIndex: mIndex,
+                    year: (mIndex >= 3) ? startYear : startYear + 1,
+                    debit: mDr,
+                    credit: mCr,
+                    balance: runningBal,
+                    type: balType,
+                    rows: mObj.rows
+                });
+
+                tbodyHtml += `
+                <tr style="background:#ffffff;">
+                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
+                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
+                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
+                    <td style="text-align:center;">
+                        <button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminExpenseMonthDetails(${mIndex})">View</button>
+                    </td>
+                </tr>`;
+            });
+
+            document.getElementById('adminExpSummaryTbody').innerHTML = tbodyHtml;
+        }
+
+        function viewAdminExpenseMonthDetails(mIndex) {
+            const mData = adminExpenseSummaryData.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+
+            const startYear = parseInt(document.getElementById('adminExpYearFilter').value, 10);
+            const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+            const monthName = monthNames[mIndex];
+
+            document.getElementById('adminExpDetailHeader').textContent = `📅 Detailed Expenses: ${monthName} ${actualYear}`;
+
+            let opnBalMonth = 0;
+            const firstOfThisMonth = new Date(actualYear, mIndex, 1);
+            const selectedDepot = document.getElementById('adminExpDepotFilter').value;
+
+            (adminBundle.expenses || []).forEach(r => {
+                const dCode = getField(r, 'Depot Code');
+                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return;
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d && d < firstOfThisMonth) {
+                    opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
+                }
+            });
+
+            let runningBal = opnBalMonth;
+            let html = '';
+
+            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
+            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
+
+            html += `<tr class="row-opening-balance">
+                <td><strong>01 ${monthName}</strong></td>
+                <td>-</td>
+                <td><strong>Opening Balance</strong></td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+            </tr>`;
+
+            mData.rows.forEach(r => {
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                const part = getField(r, 'Particular', 'particular');
+                const depotName = getField(r, 'Depot Name', 'Depot Code');
+
+                runningBal += (cr - dr);
+
+                html += `<tr>
+                    <td><strong>${dt}</strong></td>
+                    <td>${depotName}</td>
+                    <td>${part}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                </tr>`;
+            });
+
+            document.getElementById('adminExpDetailTbody').innerHTML = html;
+            document.getElementById('adminExpSummaryContainer').style.display = 'none';
+            document.getElementById('adminExpDetailContainer').style.display = 'block';
+        }
+
+        function hideAdminExpenseMonthDetails() {
+            document.getElementById('adminExpSummaryContainer').style.display = 'block';
+            document.getElementById('adminExpDetailContainer').style.display = 'none';
+        }
+
+        function exportAdminExpensesToCSV() {
+            const selectedDepot = document.getElementById('adminExpDepotFilter').value;
+            const startYear = parseInt(document.getElementById('adminExpYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const filtered = (adminBundle.expenses || []).filter(r => {
+                const dCode = getField(r, 'Depot Code');
+                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return false;
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                return d && d >= fyStartDate && d <= fyEndDate;
+            }).sort((a, b) => parseDateObj(getField(a, 'Date')) - parseDateObj(getField(b, 'Date')));
+
+            if (filtered.length === 0) {
+                showToast('No expense records to export.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `RCM Depot Expenses Report,FY ${startYear}-${startYear + 1},Depot Filter,${selectedDepot}\n\n`;
+            csvContent += "Date,Depot Code,Depot Name,Particular,Debit (INR),Credit (INR)\n";
+
+            filtered.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Date', 'date'))}"`;
+                const dCode = `"${getField(r, 'Depot Code')}"`;
+                const dName = `"${getField(r, 'Depot Name')}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                csvContent += `${dt},${dCode},${dName},${part},${dr.toFixed(2)},${cr.toFixed(2)}\n`;
+            });
+
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `Admin_Depot_Expenses_${selectedDepot}_FY${startYear}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Depot expenses exported as Excel (.csv)!');
+        }
+
+        // --- Other Standard Admin Functions ---
         function renderPendingApprovals() {
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
@@ -1558,7 +1859,6 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            // 1. OPN Row
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({
@@ -1580,16 +1880,13 @@
                 <td style="text-align:center;">-</td>
             </tr>`;
 
-            // 2. Active Months Only (Zero entries hidden)
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
                 const mLabel = monthNames[mIndex];
                 const mDr = mObj.debit;
                 const mCr = mObj.credit;
 
-                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
-                    return;
-                }
+                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) return;
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
@@ -1797,55 +2094,12 @@
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            const displayEl = document.getElementById('previewSlipDisplay');
-            displayEl.innerHTML = `
-                <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
-                    <h2 style="font-size:11pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
-                    <p style="font-size:8pt; margin:0; line-height:1.2;">${fullAddr}</p>
-                    <p style="font-size:8pt; margin:2px 0 0 0;">${contact}</p>
-                    <span style="font-weight:800; margin-top:4px; display:block; font-size:9pt;">** MONTH ACCOUNT STATEMENT **</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:8.5pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
-                    <div>
-                        <p style="margin:0;"><strong>Name:</strong> ${sName}</p>
-                        <p style="margin:0;"><strong>Code:</strong> ${sCode}</p>
-                    </div>
-                    <div class="text-right">
-                        <p style="margin:0;"><strong>Depot:</strong> ${dName}</p>
-                        <p style="margin:0;"><strong>Period:</strong> ${period}</p>
-                    </div>
-                </div>
-                <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8.5pt;">
-                    <thead>
-                        <tr>
-                            <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Date</th>
-                            <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Particulars</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Dr</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Cr</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${html}</tbody>
-                </table>
-                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; font-size:8.5pt; font-weight:bold;">
-                    <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span>Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span>Rs.${activeViewingMonthData.totalDr.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span>Rs.${activeViewingMonthData.totalCr.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between; margin-top:3px; border-top:1px dashed #000; padding-top:3px;"><span>CLOSING BALANCE:</span><span>Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                </div>
-            `;
-
+            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
         }
 
-        function closePrintPreviewModal() {
-            document.getElementById('printPreviewModal').style.display = 'none';
-        }
-
-        function triggerDirectBrowserPrint() {
-            window.print();
-        }
-
+        function closePrintPreviewModal() { document.getElementById('printPreviewModal').style.display = 'none'; }
+        function triggerDirectBrowserPrint() { window.print(); }
         function closeLedgerDetailModal() { document.getElementById('staffLedgerDetailModal').style.display = 'none'; }
 
         function openEditLedger(trxId) {
@@ -1919,11 +2173,6 @@
                     currentFYRows.push(r);
                 }
             });
-
-            if (currentFYRows.length === 0 && openingBalance === 0) {
-                showToast('No ledger transactions to export for this FY.');
-                return;
-            }
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `Staff Name,${activeLedgerStaffName},Staff Code,${activeLedgerStaffCode}\n`;
@@ -2308,6 +2557,7 @@
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
             document.getElementById('ledgerTab').style.display = (tabId === 'ledgerTab') ? 'block' : 'none';
             document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
+            document.getElementById('expensesTab').style.display = (tabId === 'expensesTab') ? 'block' : 'none';
             document.getElementById('adminMasterTab').style.display = (tabId === 'adminMasterTab') ? 'block' : 'none';
         }
 

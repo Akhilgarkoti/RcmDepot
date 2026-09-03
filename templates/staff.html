@@ -40,14 +40,16 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            flex-wrap: wrap;
         }
 
-        .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 200px; }
+        .left-header-group { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
         .staff-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .staff-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex: 1; text-align: left; }
-        .company-logo-badge { width: 190px; height: 46px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
+        .depot-center-section { display: flex; align-items: center; gap: 1rem; text-align: left; }
+        .company-logo-badge { width: 170px; height: 42px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; flex-shrink: 0; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
         .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
@@ -158,7 +160,6 @@
 </head>
 <body>
 
-    <!-- Hidden Raw Print Node for Browser Print -->
     <div id="printableReceipt">
         <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
             <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
@@ -196,7 +197,6 @@
         </div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -212,32 +212,45 @@
         </div>
     </div>
 
-    <div id="toastContainer" class="toast-container"></div>
-
-    <!-- Top Navigation Bar -->
-    <div class="navbar">
-        <div class="brand-section">
-            <div class="staff-logo-box" id="staffLogoBox"></div>
-            <div>
-                <h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3>
-                <span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">STAFF PORTAL</span>
+    <div id="fyModal" class="modal">
+        <div class="modal-box" style="max-width: 650px;">
+            <div class="modal-top-bar"><span>📊 Financial Year Statement Summary</span><button class="modal-close-btn" onclick="closeFyModal()">&times;</button></div>
+            <div class="modal-body">
+                <div class="preview-slip-box" id="fyStatementContent" style="max-height: 400px; overflow-y: auto;"></div>
+                <div style="margin-top:1rem; text-align:center;">
+                    <button class="btn-action-nav" style="background:#3b82f6; color:#fff; border:none; padding:0.6rem 1.2rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Download Excel / CSV</button>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="navbar">
+        <div class="left-header-group">
+            <div class="nav-actions">
+                <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
+                <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
+            </div>
+            <div class="brand-section">
+                <div class="staff-logo-box" id="staffLogoBox"></div>
+                <div>
+                    <h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3>
+                    <span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">STAFF PORTAL</span>
+                </div>
+            </div>
+        </div>
+        
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox"></div>
             <div>
-                <h1 style="font-size:1.1rem;font-weight:800;color:var(--theme-top-blue);"><span id="headerDepotTitle">RCM Depot</span></h1>
-                <p id="topDepotAddress" style="font-size:0.78rem;color:var(--text-muted);">Loading address...</p>
+                <h1 style="font-size:1.05rem;font-weight:800;color:var(--theme-top-blue);"><span id="headerDepotTitle">RCM Depot</span></h1>
+                <p id="topDepotAddress" style="font-size:0.75rem;color:var(--text-muted);">Loading address...</p>
             </div>
-        </div>
-        <div class="nav-actions">
-            <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
-            <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
         </div>
     </div>
 
     <div class="main-container">
-        <!-- Staff Profile Banner -->
         <div class="profile-card">
             <div class="profile-left">
                 <div id="staffAvatarBox" class="staff-avatar-large">U</div>
@@ -250,7 +263,6 @@
             </div>
         </div>
 
-        <!-- Ledger Main Panel -->
         <div class="comfort-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
@@ -258,11 +270,10 @@
                     <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
                 </div>
                 <div>
-                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
+                    <button class="btn-action-nav" style="background:#e0f2fe; border-color:#38bdf8; color:#0369a1; padding:0.45rem 1rem; font-size:0.85rem;" onclick="openFyModal()">👁️ View FY Statement</button>
                 </div>
             </div>
 
-            <!-- 1. Month-wise Summary Table (Zero Months Hidden) -->
             <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
                 <table class="custom-table" id="annualSummaryTable">
                     <thead>
@@ -279,7 +290,6 @@
                 </table>
             </div>
 
-            <!-- 2. Detailed Month-wise Breakdown -->
             <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                     <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
@@ -308,7 +318,6 @@
         </div>
     </div>
 
-    <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
@@ -380,11 +389,6 @@
             }
             let str = String(raw || '').trim();
             return str.split(' 05:')[0].split('T')[0] || '-';
-        }
-
-        function getTodayFormatted() {
-            const now = new Date();
-            return `${String(now.getDate()).padStart(2, '0')}-${monthNames[now.getMonth()]}-${String(now.getFullYear()).slice(2)}`;
         }
 
         function jsonp(url) {
@@ -683,6 +687,34 @@
             document.getElementById('monthDetailTbody').innerHTML = html;
             document.getElementById('annualSummaryContainer').style.display = 'none';
             document.getElementById('monthDetailContainer').style.display = 'block';
+        }
+
+        function openFyModal() {
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+            const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
+            
+            let html = `<h4 style="margin-bottom:8px; font-weight:800; color:#0369a1;">FY Statement Summary (${startYear}-${startYear+1})</h4>`;
+            html += `<p style="margin-bottom:6px;"><strong>Staff:</strong> ${sName} (${sCode})</p>`;
+            html += `<table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-top:8px;">`;
+            html += `<tr style="background:#e2e8f0; font-weight:bold;"><th style="padding:4px; text-align:left;">Month</th><th style="padding:4px; text-align:right;">Debit</th><th style="padding:4px; text-align:right;">Credit</th><th style="padding:4px; text-align:right;">Balance</th></tr>`;
+            
+            annualSummaryData.forEach(item => {
+                html += `<tr>
+                    <td style="padding:4px; border-bottom:1px solid #cbd5e1;">${item.monthLabel}</td>
+                    <td style="padding:4px; border-bottom:1px solid #cbd5e1; text-align:right;">${item.debit > 0 ? item.debit.toFixed(2) : '-'}</td>
+                    <td style="padding:4px; border-bottom:1px solid #cbd5e1; text-align:right;">${item.credit > 0 ? item.credit.toFixed(2) : '-'}</td>
+                    <td style="padding:4px; border-bottom:1px solid #cbd5e1; text-align:right; font-weight:bold;">${Math.abs(item.balance).toFixed(2)} ${item.type}</td>
+                </tr>`;
+            });
+            html += `</table>`;
+            
+            document.getElementById('fyStatementContent').innerHTML = html;
+            document.getElementById('fyModal').style.display = 'block';
+        }
+
+        function closeFyModal() {
+            document.getElementById('fyModal').style.display = 'none';
         }
 
         function openPrintPreviewModal() {

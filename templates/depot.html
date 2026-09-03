@@ -952,6 +952,7 @@
         }
 
         async function loadDepotData() {
+            showScreenBlocker('Loading Depot Data... Please wait!'); // लोडिंग चालू करें
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load");
@@ -998,7 +999,12 @@
                 renderStaffTable(loadedStaffList);
 
                 await loadDepotExpensesData();
-            } catch (err) { console.error(err); }
+            } catch (err) { 
+                console.error(err); 
+                showToast('Error loading data!');
+            } finally {
+                hideScreenBlocker(); // डेटा लोड होने के बाद लोडिंग बंद करें
+            }
         }
 
         function handleDispatchFilterChange() {

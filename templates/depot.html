@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --theme-top-blue: #32567f;
@@ -531,7 +532,7 @@
             
             <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.38rem 0.75rem;font-size:0.8rem;" onclick="exportCurrentFyExpensesToExcel()">📥 Export Current FY</button>
             <button class="btn-action-nav" style="background:#e0f2fe;border-color:#38bdf8;color:#0369a1;padding:0.38rem 0.75rem;font-size:0.8rem;" onclick="exportAllFyExpensesToExcel()">📊 Export All FY</button>
-            <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.38rem 0.75rem;font-size:0.8rem;" onclick="openExpensePdfStatementModal()">🖨️ Print Cur FY</button>
+            <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.38rem 0.75rem;font-size:0.8rem;" onclick="downloadExpensePdfDirect()">📄 Download PDF</button>
         </div>
 
                 <!-- Bottom Row under FY: + Add New Depot EXP Entry (Visible only on current year) -->
@@ -2745,6 +2746,132 @@
     document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
     document.getElementById('printPreviewModal').style.display = 'block';
 }
+        function downloadExpensePdfDirect() {
+            const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const validRows = loadedDepotExpenses.filter(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                return d && d >= fyStartDate && d <= fyEndDate;
+            }).sort((a,b) => parseDateObj(getField(a, 'Date')) - parseDateObj(getField(b, 'Date')));
+
+            let openingBalance = 0;
+            loadedDepotExpenses.forEach(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                let dr = Number(getField(r, 'Debit', 'debit') || 0);
+                let cr = Number(getField(r, 'Credit', 'credit') || 0);
+                if (d && d < fyStartDate) openingBalance += (cr - dr);
+            });
+
+            const monthlyGroups = {};
+            fyMonthSequence.forEach(mIndex => { monthlyGroups[mIndex] = []; });
+
+            validRows.forEach(r => {
+                let d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d) { monthlyGroups[d.getMonth()].push(r); }
+            });
+
+            let runningBal = openingBalance;
+            let fullHtmlBlocks = '';
+
+            fyMonthSequence.forEach(mIndex => {
+                const rowsInMonth = monthlyGroups[mIndex];
+                if (rowsInMonth.length === 0) return;
+
+                let monthDr = 0;
+                let monthCr = 0;
+                let monthRowsHtml = '';
+
+                let opCr = runningBal > 0 ? runningBal : 0;
+                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+
+                monthRowsHtml += `<tr>
+                    <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                    <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                </tr>`;
+
+                rowsInMonth.forEach(r => {
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                    const part = getField(r, 'Particular', 'particular');
+
+                    monthDr += dr;
+                    monthCr += cr;
+                    runningBal += (cr - dr);
+
+                    monthRowsHtml += `<tr>
+                        <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
+                        <td style="border:1px solid #000; padding:4px;">${part}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                    </tr>`;
+                });
+
+                fullHtmlBlocks += `
+                    <div style="margin-bottom: 20px;">
+                        <table style="width:100%; border-collapse:collapse; font-size:9pt; border:2px solid #000;">
+                            <thead>
+                                <tr style="background:#e0f2fe; text-align:center;">
+                                    <th colspan="5" style="border:1px solid #000; padding:5px; font-weight:bold; font-size:10pt; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                </tr>
+                                <tr style="background:#e0f2fe; text-align:center;">
+                                    <th style="border:1px solid #000; padding:4px; width:15%; color:#0369a1;">DATE</th>
+                                    <th style="border:1px solid #000; padding:4px; text-align:left; width:45%; color:#0369a1;">PARTICULAR</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%; color:#0369a1;">CREDIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:13%; color:#0369a1;">DEBIT</th>
+                                    <th style="border:1px solid #000; padding:4px; width:14%; color:#0369a1;">BALANCE</th>
+                                </tr>
+                            </thead>
+                            <tbody>${monthRowsHtml}</tbody>
+                            <tfoot>
+                                <tr style="background:#e0f2fe; font-weight:bold;">
+                                    <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + opCr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthDr + opDr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${runningBal.toFixed(2)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                `;
+            });
+
+            const exportNode = document.createElement('div');
+            exportNode.style.padding = '10px';
+            exportNode.style.background = '#ffffff';
+            exportNode.style.color = '#000000';
+            exportNode.innerHTML = `
+                <div style="text-align:center; font-weight:bold; background:#32567f; color:#fff; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
+                    ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
+                </div>
+                ${fullHtmlBlocks}
+            `;
+
+            showScreenBlocker('Generating PDF... Please wait!');
+            const opt = {
+                margin: 8,
+                filename: `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(exportNode).save().then(() => {
+                hideScreenBlocker();
+                showToast('PDF downloaded successfully!');
+            }).catch(err => {
+                hideScreenBlocker();
+                showToast('Error generating PDF.');
+                console.error(err);
+            });
+        }
         
         window.onload = () => {
             startLiveClock();

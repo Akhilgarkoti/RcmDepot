@@ -28,6 +28,39 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
 
+        /* Full Screen Loader Overlay */
+        #pageLoaderOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(234, 239, 245, 0.92);
+            backdrop-filter: blur(3px);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: opacity 0.3s ease;
+        }
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #cbd5e1;
+            border-top: 4px solid var(--theme-top-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--theme-top-blue);
+            letter-spacing: 0.5px;
+        }
+
         .navbar {
             background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
             border-bottom: 2px solid var(--theme-mid-blue);
@@ -160,6 +193,13 @@
 </head>
 <body>
 
+    <!-- Full Screen Loading Overlay -->
+    <div id="pageLoaderOverlay">
+        <div class="spinner"></div>
+        <div class="loader-text">Loading Portal Data...</div>
+    </div>
+
+    <!-- Hidden Raw Print Node for Browser Print -->
     <div id="printableReceipt">
         <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
             <h2 style="font-size:10pt; font-weight:800; margin:0 0 2px 0;">RCM Consumer Products Private Limited</h2>
@@ -197,6 +237,7 @@
         </div>
     </div>
 
+    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -205,8 +246,9 @@
             </div>
             <div class="modal-body" style="background:#f8fafc;">
                 <div class="preview-slip-box" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center;">
-                    <button class="btn-action-nav" style="width:100%; justify-content:center; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
+                <div style="margin-top:1rem; text-align:center; display:flex; gap:0.5rem;">
+                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:#10b981; color:#fff; border:none; padding:0.65rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
+                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.65rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
                 </div>
             </div>
         </div>
@@ -214,6 +256,7 @@
 
     <div id="toastContainer" class="toast-container"></div>
 
+    <!-- Top Navigation Bar -->
     <div class="navbar">
         <div class="left-header-group">
             <div class="nav-actions">
@@ -239,6 +282,7 @@
     </div>
 
     <div class="main-container">
+        <!-- Staff Profile Banner -->
         <div class="profile-card">
             <div class="profile-left">
                 <div id="staffAvatarBox" class="staff-avatar-large">U</div>
@@ -251,6 +295,7 @@
             </div>
         </div>
 
+        <!-- Ledger Main Panel -->
         <div class="comfort-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
@@ -262,6 +307,7 @@
                 </div>
             </div>
 
+            <!-- 1. Month-wise Summary Table -->
             <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
                 <table class="custom-table" id="annualSummaryTable">
                     <thead>
@@ -278,6 +324,7 @@
                 </table>
             </div>
 
+            <!-- 2. Detailed Month-wise Breakdown -->
             <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                     <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
@@ -306,6 +353,7 @@
         </div>
     </div>
 
+    <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
@@ -419,6 +467,10 @@
         }
 
         async function loadStaffData() {
+            const loader = document.getElementById('pageLoaderOverlay');
+            loader.style.display = 'flex';
+            loader.style.opacity = '1';
+
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getStaffBundle&staffCode=${encodeURIComponent(staffCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load staff bundle");
@@ -459,6 +511,9 @@
                 renderAnnualSummaryLedger();
             } catch (err) {
                 console.error(err);
+            } finally {
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 300);
             }
         }
 
@@ -863,6 +918,88 @@
         function hideMonthDetails() {
             document.getElementById('annualSummaryContainer').style.display = 'block';
             document.getElementById('monthDetailContainer').style.display = 'none';
+        }
+
+        function exportFullDetailedLedgerToCSV() {
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
+            const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
+            const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
+            const dName = getField(depotDataGlobal, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
+
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0;
+            let currentFYRows = [];
+
+            validRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+
+                if (d < fyStartDate) {
+                    if (isApproved) openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    currentFYRows.push(r);
+                }
+            });
+
+            if (currentFYRows.length === 0 && openingBalance === 0) {
+                showToast('No ledger transactions to export for this FY.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `Staff Name,${sName},Staff Code,${sCode}\n`;
+            csvContent += `Depot,${dName},Period,FY ${startYear}-${startYear + 1}\n\n`;
+            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
+
+            let runningBal = openingBalance;
+            let totalDr = 0, totalCr = 0;
+
+            let opCr = openingBalance > 0 ? openingBalance : 0;
+            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
+
+            currentFYRows.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+                }
+
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+            });
+
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Full_Ledger_${sCode}_${periodLabel}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
         }
 
         function openPasswordModal() {

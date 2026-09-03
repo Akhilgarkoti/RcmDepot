@@ -515,25 +515,31 @@
         </table>
     </div>
 </div>
-        <!-- 4. Depot Expenses Tab with 3 Export Options -->
+       <!-- 4. Depot Expenses Tab with 3 Export Options -->
         <div id="expensesTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>💰 Depot Expenses Management</h3>
-                <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;" onclick="openAddExpenseModal()">➕ Add Expense Entry</button>
             </div>
             
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
-                <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
-                    <select id="expenseYearFilter" class="filter-select-box" onchange="renderAnnualSummaryExpenses()"></select>
+            <div style="background:#ffffff; padding:0.6rem 0.9rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:0.8rem;">
+                <!-- Top Row: FY Dropdown + Export Options -->
+                <div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:0.6rem;">
+                    <label style="font-weight:700; font-size:0.86rem; color:#1e293b;">Financial Year:</label>
+                    <select id="expenseYearFilter" class="filter-select-box" style="padding:0.35rem 0.7rem; font-size:0.84rem;" onchange="renderAnnualSummaryExpenses()"></select>
+                    
+                    <div style="display:flex; align-items:center; gap:0.4rem; margin-left:0.4rem;">
+                        <select id="expenseExportMode" class="filter-select-box" style="padding:0.35rem 0.7rem; font-size:0.84rem;">
+                            <option value="CURRENT_FY" selected>📥 Export Current FY (Excel)</option>
+                            <option value="ALL_FY">📊 Export All FY (Multi-Sheet Excel)</option>
+                            <option value="PDF_FY">📄 Download Selected FY (PDF)</option>
+                        </select>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.38rem 0.85rem;font-size:0.82rem;" onclick="handleExpenseExportAction()">Go</button>
+                    </div>
                 </div>
-                <div style="display:flex; align-items:center; gap:0.5rem;">
-                    <select id="expenseExportMode" class="filter-select-box">
-                        <option value="CURRENT_FY" selected>📥 Export Current FY (Excel)</option>
-                        <option value="ALL_FY">📊 Export All FY (Multi-Sheet Excel)</option>
-                        <option value="PDF_FY">📄 Download Selected FY (PDF)</option>
-                    </select>
-                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="handleExpenseExportAction()">Go</button>
+
+                <!-- Bottom Row under FY: Only + Icon Button (Visible only on current year) -->
+                <div id="addExpBtnContainer" style="margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px dashed #e2e8f0; display: flex; align-items: center;">
+                    <button id="btnQuickAddExpense" class="btn-action-nav" style="background:#dcfce7; border-color:#22c55e; color:#15803d; width:34px; height:34px; padding:0; justify-content:center; font-size:1.15rem; font-weight:800; border-radius:4px; line-height:1;" title="Add New Exp Entry" onclick="openAddExpenseModal()">➕</button>
                 </div>
             </div>
 
@@ -553,6 +559,31 @@
                     <tbody id="expenseSummaryTbody"></tbody>
                 </table>
             </div>
+
+            <!-- Detailed Month-wise Breakdown for Expenses -->
+            <div id="expenseDetailContainer" style="display:none; margin-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="expenseDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Expenses</h4>
+                    <div>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideExpenseMonthDetails()">⬅️ Back to Annual Summary</button>
+                    </div>
+                </div>
+                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th style="width:130px;">Date</th>
+                                <th style="min-width:380px;">Particular</th>
+                                <th style="width:130px;text-align:right;">Debit (₹)</th>
+                                <th style="width:130px;text-align:right;">Credit (₹)</th>
+                                <th style="width:150px;text-align:right;">Balance (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseDetailTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
             <!-- Detailed Month-wise Breakdown for Expenses -->
             <div id="expenseDetailContainer" style="display:none; margin-top:0.5rem;">
@@ -2008,6 +2039,15 @@
         function renderAnnualSummaryExpenses() {
             hideExpenseMonthDetails();
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
+            
+            // केवल करंट फ़ाइनेंशियल ईयर होने पर ही '+' बटन दिखेगा
+            const now = new Date();
+            const curFyStart = (now.getMonth() >= 3) ? now.getFullYear() : now.getFullYear() - 1;
+            const addBtnWrap = document.getElementById('addExpBtnContainer');
+            if (addBtnWrap) {
+                addBtnWrap.style.display = (startYear === curFyStart) ? 'flex' : 'none';
+            }
+
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
 
@@ -2108,7 +2148,6 @@
 
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
         }
-
         function viewExpenseMonthDetails(mIndex) {
             const mData = expenseAnnualSummaryData.find(d => d.monthIndex === mIndex);
             if (!mData) return;

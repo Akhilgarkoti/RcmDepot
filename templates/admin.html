@@ -179,7 +179,7 @@
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
         .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
-        /* Hidden Raw Print Node */
+        /* Hidden Raw Print Node FIXED */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         /* Modal Dialogs */
@@ -2117,55 +2117,12 @@
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            const displayEl = document.getElementById('previewSlipDisplay');
-            displayEl.innerHTML = `
-                <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
-                    <h2 style="font-size:11pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
-                    <p style="font-size:8pt; margin:0; line-height:1.2;">${fullAddr}</p>
-                    <p style="font-size:8pt; margin:2px 0 0 0;">${contact}</p>
-                    <span style="font-weight:800; margin-top:4px; display:block; font-size:9pt;">** MONTH ACCOUNT STATEMENT **</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:8.5pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
-                    <div>
-                        <p style="margin:0;"><strong>Name:</strong> ${sName}</p>
-                        <p style="margin:0;"><strong>Code:</strong> ${sCode}</p>
-                    </div>
-                    <div class="text-right">
-                        <p style="margin:0;"><strong>Depot:</strong> ${dName}</p>
-                        <p style="margin:0;"><strong>Period:</strong> ${period}</p>
-                    </div>
-                </div>
-                <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8.5pt;">
-                    <thead>
-                        <tr>
-                            <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Date</th>
-                            <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Particulars</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Dr</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Cr</th>
-                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Bal</th>
-                        </tr>
-                    </thead>
-                    <tbody>${html}</tbody>
-                </table>
-                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; font-size:8.5pt; font-weight:bold;">
-                    <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span>Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span>Rs.${activeViewingMonthData.totalDr.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span>Rs.${activeViewingMonthData.totalCr.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between; margin-top:3px; border-top:1px dashed #000; padding-top:3px;"><span>CLOSING BALANCE:</span><span>Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                </div>
-            `;
-
+            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
         }
 
-        function closePrintPreviewModal() {
-            document.getElementById('printPreviewModal').style.display = 'none';
-        }
-
-        function triggerDirectBrowserPrint() {
-            window.print();
-        }
-
+        function closePrintPreviewModal() { document.getElementById('printPreviewModal').style.display = 'none'; }
+        function triggerDirectBrowserPrint() { window.print(); }
         function closeLedgerDetailModal() { document.getElementById('staffLedgerDetailModal').style.display = 'none'; }
 
         function openEditLedger(trxId) {

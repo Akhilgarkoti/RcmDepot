@@ -179,6 +179,9 @@
         .load-more-bar { text-align: center; padding-top: 0.8rem; }
         .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
 
+        /* Hidden Raw Print Node */
+        #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
+
         /* Modal Dialogs */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
         .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 540px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
@@ -561,7 +564,7 @@
                 <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
                     <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Depot:</label>
                     <select id="adminExpDepotFilter" class="filter-select-box" onchange="renderAdminExpenseSummary()">
-                        <option value="ALL" selected>🏬 All Depots</option>
+                        <option value="" disabled selected>⚠️ Please select depot</option>
                     </select>
 
                     <label style="font-weight:700; font-size:0.88rem; color:#1e293b; margin-left:0.5rem;">Financial Year:</label>
@@ -585,7 +588,9 @@
                             <th style="width:14%; text-align:center;">Action</th>
                         </tr>
                     </thead>
-                    <tbody id="adminExpSummaryTbody"></tbody>
+                    <tbody id="adminExpSummaryTbody">
+                        <tr><td colspan="6" class="text-center" style="padding:2rem; color:#b45309; font-weight:bold;">⚠️ Please select depot from the dropdown above to view expenses.</td></tr>
+                    </tbody>
                 </table>
             </div>
 
@@ -618,7 +623,7 @@
         <!-- 7. Admin Master Panel -->
         <div id="adminMasterTab" class="panel-card" style="display:none;">
             <div class="panel-header">
-                <h3>🛡️ Admin Master (All 13 Columns)</h3>
+                <h3>🛡️ Admin Master (All 15 Columns)</h3>
                 <button class="btn-new-item perm-action-admin" id="btnNewAdmin" onclick="openNewAdminModal()">➕ Add New Admin</button>
             </div>
             <div class="table-responsive">
@@ -637,6 +642,8 @@
                             <th>View Only Staff Ledger</th>
                             <th>View Only Dispatch</th>
                             <th>Pending Approvals</th>
+                            <th>Depot Exp Access</th>
+                            <th>Depot Exp View Only</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -647,8 +654,7 @@
 
     </div>
 
-    <!-- Modals (Depot, Staff, Ledger, Admin) -->
-    <!-- Modal 1: Add New Depot -->
+    <!-- Modals -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>🏬 Add New Depot (All 15 Fields)</span><button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button></div>
@@ -677,7 +683,6 @@
         </div>
     </div>
 
-    <!-- Modal 2: Edit Depot -->
     <div id="editDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>✏️ Edit Depot Record</span><button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button></div>
@@ -706,7 +711,6 @@
         </div>
     </div>
 
-    <!-- Modal 3: Add New Staff -->
     <div id="newStaffModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>👥 Add New Staff Member</span><button class="modal-close-btn" onclick="closeNewStaffModal()">&times;</button></div>
@@ -729,7 +733,6 @@
         </div>
     </div>
 
-    <!-- Modal 4: Edit Staff -->
     <div id="editStaffModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>✏️ Edit Staff Details</span><button class="modal-close-btn" onclick="closeEditStaffModal()">&times;</button></div>
@@ -754,7 +757,6 @@
         </div>
     </div>
 
-    <!-- Modal 5: Staff Full Ledger Statement -->
     <div id="staffLedgerDetailModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar"><span id="dtlLedgerTitle">📄 Staff Ledger</span><button class="modal-close-btn" onclick="closeLedgerDetailModal()">&times;</button></div>
@@ -815,7 +817,6 @@
         </div>
     </div>
 
-    <!-- Modal 6: Edit Ledger Entry -->
     <div id="editLedgerModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar"><span>✏️ Edit Ledger Entry</span><button class="modal-close-btn" onclick="closeEditLedgerModal()">&times;</button></div>
@@ -836,7 +837,7 @@
         </div>
     </div>
 
-    <!-- Modal 8: Add/Edit Admin -->
+    <!-- Modal 8: Add/Edit Admin (All 15 Columns with N and O) -->
     <div id="adminMasterModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span id="adminModalTitle">🛡️ Admin Master & Permissions</span><button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button></div>
@@ -848,14 +849,16 @@
                         <div class="form-group"><label>C: Admin Mob</label><input type="tel" id="admMobile" class="form-control" required></div>
                         <div class="form-group"><label>D: Admin Login ID</label><input type="text" id="admLoginId" class="form-control" required></div>
                         <div class="form-group"><label>E: Login Password</label><input type="text" id="admPass" class="form-control" required></div>
-                        <div class="form-group"><label>F: Can Access Staff Ledger Entry</label><select id="admColF" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-                        <div class="form-group"><label>G: Can Access Depot Master</label><select id="admColG" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-                        <div class="form-group"><label>H: Can Access Staff Master</label><select id="admColH" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-                        <div class="form-group"><label>I: Can Access Invoice Dispatch Report</label><select id="admColI" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-                        <div class="form-group"><label>J: Can Access Admin Master</label><select id="admColJ" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>F: Staff Ledger Entry</label><select id="admColF" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>G: Depot Master</label><select id="admColG" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>H: Staff Master</label><select id="admColH" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>I: Dispatch Report</label><select id="admColI" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>J: Admin Master</label><select id="admColJ" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
                         <div class="form-group"><label>K: View Only Staff Ledger</label><select id="admColK" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-                        <div class="form-group"><label>L: View Only Invoice Dispatch Report</label><select id="admColL" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
-                        <div class="form-group-full"><label>M: Can Access Pending Approvals</label><select id="admColM" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>L: View Only Dispatch</label><select id="admColL" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>M: Pending Approvals</label><select id="admColM" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>N: Depot Exp Access</label><select id="admColN" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                        <div class="form-group"><label>O: Depot Exp View Only</label><select id="admColO" class="form-control"><option value="Deafult">Deafult</option><option value="Yes">Yes</option><option value="No">No</option></select></div>
                     </div>
                     <button type="submit" class="btn-submit-modal">💾 Save Admin to Google Sheet</button>
                 </form>
@@ -882,8 +885,8 @@
         let activeViewingMonthData = null;
         let globalIsViewOnlyLedger = false;
         let globalIsViewOnlyDispatch = false;
+        let globalIsViewOnlyExpense = false;
 
-        // Admin Expenses State
         let adminExpenseSummaryData = [];
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -1026,14 +1029,23 @@
             const viewOnlyLedger = getField(currentAdmin, 'View Onlt Staff Ledger', 'View Only Staff Ledger');
             const viewOnlyDispatch = getField(currentAdmin, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report');
             const canPending = getField(currentAdmin, 'Pending Approvals', 'Can Access Pending Approvals');
+            const depotExpAccess = getField(currentAdmin, 'Depot Exp Access');
+            const depotExpViewOnly = getField(currentAdmin, 'Depot Exp View Only');
 
             globalIsViewOnlyLedger = checkValYes(viewOnlyLedger);
             globalIsViewOnlyDispatch = checkValYes(viewOnlyDispatch);
+            globalIsViewOnlyExpense = checkValYes(depotExpViewOnly);
 
             if (checkValNo(canPending)) document.getElementById('tabBtnPending').style.display = 'none';
             if (checkValNo(canDepot)) document.getElementById('tabBtnDepot').style.display = 'none';
             if (checkValNo(canStaff)) document.getElementById('tabBtnStaff').style.display = 'none';
             if (checkValNo(canAdmin)) document.getElementById('tabBtnAdminMaster').style.display = 'none';
+
+            if (checkValNo(depotExpAccess)) {
+                document.getElementById('tabBtnExpenses').style.display = 'none';
+            } else {
+                document.getElementById('tabBtnExpenses').style.display = 'inline-flex';
+            }
 
             if (checkValNo(canLedger) && !globalIsViewOnlyLedger) {
                 document.getElementById('tabBtnLedger').style.display = 'none';
@@ -1074,7 +1086,6 @@
                 handleAdminDispatchFilterChange();
                 renderAdminMaster(res.admins || []);
                 
-                // Initialize Depot Expenses Module
                 populateAdminExpenseFilters(res.depots || [], res.expenses || []);
                 renderAdminExpenseSummary();
             } catch (err) {
@@ -1084,10 +1095,10 @@
             }
         }
 
-        // --- Depot Expenses Functions (Admin View) ---
+        // --- Depot Expenses Functions (Admin View with Please Select validation) ---
         function populateAdminExpenseFilters(depots, expenses) {
             const depotSelect = document.getElementById('adminExpDepotFilter');
-            let depotOpts = `<option value="ALL" selected>🏬 All Depots (${depots.length})</option>`;
+            let depotOpts = `<option value="" disabled selected>⚠️ Please select depot</option>`;
             depots.forEach(d => {
                 const code = getField(d, 'Depot Code');
                 const name = getField(d, 'Depot Name');
@@ -1122,6 +1133,13 @@
         function renderAdminExpenseSummary() {
             hideAdminExpenseMonthDetails();
             const selectedDepot = document.getElementById('adminExpDepotFilter').value;
+            
+            if (!selectedDepot) {
+                document.getElementById('adminExpCount').textContent = `0 records`;
+                document.getElementById('adminExpSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2rem; color:#b45309; font-weight:bold;">⚠️ Please select depot from the dropdown above to view expenses.</td></tr>`;
+                return;
+            }
+
             const startYear = parseInt(document.getElementById('adminExpYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
@@ -1129,7 +1147,7 @@
             const allExpenses = adminBundle.expenses || [];
             const filteredExpenses = allExpenses.filter(r => {
                 const dCode = getField(r, 'Depot Code');
-                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return false;
+                if (dCode !== selectedDepot) return false;
                 let d = parseDateObj(getField(r, 'Date', 'date'));
                 return d && d >= fyStartDate && d <= fyEndDate;
             }).sort((a, b) => parseDateObj(getField(a, 'Date')) - parseDateObj(getField(b, 'Date')));
@@ -1139,7 +1157,7 @@
             let openingBalance = 0;
             allExpenses.forEach(r => {
                 const dCode = getField(r, 'Depot Code');
-                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return;
+                if (dCode !== selectedDepot) return;
                 let d = parseDateObj(getField(r, 'Date', 'date'));
                 let dr = Number(getField(r, 'Debit', 'debit') || 0);
                 let cr = Number(getField(r, 'Credit', 'credit') || 0);
@@ -1226,7 +1244,7 @@
                 </tr>`;
             });
 
-            document.getElementById('adminExpSummaryTbody').innerHTML = tbodyHtml;
+            document.getElementById('adminExpSummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="6" class="text-center" style="padding:2rem;">No expense records found for this depot in the selected FY.</td></tr>`;
         }
 
         function viewAdminExpenseMonthDetails(mIndex) {
@@ -1245,7 +1263,7 @@
 
             (adminBundle.expenses || []).forEach(r => {
                 const dCode = getField(r, 'Depot Code');
-                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return;
+                if (dCode !== selectedDepot) return;
                 let d = parseDateObj(getField(r, 'Date', 'date'));
                 if (d && d < firstOfThisMonth) {
                     opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
@@ -1298,13 +1316,18 @@
 
         function exportAdminExpensesToCSV() {
             const selectedDepot = document.getElementById('adminExpDepotFilter').value;
+            if (!selectedDepot) {
+                showToast('Please select a depot first.');
+                return;
+            }
+
             const startYear = parseInt(document.getElementById('adminExpYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
 
             const filtered = (adminBundle.expenses || []).filter(r => {
                 const dCode = getField(r, 'Depot Code');
-                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return false;
+                if (dCode !== selectedDepot) return false;
                 let d = parseDateObj(getField(r, 'Date', 'date'));
                 return d && d >= fyStartDate && d <= fyEndDate;
             }).sort((a, b) => parseDateObj(getField(a, 'Date')) - parseDateObj(getField(b, 'Date')));
@@ -1338,7 +1361,7 @@
             showToast('Depot expenses exported as Excel (.csv)!');
         }
 
-        // --- Other Standard Admin Functions ---
+        // --- Other Admin Functions ---
         function renderPendingApprovals() {
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
@@ -2094,12 +2117,55 @@
             const finalNet = activeViewingMonthData.closingBal;
             document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
-            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
+            const displayEl = document.getElementById('previewSlipDisplay');
+            displayEl.innerHTML = `
+                <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
+                    <h2 style="font-size:11pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
+                    <p style="font-size:8pt; margin:0; line-height:1.2;">${fullAddr}</p>
+                    <p style="font-size:8pt; margin:2px 0 0 0;">${contact}</p>
+                    <span style="font-weight:800; margin-top:4px; display:block; font-size:9pt;">** MONTH ACCOUNT STATEMENT **</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:8.5pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+                    <div>
+                        <p style="margin:0;"><strong>Name:</strong> ${sName}</p>
+                        <p style="margin:0;"><strong>Code:</strong> ${sCode}</p>
+                    </div>
+                    <div class="text-right">
+                        <p style="margin:0;"><strong>Depot:</strong> ${dName}</p>
+                        <p style="margin:0;"><strong>Period:</strong> ${period}</p>
+                    </div>
+                </div>
+                <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8.5pt;">
+                    <thead>
+                        <tr>
+                            <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Date</th>
+                            <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Particulars</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Dr</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Cr</th>
+                            <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 2px;">Bal</th>
+                        </tr>
+                    </thead>
+                    <tbody>${html}</tbody>
+                </table>
+                <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:5px 0; font-size:8.5pt; font-weight:bold;">
+                    <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span>Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span>Rs.${activeViewingMonthData.totalDr.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span>Rs.${activeViewingMonthData.totalCr.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between; margin-top:3px; border-top:1px dashed #000; padding-top:3px;"><span>CLOSING BALANCE:</span><span>Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                </div>
+            `;
+
             document.getElementById('printPreviewModal').style.display = 'block';
         }
 
-        function closePrintPreviewModal() { document.getElementById('printPreviewModal').style.display = 'none'; }
-        function triggerDirectBrowserPrint() { window.print(); }
+        function closePrintPreviewModal() {
+            document.getElementById('printPreviewModal').style.display = 'none';
+        }
+
+        function triggerDirectBrowserPrint() {
+            window.print();
+        }
+
         function closeLedgerDetailModal() { document.getElementById('staffLedgerDetailModal').style.display = 'none'; }
 
         function openEditLedger(trxId) {
@@ -2173,6 +2239,11 @@
                     currentFYRows.push(r);
                 }
             });
+
+            if (currentFYRows.length === 0 && openingBalance === 0) {
+                showToast('No ledger transactions to export for this FY.');
+                return;
+            }
 
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `Staff Name,${activeLedgerStaffName},Staff Code,${activeLedgerStaffCode}\n`;
@@ -2461,6 +2532,8 @@
                 const k = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
                 const l = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
                 const m = getField(a, 'Pending Approvals', 'Can Access Pending Approvals') || 'Deafult';
+                const n = getField(a, 'Depot Exp Access') || 'Deafult';
+                const o = getField(a, 'Depot Exp View Only') || 'Deafult';
 
                 let actionBtns = `
                     <button class="btn-action-edit" onclick="openEditAdmin('${id}')">✏️ Edit</button>
@@ -2481,6 +2554,8 @@
                     <td>${k}</td>
                     <td>${l}</td>
                     <td>${m}</td>
+                    <td>${n}</td>
+                    <td>${o}</td>
                     <td>${actionBtns}</td>
                 </tr>`;
             });
@@ -2490,7 +2565,7 @@
         function openNewAdminModal() {
             document.getElementById('adminMasterForm').reset();
             document.getElementById('admId').readOnly = false;
-            document.getElementById('adminModalTitle').textContent = '🛡️ Add New Admin (All 13 Columns)';
+            document.getElementById('adminModalTitle').textContent = '🛡️ Add New Admin (All 15 Columns)';
             document.getElementById('adminMasterModal').style.display = 'block';
         }
 
@@ -2512,6 +2587,8 @@
             document.getElementById('admColK').value = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
             document.getElementById('admColL').value = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
             document.getElementById('admColM').value = getField(a, 'Pending Approvals', 'Can Access Pending Approvals') || 'Deafult';
+            document.getElementById('admColN').value = getField(a, 'Depot Exp Access') || 'Deafult';
+            document.getElementById('admColO').value = getField(a, 'Depot Exp View Only') || 'Deafult';
 
             document.getElementById('adminModalTitle').textContent = `✏️ Edit Admin (${id})`;
             document.getElementById('adminMasterModal').style.display = 'block';
@@ -2536,7 +2613,9 @@
                 colJ: document.getElementById('admColJ').value,
                 colK: document.getElementById('admColK').value,
                 colL: document.getElementById('admColL').value,
-                colM: document.getElementById('admColM').value
+                colM: document.getElementById('admColM').value,
+                colN: document.getElementById('admColN').value,
+                colO: document.getElementById('admColO').value
             };
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');

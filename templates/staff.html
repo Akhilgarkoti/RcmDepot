@@ -142,14 +142,14 @@
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
-            @page { size: A5 portrait; margin: 6mm 8mm; }
+            @page { size: auto; margin: 2mm; }
             body { background: #ffffff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             body * { visibility: hidden !important; }
             #printableReceipt, #printableReceipt * { visibility: visible !important; }
             #printableReceipt { 
                 display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
-                width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; 
-                font-size: 8pt !important; line-height: 1.25 !important; border: none !important; background: #fff !important; 
+                width: 100% !important; max-width: 80mm !important; margin: 0 auto !important; padding: 2mm !important; 
+                font-size: 8pt !important; line-height: 1.2 !important; border: none !important; background: #fff !important; 
             }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
@@ -160,15 +160,14 @@
 </head>
 <body>
 
-    <!-- Hidden Raw Print Node for Browser Print -->
     <div id="printableReceipt">
         <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
-            <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
-            <p id="rcptFullAddress" style="font-size:7.5pt; margin:0; line-height:1.2;">Depot Address</p>
-            <p id="rcptContact" style="font-size:7.5pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
-            <span id="rcptStatementTitle" style="font-weight:800; margin-top:4px; display:block; font-size:8.5pt;">** MONTH ACCOUNT STATEMENT **</span>
+            <h2 style="font-size:10pt; font-weight:800; margin:0 0 2px 0;">RCM Consumer Products Private Limited</h2>
+            <p id="rcptFullAddress" style="font-size:7pt; margin:0; line-height:1.2;">Depot Address</p>
+            <p id="rcptContact" style="font-size:7pt; margin:2px 0 0 0;">Mob: - | GSTIN: -</p>
+            <span id="rcptStatementTitle" style="font-weight:800; margin-top:3px; display:block; font-size:8pt;">** STATEMENT **</span>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:8pt; border-bottom:1px solid #000; padding-bottom:4px; margin-bottom:4px;">
+        <div style="display:flex; justify-content:space-between; font-size:7.5pt; border-bottom:1px solid #000; padding-bottom:3px; margin-bottom:3px;">
             <div>
                 <p style="margin:0;"><strong>Name:</strong> <span id="rcptStaffName">-</span></p>
                 <p style="margin:0;"><strong>Code:</strong> <span id="rcptStaffCode">-</span></p>
@@ -178,19 +177,19 @@
                 <p style="margin:0;"><strong>Period:</strong> <span id="rcptPrintPeriod">-</span></p>
             </div>
         </div>
-        <table style="width:100%; border-collapse:collapse; margin-bottom:5px; font-size:8pt;">
+        <table style="width:100%; border-collapse:collapse; margin-bottom:4px; font-size:7.5pt;">
             <thead>
                 <tr>
-                    <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Date</th>
-                    <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Particulars</th>
-                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Dr</th>
-                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Cr</th>
-                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 2px;">Bal</th>
+                    <th style="width:18%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Date</th>
+                    <th style="width:46%; text-align:left; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Particulars</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Dr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Cr</th>
+                    <th class="text-right" style="width:12%; border-top:1px solid #000; border-bottom:1px solid #000; padding:2px 1px;">Bal</th>
                 </tr>
             </thead>
             <tbody id="rcptTableBody"></tbody>
         </table>
-        <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:4px 0; font-size:8pt; font-weight:bold;">
+        <div style="border-top:1px solid #000; border-bottom:1px solid #000; padding:3px 0; font-size:7.5pt; font-weight:bold;">
             <div style="display:flex; justify-content:space-between;"><span>OPENING BALANCE:</span><span id="rcptOpeningBalance">Rs.0.00</span></div>
             <div style="display:flex; justify-content:space-between;"><span>TOTAL DEBIT:</span><span id="rcptTotalDebit">Rs.0.00</span></div>
             <div style="display:flex; justify-content:space-between;"><span>TOTAL CREDIT:</span><span id="rcptTotalCredit">Rs.0.00</span></div>
@@ -198,7 +197,6 @@
         </div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -207,9 +205,8 @@
             </div>
             <div class="modal-body" style="background:#f8fafc;">
                 <div class="preview-slip-box" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center; display:flex; gap:0.5rem;">
-                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:#0284c7; color:#fff; border:none; padding:0.65rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Download Excel</button>
-                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.65rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
+                <div style="margin-top:1rem; text-align:center;">
+                    <button class="btn-action-nav" style="width:100%; justify-content:center; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
                 </div>
             </div>
         </div>
@@ -217,7 +214,6 @@
 
     <div id="toastContainer" class="toast-container"></div>
 
-    <!-- Top Navigation Bar -->
     <div class="navbar">
         <div class="left-header-group">
             <div class="nav-actions">
@@ -243,7 +239,6 @@
     </div>
 
     <div class="main-container">
-        <!-- Staff Profile Banner -->
         <div class="profile-card">
             <div class="profile-left">
                 <div id="staffAvatarBox" class="staff-avatar-large">U</div>
@@ -256,7 +251,6 @@
             </div>
         </div>
 
-        <!-- Ledger Main Panel -->
         <div class="comfort-panel">
             <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
@@ -268,7 +262,6 @@
                 </div>
             </div>
 
-            <!-- 1. Month-wise Summary Table -->
             <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
                 <table class="custom-table" id="annualSummaryTable">
                     <thead>
@@ -285,7 +278,6 @@
                 </table>
             </div>
 
-            <!-- 2. Detailed Month-wise Breakdown -->
             <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
                     <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
@@ -314,7 +306,6 @@
         </div>
     </div>
 
-    <!-- Password Modal -->
     <div id="pwdModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar"><span>🔑 Change Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
@@ -872,88 +863,6 @@
         function hideMonthDetails() {
             document.getElementById('annualSummaryContainer').style.display = 'block';
             document.getElementById('monthDetailContainer').style.display = 'none';
-        }
-
-        function exportFullDetailedLedgerToCSV() {
-            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
-            const fyStartDate = new Date(startYear, 3, 1);
-            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
-            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
-            const sName = getField(staffDataGlobal, 'Staff Name') || staffNameStored;
-            const sCode = getField(staffDataGlobal, 'Staff Code') || staffCode;
-            const dName = getField(depotDataGlobal, 'Depot Name') || getField(staffDataGlobal, 'Staff Working Depot Name');
-
-            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
-                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
-                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
-                return da - db;
-            });
-
-            let openingBalance = 0;
-            let currentFYRows = [];
-
-            validRows.forEach(r => {
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-
-                if (!d) return;
-
-                if (d < fyStartDate) {
-                    if (isApproved) openingBalance += (cr - dr);
-                } else if (d >= fyStartDate && d <= fyEndDate) {
-                    currentFYRows.push(r);
-                }
-            });
-
-            if (currentFYRows.length === 0 && openingBalance === 0) {
-                showToast('No ledger transactions to export for this FY.');
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += `Staff Name,${sName},Staff Code,${sCode}\n`;
-            csvContent += `Depot,${dName},Period,FY ${startYear}-${startYear + 1}\n\n`;
-            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
-
-            let runningBal = openingBalance;
-            let totalDr = 0, totalCr = 0;
-
-            let opCr = openingBalance > 0 ? openingBalance : 0;
-            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
-
-            currentFYRows.forEach(r => {
-                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
-                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-
-                if (isApproved) {
-                    totalDr += dr;
-                    totalCr += cr;
-                    runningBal += (cr - dr);
-                }
-
-                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
-                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
-            });
-
-            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Full_Ledger_${sCode}_${periodLabel}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
         }
 
         function openPasswordModal() {

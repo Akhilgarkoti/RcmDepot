@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
@@ -2032,7 +2033,55 @@
         }
 
       // Helper: Data Array बनाना
-        function prepareFyExpenseSheetData(startYear) {
+       // स्टाइल डेफिनिशन
+        const STYLE_TITLE = {
+            fill: { fgColor: { rgb: "FEF08A" } },
+            font: { name: "Calibri", sz: 12, bold: true, color: { rgb: "854D0E" } },
+            alignment: { horizontal: "center", vertical: "center" }
+        };
+        const STYLE_MONTH = {
+            fill: { fgColor: { rgb: "38BDF8" } },
+            font: { name: "Calibri", sz: 11, bold: true, color: { rgb: "FFFFFF" } },
+            alignment: { horizontal: "center", vertical: "center" },
+            border: {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+            }
+        };
+        const STYLE_HEADER = {
+            fill: { fgColor: { rgb: "FEF08A" } },
+            font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "854D0E" } },
+            alignment: { horizontal: "center", vertical: "center" },
+            border: {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+            }
+        };
+        const STYLE_DATA = {
+            font: { name: "Calibri", sz: 10 },
+            border: {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+            }
+        };
+        const STYLE_TOTAL = {
+            fill: { fgColor: { rgb: "FEF08A" } },
+            font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "DC2626" } },
+            border: {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+            }
+        };
+
+        function buildStyledWorksheet(startYear) {
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
 
@@ -2060,9 +2109,26 @@
                 }
             });
 
-            const sheetData = [];
-            sheetData.push([`${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}`]);
-            sheetData.push([]); 
+            const ws = {};
+            const merges = [];
+            let rIdx = 0;
+
+            function setCell(r, c, val, style, numFmt) {
+                const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
+                const cell = { v: val, s: style };
+                if (typeof val === 'number') {
+                    cell.t = 'n';
+                    if (numFmt) cell.z = numFmt;
+                } else {
+                    cell.t = 's';
+                }
+                ws[cellRef] = cell;
+            }
+
+            // Title Row
+            merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } });
+            for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? `${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}` : "", STYLE_TITLE);
+            rIdx += 2; 
 
             let runningBal = openingBalance;
 
@@ -2071,8 +2137,16 @@
                 if (rowsInMonth.length === 0) return;
 
                 const mLabel = `${monthNames[mIndex]}-${String(mIndex >= 3 ? startYear : startYear + 1).slice(2)}`;
-                sheetData.push([mLabel]); 
-                sheetData.push(["DATE", "PARTICULAR", "CREDIT", "DEBIT", "BALANCE"]);
+
+                // Month Header (Sky Blue)
+                merges.push({ s: { r: rIdx, c: 0 }, e: { r: rIdx, c: 4 } });
+                for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? mLabel : "", STYLE_MONTH);
+                rIdx++;
+
+                // Table Headers (Yellow)
+                const headers = ["DATE", "PARTICULAR", "CREDIT", "DEBIT", "BALANCE"];
+                headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
+                rIdx++;
 
                 let monthDr = 0;
                 let monthCr = 0;
@@ -2080,14 +2154,15 @@
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
-                sheetData.push([
-                    `01-${mLabel}`,
-                    "OLD MONTH BALANCE",
-                    opCr > 0 ? Number(opCr.toFixed(2)) : "",
-                    opDr > 0 ? Number(opDr.toFixed(2)) : "",
-                    Number(runningBal.toFixed(2))
-                ]);
+                // Old Month Balance Row
+                setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
+                setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                rIdx++;
 
+                // Entries Rows
                 rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
@@ -2098,169 +2173,47 @@
                     monthCr += cr;
                     runningBal += (cr - dr);
 
-                    sheetData.push([
-                        dt,
-                        part,
-                        cr > 0 ? Number(cr.toFixed(2)) : "",
-                        dr > 0 ? Number(dr.toFixed(2)) : "",
-                        Number(runningBal.toFixed(2))
-                    ]);
+                    setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
+                    setCell(rIdx, 1, part, STYLE_DATA);
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                    rIdx++;
                 });
 
-                sheetData.push([
-                    "TOTAL",
-                    "closing balance",
-                    Number((monthCr + opCr).toFixed(2)),
-                    Number((monthDr + opDr).toFixed(2)),
-                    Number(runningBal.toFixed(2))
-                ]);
-                sheetData.push([]); 
+                // Closing Balance Row (Yellow background + Red Font)
+                setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
+                setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
+                setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
+                rIdx += 2; 
             });
 
-            return sheetData;
+            ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rIdx, c: 4 } });
+            ws['!merges'] = merges;
+            ws['!cols'] = [
+                { wch: 14 }, // Date
+                { wch: 48 }, // Particular
+                { wch: 14 }, // Credit
+                { wch: 14 }, // Debit
+                { wch: 15 }  // Balance
+            ];
+
+            return ws;
         }
 
-       // 1. Current FY Styled Excel Export (Width Fix)
         function exportCurrentFyExpensesToExcel() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
-            const fyStartDate = new Date(startYear, 3, 1);
-            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
-            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
+            const ws = buildStyledWorksheet(startYear);
 
-            const validRows = loadedDepotExpenses.slice().sort((a, b) => {
-                let da = parseDateObj(getField(a, 'Date', 'date')) || new Date(0);
-                let db = parseDateObj(getField(b, 'Date', 'date')) || new Date(0);
-                return da - db;
-            });
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, `FY ${startYear}-${String(startYear + 1).slice(2)}`);
 
-            let openingBalance = 0;
-            validRows.forEach(r => {
-                let d = parseDateObj(getField(r, 'Date', 'date'));
-                let dr = Number(getField(r, 'Debit', 'debit') || 0);
-                let cr = Number(getField(r, 'Credit', 'credit') || 0);
-                if (d && d < fyStartDate) openingBalance += (cr - dr);
-            });
-
-            const monthlyGroups = {};
-            fyMonthSequence.forEach(mIndex => { monthlyGroups[mIndex] = []; });
-
-            validRows.forEach(r => {
-                let d = parseDateObj(getField(r, 'Date', 'date'));
-                if (d && d >= fyStartDate && d <= fyEndDate) {
-                    monthlyGroups[d.getMonth()].push(r);
-                }
-            });
-
-            let runningBal = openingBalance;
-            let fullHtmlBlocks = '';
-
-            fyMonthSequence.forEach(mIndex => {
-                const rowsInMonth = monthlyGroups[mIndex];
-                if (rowsInMonth.length === 0) return;
-
-                let monthDr = 0;
-                let monthCr = 0;
-                let monthRowsHtml = '';
-
-                let opCr = runningBal > 0 ? runningBal : 0;
-                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-
-                monthRowsHtml += `<tr>
-                    <td style="border:1px solid #000; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
-                    <td style="border:1px solid #000;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
-                </tr>`;
-
-                rowsInMonth.forEach(r => {
-                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    const dt = formatCleanDate(getField(r, 'Date', 'date'));
-                    const part = getField(r, 'Particular', 'particular');
-
-                    monthDr += dr;
-                    monthCr += cr;
-                    runningBal += (cr - dr);
-
-                    monthRowsHtml += `<tr>
-                        <td style="border:1px solid #000; text-align:center; white-space:nowrap;">${dt}</td>
-                        <td style="border:1px solid #000; white-space:nowrap;">${part}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${cr > 0 ? cr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${dr > 0 ? dr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
-                    </tr>`;
-                });
-
-                fullHtmlBlocks += `
-                    <table border="1" style="border-collapse:collapse; font-family:Calibri, Arial, sans-serif; margin-bottom:25px;">
-                        <thead>
-                            <tr style="background:#38bdf8; text-align:center;">
-                                <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:6px; color:#ffffff;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
-                            </tr>
-                            <tr style="background:#fef08a; text-align:center; color:#854d0e; font-weight:bold;">
-                                <th style="border:1px solid #000; padding:6px; width:130pt; mso-width-source:userset; mso-width-alt:4500;">DATE</th>
-                                <th style="border:1px solid #000; padding:6px; width:450pt; mso-width-source:userset; mso-width-alt:16000; text-align:left;">PARTICULAR</th>
-                                <th style="border:1px solid #000; padding:6px; width:120pt; mso-width-source:userset; mso-width-alt:4200;">CREDIT</th>
-                                <th style="border:1px solid #000; padding:6px; width:120pt; mso-width-source:userset; mso-width-alt:4200;">DEBIT</th>
-                                <th style="border:1px solid #000; padding:6px; width:140pt; mso-width-source:userset; mso-width-alt:4800;">BALANCE</th>
-                            </tr>
-                        </thead>
-                        <tbody>${monthRowsHtml}</tbody>
-                        <tfoot>
-                            <tr style="background:#fef08a; font-weight:bold; color:#dc2626;">
-                                <td style="border:1px solid #000; padding:5px; text-align:center; color:#dc2626; font-weight:bold;">TOTAL</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:left; color:#dc2626; font-weight:bold;">closing blance</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:right; color:#dc2626; font-weight:bold; mso-number-format:'0.00';">${(monthCr + opCr).toFixed(2)}</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:right; color:#dc2626; font-weight:bold; mso-number-format:'0.00';">${(monthDr + opDr).toFixed(2)}</td>
-                                <td style="border:1px solid #000; padding:5px; text-align:right; color:#dc2626; font-weight:bold; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                `;
-            });
-
-            const excelHTML = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    <!--[if gte mso 9]>
-                    <xml>
-                        <x:ExcelWorkbook>
-                            <x:ExcelWorksheets>
-                                <x:ExcelWorksheet>
-                                    <x:Name>FY ${startYear}-${startYear+1}</x:Name>
-                                    <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
-                                </x:ExcelWorksheet>
-                            </x:ExcelWorksheets>
-                        </x:ExcelWorkbook>
-                    </xml>
-                    <![endif]-->
-                </head>
-                <body>
-                    <table border="1" style="border-collapse:collapse; font-family:Calibri, Arial, sans-serif; margin-bottom:15px;">
-                        <tr>
-                            <th colspan="5" style="text-align:center; font-weight:bold; background:#fef08a; color:#854d0e; padding:10px; border:2px solid #000; font-size:13pt;">
-                                ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
-                            </th>
-                        </tr>
-                    </table>
-                    ${fullHtmlBlocks}
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff' + excelHTML], { type: 'application/vnd.ms-excel' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Depot_Expenses_${depotNameStored}_${periodLabel}.xls`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Current FY Expenses downloaded!');
+            XLSX.writeFile(wb, `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.xlsx`);
+            showToast('Current FY Styled Excel downloaded!');
         }
 
-        // 2. All FY Styled Excel Export (Width Fix)
         function exportAllFyExpensesToExcel() {
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
@@ -2272,147 +2225,21 @@
             });
 
             if (yearsSet.size === 0) {
-                showToast('No expense records available to export.');
+                showToast('No expense records found.');
                 return;
             }
 
-            const sortedYears = Array.from(yearsSet).sort((a,b) => a - b);
-            let worksheetsHtml = '';
+            const sortedYears = Array.from(yearsSet).sort((a, b) => a - b);
+            const wb = XLSX.utils.book_new();
 
             sortedYears.forEach(startYear => {
-                const fyStartDate = new Date(startYear, 3, 1);
-                const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
-
-                let openingBalance = 0;
-                loadedDepotExpenses.forEach(r => {
-                    let d = parseDateObj(getField(r, 'Date', 'date'));
-                    let dr = Number(getField(r, 'Debit', 'debit') || 0);
-                    let cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    if (d && d < fyStartDate) openingBalance += (cr - dr);
-                });
-
-                const monthlyGroups = {};
-                fyMonthSequence.forEach(mIndex => { monthlyGroups[mIndex] = []; });
-
-                loadedDepotExpenses.forEach(r => {
-                    let d = parseDateObj(getField(r, 'Date', 'date'));
-                    if (d && d >= fyStartDate && d <= fyEndDate) {
-                        monthlyGroups[d.getMonth()].push(r);
-                    }
-                });
-
-                let runningBal = openingBalance;
-                let fyHtmlBlocks = '';
-
-                fyMonthSequence.forEach(mIndex => {
-                    const rowsInMonth = monthlyGroups[mIndex];
-                    if (rowsInMonth.length === 0) return;
-
-                    let monthDr = 0;
-                    let monthCr = 0;
-                    let monthRowsHtml = '';
-
-                    let opCr = runningBal > 0 ? runningBal : 0;
-                    let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-
-                    monthRowsHtml += `<tr>
-                        <td style="border:1px solid #000; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
-                        <td style="border:1px solid #000;">OLD MONTH BALANCE</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
-                    </tr>`;
-
-                    rowsInMonth.forEach(r => {
-                        const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                        const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                        const dt = formatCleanDate(getField(r, 'Date', 'date'));
-                        const part = getField(r, 'Particular', 'particular');
-
-                        monthDr += dr;
-                        monthCr += cr;
-                        runningBal += (cr - dr);
-
-                        monthRowsHtml += `<tr>
-                            <td style="border:1px solid #000; text-align:center; white-space:nowrap;">${dt}</td>
-                            <td style="border:1px solid #000; white-space:nowrap;">${part}</td>
-                            <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${cr > 0 ? cr.toFixed(2) : ''}</td>
-                            <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${dr > 0 ? dr.toFixed(2) : ''}</td>
-                            <td style="border:1px solid #000; text-align:right; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
-                        </tr>`;
-                    });
-
-                    fyHtmlBlocks += `
-                        <table border="1" style="border-collapse:collapse; font-family:Calibri, Arial, sans-serif; margin-bottom:20px;">
-                            <thead>
-                                <tr style="background:#38bdf8; text-align:center;">
-                                    <th colspan="5" style="border:1px solid #000; font-size:11pt; font-weight:bold; padding:5px; color:#ffffff;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
-                                </tr>
-                                <tr style="background:#fef08a; text-align:center; color:#854d0e; font-weight:bold;">
-                                    <th style="border:1px solid #000; padding:6px; width:130pt; mso-width-source:userset; mso-width-alt:4500;">DATE</th>
-                                    <th style="border:1px solid #000; padding:6px; width:450pt; mso-width-source:userset; mso-width-alt:16000; text-align:left;">PARTICULAR</th>
-                                    <th style="border:1px solid #000; padding:6px; width:120pt; mso-width-source:userset; mso-width-alt:4200;">CREDIT</th>
-                                    <th style="border:1px solid #000; padding:6px; width:120pt; mso-width-source:userset; mso-width-alt:4200;">DEBIT</th>
-                                    <th style="border:1px solid #000; padding:6px; width:140pt; mso-width-source:userset; mso-width-alt:4800;">BALANCE</th>
-                                </tr>
-                            </thead>
-                            <tbody>${monthRowsHtml}</tbody>
-                            <tfoot>
-                                <tr style="background:#fef08a; font-weight:bold; color:#dc2626;">
-                                    <td style="border:1px solid #000; padding:4px; text-align:center; color:#dc2626; font-weight:bold;">TOTAL</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:left; color:#dc2626; font-weight:bold;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#dc2626; font-weight:bold; mso-number-format:'0.00';">${(monthCr + opCr).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#dc2626; font-weight:bold; mso-number-format:'0.00';">${(monthDr + opDr).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#dc2626; font-weight:bold; mso-number-format:'0.00';">${runningBal.toFixed(2)}</td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    `;
-                });
-
-                worksheetsHtml += `
-                    <table border="1" style="border-collapse:collapse; font-family:Calibri, Arial, sans-serif; margin-bottom:15px;">
-                        <tr>
-                            <th colspan="5" style="text-align:center; font-weight:bold; background:#fef08a; color:#854d0e; padding:10px; border:2px solid #000; font-size:13pt;">
-                                ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
-                            </th>
-                        </tr>
-                    </table>
-                    ${fyHtmlBlocks}
-                `;
+                const ws = buildStyledWorksheet(startYear);
+                const sheetName = `FY ${startYear}-${String(startYear + 1).slice(2)}`;
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
             });
 
-            const multiSheetExcelHTML = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    <!--[if gte mso 9]>
-                    <xml>
-                        <x:ExcelWorkbook>
-                            <x:ExcelWorksheets>
-                                <x:ExcelWorksheet>
-                                    <x:Name>All_Expenses</x:Name>
-                                    <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>
-                                </x:ExcelWorksheet>
-                            </x:ExcelWorksheets>
-                        </x:ExcelWorkbook>
-                    </xml>
-                    <![endif]-->
-                </head>
-                <body>
-                    ${worksheetsHtml}
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff' + multiSheetExcelHTML], { type: 'application/vnd.ms-excel' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `All_FY_Depot_Expenses_${depotNameStored}.xls`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('All FY Expenses exported successfully!');
+            XLSX.writeFile(wb, `All_FY_Depot_Expenses_${depotNameStored}.xlsx`);
+            showToast('All FY Multi-Sheet Styled Excel downloaded!');
         }
         function downloadExpensePdfDirect() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);

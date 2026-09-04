@@ -1080,12 +1080,12 @@
             }
         }
 
-        // Change Password Handler
+        // Change Password Handler (Updated)
         document.getElementById('depotPwdForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const oldPass = document.getElementById('oldDepotPass').value;
-            const newPass = document.getElementById('newDepotPass').value;
-            const confirmPass = document.getElementById('confirmDepotPass').value;
+            const oldPass = document.getElementById('oldDepotPass').value.trim();
+            const newPass = document.getElementById('newDepotPass').value.trim();
+            const confirmPass = document.getElementById('confirmDepotPass').value.trim();
 
             if (newPass !== confirmPass) {
                 showToast('New password and Confirm password do not match!');
@@ -1097,7 +1097,9 @@
             showScreenBlocker('Updating Password...');
 
             try {
-                const res = await jsonp(`${SCRIPT_URL}?action=changeDepotPassword&depotCode=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`);
+                const targetUser = encodeURIComponent(depotCode || sessionStorage.getItem("user") || "");
+                const res = await jsonp(`${SCRIPT_URL}?action=changeDepotPassword&username=${targetUser}&depotCode=${targetUser}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`);
+                
                 if (res && res.success) {
                     showToast(res.message || 'Password updated successfully!');
                     closePasswordModal();

@@ -85,7 +85,7 @@
             align-items: center; 
             justify-content: center; 
             gap: 0.25rem; 
-            text-align: center;
+            text-align: center; 
             flex: 1;
         }
 
@@ -162,7 +162,7 @@
         .tab-btn { 
             background: linear-gradient(180deg, #e7edf4 0%, #cfdde9 100%); 
             border: 1px solid var(--theme-border); 
-            border-bottom: none;
+            border-bottom: none; 
             color: var(--text-dark); 
             padding: 0.55rem 1.3rem; 
             border-radius: 4px 4px 0 0; 
@@ -175,8 +175,8 @@
             color: var(--theme-top-blue); 
             border: 2px solid var(--theme-mid-blue); 
             border-bottom: 2px solid #ffffff; 
-            margin-bottom: -2px;
-            font-weight: 800;
+            margin-bottom: -2px; 
+            font-weight: 800; 
         }
 
         .comfort-panel { 
@@ -320,8 +320,42 @@
         <div style="color:#fff;font-weight:700;" id="globalLoadingMsg">Saving Data... Please wait!</div>
     </div>
 
-    <!-- Hidden Raw Print Node for Browser Print -->
-    <div id="printableReceipt"></div>
+    <!-- Hidden Raw Print Node for PDF / Browser Print -->
+    <div id="printableReceipt">
+        <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;">
+            <div style="padding: 10px;">
+                <div style="text-align:center; font-weight:bold; font-size:12pt; margin-bottom:2px;" id="rcptDepotName"></div>
+                <div style="text-align:center; font-size:8.5pt; margin-bottom:1px;" id="rcptFullAddress"></div>
+                <div style="text-align:center; font-size:8.5pt; margin-bottom:10px;" id="rcptContact"></div>
+                
+                <div style="margin-bottom:8px; font-size:9pt; border-bottom:1px solid #000; padding-bottom:5px;">
+                    <strong>Staff Name:</strong> <span id="rcptStaffName"></span> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    <strong>Staff Code:</strong> <span id="rcptStaffCode"></span> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    <strong>Period:</strong> <span id="rcptPrintPeriod"></span>
+                </div>
+
+                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8px;">
+                    <thead>
+                        <tr style="background:#e0f2fe;">
+                            <th style="border:1px solid #000; padding:4px; width:15%;">Date</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">Particular / Description</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Debit</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Credit</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:14%;">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rcptTableBody"></tbody>
+                </table>
+
+                <div style="font-size:8.5pt; margin-top:8px; border-top:1px solid #000; padding-top:5px; line-height: 1.4;">
+                    <div><strong>Opening Balance:</strong> <span id="rcptOpeningBalance"></span></div>
+                    <div><strong>Total Debit:</strong> <span id="rcptTotalDebit"></span></div>
+                    <div><strong>Total Credit:</strong> <span id="rcptTotalCredit"></span></div>
+                    <div><strong>Net Balance:</strong> <span id="rcptNetBalance"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
@@ -557,11 +591,12 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th style="width:130px;">Date</th>
-                                <th style="min-width:380px;">Particular</th>
-                                <th style="width:130px;text-align:right;">Debit (₹)</th>
-                                <th style="width:130px;text-align:right;">Credit (₹)</th>
-                                <th style="width:150px;text-align:right;">Balance (₹)</th>
+                                <th style="width:60px; text-align:center;">Action</th>
+                                <th style="width:110px;">Date</th>
+                                <th style="min-width:350px;">Particular</th>
+                                <th style="width:120px;text-align:right;">Debit (₹)</th>
+                                <th style="width:120px;text-align:right;">Credit (₹)</th>
+                                <th style="width:140px;text-align:right;">Balance (₹)</th>
                             </tr>
                         </thead>
                         <tbody id="expenseDetailTbody"></tbody>
@@ -628,6 +663,7 @@
                         <select id="ledgerYearFilter" class="filter-select-box" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onchange="renderAnnualSummaryLedger()"></select>
                     </div>
                     <div>
+                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.35rem 0.7rem;font-size:0.8rem;margin-right:0.3rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export Detailed Excel</button>
                         <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.35rem 0.8rem;font-size:0.8rem;" onclick="openThermalFyPrintPreview()">🖨️ Print Preview</button>
                     </div>
                 </div>
@@ -673,7 +709,7 @@
         </div>
     </div>
 
-    <!-- Modal: Add Depot Expense -->
+    <!-- Modal: Add / Edit Depot Expense -->
     <div id="addExpenseModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -682,6 +718,7 @@
             </div>
             <div class="modal-body">
                 <form id="addExpenseForm">
+                    <input type="hidden" id="expId"> <!-- Edit के लिए ID -->
                     <div class="form-group"><label>Date</label><input type="date" id="expDate" class="form-control" required></div>
                     <div class="form-group" style="position:relative;">
                         <label>Particular</label>
@@ -742,7 +779,6 @@
         let dispatchFySummaryList = [];
         let activeViewingMonthData = null;
 
-        // Depot Expenses State
         let loadedDepotExpenses = [];
         let expenseAnnualSummaryData = [];
 
@@ -882,19 +918,14 @@
         function buildHistoricalDataLists(dispatches) {
             const throughSet = new Set();
             const vehicleSet = new Set();
-
             dispatches.forEach(d => {
                 const th = getField(d, 'Dispatch Throuch', 'Dispatch Through');
                 const vn = getField(d, 'Vehicle No');
                 if (th && th !== '-') throughSet.add(th);
                 if (vn && vn !== '-') vehicleSet.add(vn);
             });
-
-            const throughDList = document.getElementById('dispatchThroughList');
-            throughDList.innerHTML = Array.from(throughSet).map(item => `<option value="${item}">`).join('');
-
-            const vehicleDList = document.getElementById('vehicleNoList');
-            vehicleDList.innerHTML = Array.from(vehicleSet).map(item => `<option value="${item}">`).join('');
+            document.getElementById('dispatchThroughList').innerHTML = Array.from(throughSet).map(item => `<option value="${item}">`).join('');
+            document.getElementById('vehicleNoList').innerHTML = Array.from(vehicleSet).map(item => `<option value="${item}">`).join('');
         }
 
         function handleThroughInput(val) {
@@ -928,10 +959,8 @@
             const now = new Date();
             const currentYear = now.getFullYear();
             const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
-
             const fySet = new Set();
             fySet.add(curFyStart);
-
             dispatches.forEach(r => {
                 const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
                 if (d) {
@@ -939,20 +968,16 @@
                     fySet.add(fy);
                 }
             });
-
-            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option>`;
-            optionsHtml += `<option value="ALL">🌐 All Records</option>`;
-
+            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
             const sortedFys = Array.from(fySet).sort((a, b) => b - a);
             sortedFys.forEach(fy => {
                 optionsHtml += `<option value="FY_${fy}">💼 FY: ${fy}-${String(fy+1).slice(2)}</option>`;
             });
-
             selectBox.innerHTML = optionsHtml;
         }
 
         async function loadDepotData() {
-            showScreenBlocker('Loading Depot Data... Please wait!'); // लोडिंग चालू करें
+            showScreenBlocker('Loading Depot Data... Please wait!');
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load");
@@ -1003,9 +1028,42 @@
                 console.error(err); 
                 showToast('Error loading data!');
             } finally {
-                hideScreenBlocker(); // डेटा लोड होने के बाद लोडिंग बंद करें
+                hideScreenBlocker();
             }
         }
+
+        // Change Password Handler
+        document.getElementById('depotPwdForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const oldPass = document.getElementById('oldDepotPass').value;
+            const newPass = document.getElementById('newDepotPass').value;
+            const confirmPass = document.getElementById('confirmDepotPass').value;
+
+            if (newPass !== confirmPass) {
+                showToast('New password and Confirm password do not match!');
+                return;
+            }
+
+            const btn = document.getElementById('btnDepotPwdSubmit');
+            btn.disabled = true;
+            showScreenBlocker('Updating Password...');
+
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=changeDepotPassword&depotCode=${encodeURIComponent(depotCode)}&oldPass=${encodeURIComponent(oldPass)}&newPass=${encodeURIComponent(newPass)}`);
+                if (res && res.success) {
+                    showToast(res.message || 'Password updated successfully!');
+                    closePasswordModal();
+                    document.getElementById('depotPwdForm').reset();
+                } else {
+                    showToast(res.message || 'Failed to update password.');
+                }
+            } catch (err) {
+                showToast('Error updating password.');
+            } finally {
+                hideScreenBlocker();
+                btn.disabled = false;
+            }
+        });
 
         function handleDispatchFilterChange() {
             const periodVal = document.getElementById('historyPeriodFilter').value;
@@ -1072,24 +1130,9 @@
                     }
                 });
 
-                dispatchFySummaryList.push({
-                    monthIndex: mIndex,
-                    monthLabel: mLabel,
-                    year: actualYear,
-                    count: mData.count,
-                    topVType: topVType,
-                    rows: mData.rows
-                });
+                dispatchFySummaryList.push({ monthIndex: mIndex, monthLabel: mLabel, year: actualYear, count: mData.count, topVType: topVType, rows: mData.rows });
 
-                tbodyHtml += `
-                <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel} ${actualYear}</td>
-                    <td style="text-align:right; font-weight:800; color:#0369a1;">${mData.count}</td>
-                    <td style="color:#475569; font-weight:600;">${topVType}</td>
-                    <td style="text-align:center;">
-                        <button class="btn-action-ledger" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="viewDispatchMonthDetails(${mIndex})">View</button>
-                    </td>
-                </tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel} ${actualYear}</td><td style="text-align:right; font-weight:800; color:#0369a1;">${mData.count}</td><td style="color:#475569; font-weight:600;">${topVType}</td><td style="text-align:center;"><button class="btn-action-ledger" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="viewDispatchMonthDetails(${mIndex})">View</button></td></tr>`;
             });
 
             document.getElementById('dispFySummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="4" class="text-center" style="padding:2rem;">No dispatch records found in this Financial Year.</td></tr>`;
@@ -1099,13 +1142,11 @@
         function viewDispatchMonthDetails(mIndex) {
             const mData = dispatchFySummaryList.find(d => d.monthIndex === mIndex);
             if (!mData) return;
-
             document.getElementById('dispFySummaryContainer').style.display = 'none';
             document.getElementById('dispRawTableContainer').style.display = 'block';
             document.getElementById('dispMonthBackBar').style.display = 'flex';
             document.getElementById('dispSearchWrap').style.display = 'flex';
             document.getElementById('dispMonthBackTitle').textContent = `📅 Dispatch Records: ${mData.monthLabel} ${mData.year}`;
-
             renderDispatchTable(mData.rows);
         }
 
@@ -1158,9 +1199,7 @@
                     <td>${vNo}</td>
                     <td>${time}</td>
                     <td>${remark}</td>
-                    <td>
-                        <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${rId}')">🗑️</button>
-                    </td>
+                    <td><button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${rId}')">🗑️</button></td>
                 </tr>`;
             });
             tbody.innerHTML = html || `<tr><td colspan="10" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
@@ -1194,11 +1233,8 @@
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(ids.join(','))}`);
                 showToast(res.message || "Selected records deleted successfully!");
                 await loadDepotData();
-            } catch (e) {
-                showToast("Error deleting selected records");
-            } finally {
-                hideScreenBlocker();
-            }
+            } catch (e) { showToast("Error deleting selected records"); }
+            finally { hideScreenBlocker(); }
         }
 
         function filterHistoryTable() {
@@ -1222,9 +1258,7 @@
                     return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
                 }
 
-                if (periodFilter === "TODAY") {
-                    if (cleanDate !== todayStr) return false;
-                }
+                if (periodFilter === "TODAY") { if (cleanDate !== todayStr) return false; }
                 return true;
             });
 
@@ -1257,7 +1291,6 @@
                 const vNo = `"${getField(r, 'Vehicle No') || '-'}"`;
                 const time = `"${getField(r, 'Entry Time')}"`;
                 const remark = `"${(getField(r, 'Remark If Any') || '-').replace(/"/g, '""')}"`;
-
                 csvContent += `${dt},${inv},${vType},${through},${dueExcess},${vNo},${time},${remark}\n`;
             });
 
@@ -1285,9 +1318,7 @@
                 });
                 const net = totalCr - totalDr;
                 return `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
-            } catch (e) {
-                return '-';
-            }
+            } catch (e) { return '-'; }
         }
 
         function renderStaffTable(list) {
@@ -1381,10 +1412,7 @@
             const debit = Number(document.getElementById('trxDebitAmount').value) || 0;
             const credit = Number(document.getElementById('trxCreditAmount').value) || 0;
 
-            if (debit === 0 && credit === 0) {
-                showToast('Please enter either Debit or Credit amount.');
-                return;
-            }
+            if (debit === 0 && credit === 0) { showToast('Please enter either Debit or Credit amount.'); return; }
 
             const btn = document.getElementById('btnReqTrxSubmit');
             btn.disabled = true;
@@ -1425,16 +1453,10 @@
             e.preventDefault();
             const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
             const rawList = rawInput.split(/[\n,]+/).map(s => s.trim().replace(/[^0-9]/g, '')).filter(Boolean);
-            if (rawList.length === 0) {
-                showToast('No valid invoice numbers entered.');
-                return;
-            }
+            if (rawList.length === 0) { showToast('No valid invoice numbers entered.'); return; }
 
             for (let num of rawList) {
-                if (num.length !== 5) {
-                    showToast(`⚠️ Error: "${num}" is not 5 digits! Each invoice must be exactly 5 digits.`);
-                    return;
-                }
+                if (num.length !== 5) { showToast(`⚠️ Error: "${num}" is not 5 digits! Each invoice must be exactly 5 digits.`); return; }
             }
 
             const btn = document.getElementById('btnSaveDispatchMain');
@@ -1486,12 +1508,9 @@
                 showToast(res.message || "Deleted");
                 await loadDepotData();
             } catch (e) { showToast("Error deleting record"); }
-            finally {
-                hideScreenBlocker();
-            }
+            finally { hideScreenBlocker(); }
         }
 
-        // Staff Ledger Modal Functions
         function populateYearDropdown(rows) {
             const yearSelect = document.getElementById('ledgerYearFilter');
             const yearsSet = new Set();
@@ -1532,10 +1551,7 @@
 
             let openingBalance = 0;
             const monthlyData = {};
-
-            fyMonthSequence.forEach(mIndex => {
-                monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] };
-            });
+            fyMonthSequence.forEach(mIndex => { monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] }; });
 
             validRows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
@@ -1566,24 +1582,9 @@
 
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
-            annualSummaryData.push({
-                monthLabel: 'OPN',
-                debit: 0,
-                credit: openingBalance > 0 ? openingBalance : 0,
-                balance: runningBal,
-                type: opnType,
-                rows: []
-            });
+            annualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `
-            <tr style="background:#ffffff; font-weight:700;">
-                <td style="color:#0f172a;">OPN</td>
-                <td style="text-align:right;">0</td>
-                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
-                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
-                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
-                <td style="text-align:center;">-</td>
-            </tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -1591,36 +1592,15 @@
                 const mDr = mObj.debit;
                 const mCr = mObj.credit;
 
-                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
-                    return;
-                }
+                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) return;
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
                 const balFormatted = Math.abs(runningBal).toFixed(2);
 
-                annualSummaryData.push({
-                    monthLabel: mLabel,
-                    monthIndex: mIndex,
-                    year: (mIndex >= 3) ? startYear : startYear + 1,
-                    debit: mDr,
-                    credit: mCr,
-                    balance: runningBal,
-                    type: balType,
-                    rows: mObj.rows
-                });
+                annualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `
-                <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
-                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
-                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
-                    <td style="text-align:center;">
-                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}
-                    </td>
-                </tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
@@ -1692,15 +1672,7 @@
                 </tr>`;
             });
 
-            activeViewingMonthData = {
-                monthLabel: `${monthName} ${actualYear}`,
-                openingBal: opnBalMonth,
-                rows: mData.rows,
-                totalDr: totalDr,
-                totalCr: totalCr,
-                closingBal: runningBal
-            };
-
+            activeViewingMonthData = { monthLabel: `${monthName} ${actualYear}`, openingBal: opnBalMonth, rows: mData.rows, totalDr: totalDr, totalCr: totalCr, closingBal: runningBal };
             document.getElementById('monthDetailTbody').innerHTML = html;
             document.getElementById('annualSummaryContainer').style.display = 'none';
             document.getElementById('monthDetailContainer').style.display = 'block';
@@ -1727,8 +1699,160 @@
         }
         function closeStaffLedgerModal() { document.getElementById('staffLedgerModal').style.display = 'none'; }
 
+        function openPrintPreviewModal() {
+            if (!activeViewingMonthData) {
+                showToast('No active month data to preview.');
+                return;
+            }
+
+            const depot = depotGlobalInfo || {};
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile');
+            const gstin = getField(depot, 'GSTIN');
+
+            const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            const contact = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
+            const dName = getField(depot, 'Depot Name') || depotNameStored;
+            const period = activeViewingMonthData.monthLabel;
+
+            document.getElementById('rcptFullAddress').textContent = fullAddr;
+            document.getElementById('rcptContact').textContent = contact;
+            document.getElementById('rcptStaffName').textContent = currentActiveStaffName;
+            document.getElementById('rcptStaffCode').textContent = currentActiveStaffCode;
+            document.getElementById('rcptDepotName').textContent = dName;
+            document.getElementById('rcptPrintPeriod').textContent = period;
+
+            let html = '';
+            let runningBal = activeViewingMonthData.openingBal;
+
+            let opCr = runningBal > 0 ? runningBal : 0;
+            let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+
+            html += `<tr style="font-weight:bold; background:#f8fafc;">
+                <td style="border:1px solid #000; padding:4px;">01-B/F</td>
+                <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+            </tr>`;
+
+            activeViewingMonthData.rows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
+                if (appRaw.toLowerCase() === 'approved') {
+                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
+                    const part = getField(r, 'Particular', 'particular');
+                    runningBal += (cr - dr);
+
+                    html += `<tr>
+                        <td style="border:1px solid #000; padding:4px;">${dt}</td>
+                        <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                    </tr>`;
+                }
+            });
+
+            document.getElementById('rcptTableBody').innerHTML = html;
+
+            const opBal = activeViewingMonthData.openingBal;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
+            const finalNet = activeViewingMonthData.closingBal;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+
+            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
+            document.getElementById('printPreviewModal').style.display = 'block';
+        }
+
+        function closeAdminPrintPreview() { document.getElementById('printPreviewModal').style.display = 'none'; }
         function closePrintPreviewModal() { document.getElementById('printPreviewModal').style.display = 'none'; }
         function triggerDirectBrowserPrint() { window.print(); }
+
+        function exportFullDetailedLedgerToCSV() {
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
+
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0;
+            let currentFYRows = [];
+
+            validRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+
+                if (d < fyStartDate) {
+                    if (isApproved) openingBalance += (cr - dr);
+                } else if (d >= fyStartDate && d <= fyEndDate) {
+                    currentFYRows.push(r);
+                }
+            });
+
+            if (currentFYRows.length === 0 && openingBalance === 0) {
+                showToast('No ledger transactions to export for this FY.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += `Staff Name,${currentActiveStaffName},Staff Code,${currentActiveStaffCode}\n`;
+            csvContent += `Depot,${depotNameStored},Period,FY ${startYear}-${startYear + 1}\n\n`;
+            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
+
+            let runningBal = openingBalance;
+            let totalDr = 0, totalCr = 0;
+
+            let opCr = openingBalance > 0 ? openingBalance : 0;
+            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
+
+            currentFYRows.forEach(r => {
+                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
+                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
+                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+
+                if (isApproved) {
+                    totalDr += dr;
+                    totalCr += cr;
+                    runningBal += (cr - dr);
+                }
+
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+            });
+
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Full_Ledger_${currentActiveStaffCode}_${periodLabel}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
+        }
 
         // Depot Expenses Functions
         async function loadDepotExpensesData() {
@@ -1737,34 +1861,48 @@
                 loadedDepotExpenses = (res && res.expenses) ? res.expenses : [];
                 populateExpenseYearDropdown(loadedDepotExpenses);
                 renderAnnualSummaryExpenses();
-            } catch (e) {
-                console.error("Error loading expenses", e);
-            }
+            } catch (e) { console.error("Error loading expenses", e); }
         }
 
+        // Add / Edit Depot Expense Handlers
         function openAddExpenseModal() {
             document.getElementById('addExpenseForm').reset();
+            document.getElementById('expId').value = ''; 
             document.getElementById('expDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('addExpenseModal').querySelector('.modal-top-bar span').textContent = '➕ Add Depot Expense Entry';
+            document.getElementById('btnSaveExpense').textContent = 'Save Expense Entry';
             document.getElementById('addExpenseModal').style.display = 'block';
         }
+
+        function editExpenseEntry(id, dateStr, part, dr, cr) {
+            document.getElementById('addExpenseForm').reset();
+            document.getElementById('expId').value = id || '';
+            document.getElementById('expDate').value = dateStr;
+            document.getElementById('expParticular').value = part;
+            document.getElementById('expDebit').value = dr;
+            document.getElementById('expCredit').value = cr;
+            document.getElementById('addExpenseModal').querySelector('.modal-top-bar span').textContent = '✏️ Edit Depot Expense Entry';
+            document.getElementById('btnSaveExpense').textContent = 'Update Expense Entry';
+            document.getElementById('addExpenseModal').style.display = 'block';
+        }
+
         function closeAddExpenseModal() { document.getElementById('addExpenseModal').style.display = 'none'; }
 
         document.getElementById('addExpenseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            const expId = document.getElementById('expId').value;
             const debit = Number(document.getElementById('expDebit').value) || 0;
             const credit = Number(document.getElementById('expCredit').value) || 0;
 
-            if (debit === 0 && credit === 0) {
-                showToast('Please enter either Debit or Credit amount.');
-                return;
-            }
+            if (debit === 0 && credit === 0) { showToast('Please enter either Debit or Credit amount.'); return; }
 
             const btn = document.getElementById('btnSaveExpense');
             btn.disabled = true;
-            showScreenBlocker('Saving expense entry...');
+            showScreenBlocker(expId ? 'Updating expense entry...' : 'Saving expense entry...');
 
             const payload = {
-                action: 'saveDepotExpense',
+                action: expId ? 'editDepotExpense' : 'saveDepotExpense', 
+                id: expId, 
                 depotCode: depotCode,
                 depotName: depotNameStored,
                 date: document.getElementById('expDate').value,
@@ -1783,21 +1921,13 @@
                 } else {
                     showToast(res.message || 'Failed to save.');
                 }
-            } catch (err) {
-                showToast('Error saving expense.');
-            } finally {
-                hideScreenBlocker();
-                btn.disabled = false;
-            }
+            } catch (err) { showToast('Error saving expense.'); } 
+            finally { hideScreenBlocker(); btn.disabled = false; }
         });
 
         function handleExpenseParticularInput(val) {
             const box = document.getElementById('expenseSuggestionsBox');
-            if (!val || val.trim().length === 0) {
-                box.style.display = 'none';
-                box.innerHTML = '';
-                return;
-            }
+            if (!val || val.trim().length === 0) { box.style.display = 'none'; box.innerHTML = ''; return; }
 
             const query = val.trim().toLowerCase();
             const uniqueParticulars = new Set();
@@ -1806,36 +1936,26 @@
                 if (p && p !== '-') uniqueParticulars.add(p);
             });
 
-            const matches = Array.from(uniqueParticulars)
-                .filter(item => item.toLowerCase().includes(query))
-                .slice(0, 5);
+            const matches = Array.from(uniqueParticulars).filter(item => item.toLowerCase().includes(query)).slice(0, 5);
 
             if (matches.length > 0) {
                 let html = '';
-                matches.forEach(m => {
-                    html += `<div style="padding:0.5rem 0.8rem; cursor:pointer; font-size:0.86rem; border-bottom:1px solid #f1f5f9;" onmousedown="selectExpenseParticular('${m.replace(/'/g, "\\'")}')">${m}</div>`;
-                });
+                matches.forEach(m => { html += `<div style="padding:0.5rem 0.8rem; cursor:pointer; font-size:0.86rem; border-bottom:1px solid #f1f5f9;" onmousedown="selectExpenseParticular('${m.replace(/'/g, "\\'")}')">${m}</div>`; });
                 box.innerHTML = html;
                 box.style.display = 'block';
-            } else {
-                box.style.display = 'none';
-                box.innerHTML = '';
-            }
+            } else { box.style.display = 'none'; box.innerHTML = ''; }
         }
 
         function selectExpenseParticular(val) {
             document.getElementById('expParticular').value = val;
             const box = document.getElementById('expenseSuggestionsBox');
-            box.style.display = 'none';
-            box.innerHTML = '';
+            box.style.display = 'none'; box.innerHTML = '';
         }
 
         document.addEventListener('click', function(e) {
             const box = document.getElementById('expenseSuggestionsBox');
             const input = document.getElementById('expParticular');
-            if (box && input && !input.contains(e.target) && !box.contains(e.target)) {
-                box.style.display = 'none';
-            }
+            if (box && input && !input.contains(e.target) && !box.contains(e.target)) { box.style.display = 'none'; }
         });
 
         function populateExpenseYearDropdown(rows) {
@@ -1843,7 +1963,6 @@
             const yearsSet = new Set();
             const now = new Date();
             const currentYear = now.getFullYear();
-            
             const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
             yearsSet.add(curFyStart);
 
@@ -1867,13 +1986,10 @@
         function renderAnnualSummaryExpenses() {
             hideExpenseMonthDetails();
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
-            
             const now = new Date();
             const curFyStart = (now.getMonth() >= 3) ? now.getFullYear() : now.getFullYear() - 1;
             const addBtnWrap = document.getElementById('addExpBtnContainer');
-            if (addBtnWrap) {
-                addBtnWrap.style.display = (startYear === curFyStart) ? 'flex' : 'none';
-            }
+            if (addBtnWrap) { addBtnWrap.style.display = (startYear === curFyStart) ? 'flex' : 'none'; }
 
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
@@ -1886,21 +2002,15 @@
 
             let openingBalance = 0;
             const monthlyData = {};
-
-            fyMonthSequence.forEach(mIndex => {
-                monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] };
-            });
+            fyMonthSequence.forEach(mIndex => { monthlyData[mIndex] = { debit: 0, credit: 0, rows: [] }; });
 
             validRows.forEach(r => {
                 const d = parseDateObj(getField(r, 'Date', 'date'));
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
-
                 if (!d) return;
-
-                if (d < fyStartDate) {
-                    openingBalance += (cr - dr);
-                } else if (d >= fyStartDate && d <= fyEndDate) {
+                if (d < fyStartDate) { openingBalance += (cr - dr); } 
+                else if (d >= fyStartDate && d <= fyEndDate) {
                     const m = d.getMonth();
                     if (monthlyData[m]) {
                         monthlyData[m].rows.push(r);
@@ -1916,24 +2026,9 @@
 
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
-            expenseAnnualSummaryData.push({
-                monthLabel: 'OPN',
-                debit: 0,
-                credit: openingBalance > 0 ? openingBalance : 0,
-                balance: runningBal,
-                type: opnType,
-                rows: []
-            });
+            expenseAnnualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `
-            <tr style="background:#ffffff; font-weight:700;">
-                <td style="color:#0f172a;">OPN</td>
-                <td style="text-align:right;">0</td>
-                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
-                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
-                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
-                <td style="text-align:center;">-</td>
-            </tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -1941,36 +2036,15 @@
                 const mDr = mObj.debit;
                 const mCr = mObj.credit;
 
-                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) {
-                    return;
-                }
+                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) return;
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
                 const balFormatted = Math.abs(runningBal).toFixed(2);
 
-                expenseAnnualSummaryData.push({
-                    monthLabel: mLabel,
-                    monthIndex: mIndex,
-                    year: (mIndex >= 3) ? startYear : startYear + 1,
-                    debit: mDr,
-                    credit: mCr,
-                    balance: runningBal,
-                    type: balType,
-                    rows: mObj.rows
-                });
+                expenseAnnualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `
-                <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
-                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
-                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
-                    <td style="text-align:center;">
-                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}
-                    </td>
-                </tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
@@ -1983,6 +2057,10 @@
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
             const monthName = monthNames[mIndex];
+
+            // Edit Button Check (Only for Current Month)
+            const now = new Date();
+            const isCurrentMonth = (actualYear === now.getFullYear() && mIndex === now.getMonth());
 
             document.getElementById('expenseDetailHeader').textContent = `📅 Detailed Expenses: ${monthName} ${actualYear}`;
 
@@ -2003,6 +2081,7 @@
             let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
 
             html += `<tr class="row-opening-balance">
+                <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
                 <td><strong>Opening Balance</strong></td>
                 <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
@@ -2011,14 +2090,24 @@
             </tr>`;
 
             mData.rows.forEach(r => {
+                const rowId = getField(r, 'ID', 'Row ID', 'id');
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                const rawDate = getField(r, 'Date', 'date');
+                const dt = formatCleanDate(rawDate);
                 const part = getField(r, 'Particular', 'particular');
 
                 runningBal += (cr - dr);
 
+                let actionBtn = '-';
+                if (isCurrentMonth) {
+                    let dObj = parseDateObj(rawDate);
+                    let isoDate = dObj ? `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}` : '';
+                    actionBtn = `<button class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px;" onclick="editExpenseEntry('${rowId}', '${isoDate}', '${part.replace(/'/g, "\\'")}', ${dr}, ${cr})">✏️</button>`;
+                }
+
                 html += `<tr>
+                    <td style="text-align:center;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
                     <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
@@ -2037,54 +2126,12 @@
             document.getElementById('expenseDetailContainer').style.display = 'none';
         }
 
-      // Helper: Data Array बनाना
-       // स्टाइल डेफिनिशन
-        const STYLE_TITLE = {
-            fill: { fgColor: { rgb: "FEF08A" } },
-            font: { name: "Calibri", sz: 12, bold: true, color: { rgb: "854D0E" } },
-            alignment: { horizontal: "center", vertical: "center" }
-        };
-        const STYLE_MONTH = {
-            fill: { fgColor: { rgb: "38BDF8" } },
-            font: { name: "Calibri", sz: 11, bold: true, color: { rgb: "FFFFFF" } },
-            alignment: { horizontal: "center", vertical: "center" },
-            border: {
-                top: { style: "thin", color: { rgb: "000000" } },
-                bottom: { style: "thin", color: { rgb: "000000" } },
-                left: { style: "thin", color: { rgb: "000000" } },
-                right: { style: "thin", color: { rgb: "000000" } }
-            }
-        };
-        const STYLE_HEADER = {
-            fill: { fgColor: { rgb: "FEF08A" } },
-            font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "854D0E" } },
-            alignment: { horizontal: "center", vertical: "center" },
-            border: {
-                top: { style: "thin", color: { rgb: "000000" } },
-                bottom: { style: "thin", color: { rgb: "000000" } },
-                left: { style: "thin", color: { rgb: "000000" } },
-                right: { style: "thin", color: { rgb: "000000" } }
-            }
-        };
-        const STYLE_DATA = {
-            font: { name: "Calibri", sz: 10 },
-            border: {
-                top: { style: "thin", color: { rgb: "000000" } },
-                bottom: { style: "thin", color: { rgb: "000000" } },
-                left: { style: "thin", color: { rgb: "000000" } },
-                right: { style: "thin", color: { rgb: "000000" } }
-            }
-        };
-        const STYLE_TOTAL = {
-            fill: { fgColor: { rgb: "FEF08A" } },
-            font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "DC2626" } },
-            border: {
-                top: { style: "thin", color: { rgb: "000000" } },
-                bottom: { style: "thin", color: { rgb: "000000" } },
-                left: { style: "thin", color: { rgb: "000000" } },
-                right: { style: "thin", color: { rgb: "000000" } }
-            }
-        };
+        // Excel Styled Export Functions
+        const STYLE_TITLE = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 12, bold: true, color: { rgb: "FF854D0E" } }, alignment: { horizontal: "center", vertical: "center" } };
+        const STYLE_MONTH = { fill: { fgColor: { rgb: "FF38BDF8" } }, font: { name: "Calibri", sz: 11, bold: true, color: { rgb: "FFFFFFFF" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
+        const STYLE_HEADER = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "FF854D0E" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
+        const STYLE_DATA = { font: { name: "Calibri", sz: 10 }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
+        const STYLE_TOTAL = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "FFDC2626" } }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
 
         function buildStyledWorksheet(startYear) {
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2109,9 +2156,7 @@
 
             validRows.forEach(r => {
                 let d = parseDateObj(getField(r, 'Date', 'date'));
-                if (d && d >= fyStartDate && d <= fyEndDate) {
-                    monthlyGroups[d.getMonth()].push(r);
-                }
+                if (d && d >= fyStartDate && d <= fyEndDate) { monthlyGroups[d.getMonth()].push(r); }
             });
 
             const ws = {};
@@ -2121,16 +2166,11 @@
             function setCell(r, c, val, style, numFmt) {
                 const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
                 const cell = { v: val, s: style };
-                if (typeof val === 'number') {
-                    cell.t = 'n';
-                    if (numFmt) cell.z = numFmt;
-                } else {
-                    cell.t = 's';
-                }
+                if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
+                else { cell.t = 's'; }
                 ws[cellRef] = cell;
             }
 
-            // Title Row
             merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } });
             for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? `${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}` : "", STYLE_TITLE);
             rIdx += 2; 
@@ -2143,23 +2183,18 @@
 
                 const mLabel = `${monthNames[mIndex]}-${String(mIndex >= 3 ? startYear : startYear + 1).slice(2)}`;
 
-                // Month Header (Sky Blue)
                 merges.push({ s: { r: rIdx, c: 0 }, e: { r: rIdx, c: 4 } });
                 for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? mLabel : "", STYLE_MONTH);
                 rIdx++;
 
-                // Table Headers (Yellow)
                 const headers = ["DATE", "PARTICULAR", "CREDIT", "DEBIT", "BALANCE"];
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let monthDr = 0;
-                let monthCr = 0;
-
+                let monthDr = 0; let monthCr = 0;
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
-                // Old Month Balance Row
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
@@ -2167,16 +2202,13 @@
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                 rIdx++;
 
-                // Entries Rows
                 rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    monthDr += dr;
-                    monthCr += cr;
-                    runningBal += (cr - dr);
+                    monthDr += dr; monthCr += cr; runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
@@ -2186,7 +2218,6 @@
                     rIdx++;
                 });
 
-                // Closing Balance Row (Yellow background + Red Font)
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
                 setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
@@ -2197,29 +2228,23 @@
 
             ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rIdx, c: 4 } });
             ws['!merges'] = merges;
-            ws['!cols'] = [
-                { wch: 14 }, // Date
-                { wch: 48 }, // Particular
-                { wch: 14 }, // Credit
-                { wch: 14 }, // Debit
-                { wch: 15 }  // Balance
-            ];
+            ws['!cols'] = [ { wch: 14 }, { wch: 48 }, { wch: 14 }, { wch: 14 }, { wch: 15 } ];
 
             return ws;
         }
 
         function exportCurrentFyExpensesToExcel() {
+            if (typeof XLSX === 'undefined') { showToast('Excel Library loading, please try again in a second.'); return; }
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const ws = buildStyledWorksheet(startYear);
-
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, `FY ${startYear}-${String(startYear + 1).slice(2)}`);
-
             XLSX.writeFile(wb, `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.xlsx`);
             showToast('Current FY Styled Excel downloaded!');
         }
 
         function exportAllFyExpensesToExcel() {
+            if (typeof XLSX === 'undefined') { showToast('Excel Library loading, please try again in a second.'); return; }
             const yearsSet = new Set();
             loadedDepotExpenses.forEach(r => {
                 let d = parseDateObj(getField(r, 'Date', 'date'));
@@ -2229,11 +2254,7 @@
                 }
             });
 
-            if (yearsSet.size === 0) {
-                showToast('No expense records found.');
-                return;
-            }
-
+            if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
             const sortedYears = Array.from(yearsSet).sort((a, b) => a - b);
             const wb = XLSX.utils.book_new();
 
@@ -2246,6 +2267,7 @@
             XLSX.writeFile(wb, `All_FY_Depot_Expenses_${depotNameStored}.xlsx`);
             showToast('All FY Multi-Sheet Styled Excel downloaded!');
         }
+
         function downloadExpensePdfDirect() {
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -2307,8 +2329,8 @@
                     monthRowsHtml += `<tr>
                         <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
                         <td style="border:1px solid #000;">${part}</td>
-                        <td style="border:1px solid #000; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
                         <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 });
@@ -2356,20 +2378,15 @@
 
             showScreenBlocker('Generating PDF... Please wait!');
             const opt = {
-                margin: 8,
-                filename: `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
+                margin: 8, filename: `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             html2pdf().set(opt).from(exportNode).save().then(() => {
-                hideScreenBlocker();
-                showToast('PDF downloaded successfully!');
+                hideScreenBlocker(); showToast('PDF downloaded successfully!');
             }).catch(err => {
-                hideScreenBlocker();
-                showToast('Error generating PDF.');
-                console.error(err);
+                hideScreenBlocker(); showToast('Error generating PDF.'); console.error(err);
             });
         }
 
@@ -2396,8 +2413,7 @@
                 return da - db;
             });
 
-            let openingBalance = 0;
-            let fyRows = [];
+            let openingBalance = 0; let fyRows = [];
 
             validRows.forEach(r => {
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
@@ -2407,12 +2423,8 @@
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
 
                 if (!d) return;
-
-                if (d < fyStartDate) {
-                    if (isApproved) openingBalance += (cr - dr);
-                } else if (d >= fyStartDate && d <= fyEndDate) {
-                    if (isApproved) fyRows.push(r);
-                }
+                if (d < fyStartDate) { if (isApproved) openingBalance += (cr - dr); } 
+                else if (d >= fyStartDate && d <= fyEndDate) { if (isApproved) fyRows.push(r); }
             });
 
             const depot = depotGlobalInfo || {};
@@ -2426,17 +2438,14 @@
             const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
 
             let runningBal = openingBalance;
-            let totalDr = 0;
-            let totalCr = 0;
-
+            let totalDr = 0; let totalCr = 0;
             let rowsHtml = '';
             let opCr = openingBalance > 0 ? openingBalance : 0;
             let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
 
             rowsHtml += `
                 <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
-                    <td style="padding: 3px 1px;">01-Apr</td>
-                    <td style="padding: 3px 1px;">Opening Balance</td>
+                    <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
                     <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
                     <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
                     <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
@@ -2449,9 +2458,7 @@
                 const dt = formatCleanDate(getField(r, 'Transaction Date', 'date')).slice(0, 6);
                 const part = getField(r, 'Particular', 'particular');
 
-                totalDr += dr;
-                totalCr += cr;
-                runningBal += (cr - dr);
+                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
 
                 rowsHtml += `
                     <tr style="border-bottom: 1px dotted #ccc;">
@@ -2470,8 +2477,7 @@
                         ${dName} Depot
                     </div>
                     <div style="text-align: center; font-size: 7.5pt; line-height: 1.2; margin-bottom: 6px;">
-                        ${fullAddr}<br>
-                        Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}
+                        ${fullAddr}<br>Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}
                     </div>
                     <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 0; font-size: 8pt; margin-bottom: 6px;">
                         <div><strong>Staff:</strong> ${currentActiveStaffName} (${currentActiveStaffCode})</div>
@@ -2497,21 +2503,15 @@
                             <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>
-                    <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">
-                        *** -- ***
-                    </div>
+                    <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">*** Thank You ***</div>
                 </div>
             `;
-
             document.getElementById('printableReceipt').innerHTML = slipTemplate;
             document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
             document.getElementById('printPreviewModal').style.display = 'block';
         }
         
-        window.onload = () => {
-            startLiveClock();
-            loadDepotData();
-        };
+        window.onload = () => { startLiveClock(); loadDepotData(); };
     </script>
 </body>
 </html>

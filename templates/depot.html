@@ -546,7 +546,6 @@
             </div>
             
             <div style="background:#ffffff; padding:0.6rem 0.9rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:0.8rem;">
-                <!-- Top Row: FY Dropdown + 3 Direct Export Buttons -->
                 <div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:0.5rem;">
                     <label style="font-weight:700; font-size:0.86rem; color:#1e293b;">Financial Year:</label>
                     <select id="expenseYearFilter" class="filter-select-box" style="padding:0.35rem 0.7rem; font-size:0.84rem; margin-right:0.4rem;" onchange="renderAnnualSummaryExpenses()"></select>
@@ -556,7 +555,6 @@
                     <button class="btn-action-nav" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;padding:0.38rem 0.75rem;font-size:0.8rem;" onclick="downloadExpensePdfDirect()">📄 Download PDF</button>
                 </div>
 
-                <!-- Bottom Row under FY: + Add New Depot EXP Entry (Visible only on current year) -->
                 <div id="addExpBtnContainer" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed #e2e8f0; display: flex; align-items: center;">
                     <button id="btnQuickAddExpense" class="btn-action-nav" style="background:#dcfce7; border-color:#22c55e; color:#15803d; padding:0.42rem 0.9rem; font-size:0.84rem; font-weight:800; border-radius:4px;" onclick="openAddExpenseModal()">➕ Add New Depot EXP Entry</button>
                 </div>
@@ -857,7 +855,7 @@
             return new Promise((resolve, reject) => {
                 const cbName = 'depot_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 12000);
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 15000);
                 function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
                 window[cbName] = function(data) { cleanup(); resolve(data); };
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
@@ -1209,7 +1207,7 @@
 
         function toggleSelectAllDispatches(masterCb) {
             const checkboxes = document.querySelectorAll('.dispatch-row-checkbox');
-            checkboxes.forEach(cb => cb.checked = masterCb.checked);
+            checkbox.forEach(cb => cb.checked = masterCb.checked);
             updateSelectedDispatchCount();
         }
 
@@ -1876,7 +1874,7 @@
 
         function editExpenseEntry(id, dateStr, part, dr, cr) {
             document.getElementById('addExpenseForm').reset();
-            document.getElementById('expId').value = id || '';
+            document.getElementById('expId').value = id ? String(id).trim() : '';
             document.getElementById('expDate').value = dateStr;
             document.getElementById('expParticular').value = part;
             document.getElementById('expDebit').value = dr;
@@ -1886,19 +1884,28 @@
             document.getElementById('addExpenseModal').style.display = 'block';
         }
 
-        function closeAddExpenseModal() { document.getElementById('addExpenseModal').style.display = 'none'; }
+        function closeAddExpenseModal() { 
+            document.getElementById('addExpenseModal').style.display = 'none';
+            document.getElementById('expId').value = '';
+        }
 
         async function deleteExpenseEntry(rowId) {
+            const cleanId = String(rowId || '').trim();
+            if (!cleanId) {
+                showToast("Error: Record ID nahi mila.");
+                return;
+            }
+
             if (!confirm("क्या आप वाकई इस Expense एंट्री को डिलीट करना चाहते हैं?")) return;
             
             showScreenBlocker('Deleting expense entry...');
             try {
-                const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(rowId)}`);
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&depotCode=${encodeURIComponent(depotCode)}`);
                 if (res && res.success) {
                     showToast(res.message || 'Deleted successfully!');
                     await loadDepotExpensesData();
                 } else {
-                    showToast(res.message || 'Failed to delete.');
+                    showToast((res && res.message) ? res.message : 'Failed to delete.');
                 }
             } catch (e) {
                 showToast('Error deleting expense.');
@@ -1907,9 +1914,16 @@
             }
         }
 
+        // Edit Button Bridge Helper to prevent Quote breakages
+        function triggerExpenseEdit(encodedId, dateStr, encodedPart, dr, cr) {
+            const id = decodeURIComponent(encodedId);
+            const part = decodeURIComponent(encodedPart);
+            editExpenseEntry(id, dateStr, part, dr, cr);
+        }
+
         document.getElementById('addExpenseForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const expId = document.getElementById('expId').value;
+            const expId = document.getElementById('expId').value.trim();
             const inputDate = document.getElementById('expDate').value;
             const particular = document.getElementById('expParticular').value.trim();
             const debit = Number(document.getElementById('expDebit').value) || 0;
@@ -1920,7 +1934,7 @@
                 return; 
             }
 
-            // --- कंडीशन: एक ही महीने में सेम टेक्स्ट (Particular) दोबारा ऐड न हो सके ---
+            // Duplicate check sirf nayi entry banate waqt chalega, Edit me nahi
             if (!expId) {
                 const newD = new Date(inputDate);
                 const newMonth = newD.getMonth();
@@ -1941,7 +1955,6 @@
                     return;
                 }
             }
-            // ------------------------------------------------------------------------
 
             const btn = document.getElementById('btnSaveExpense');
             btn.disabled = true;
@@ -1962,11 +1975,13 @@
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
-                    showToast(res.message || 'Saved successfully!');
+                    showToast(res.message || (expId ? 'Updated successfully!' : 'Saved successfully!'));
                     closeAddExpenseModal();
+                    document.getElementById('addExpenseForm').reset();
+                    document.getElementById('expId').value = '';
                     await loadDepotExpensesData();
                 } else {
-                    showToast(res.message || 'Failed to save.');
+                    showToast((res && res.message) ? res.message : 'Failed to save.');
                 }
             } catch (err) { 
                 showToast('Error saving expense.'); 
@@ -2109,7 +2124,6 @@
             const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
             const monthName = monthNames[mIndex];
 
-            // Edit/Delete Button Check (Only for Current Month)
             const now = new Date();
             const isCurrentMonth = (actualYear === now.getFullYear() && mIndex === now.getMonth());
 
@@ -2140,8 +2154,9 @@
                 <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
             </tr>`;
 
-            mData.rows.forEach(r => {
-                const rowId = getField(r, 'ID', 'Row ID', 'id');
+            mData.rows.forEach((r, idx) => {
+                // Fallback ID checking taaki delete aur edit me row blank na rahe
+                const rowId = getField(r, 'ID', 'Id', 'id', 'Row ID', 'rowId') || r._rowId || String(idx + 2);
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const rawDate = getField(r, 'Date', 'date');
@@ -2154,9 +2169,12 @@
                 if (isCurrentMonth) {
                     let dObj = parseDateObj(rawDate);
                     let isoDate = dObj ? `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}` : '';
+                    const safePart = encodeURIComponent(part);
+                    const safeId = encodeURIComponent(rowId);
+
                     actionBtn = `
-                        <button class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:4px;" title="Edit" onclick="editExpenseEntry('${rowId}', '${isoDate}', '${part.replace(/'/g, "\\'")}', ${dr}, ${cr})">✏️</button>
-                        <button class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${rowId}')">🗑️</button>
+                        <button type="button" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:4px;" title="Edit" onclick="triggerExpenseEdit('${safeId}', '${isoDate}', '${safePart}', ${dr}, ${cr})">✏️</button>
+                        <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}')">🗑️</button>
                     `;
                 }
 

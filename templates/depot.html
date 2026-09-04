@@ -214,7 +214,24 @@
             color: var(--text-dark); 
             letter-spacing: -0.01em;
         }
+/* Particular Column Special Modern Typography */
+table.custom-table td:nth-child(3) {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    letter-spacing: 0.01em;
+    text-transform: capitalize; /* AUTO Clean Look (sab capital chikhne jaisa nahi lagega) */
+    line-height: 1.4;
+    white-space: normal !important; /* Lamba text hone par cleanly wrap hoga */
+}
 
+/* Opening balance text ko highlight rakhne ke liye */
+.row-opening-balance td:nth-child(3) {
+    color: #0284c7 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+}
         /* Modern Crisp Form Styles */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         .form-group-full { grid-column: span 2; }

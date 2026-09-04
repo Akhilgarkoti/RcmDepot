@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RCM Staff Portal - Login</title>
+    <title>RCM Depot Management Portal - Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #1e3a8a;
@@ -17,6 +17,9 @@
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
+            --accent-depot: #0284c7;
+            --accent-staff: #d97706;
+            --accent-admin: #dc2626;
             --shadow-card: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
             --radius-box: 16px;
         }
@@ -41,90 +44,145 @@
             position: relative;
         }
 
-        /* Subtle Background Gradient Accents */
         body::before {
             content: '';
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 240px;
+            height: 260px;
             background: linear-gradient(180deg, #dbeafe 0%, transparent 100%);
             z-index: -1;
         }
 
-        .login-wrapper {
+        .auth-card {
             width: 100%;
-            max-width: 420px;
-        }
-
-        /* Brand Header */
-        .brand-header {
-            text-align: center;
-            margin-bottom: 1.6rem;
-        }
-
-        .brand-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0.45rem 1rem;
-            background: #ffffff;
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            margin-bottom: 0.85rem;
-        }
-
-        .badge-dot {
-            width: 9px;
-            height: 9px;
-            background: #16a34a;
-            border-radius: 50%;
-        }
-
-        .brand-badge span {
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-
-        .brand-header h1 {
-            font-size: 1.55rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-
-        .brand-header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 0.35rem;
-            font-weight: 500;
-        }
-
-        /* Login Card */
-        .login-card {
+            max-width: 440px;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-box);
             padding: 2rem 1.8rem;
             box-shadow: var(--shadow-card);
+            position: relative;
+            z-index: 10;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-logo-wrap {
+            width: 180px;
+            height: 48px;
+            margin: 0 auto 1rem auto;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .company-logo-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .auth-header h2 {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.4px;
+            line-height: 1.2;
+        }
+
+        .auth-header p {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+            font-weight: 600;
+        }
+
+        .role-selector-title {
+            font-size: 0.74rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            text-align: center;
+        }
+
+        .role-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.65rem;
+            margin-bottom: 1.3rem;
+        }
+
+        .role-btn {
+            background: #ffffff;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.7rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            user-select: none;
+        }
+
+        .role-btn .role-icon { font-size: 1.1rem; }
+        .role-btn .role-label { font-size: 0.85rem; font-weight: 700; }
+
+        .role-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .role-btn.active[data-role="depot"] {
+            border-color: var(--accent-depot);
+            background: #e0f2fe;
+            color: #0369a1;
+            font-weight: 800;
+            box-shadow: 0 0 0 1px var(--accent-depot);
+        }
+
+        .role-btn.active[data-role="staff"] {
+            border-color: var(--accent-staff);
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 800;
+            box-shadow: 0 0 0 1px var(--accent-staff);
+        }
+
+        .role-btn.active[data-role="admin"] {
+            border-color: var(--accent-admin);
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: 800;
+            box-shadow: 0 0 0 1px var(--accent-admin);
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.1rem;
         }
 
-        .form-label {
+        .form-group label {
             display: block;
             font-size: 0.82rem;
             font-weight: 700;
             color: var(--text-dark);
-            margin-bottom: 0.45rem;
+            margin-bottom: 0.4rem;
         }
 
         .input-box {
@@ -135,13 +193,13 @@
 
         .input-box input {
             width: 100%;
-            padding: 0.78rem 1rem 0.78rem 2.6rem;
+            padding: 0.78rem 1rem 0.78rem 2.5rem;
             background: #ffffff;
             border: 1.5px solid var(--border-color);
             border-radius: 10px;
+            color: var(--text-dark);
             font-size: 0.92rem;
             font-weight: 600;
-            color: var(--text-dark);
             outline: none;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
@@ -153,15 +211,15 @@
 
         .input-icon {
             position: absolute;
-            left: 0.9rem;
-            font-size: 1rem;
+            left: 0.85rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
             pointer-events: none;
         }
 
         .toggle-password {
             position: absolute;
-            right: 0.9rem;
+            right: 0.85rem;
             background: none;
             border: none;
             cursor: pointer;
@@ -170,214 +228,450 @@
             padding: 4px;
         }
 
-        /* Submit Button */
         .btn-submit {
             width: 100%;
-            padding: 0.85rem;
+            padding: 0.82rem;
             background: var(--primary-light);
             color: #ffffff;
             border: none;
             border-radius: 10px;
-            font-size: 0.95rem;
+            font-size: 0.94rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
             transition: background-color 0.2s, transform 0.1s;
+            margin-top: 0.4rem;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-top: 0.5rem;
+            gap: 6px;
         }
 
-        .btn-submit:hover {
-            background: #1d4ed8;
-        }
+        .btn-submit:active { transform: scale(0.99); }
+        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; box-shadow: none; }
 
-        .btn-submit:active {
-            transform: scale(0.99);
-        }
-
-        .btn-submit:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        /* Footer Info */
-        .footer-note {
+        .status-msg {
+            margin-top: 0.9rem;
+            font-size: 0.82rem;
             text-align: center;
-            margin-top: 1.6rem;
+            font-weight: 700;
+            color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            padding: 0.55rem 0.8rem;
+            display: none;
+        }
+
+        .auth-footer-links {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.2rem;
+            padding-top: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.82rem;
+        }
+
+        .auth-link {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .auth-link:hover { text-decoration: underline; }
+
+        .admin-footer-wrap {
+            margin-top: 0.9rem;
+            text-align: center;
+            padding-top: 0.8rem;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .btn-switch-admin {
+            background: #fff;
+            color: var(--accent-admin);
+            border: 1px solid #fca5a5;
+            padding: 0.45rem 0.95rem;
+            border-radius: 8px;
+            font-weight: 700;
             font-size: 0.78rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s;
+        }
+
+        .btn-switch-admin:hover {
+            background: #fee2e2;
+        }
+
+        .dev-footer {
+            margin-top: 1.4rem;
+            text-align: center;
+            font-size: 0.8rem;
             color: var(--text-muted);
             font-weight: 600;
+            z-index: 10;
         }
 
-        /* Toast Message */
-        .toast-container {
+        .dev-footer strong {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        /* Modal Contact */
+        .modal {
+            display: none;
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 99999;
+            z-index: 1000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            margin: 4rem auto;
+            max-width: 400px;
+            border-radius: var(--radius-box);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+        }
+
+        .modal-top-bar {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.2rem;
+            background: var(--primary);
+            color: #ffffff;
         }
 
-        .toast-msg {
-            min-width: 260px;
-            padding: 0.75rem 1.1rem;
+        .modal-top-bar span { font-size: 0.92rem; font-weight: 700; }
+        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+
+        .modal-body { padding: 1.4rem; text-align: center; background: #f8fafc; }
+        .admin-avatar {
+            width: 52px; height: 52px; border-radius: 12px;
+            background: #e0f2fe;
+            border: 1px solid #7dd3fc;
+            display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #0369a1;
+            margin: 0 auto 0.75rem auto;
+        }
+
+        .modal-body h3 { font-size: 1.05rem; color: var(--text-dark); font-weight: 800; margin-bottom: 0.2rem; }
+        .modal-body p.modal-desc { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+
+        .contact-info-list {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            margin-bottom: 1.1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.45rem 0;
+            font-size: 0.84rem;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .contact-item:last-child { border-bottom: none; }
+        .contact-item span.label { color: var(--text-muted); font-weight: 700; width: 60px; }
+        .contact-item a { color: var(--primary-light); font-weight: 700; text-decoration: none; word-break: break-all; }
+        .contact-item a:hover { text-decoration: underline; }
+
+        .btn-modal-close {
+            width: 100%;
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            padding: 0.65rem;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 700;
-            background: #0f172a;
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            border-left: 4px solid var(--primary-light);
-            animation: fadeIn 0.2s ease;
+            cursor: pointer;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .btn-modal-close:hover { background: #e2e8f0; }
 
         @media (max-width: 480px) {
-            .login-card {
-                padding: 1.5rem 1.25rem;
-                border-radius: 12px;
-            }
-            .brand-header h1 {
-                font-size: 1.35rem;
-            }
+            .auth-card { padding: 1.5rem 1.25rem; border-radius: 12px; }
+            .auth-header h2 { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="toastContainer" class="toast-container"></div>
-
-    <div class="login-wrapper">
-        <div class="brand-header">
-            <div class="brand-badge">
-                <div class="badge-dot"></div>
-                <span>RCM Consumer Products</span>
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="company-logo-wrap" id="logoBox">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#1e3a8a"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
             </div>
-            <h1>Staff Portal</h1>
-            <p>Enter your credentials to access your passbook</p>
+            <h2>RCM Depot <span>Portal</span></h2>
+            <p id="portalSubText">Depot Management Login</p>
         </div>
 
-        <div class="login-card">
-            <form id="staffLoginForm">
-                <div class="form-group">
-                    <label class="form-label" for="staffUserCode">Staff Employee Code</label>
-                    <div class="input-box">
-                        <span class="input-icon">👤</span>
-                        <input type="text" id="staffUserCode" placeholder="e.g. STF102" required autocomplete="username">
+        <div class="role-selector-title">Select Portal Role</div>
+
+        <div class="role-options-grid">
+            <div class="role-btn active" data-role="depot" onclick="selectRole('depot', true)">
+                <span class="role-icon">🏬</span>
+                <span class="role-label">1. Depot</span>
+            </div>
+            <div class="role-btn" data-role="staff" onclick="selectRole('staff', true)">
+                <span class="role-icon">👤</span>
+                <span class="role-label">2. Staff</span>
+            </div>
+        </div>
+
+        <form id="loginForm">
+            <input type="hidden" id="selectedRoleInput" value="depot">
+
+            <div class="form-group">
+                <label for="userName" id="userLabel">Depot Code / Username</label>
+                <div class="input-box">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="userName" required placeholder="Enter Depot Code (e.g. D121)" autocomplete="username">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="userPassword">Password</label>
+                <div class="input-box">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="userPassword" required placeholder="••••••••" autocomplete="current-password">
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" aria-label="Toggle password">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" id="loginBtn" class="btn-submit">Login to Depot Portal</button>
+            <div id="loginMsg" class="status-msg"></div>
+        </form>
+
+        <div class="auth-footer-links">
+            <a class="auth-link" onclick="openContactModal('Password Reset Assistance')">🔑 Forgot Password?</a>
+            <a class="auth-link" onclick="openContactModal('New User Registration')">📝 Register User</a>
+        </div>
+
+        <div class="admin-footer-wrap">
+            <button type="button" class="btn-switch-admin" onclick="selectRole('admin', true)">
+                🛡️ Master Admin Login
+            </button>
+        </div>
+    </div>
+
+    <div class="dev-footer">
+        Developed for <strong>RCM Depot Network</strong>
+    </div>
+
+    <!-- Contact Administrator Modal -->
+    <div id="adminContactModal" class="modal">
+        <div class="modal-box">
+            <div class="modal-top-bar">
+                <span id="modalActionTitle">📞 Contact Administrator</span>
+                <button class="modal-close-btn" onclick="closeContactModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-avatar">👤</div>
+                <h3>Contact Administrator</h3>
+                <p class="modal-desc" id="modalActionDesc">For account registration or password reset, kindly contact the administrator below:</p>
+                
+                <div class="contact-info-list">
+                    <div class="contact-item">
+                        <span class="label">Status:</span>
+                        <span style="color: #0f172a; font-weight: 700;">Active Portal Support</span>
+                    </div>
+                    <div class="contact-item">
+                        <span class="label">Email:</span>
+                        <a href="mailto:support@rcmdepot.com">support@rcmdepot.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="label">Phone:</span>
+                        <a href="tel:+919053690281">+91 Support Desk</a>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label" for="staffPassword">Portal Password</label>
-                    <div class="input-box">
-                        <span class="input-icon">🔒</span>
-                        <input type="password" id="staffPassword" placeholder="Enter password" required autocomplete="current-password">
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" aria-label="Toggle password">👁️</button>
-                    </div>
-                </div>
-
-                <button type="submit" id="btnLoginSubmit" class="btn-submit">
-                    <span>Secure Sign In</span>
-                </button>
-            </form>
-        </div>
-
-        <div class="footer-note">
-            Authorized Staff Personnel Only &bull; RCM Depot Network
+                <button type="button" class="btn-modal-close" onclick="closeContactModal()">Close</button>
+            </div>
         </div>
     </div>
 
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
-        // Destination ledger portal file name (portal.html / staff-portal.html)
-        const PORTAL_PAGE_URL = "portal.html";
 
-        // If user already logged in, redirect automatically
-        window.addEventListener('DOMContentLoaded', () => {
-            const loggedUser = sessionStorage.getItem("user");
-            if (loggedUser) {
-                window.location.href = PORTAL_PAGE_URL;
+        let currentRole = "depot";
+
+        function selectRole(role, clearError = false) {
+            currentRole = role;
+            document.getElementById('selectedRoleInput').value = role;
+
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                if (btn.getAttribute('data-role') === role) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const userLabel = document.getElementById('userLabel');
+            const userNameInput = document.getElementById('userName');
+            const loginBtn = document.getElementById('loginBtn');
+            const subText = document.getElementById('portalSubText');
+            
+            if (clearError) {
+                const errBox = document.getElementById('loginMsg');
+                errBox.style.display = 'none';
+                errBox.textContent = '';
             }
-        });
 
-        function showToast(msg, isError = false) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast-msg';
-            if (isError) toast.style.borderLeftColor = '#ef4444';
-            toast.textContent = msg;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
+            if (role === "depot") {
+                userLabel.textContent = "Depot Code / Username";
+                userNameInput.placeholder = "Enter Depot Code (e.g. D121)";
+                loginBtn.textContent = "Login to Depot Portal";
+                loginBtn.style.background = "var(--primary-light)";
+                loginBtn.style.boxShadow = "0 4px 12px rgba(37, 99, 235, 0.25)";
+                subText.textContent = "Depot Management Login";
+            } else if (role === "staff") {
+                userLabel.textContent = "Staff Code / Login ID";
+                userNameInput.placeholder = "Enter Login ID (e.g. EMP001)";
+                loginBtn.textContent = "Login to Staff Portal";
+                loginBtn.style.background = "linear-gradient(180deg, #f59e0b 0%, #d97706 100%)";
+                loginBtn.style.boxShadow = "0 4px 12px rgba(217, 119, 6, 0.25)";
+                subText.textContent = "Staff Portal Login";
+            } else if (role === "admin") {
+                userLabel.textContent = "Admin Username";
+                userNameInput.placeholder = "Enter Admin Username";
+                loginBtn.textContent = "Login to Master Admin";
+                loginBtn.style.background = "linear-gradient(180deg, #ef4444 0%, #dc2626 100%)";
+                loginBtn.style.boxShadow = "0 4px 12px rgba(220, 38, 38, 0.25)";
+                subText.textContent = "Master Admin Portal Login";
+            }
         }
 
         function togglePasswordVisibility() {
-            const pwdInput = document.getElementById('staffPassword');
+            const pwdInput = document.getElementById('userPassword');
             pwdInput.type = (pwdInput.type === 'password') ? 'text' : 'password';
         }
 
-        function jsonp(url) {
+        function jsonpRequest(url) {
             return new Promise((resolve, reject) => {
                 const cbName = 'login_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                const timer = setTimeout(() => { cleanup(); reject(new Error("Request timed out.")); }, 14000);
-                function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
-                window[cbName] = function(data) { cleanup(); resolve(data); };
+                
+                const timer = setTimeout(() => {
+                    cleanup();
+                    reject(new Error("Connection Timeout. Please check your internet connection."));
+                }, 8000);
+
+                function cleanup() {
+                    clearTimeout(timer);
+                    if (window[cbName]) delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                window[cbName] = function(data) {
+                    cleanup();
+                    resolve(data);
+                };
+
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+                script.onerror = () => {
+                    cleanup();
+                    reject(new Error("Network Error connecting to backend server."));
+                };
                 document.body.appendChild(script);
             });
         }
 
-        document.getElementById('staffLoginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const userCode = document.getElementById('staffUserCode').value.trim();
-            const password = document.getElementById('staffPassword').value.trim();
+            
+            const role = document.getElementById('selectedRoleInput').value.trim();
+            const username = document.getElementById('userName').value.trim();
+            const password = document.getElementById('userPassword').value.trim();
+            
+            const btn = document.getElementById('loginBtn');
+            const msgBox = document.getElementById('loginMsg');
 
-            if (!userCode || !password) {
-                showToast("Please enter both Staff Code and Password", true);
-                return;
-            }
-
-            const btn = document.getElementById('btnLoginSubmit');
             btn.disabled = true;
-            btn.innerHTML = `<span>Signing In...</span>`;
+            btn.textContent = "Verifying credentials...";
+            msgBox.style.display = 'none';
+            msgBox.textContent = "";
 
             try {
-                // Apps Script authentication call
-                const authUrl = `${SCRIPT_URL}?action=staffLogin&username=${encodeURIComponent(userCode)}&password=${encodeURIComponent(password)}`;
-                const res = await jsonp(authUrl);
+                const url = `${SCRIPT_URL}?action=login&role=${encodeURIComponent(role)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                const res = await jsonpRequest(url);
 
                 if (res && res.success) {
-                    showToast("Login successful! Redirecting...");
+                    sessionStorage.clear();
+                    sessionStorage.setItem("user", res.username || username);
+                    sessionStorage.setItem("name", res.name || "User");
+                    sessionStorage.setItem("role", res.role || role);
+                    sessionStorage.setItem("depot", res.depot || "");
                     
-                    // Save session details for the portal page
-                    sessionStorage.setItem("user", userCode);
-                    sessionStorage.setItem("name", res.name || res.staffName || "Staff");
+                    if (res.permissions) {
+                        sessionStorage.setItem("permissions", JSON.stringify(res.permissions));
+                    }
 
-                    setTimeout(() => {
-                        window.location.href = PORTAL_PAGE_URL;
-                    }, 600);
+                    btn.textContent = "Success! Redirecting...";
+
+                    if (role === "depot") window.location.href = "/depot";
+                    else if (role === "staff") window.location.href = "/staff";
+                    else if (role === "admin") window.location.href = "/admin";
                 } else {
-                    showToast(res.message || "Invalid Staff Code or Password", true);
+                    msgBox.textContent = (res && res.message) ? ("⚠️ " + res.message) : "⚠️ Invalid username or password.";
+                    msgBox.style.display = 'block';
                     btn.disabled = false;
-                    btn.innerHTML = `<span>Secure Sign In</span>`;
+                    selectRole(role, false);
                 }
             } catch (err) {
-                console.error(err);
-                showToast("Server connection error. Please try again.", true);
+                msgBox.textContent = "⚠️ " + (err.message || "Failed to login. Please try again.");
+                msgBox.style.display = 'block';
                 btn.disabled = false;
-                btn.innerHTML = `<span>Secure Sign In</span>`;
+                selectRole(role, false);
             }
         });
+
+        function openContactModal(actionReason) {
+            document.getElementById('modalActionTitle').textContent = `📞 ${actionReason}`;
+            document.getElementById('modalActionDesc').textContent = `For ${actionReason.toLowerCase()}, kindly contact the administrator below:`;
+            document.getElementById('adminContactModal').style.display = 'block';
+        }
+
+        function closeContactModal() {
+            document.getElementById('adminContactModal').style.display = 'none';
+        }
+
+        async function loadLoginLogo() {
+            try {
+                const res = await jsonpRequest(`${SCRIPT_URL}?action=getStaffBundle&staffCode=EMP001`);
+                if (res && res.companyLogo) {
+                    let u = res.companyLogo.trim();
+                    if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
+                        u = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
+                    }
+                    const img = new Image();
+                    img.onload = () => {
+                        const box = document.getElementById('logoBox');
+                        box.innerHTML = '';
+                        box.appendChild(img);
+                    };
+                    img.src = u;
+                }
+            } catch (e) {}
+        }
+
+        window.onload = loadLoginLogo;
     </script>
 </body>
 </html>

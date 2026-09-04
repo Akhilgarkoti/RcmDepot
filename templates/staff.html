@@ -2,197 +2,259 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RCM Staff Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --theme-top-blue: #32567f;
-            --theme-mid-blue: #446e9b;
-            --theme-light-blue: #dde7f0;
-            --theme-bg: #eaeff5;
-            --theme-panel-bg: #f5f8fb;
-            --theme-border: #9fb3c8;
-            --theme-border-dark: #6382a1;
-            --text-dark: #1b2e4b;
-            --text-muted: #475569;
-            --input-bg: #ffffff;
-            --input-readonly: #f1f5f9;
-            --accent-dr: #c5221f;
-            --accent-cr: #0f766e;
-            --accent-bal: #0284c7;
+            --primary: #1e3a8a;
+            --primary-light: #2563eb;
+            --primary-soft: #eff6ff;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --debit-red: #dc2626;
+            --credit-green: #16a34a;
+            --balance-blue: #0284c7;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 14px -2px rgba(15, 23, 42, 0.08);
+            --radius-md: 12px;
+            --radius-sm: 8px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* Full Screen Loader Overlay */
+        /* Loader Overlay */
         #pageLoaderOverlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(234, 239, 245, 0.92);
-            backdrop-filter: blur(3px);
+            background: rgba(241, 245, 249, 0.94);
+            backdrop-filter: blur(4px);
             z-index: 99999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            transition: opacity 0.3s ease;
+            gap: 14px;
+            transition: opacity 0.25s ease;
         }
         .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid #cbd5e1;
-            border-top: 4px solid var(--theme-top-blue);
+            width: 44px;
+            height: 44px;
+            border: 3.5px solid #cbd5e1;
+            border-top: 3.5px solid var(--primary-light);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.75s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loader-text {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--theme-top-blue);
-            letter-spacing: 0.5px;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-text { font-size: 0.88rem; font-weight: 700; color: var(--primary); letter-spacing: 0.3px; }
 
+        /* Modern App Header */
         .navbar {
-            background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
-            border-bottom: 2px solid var(--theme-mid-blue);
-            padding: 0.65rem 1.4rem;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1.4rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1.2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            gap: 1rem;
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 1000;
-            flex-wrap: wrap;
         }
-
-        .left-header-group { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
-        .staff-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
+        .nav-left-box { display: flex; align-items: center; gap: 1rem; }
+        .staff-logo-box { width: 44px; height: 44px; border-radius: 10px; background: #fff; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px; }
         .staff-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+        .brand-meta h3 { font-size: 1rem; font-weight: 800; color: var(--primary); line-height: 1.1; }
+        .brand-meta span { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .depot-center-section { display: flex; align-items: center; gap: 1rem; text-align: left; }
-        .company-logo-badge { width: 170px; height: 42px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; flex-shrink: 0; }
+        .nav-depot-box { display: flex; align-items: center; gap: 0.9rem; }
+        .company-logo-badge { width: 140px; height: 38px; border-radius: 6px; background: #fff; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 4px; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
+        .depot-text-box h1 { font-size: 0.95rem; font-weight: 800; color: var(--text-main); }
+        .depot-text-box p { font-size: 0.72rem; color: var(--text-sub); max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
         .btn-action-nav { 
-            background: linear-gradient(180deg, #ffffff 0%, #e2eaf1 100%); 
-            color: var(--text-dark); 
-            border: 1px solid var(--theme-border-dark); 
-            padding: 0.45rem 0.9rem; 
-            border-radius: 4px; 
+            background: #ffffff; 
+            color: var(--text-main); 
+            border: 1px solid var(--border-color); 
+            padding: 0.45rem 0.85rem; 
+            border-radius: 8px; 
             font-weight: 700; 
-            font-size: 0.82rem; 
+            font-size: 0.8rem; 
             cursor: pointer;
-            box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-sm);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            transition: all 0.2s ease;
         }
-        .btn-action-nav:hover { background: #f8fafc; border-color: #1e3a5f; }
-        .btn-nav-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
+        .btn-action-nav:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .btn-nav-logout { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+        .btn-nav-logout:hover { background: #fee2e2; }
 
-        .main-container { width: 100%; max-width: 1400px; margin: 1rem auto; padding: 0 1rem; }
+        .main-container { width: 100%; max-width: 1200px; margin: 1.2rem auto; padding: 0 1rem; }
 
+        /* Profile Banner Card */
         .profile-card {
-            background: var(--theme-panel-bg);
-            border: 1px solid var(--theme-border);
-            border-radius: 4px;
-            padding: 1.2rem 1.6rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.1rem 1.4rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.2rem;
+            box-shadow: var(--shadow-md);
             flex-wrap: wrap;
             gap: 1rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
         }
-        .profile-left { display: flex; align-items: center; gap: 1.2rem; }
+        .profile-left { display: flex; align-items: center; gap: 1rem; }
         .staff-avatar-large {
-            width: 54px; height: 54px; border-radius: 4px; object-fit: cover;
-            border: 1px solid var(--theme-border-dark); background: #e2e8f0; display: flex;
-            align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; color: var(--theme-top-blue);
+            width: 52px; height: 52px; border-radius: 12px; object-fit: cover;
+            border: 2px solid #e0e7ff; background: var(--primary-soft); display: flex;
+            align-items: center; justify-content: center; font-size: 1.35rem; font-weight: 800; color: var(--primary-light);
         }
 
-        .comfort-panel { 
-            background: var(--theme-panel-bg); 
-            border: 1px solid var(--theme-border); 
-            border-radius: 4px; 
-            padding: 1.4rem; 
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06); 
-            margin-bottom: 1.2rem; 
+        /* Ledger Container */
+        .comfort-panel {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.3rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
         }
 
-        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: var(--theme-top-blue); font-size: 0.84rem; font-weight: 700; }
-        .btn-tool { padding: 0.35rem 0.7rem; border-radius: 3px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--theme-border); }
-        .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.75rem; border-radius: 3px; font-weight: 700; cursor: pointer; margin-right: 0.3rem; }
-        .btn-action-ledger:hover { background: #0284c7; color: #fff; }
+        .filter-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; color: var(--text-main); font-size: 0.86rem; font-weight: 700; outline: none; }
 
-        .table-responsive { width: 100%; max-height: 720px; min-height: 380px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
+        /* Desktop Table View */
+        .table-responsive { width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff; overflow-x: auto; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
-            position: sticky; top: 0; z-index: 20; 
-            padding: 0.75rem 0.95rem; 
+            position: sticky; top: 0; z-index: 10;
+            padding: 0.85rem 1rem; 
             color: #ffffff; 
-            font-size: 0.82rem; 
+            font-size: 0.8rem; 
             font-weight: 700; 
             text-transform: uppercase; 
-            background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
-            border-right: 1px solid #284464; 
-            border-bottom: 2px solid #1a304a; 
-            letter-spacing: 0.3px;
+            background: #1e293b; 
+            border-bottom: 1px solid #0f172a; 
+            letter-spacing: 0.5px;
         }
-        table.custom-table td { padding: 0.7rem 0.95rem; font-size: 0.86rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; }
-        table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
-        table.custom-table tr:hover { background-color: #e9f2fb; }
+        table.custom-table td { padding: 0.85rem 1rem; font-size: 0.86rem; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        table.custom-table tr:hover { background-color: #f8fafc; }
 
-        .row-opening-balance { background-color: #eff6ff !important; font-weight: bold; }
-        .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #0284c7 !important; }
+        .btn-view-desktop { background: var(--primary-soft); color: var(--primary-light); border: 1px solid #bfdbfe; padding: 0.35rem 0.75rem; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .btn-view-desktop:hover { background: var(--primary-light); color: #fff; }
 
-        /* Mobile In-Line Expansion Styling */
-        .mobile-expand-row {
-            display: none;
-            background-color: #f8fafc !important;
-        }
-        .mobile-expand-row td {
-            padding: 0.75rem !important;
-            white-space: normal !important;
-            border-bottom: 2px solid var(--theme-border) !important;
-        }
-        .mobile-sub-card {
+        /* Mobile Native Ledger List */
+        #mobileLedgerFeed { display: none; flex-direction: column; gap: 0.85rem; }
+        .mobile-month-card {
             background: #ffffff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: border-color 0.2s;
         }
-        .mobile-sub-card:last-child {
-            margin-bottom: 0;
+        .mobile-month-card.active {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 1px var(--primary-light);
         }
+        .mobile-month-header {
+            padding: 0.9rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            background: #ffffff;
+        }
+        .month-name-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.35rem 0.7rem;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 0.88rem;
+            border-radius: 8px;
+        }
+        .month-quick-summary {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-align: right;
+        }
+        .quick-bal { font-size: 0.95rem; font-weight: 800; }
+        .quick-bal-type { font-size: 0.7rem; font-weight: 800; padding: 1px 4px; border-radius: 4px; }
+        .chevron-icon { font-size: 0.85rem; color: var(--text-sub); transition: transform 0.25s ease; }
+        .mobile-month-card.active .chevron-icon { transform: rotate(180deg); }
 
+        .mobile-drawer-body {
+            display: none;
+            background: #f8fafc;
+            border-top: 1px solid var(--border-color);
+            padding: 0.85rem;
+        }
+        .mobile-drawer-body.open { display: block; }
+        
+        .stat-strip {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.78rem;
+        }
+        .stat-strip div:last-child { text-align: right; }
+
+        .mobile-tx-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 0.75rem;
+            margin-bottom: 0.6rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .mobile-tx-card:last-child { margin-bottom: 0; }
+        .tx-top { display: flex; justify-content: space-between; align-items: center; font-size: 0.74rem; margin-bottom: 4px; color: var(--text-sub); }
+        .tx-particular { font-size: 0.86rem; font-weight: 600; color: var(--text-main); margin-bottom: 6px; line-height: 1.3; }
+        .tx-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; padding-top: 5px; border-top: 1px dashed #f1f5f9; }
+
+        /* Modals & Receipts */
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
-        .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 580px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
-        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
-        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
+        .modal-box { background: #ffffff; margin: 1.5rem auto; width: 100%; max-width: 520px; border-radius: var(--radius-md); box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden; }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.2rem; background: var(--primary); color: #ffffff; }
+        .modal-top-bar span { font-weight: 700; font-size: 0.95rem; }
+        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; line-height: 1; }
         .modal-body { padding: 1.2rem; background: #f8fafc; }
 
-        .preview-slip-box { background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem; border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; max-height: 420px; overflow-y: auto; }
+        .preview-slip-box { background: #ffffff; border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 8px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; max-height: 440px; overflow-y: auto; }
         .text-right { text-align: right !important; }
-        .text-center { text-align: center !important; }
 
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
@@ -210,7 +272,19 @@
         }
 
         .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
-        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
+        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 700; background: #0f172a; color: #fff; box-shadow: var(--shadow-md); border-left: 4px solid var(--primary-light); }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .navbar { padding: 0.6rem 0.8rem; }
+            .nav-depot-box { display: none; }
+            .profile-card { padding: 1rem; border-radius: 10px; }
+            .comfort-panel { padding: 1rem 0.8rem; border-radius: 10px; }
+            #annualSummaryContainer { display: none !important; }
+            #mobileLedgerFeed { display: flex; }
+            .filter-header-bar { flex-direction: column; align-items: stretch; gap: 0.6rem; padding: 0.7rem; }
+            .filter-header-bar button { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body>
@@ -257,17 +331,17 @@
         </div>
     </div>
 
-    <div id="printPreviewModal" class="modal" style="z-index: 2500;">
-        <div class="modal-box modal-box-compact">
+    <div id="printPreviewModal" class="modal">
+        <div class="modal-box">
             <div class="modal-top-bar">
                 <span id="printPreviewModalTitle">📄 Statement Print Preview</span>
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
-            <div class="modal-body" style="background:#f8fafc;">
+            <div class="modal-body">
                 <div class="preview-slip-box" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center; display:flex; gap:0.5rem;">
-                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:#10b981; color:#fff; border:none; padding:0.65rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
-                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.65rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
+                <div style="margin-top:1rem; display:flex; gap:0.6rem;">
+                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:#10b981; color:#fff; border:none; padding:0.65rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export Excel</button>
+                    <button class="btn-action-nav" style="flex:1; justify-content:center; background:var(--primary-light); color:#fff; border:none; padding:0.65rem;" onclick="triggerDirectBrowserPrint()">🖨️ Print Receipt</button>
                 </div>
             </div>
         </div>
@@ -276,26 +350,25 @@
     <div id="toastContainer" class="toast-container"></div>
 
     <div class="navbar">
-        <div class="left-header-group">
-            <div class="nav-actions">
-                <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
-                <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-            </div>
-            <div class="brand-section">
-                <div class="staff-logo-box" id="staffLogoBox"></div>
-                <div>
-                    <h3 style="color:var(--theme-top-blue);font-size:0.95rem;font-weight:800;">RCM DEPOT</h3>
-                    <span style="font-size:0.72rem;color:var(--text-muted);font-weight:700;">STAFF PORTAL</span>
-                </div>
+        <div class="nav-left-box">
+            <div class="staff-logo-box" id="staffLogoBox"></div>
+            <div class="brand-meta">
+                <h3>RCM DEPOT</h3>
+                <span>Staff Portal</span>
             </div>
         </div>
-        
-        <div class="depot-center-section">
+
+        <div class="nav-depot-box">
             <div class="company-logo-badge" id="companyLogoBox"></div>
-            <div>
-                <h1 style="font-size:1.05rem;font-weight:800;color:var(--theme-top-blue);"><span id="headerDepotTitle">RCM Depot</span></h1>
-                <p id="topDepotAddress" style="font-size:0.75rem;color:var(--text-muted);">Loading address...</p>
+            <div class="depot-text-box">
+                <h1 id="headerDepotTitle">RCM Depot</h1>
+                <p id="topDepotAddress">Loading...</p>
             </div>
+        </div>
+
+        <div style="display:flex; gap:0.4rem; align-items:center;">
+            <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Pin</button>
+            <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
         </div>
     </div>
 
@@ -304,50 +377,50 @@
             <div class="profile-left">
                 <div id="staffAvatarBox" class="staff-avatar-large">U</div>
                 <div>
-                    <h2 id="staffDisplayName" style="font-size:1.25rem;font-weight:800;color:#0f172a;">Staff Name</h2>
-                    <p style="color:var(--text-muted);font-size:0.86rem;margin-top:2px;">
-                        Employee ID: <strong id="staffDisplayCode" style="color:#0284c7;">-</strong> | Assigned Depot: <strong id="staffDisplayDepot" style="color:#0f172a;">-</strong>
+                    <h2 id="staffDisplayName" style="font-size:1.15rem;font-weight:800;color:var(--text-main);">Staff Name</h2>
+                    <p style="color:var(--text-sub);font-size:0.8rem;margin-top:3px;">
+                        ID: <strong id="staffDisplayCode" style="color:var(--primary-light);">-</strong> | Depot: <strong id="staffDisplayDepot" style="color:var(--text-main);">-</strong>
                     </p>
                 </div>
             </div>
         </div>
 
         <div class="comfort-panel">
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
+            <div class="filter-header-bar">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
-                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
+                    <label style="font-weight:700; font-size:0.84rem; color:var(--text-sub);">Financial Year:</label>
                     <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAnnualSummaryLedger()"></select>
                 </div>
-                <div>
-                    <button class="btn-action-nav" style="background:#e0f2fe; border-color:#38bdf8; color:#0369a1; padding:0.45rem 1rem; font-size:0.85rem;" onclick="openFyPrintPreview()">👁️ View FY Statement</button>
-                </div>
+                <button class="btn-action-nav" style="background:var(--primary-soft); border-color:#bfdbfe; color:var(--primary-light); font-weight:700;" onclick="openFyPrintPreview()">👁️ FY Full Statement</button>
             </div>
 
-            <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+            <div id="annualSummaryContainer" class="table-responsive">
                 <table class="custom-table" id="annualSummaryTable">
                     <thead>
                         <tr>
-                            <th style="width:14%;">Month</th>
-                            <th style="width:20%; text-align:right;">Debit</th>
-                            <th style="width:20%; text-align:right;">Credit</th>
-                            <th style="width:20%; text-align:right;">Balance</th>
-                            <th style="width:12%; text-align:center;">Type</th>
-                            <th style="width:14%; text-align:center;">Action</th>
+                            <th style="width:15%;">Month</th>
+                            <th style="width:20%; text-align:right;">Debit (₹)</th>
+                            <th style="width:20%; text-align:right;">Credit (₹)</th>
+                            <th style="width:20%; text-align:right;">Balance (₹)</th>
+                            <th style="width:10%; text-align:center;">Type</th>
+                            <th style="width:15%; text-align:center;">Action</th>
                         </tr>
                     </thead>
                     <tbody id="annualSummaryTbody"></tbody>
                 </table>
             </div>
 
+            <div id="mobileLedgerFeed"></div>
+
             <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
-                    <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:var(--primary-light);">📅 Detailed Ledger</h4>
                     <div style="display:flex; gap:0.5rem;">
-                        <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="openMonthPrintPreview()">🖨️ Print Month Statement</button>
-                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideMonthDetails()">⬅️ Back to Annual Summary</button>
+                        <button class="btn-action-nav" style="background:#fef3c7; border-color:#fde68a; color:#92400e;" onclick="openMonthPrintPreview()">🖨️ Print Statement</button>
+                        <button class="btn-action-nav" onclick="hideMonthDetails()">⬅️ Back</button>
                     </div>
                 </div>
-                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                <div class="table-responsive">
                     <table class="custom-table">
                         <thead>
                             <tr>
@@ -373,18 +446,18 @@
             <div style="padding:1.2rem;">
                 <form id="staffPwdForm">
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">Current Password</label>
-                        <input type="password" id="oldStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;background:#fff;" required placeholder="Enter current password">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:700;margin-bottom:0.3rem;">Current Password</label>
+                        <input type="password" id="oldStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;" required placeholder="Enter current password">
                     </div>
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">New Password</label>
-                        <input type="password" id="newStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;background:#fff;" required placeholder="Enter new password">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:700;margin-bottom:0.3rem;">New Password</label>
+                        <input type="password" id="newStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;" required placeholder="Enter new password">
                     </div>
                     <div style="margin-bottom:0.8rem;">
-                        <label style="display:block;font-size:0.82rem;color:var(--text-muted);font-weight:bold;margin-bottom:0.3rem;">Confirm New Password</label>
-                        <input type="password" id="confirmStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;background:#fff;" required placeholder="Confirm new password">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:700;margin-bottom:0.3rem;">Confirm New Password</label>
+                        <input type="password" id="confirmStaffPass" class="filter-select-box" style="width:100%;padding:0.6rem;" required placeholder="Confirm new password">
                     </div>
-                    <button type="submit" id="btnStaffPwdSubmit" class="btn-action-nav" style="width:100%;justify-content:center;background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);color:#fff;border:none;padding:0.7rem;font-size:0.9rem;margin-top:0.4rem;">Update Password</button>
+                    <button type="submit" id="btnStaffPwdSubmit" class="btn-action-nav" style="width:100%;justify-content:center;background:var(--primary-light);color:#fff;border:none;padding:0.75rem;font-size:0.9rem;margin-top:0.4rem;">Update Password</button>
                 </form>
             </div>
         </div>
@@ -444,7 +517,7 @@
             return new Promise((resolve, reject) => {
                 const cbName = 'staff_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
-                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 12000);
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 14000);
                 function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
                 window[cbName] = function(data) { cleanup(); resolve(data); };
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
@@ -506,7 +579,7 @@
 
                 const avatarBox = document.getElementById('staffAvatarBox');
                 if (photo && (photo.startsWith('http') || photo.startsWith('data:image'))) {
-                    avatarBox.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:4px;object-fit:cover;">`;
+                    avatarBox.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:10px;object-fit:cover;">`;
                 } else {
                     avatarBox.textContent = sName.charAt(0).toUpperCase();
                 }
@@ -524,6 +597,7 @@
                 renderAnnualSummaryLedger();
             } catch (err) {
                 console.error(err);
+                showToast("Could not load data. Check internet connection.");
             } finally {
                 loader.style.opacity = '0';
                 setTimeout(() => { loader.style.display = 'none'; }, 300);
@@ -600,10 +674,12 @@
 
             annualSummaryData = [];
             let runningBal = openingBalance;
-            let tbodyHtml = '';
+            let desktopTbody = '';
+            let mobileCardsHtml = '';
 
             let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
+
             annualSummaryData.push({
                 monthLabel: 'OPN',
                 debit: 0,
@@ -613,15 +689,29 @@
                 rows: []
             });
 
-            tbodyHtml += `
+            desktopTbody += `
             <tr style="background:#ffffff; font-weight:700;">
-                <td style="color:#0f172a;">OPN</td>
+                <td style="color:var(--text-main);">Opening Balance (OPN)</td>
                 <td style="text-align:right;">0</td>
-                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
-                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
-                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
+                <td style="text-align:right; color:var(--credit-green);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
+                <td style="text-align:right; color:var(--balance-blue);">₹${opnBalFormatted}</td>
+                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--credit-green)' : 'var(--debit-red)'};">${opnType}</td>
                 <td style="text-align:center;">-</td>
             </tr>`;
+
+            mobileCardsHtml += `
+            <div class="mobile-month-card" style="background:#f8fafc; border-left:4px solid var(--primary-light);">
+                <div class="mobile-month-header" style="cursor:default; background:transparent;">
+                    <div>
+                        <span class="month-name-badge" style="background:#e0f2fe; color:#0369a1;">OPN</span>
+                        <span style="font-size:0.8rem; font-weight:700; margin-left:6px; color:var(--text-sub);">Opening Balance</span>
+                    </div>
+                    <div class="month-quick-summary">
+                        <span class="quick-bal" style="color:var(--balance-blue);">₹${opnBalFormatted}</span>
+                        <span class="quick-bal-type" style="background:${opnType === 'CR' ? '#dcfce7;color:#15803d' : '#fee2e2;color:#dc2626'};">${opnType}</span>
+                    </div>
+                </div>
+            </div>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -648,46 +738,59 @@
                     rows: mObj.rows
                 });
 
-                tbodyHtml += `
-                <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
-                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
-                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
+                // Desktop Row
+                desktopTbody += `
+                <tr>
+                    <td style="font-weight:700; color:var(--text-main);">${mLabel}</td>
+                    <td style="text-align:right; color:${mDr > 0 ? 'var(--debit-red)' : 'var(--text-sub)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; color:${mCr > 0 ? 'var(--credit-green)' : 'var(--text-sub)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--balance-blue);">₹${balFormatted}</td>
+                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--credit-green)' : 'var(--debit-red)'};">${balType}</td>
                     <td style="text-align:center;">
-                        ${mObj.rows.length > 0 ? `<button id="btnMonthToggle_${mIndex}" class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="handleMonthClick(${mIndex})">View</button>` : '-'}
+                        ${mObj.rows.length > 0 ? `<button class="btn-view-desktop" onclick="viewMonthDetails(${mIndex})">View Statement</button>` : '-'}
                     </td>
-                </tr>
-                <tr id="mobileDrawerRow_${mIndex}" class="mobile-expand-row">
-                    <td colspan="6" id="mobileDrawerContent_${mIndex}"></td>
                 </tr>`;
+
+                // Mobile Card (Direct Accordion)
+                mobileCardsHtml += `
+                <div class="mobile-month-card" id="mCard_${mIndex}">
+                    <div class="mobile-month-header" onclick="toggleMobileCard(${mIndex})">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="month-name-badge">${mLabel}</span>
+                            <div style="display:flex; flex-direction:column;">
+                                <span style="font-size:0.7rem; color:var(--text-sub); font-weight:600;">Cr: ₹${mCr.toFixed(0)} | Dr: ₹${mDr.toFixed(0)}</span>
+                            </div>
+                        </div>
+                        <div class="month-quick-summary">
+                            <div>
+                                <span class="quick-bal" style="color:var(--balance-blue);">₹${balFormatted}</span>
+                                <span class="quick-bal-type" style="background:${balType === 'CR' ? '#dcfce7;color:#15803d' : '#fee2e2;color:#dc2626'};">${balType}</span>
+                            </div>
+                            <span class="chevron-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="mobile-drawer-body" id="mDrawer_${mIndex}"></div>
+                </div>`;
             });
 
-            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
+            document.getElementById('annualSummaryTbody').innerHTML = desktopTbody;
+            document.getElementById('mobileLedgerFeed').innerHTML = mobileCardsHtml;
         }
 
-        function handleMonthClick(mIndex) {
-            if (window.innerWidth <= 768) {
-                toggleMobileMonthDrawer(mIndex);
-            } else {
-                viewMonthDetails(mIndex);
-            }
-        }
+        // Accordion Toggle for Mobile Screens
+        function toggleMobileCard(mIndex) {
+            const card = document.getElementById(`mCard_${mIndex}`);
+            const drawer = document.getElementById(`mDrawer_${mIndex}`);
+            const isOpen = drawer.classList.contains('open');
 
-        function toggleMobileMonthDrawer(mIndex) {
-            const drawerRow = document.getElementById(`mobileDrawerRow_${mIndex}`);
-            const btn = document.getElementById(`btnMonthToggle_${mIndex}`);
-            if (!drawerRow) return;
+            // Close other drawers
+            document.querySelectorAll('.mobile-month-card').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.mobile-drawer-body').forEach(d => { d.classList.remove('open'); d.innerHTML = ''; });
 
-            if (drawerRow.style.display === 'table-row') {
-                drawerRow.style.display = 'none';
-                if (btn) btn.textContent = 'View';
-                return;
-            }
+            if (isOpen) return;
 
-            document.querySelectorAll('.mobile-expand-row').forEach(row => row.style.display = 'none');
-            document.querySelectorAll('[id^="btnMonthToggle_"]').forEach(b => b.textContent = 'View');
+            card.classList.add('active');
+            drawer.classList.add('open');
 
             const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
             if (!mData) return;
@@ -710,26 +813,28 @@
 
             let runningBal = opnBalMonth;
             let totalDr = 0, totalCr = 0;
-            let contentHtml = `
-            <div style="background:#f1f5f9; padding:0.8rem; border-radius:6px; border:1px solid #cbd5e1;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-                    <strong style="color:#0369a1; font-size:0.88rem;">📅 ${monthName} ${actualYear} Details</strong>
-                    <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.25rem 0.55rem; font-size:0.75rem;" onclick="prepareMonthPrintPreviewByIndex(${mIndex})">🖨️ Print</button>
-                </div>
-                
-                <div class="mobile-sub-card" style="border-left:4px solid #38bdf8; background:#eff6ff;">
-                    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.82rem;">
-                        <span>Opening Balance (01-${monthName})</span>
-                        <span style="color:var(--accent-bal);">₹${runningBal.toFixed(2)}</span>
-                    </div>
-                </div>`;
+
+            let html = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <span style="font-size:0.8rem; font-weight:800; color:var(--primary);">${monthName} ${actualYear} Entries</span>
+                <button class="btn-action-nav" style="padding:0.25rem 0.6rem; font-size:0.75rem; background:#fef3c7; color:#92400e; border-color:#fde68a;" onclick="quickPrintMobile(${mIndex})">🖨️ Print Slip</button>
+            </div>
+
+            <div class="stat-strip">
+                <div><span>Opening:</span> <strong>₹${Math.abs(opnBalMonth).toFixed(2)} ${opnBalMonth >= 0 ? 'Cr' : 'Dr'}</strong></div>
+                <div><span>Entries:</span> <strong>${mData.rows.length} Txns</strong></div>
+            </div>`;
+
+            if (mData.rows.length === 0) {
+                html += `<div style="text-align:center; padding:1rem; color:var(--text-sub); font-size:0.82rem;">No entries for this month.</div>`;
+            }
 
             mData.rows.forEach(r => {
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
                 const part = getField(r, 'Particular', 'particular');
-                const mode = getField(r, 'Payment Mode', 'mode') || '-';
+                const mode = getField(r, 'Payment Mode', 'mode') || 'Cash';
 
                 const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
                 const isApproved = appRaw.toLowerCase() === 'approved';
@@ -740,46 +845,33 @@
                     runningBal += (cr - dr);
                 }
 
-                contentHtml += `
-                <div class="mobile-sub-card">
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b; margin-bottom:4px;">
-                        <span>📅 <strong>${dt}</strong></span>
-                        <span style="background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'}; padding:1px 6px; border-radius:3px; font-weight:bold;">${isApproved ? 'Approved' : 'Pending'}</span>
+                html += `
+                <div class="mobile-tx-card">
+                    <div class="tx-top">
+                        <span>📅 ${dt}</span>
+                        <span style="font-weight:700; padding:2px 6px; border-radius:4px; font-size:0.7rem; background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span>
                     </div>
-                    <div style="font-size:0.84rem; font-weight:600; color:#1e293b; margin-bottom:6px; line-height:1.3;">
-                        ${part}
-                    </div>
-                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; border-top:1px dashed #e2e8f0; padding-top:4px;">
-                        <div><span style="color:#64748b;">Mode:</span> <strong>${mode}</strong></div>
-                        <div>
-                            ${dr > 0 ? `<span style="color:var(--accent-dr); font-weight:700;">Dr: ₹${dr.toFixed(2)}</span> ` : ''}
-                            ${cr > 0 ? `<span style="color:var(--accent-cr); font-weight:700;">Cr: ₹${cr.toFixed(2)}</span> ` : ''}
+                    <div class="tx-particular">${part}</div>
+                    <div class="tx-bottom">
+                        <span style="color:var(--text-sub); font-size:0.75rem;">Mode: <b>${mode}</b></span>
+                        <div style="text-align:right;">
+                            ${dr > 0 ? `<span style="color:var(--debit-red); font-weight:800;">-₹${dr.toFixed(2)} (Dr)</span>` : ''}
+                            ${cr > 0 ? `<span style="color:var(--credit-green); font-weight:800;">+₹${cr.toFixed(2)} (Cr)</span>` : ''}
                         </div>
-                    </div>
-                    <div style="text-align:right; font-size:0.78rem; margin-top:2px;">
-                        <span style="color:#64748b;">Bal:</span> <strong style="color:var(--accent-bal);">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</strong>
                     </div>
                 </div>`;
             });
 
-            contentHtml += `
-                <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:bold; padding-top:4px; border-top:1px solid #cbd5e1; margin-top:4px;">
-                    <span>Month Total:</span>
-                    <span>Dr: <span style="color:var(--accent-dr);">₹${totalDr.toFixed(2)}</span> | Cr: <span style="color:var(--accent-cr);">₹${totalCr.toFixed(2)}</span></span>
-                </div>
-            </div>`;
-
-            document.getElementById(`mobileDrawerContent_${mIndex}`).innerHTML = contentHtml;
-            drawerRow.style.display = 'table-row';
-            if (btn) btn.textContent = 'Hide';
+            drawer.innerHTML = html;
         }
 
-        function prepareMonthPrintPreviewByIndex(mIndex) {
+        function quickPrintMobile(mIndex) {
             viewMonthDetails(mIndex);
             openMonthPrintPreview();
             hideMonthDetails();
         }
 
+        // Full Desktop View
         function viewMonthDetails(mIndex) {
             const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
             if (!mData) return;
@@ -810,14 +902,14 @@
             let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
             let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
 
-            html += `<tr class="row-opening-balance">
+            html += `<tr style="background:#eff6ff; font-weight:bold;">
                 <td><strong>01 ${monthName}</strong></td>
                 <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
                 <td>-</td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
-                <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
+                <td style="color:${opDr > 0 ? 'var(--debit-red)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--credit-green)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--balance-blue);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
             </tr>`;
 
             mData.rows.forEach(r => {
@@ -840,10 +932,10 @@
                     <td><strong>${dt}</strong></td>
                     <td style="white-space:normal;min-width:320px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
-                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
+                    <td style="color:${dr > 0 ? 'var(--debit-red)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--credit-green)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--balance-blue);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
 
@@ -858,7 +950,14 @@
 
             document.getElementById('monthDetailTbody').innerHTML = html;
             document.getElementById('annualSummaryContainer').style.display = 'none';
+            document.getElementById('mobileLedgerFeed').style.display = 'none';
             document.getElementById('monthDetailContainer').style.display = 'block';
+        }
+
+        function hideMonthDetails() {
+            document.getElementById('annualSummaryContainer').style.display = '';
+            document.getElementById('mobileLedgerFeed').style.display = '';
+            document.getElementById('monthDetailContainer').style.display = 'none';
         }
 
         function openFyPrintPreview() {
@@ -1042,11 +1141,6 @@
 
         function triggerDirectBrowserPrint() {
             window.print();
-        }
-
-        function hideMonthDetails() {
-            document.getElementById('annualSummaryContainer').style.display = 'block';
-            document.getElementById('monthDetailContainer').style.display = 'none';
         }
 
         function exportFullDetailedLedgerToCSV() {

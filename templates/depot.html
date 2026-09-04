@@ -301,23 +301,73 @@
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
+        /* Modern Glassmorphic Loader */
         .global-loading-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); z-index: 999999;
-            flex-direction: column; align-items: center; justify-content: center; cursor: wait;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            cursor: wait;
         }
-        .global-spinner {
-            width: 58px; height: 58px; border: 6px solid #e2e8f0; border-top: 6px solid #38bdf8;
-            border-radius: 50%; animation: spinAnim 0.8s linear infinite; margin-bottom: 1.2rem;
+
+        .loader-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.8rem 2.4rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            min-width: 280px;
+            animation: popIn 0.25s ease-out;
         }
-        @keyframes spinAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .loader-ring {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #0284c7;
+            border-right: 4px solid #38bdf8;
+            animation: spinRing 0.75s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+        }
+
+        .loader-text {
+            color: #1e293b;
+            font-size: 0.92rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            text-align: center;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Modern Clean Loader -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
-        <div class="global-spinner"></div>
-        <div style="color:#fff;font-weight:700;" id="globalLoadingMsg">Saving Data... Please wait!</div>
+        <div class="loader-card">
+            <div class="loader-ring"></div>
+            <div class="loader-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
+        </div>
     </div>
 
     <!-- Hidden Raw Print Node for PDF / Browser Print -->
@@ -1207,7 +1257,7 @@
 
         function toggleSelectAllDispatches(masterCb) {
             const checkboxes = document.querySelectorAll('.dispatch-row-checkbox');
-            checkbox.forEach(cb => cb.checked = masterCb.checked);
+            checkboxes.forEach(cb => cb.checked = masterCb.checked);
             updateSelectedDispatchCount();
         }
 
@@ -1889,30 +1939,29 @@
             document.getElementById('expId').value = '';
         }
 
-        // deleteExpenseEntry ko isse replace karein:
-async function deleteExpenseEntry(rowId, particularText) {
-    if (!confirm("क्या आप वाकई इस Expense एंट्री को डिलीट करना चाहते हैं?")) return;
-    
-    showScreenBlocker('Deleting expense entry...');
-    try {
-        const cleanId = String(rowId || '').trim();
-        const cleanPart = encodeURIComponent(particularText || '');
-        const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&particular=${cleanPart}&depotCode=${encodeURIComponent(depotCode)}`);
-        
-        if (res && res.success) {
-            showToast(res.message || 'Deleted successfully!');
-            await loadDepotExpensesData();
-        } else {
-            showToast((res && res.message) ? res.message : 'Failed to delete.');
+        async function deleteExpenseEntry(rowId, particularText) {
+            if (!confirm("क्या आप वाकई इस Expense एंट्री को डिलीट करना चाहते हैं?")) return;
+            
+            showScreenBlocker('Deleting expense entry...');
+            try {
+                const cleanId = String(rowId || '').trim();
+                const cleanPart = encodeURIComponent(particularText || '');
+                const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&particular=${cleanPart}&depotCode=${encodeURIComponent(depotCode)}`);
+                
+                if (res && res.success) {
+                    showToast(res.message || 'Deleted successfully!');
+                    await loadDepotExpensesData();
+                } else {
+                    showToast((res && res.message) ? res.message : 'Failed to delete.');
+                }
+            } catch (e) {
+                showToast('Error deleting expense.');
+            } finally {
+                hideScreenBlocker();
+            }
         }
-    } catch (e) {
-        showToast('Error deleting expense.');
-    } finally {
-        hideScreenBlocker();
-    }
-}
 
-        // Edit Button Bridge Helper to prevent Quote breakages
+        // Edit Button Bridge Helper
         function triggerExpenseEdit(encodedId, dateStr, encodedPart, dr, cr) {
             const id = decodeURIComponent(encodedId);
             const part = decodeURIComponent(encodedPart);
@@ -2153,8 +2202,7 @@ async function deleteExpenseEntry(rowId, particularText) {
             </tr>`;
 
             mData.rows.forEach((r, idx) => {
-                // Fallback ID checking taaki delete aur edit me row blank na rahe
-                const rowId = getField(r, 'ID', 'Id', 'id', 'Row ID', 'rowId') || r._rowId || String(idx + 2);
+                const rowId = getField(r, 'id', 'ID', 'Id', 'Row ID', 'rowId') || r._rowIndex || String(idx + 2);
                 const dr = Number(getField(r, 'Debit', 'debit') || 0);
                 const cr = Number(getField(r, 'Credit', 'credit') || 0);
                 const rawDate = getField(r, 'Date', 'date');
@@ -2167,12 +2215,13 @@ async function deleteExpenseEntry(rowId, particularText) {
                 if (isCurrentMonth) {
                     let dObj = parseDateObj(rawDate);
                     let isoDate = dObj ? `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}` : '';
-                    const safePart = encodeURIComponent(part);
+                    
                     const safeId = encodeURIComponent(rowId);
+                    const safePart = encodeURIComponent(part);
 
                     actionBtn = `
                         <button type="button" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:4px;" title="Edit" onclick="triggerExpenseEdit('${safeId}', '${isoDate}', '${safePart}', ${dr}, ${cr})">✏️</button>
-                       <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}', '${safePart}')">🗑️</button>
+                        <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}', decodeURIComponent('${safePart}'))">🗑️</button>
                     `;
                 }
 

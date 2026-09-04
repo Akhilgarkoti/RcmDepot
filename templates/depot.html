@@ -1889,30 +1889,28 @@
             document.getElementById('expId').value = '';
         }
 
-        async function deleteExpenseEntry(rowId) {
-            const cleanId = String(rowId || '').trim();
-            if (!cleanId) {
-                showToast("Error: Record ID nahi mila.");
-                return;
-            }
-
-            if (!confirm("क्या आप वाकई इस Expense एंट्री को डिलीट करना चाहते हैं?")) return;
-            
-            showScreenBlocker('Deleting expense entry...');
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&depotCode=${encodeURIComponent(depotCode)}`);
-                if (res && res.success) {
-                    showToast(res.message || 'Deleted successfully!');
-                    await loadDepotExpensesData();
-                } else {
-                    showToast((res && res.message) ? res.message : 'Failed to delete.');
-                }
-            } catch (e) {
-                showToast('Error deleting expense.');
-            } finally {
-                hideScreenBlocker();
-            }
+        // deleteExpenseEntry ko isse replace karein:
+async function deleteExpenseEntry(rowId, particularText) {
+    if (!confirm("क्या आप वाकई इस Expense एंट्री को डिलीट करना चाहते हैं?")) return;
+    
+    showScreenBlocker('Deleting expense entry...');
+    try {
+        const cleanId = String(rowId || '').trim();
+        const cleanPart = encodeURIComponent(particularText || '');
+        const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&particular=${cleanPart}&depotCode=${encodeURIComponent(depotCode)}`);
+        
+        if (res && res.success) {
+            showToast(res.message || 'Deleted successfully!');
+            await loadDepotExpensesData();
+        } else {
+            showToast((res && res.message) ? res.message : 'Failed to delete.');
         }
+    } catch (e) {
+        showToast('Error deleting expense.');
+    } finally {
+        hideScreenBlocker();
+    }
+}
 
         // Edit Button Bridge Helper to prevent Quote breakages
         function triggerExpenseEdit(encodedId, dateStr, encodedPart, dr, cr) {
@@ -2174,7 +2172,7 @@
 
                     actionBtn = `
                         <button type="button" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:4px;" title="Edit" onclick="triggerExpenseEdit('${safeId}', '${isoDate}', '${safePart}', ${dr}, ${cr})">✏️</button>
-                        <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}')">🗑️</button>
+                       <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}', '${safePart}')">🗑️</button>
                     `;
                 }
 

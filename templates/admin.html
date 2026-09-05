@@ -6,204 +6,265 @@
     <title>RCM Master Admin Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --theme-top-blue: #32567f;
-            --theme-mid-blue: #446e9b;
-            --theme-light-blue: #dde7f0;
-            --theme-bg: #eaeff5;
-            --theme-panel-bg: #f5f8fb;
-            --theme-border: #9fb3c8;
-            --theme-border-dark: #6382a1;
-            --text-dark: #1b2e4b;
-            --text-muted: #475569;
-            --input-bg: #ffffff;
-            --input-readonly: #f1f5f9;
-            --accent-dr: #c5221f;
-            --accent-cr: #0f766e;
-            --accent-bal: #0284c7;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --bg-page: #f8fafc;
+            --surface: #ffffff;
+            --surface-subtle: #f1f5f9;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --danger-light: #fef2f2;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --info: #0284c7;
+            --info-light: #f0f9ff;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 2px 4px -1px rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04);
+            --shadow-md: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-page); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
+        /* Navbar */
         .navbar {
-            background: linear-gradient(180deg, #eef4f9 0%, #d5e2ed 100%);
-            border-bottom: 2px solid #dc2626;
-            padding: 0.65rem 1.4rem;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1.2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            gap: 1.5rem;
+            box-shadow: var(--shadow-xs);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
-        .brand-section { display: flex; align-items: center; gap: 0.85rem; min-width: 220px; }
-        .admin-logo-box { width: 48px; height: 48px; border-radius: 4px; background: #fee2e2; border: 1px solid #f87171; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
+        .admin-logo-box {
+            width: 42px; height: 42px; border-radius: var(--radius-md);
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 1px solid #fca5a5; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+        }
 
-        .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.2rem; flex: 1; text-align: left; }
-        .company-logo-badge { width: 190px; height: 46px; border-radius: 4px; background: #fff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
+        .depot-center-section { display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex: 1; }
+        .company-logo-badge {
+            width: 170px; height: 42px; border-radius: var(--radius-sm);
+            background: #fff; border: 1px solid var(--border); display: flex;
+            align-items: center; justify-content: center; overflow: hidden; padding: 2px 8px;
+        }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
         .btn-action-nav { 
-            background: linear-gradient(180deg, #ffffff 0%, #e2eaf1 100%); 
-            color: var(--text-dark); 
-            border: 1px solid var(--theme-border-dark); 
-            padding: 0.45rem 0.9rem; 
-            border-radius: 4px; 
-            font-weight: 700; 
-            font-size: 0.82rem; 
+            background: var(--surface);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.82rem;
             cursor: pointer;
-            box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            transition: all 0.15s ease;
         }
-        .btn-action-nav:hover { background: #f8fafc; border-color: #1e3a5f; }
-        .btn-nav-logout { background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%); border-color: #dc2626; color: #991b1b; }
+        .btn-action-nav:hover { background: var(--surface-subtle); border-color: var(--border-hover); }
+        .btn-nav-logout { background: var(--danger-light); border-color: #fca5a5; color: #b91c1c; }
+        .btn-nav-logout:hover { background: #fee2e2; border-color: var(--danger); }
 
-        .main-container { width: 100%; max-width: 1560px; margin: 1rem auto; padding: 0 1rem; }
+        /* Container & Tabs */
+        .main-container { width: 100%; max-width: 1600px; margin: 1.2rem auto; padding: 0 1.5rem; }
 
-        .admin-nav-tabs { display: flex; gap: 0.3rem; border-bottom: 2px solid var(--theme-mid-blue); padding-bottom: 0px; margin-bottom: 1.2rem; flex-wrap: wrap; }
+        .admin-nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.4rem;
+            flex-wrap: wrap;
+        }
         .tab-btn { 
-            background: linear-gradient(180deg, #e7edf4 0%, #cfdde9 100%); 
-            border: 1px solid var(--theme-border); 
-            border-bottom: none;
-            color: var(--text-dark); 
-            padding: 0.55rem 1.1rem; 
-            border-radius: 4px 4px 0 0; 
-            font-weight: 700; 
-            font-size: 0.84rem; 
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 0.55rem 1rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.86rem;
             cursor: pointer; 
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.45rem;
+            transition: all 0.2s ease;
         }
+        .tab-btn:hover { background: var(--surface-subtle); color: var(--text-main); }
         .tab-btn.active { 
-            background: #ffffff; 
-            color: var(--theme-top-blue); 
-            border: 2px solid var(--theme-mid-blue); 
-            border-bottom: 2px solid #ffffff; 
-            margin-bottom: -2px;
-            font-weight: 800;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: #bfdbfe;
+            font-weight: 700;
         }
 
-        .badge-count { background: #dc2626; color: #fff; font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 10px; font-weight: 800; }
+        .badge-count {
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.68rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-weight: 700;
+        }
 
+        /* Panels */
         .panel-card { 
-            background: var(--theme-panel-bg); 
-            border: 1px solid var(--theme-border); 
-            border-radius: 4px; 
-            padding: 1.4rem; 
-            box-shadow: 0 3px 10px rgba(0,0,0,0.06); 
-            margin-bottom: 1.2rem; 
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.4rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
         }
         .panel-header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            margin-bottom: 1rem; 
-            border-bottom: 2px solid var(--theme-light-blue); 
-            padding-bottom: 0.5rem; 
+            margin-bottom: 1.25rem; 
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid var(--border);
             flex-wrap: wrap; 
-            gap: 0.6rem;
+            gap: 0.75rem;
         }
-        .panel-header h3 { font-size: 1.05rem; font-weight: 800; color: var(--theme-top-blue); }
+        .panel-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
 
         .btn-new-item { 
-            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); 
-            color: #fff; 
-            border: 1px solid #1e40af; 
-            padding: 0.45rem 0.9rem; 
-            border-radius: 4px; 
-            font-weight: 700; 
-            font-size: 0.82rem; 
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.82rem;
             cursor: pointer; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 0.35rem; 
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            box-shadow: var(--shadow-xs);
+            transition: background 0.15s ease;
         }
-        .btn-new-item:hover { background: #1d4ed8; }
+        .btn-new-item:hover { background: var(--primary-hover); }
 
-        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
-        .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
+        /* Toolbar & Controls */
+        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .toolbar-left { display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; flex: 1; }
         
-        .filter-select-box { padding: 0.45rem 0.8rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: var(--theme-top-blue); font-size: 0.84rem; font-weight: 700; }
-        .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
-        .search-input { width: 100%; padding: 0.45rem 0.8rem 0.45rem 2rem; background: #fff; border: 1px solid var(--theme-border); border-radius: 3px; color: #111; font-size: 0.86rem; }
-        .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.8rem; pointer-events: none; }
+        .filter-select-box {
+            padding: 0.5rem 0.85rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .filter-select-box:focus { border-color: var(--primary); }
 
-        .btn-tool { padding: 0.35rem 0.7rem; border-radius: 3px; font-weight: 700; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--theme-border); }
-        .btn-approve { background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 0.35rem 0.65rem; border-radius: 3px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.2rem; }
-        .btn-approve:hover { background: #22c55e; color: #fff; }
-        .btn-reject { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 0.35rem 0.65rem; border-radius: 3px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.2rem; }
-        .btn-reject:hover { background: #ef4444; color: #fff; }
+        .search-box-wrap { position: relative; min-width: 240px; max-width: 340px; flex: 1; }
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 0.85rem 0.5rem 2.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
 
-        .btn-action-edit { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.65rem; border-radius: 3px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-right: 0.2rem; }
-        .btn-action-edit:hover { background: #0284c7; color: #fff; }
-        .btn-action-delete { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 0.35rem 0.65rem; border-radius: 3px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
-        .btn-action-delete:hover { background: #ef4444; color: #fff; }
-        .btn-action-ledger { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; padding: 0.35rem 0.65rem; border-radius: 3px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
-        .btn-action-ledger:hover { background: #0284c7; color: #fff; }
+        /* Action Buttons */
+        .btn-tool { padding: 0.4rem 0.8rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; border: 1px solid var(--border); background: var(--surface-subtle); color: var(--text-main); }
+        .btn-approve { background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; padding: 0.35rem 0.75rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.78rem; cursor: pointer; margin-right: 0.3rem; }
+        .btn-approve:hover { background: #d1fae5; }
+        .btn-reject { background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; padding: 0.35rem 0.75rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.78rem; cursor: pointer; margin-right: 0.3rem; }
+        .btn-reject:hover { background: #fee2e2; }
+        .btn-action-edit { background: var(--primary-light); color: var(--primary-hover); border: 1px solid #bfdbfe; padding: 0.35rem 0.75rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.78rem; cursor: pointer; margin-right: 0.3rem; }
+        .btn-action-edit:hover { background: #dbeafe; }
+        .btn-action-delete { background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; padding: 0.35rem 0.75rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+        .btn-action-delete:hover { background: #fee2e2; }
+        .btn-action-ledger { background: var(--info-light); color: #0369a1; border: 1px solid #bae6fd; padding: 0.35rem 0.75rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.78rem; cursor: pointer; }
+        .btn-action-ledger:hover { background: #e0f2fe; }
 
-        .bulk-actions-bar { display: flex; gap: 0.4rem; align-items: center; }
-        .staff-avatar-cell { width: 34px; height: 34px; border-radius: 4px; object-fit: cover; border: 1px solid var(--theme-border); background: #e2e8f0; display: inline-flex; align-items: center; justify-content: center; font-weight: 800; color: var(--theme-top-blue); }
+        .bulk-actions-bar { display: flex; gap: 0.5rem; align-items: center; }
+        .staff-avatar-cell { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: var(--surface-subtle); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; color: var(--primary); font-size: 0.85rem; }
 
-        .table-responsive { width: 100%; max-height: 680px; min-height: 380px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); border-radius: 2px; background: #ffffff; }
+        /* Tables */
+        .table-responsive { width: 100%; max-height: 650px; min-height: 360px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
             position: sticky; top: 0; z-index: 20; 
-            padding: 0.75rem 0.95rem; 
-            color: #ffffff; 
-            font-size: 0.82rem; 
+            padding: 0.8rem 1rem; 
+            color: var(--text-muted); 
+            font-size: 0.78rem; 
             font-weight: 700; 
             text-transform: uppercase; 
-            background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); 
-            border-right: 1px solid #284464; 
-            border-bottom: 2px solid #1a304a; 
-            letter-spacing: 0.3px;
+            background: #f8fafc; 
+            border-bottom: 1px solid var(--border); 
+            letter-spacing: 0.5px;
         }
-        table.custom-table td { padding: 0.7rem 0.95rem; font-size: 0.86rem; border-bottom: 1px solid #dce4ec; border-right: 1px solid #eef2f6; white-space: nowrap; vertical-align: middle; }
-        table.custom-table tr:nth-child(even) { background-color: #f7fafc; }
-        table.custom-table tr:hover { background-color: #e9f2fb; }
+        table.custom-table td { padding: 0.75rem 1rem; font-size: 0.84rem; border-bottom: 1px solid var(--border); white-space: nowrap; vertical-align: middle; }
+        table.custom-table tr:nth-child(even) { background-color: #fafbfc; }
+        table.custom-table tr:hover { background-color: #f1f5f9; }
 
-        .row-opening-balance { background-color: #eff6ff !important; font-weight: bold; }
-        .row-opening-balance td { border-bottom: 2px solid #93c5fd !important; color: #0284c7 !important; }
+        .row-opening-balance { background-color: var(--primary-light) !important; font-weight: 600; }
+        .row-opening-balance td { border-bottom: 1px solid #bfdbfe !important; color: var(--primary-hover) !important; }
 
-        .load-more-bar { text-align: center; padding-top: 0.8rem; }
-        .btn-load-older { background: #e2e8f0; color: var(--theme-top-blue); border: 1px solid var(--theme-border); padding: 0.45rem 1.2rem; border-radius: 3px; font-weight: 700; font-size: 0.84rem; cursor: pointer; }
+        .load-more-bar { text-align: center; padding-top: 1rem; }
+        .btn-load-older { background: var(--surface); color: var(--text-main); border: 1px solid var(--border); padding: 0.55rem 1.4rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.84rem; cursor: pointer; }
+        .btn-load-older:hover { background: var(--surface-subtle); }
 
-        /* Hidden Raw Print Node FIXED */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
-        /* Modal Dialogs */
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); overflow-y: auto; padding: 0.8rem; }
-        .modal-box { background: #ffffff; margin: 1rem auto; width: 95%; max-width: 540px; border-radius: 6px; border: 2px solid var(--theme-mid-blue); box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
-        .modal-box-large { width: 96% !important; max-width: 1350px !important; margin: 0.8rem auto !important; }
-        .modal-box-wide { max-width: 820px; }
-        .modal-box-compact { max-width: 500px !important; }
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.3rem; background: linear-gradient(180deg, #4b739e 0%, #34567e 100%); border-bottom: 1px solid #1a304a; color: #ffffff; }
-        .modal-top-bar span { color: #fff; font-weight: 700; font-size: 0.95rem; }
-        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; line-height: 1; }
-        .modal-body { padding: 1.2rem; background: #f8fafc; }
+        /* Modals */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(4px); overflow-y: auto; padding: 1.2rem; }
+        .modal-box { background: var(--surface); margin: 2rem auto; width: 95%; max-width: 540px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-md); overflow: hidden; }
+        .modal-box-large { width: 96% !important; max-width: 1300px !important; margin: 1rem auto !important; }
+        .modal-box-wide { max-width: 800px; }
+        .modal-box-compact { max-width: 480px !important; }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.4rem; background: #f8fafc; border-bottom: 1px solid var(--border); color: var(--text-main); }
+        .modal-top-bar span { font-weight: 700; font-size: 0.95rem; }
+        .modal-close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; line-height: 1; transition: color 0.15s; }
+        .modal-close-btn:hover { color: var(--text-main); }
+        .modal-body { padding: 1.4rem; background: var(--surface); }
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .form-group-full { grid-column: span 2; }
-        .form-group { margin-bottom: 0.4rem; }
-        .form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #2c4263; margin-bottom: 0.3rem; }
-        .form-control { width: 100%; padding: 0.6rem 0.85rem; background: var(--input-bg); border: 1px solid var(--theme-border); border-radius: 3px; color: #111827; font-size: 0.88rem; outline: none; }
-        .form-control:focus { border-color: var(--theme-top-blue); box-shadow: 0 0 0 2px rgba(68,110,155,0.2); }
+        .form-group { margin-bottom: 0.2rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem; }
+        .form-control { width: 100%; padding: 0.55rem 0.85rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text-main); font-size: 0.86rem; outline: none; transition: all 0.15s ease; }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
-        .btn-submit-modal { width: 100%; padding: 0.75rem; background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; border: 1px solid #1e40af; border-radius: 4px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 0.8rem; }
-        .btn-submit-modal:hover { background: #1d4ed8; }
+        .btn-submit-modal { width: 100%; padding: 0.75rem; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem; cursor: pointer; margin-top: 1rem; transition: background 0.15s; }
+        .btn-submit-modal:hover { background: var(--primary-hover); }
 
-        .preview-slip-box { background: #ffffff; border: 1px solid #cbd5e1; padding: 1.2rem; border-radius: 6px; font-family: 'Segoe UI', Arial, sans-serif; font-size: 8.5pt; color: #000; }
+        .preview-slip-box { background: #ffffff; border: 1px solid var(--border); padding: 1.2rem; border-radius: var(--radius-sm); font-family: system-ui, -apple-system, sans-serif; font-size: 8.5pt; color: #000; }
         .text-right { text-align: right !important; }
         .text-center { text-align: center !important; }
 
@@ -220,17 +281,17 @@
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
-        .toast-msg { min-width: 260px; padding: 0.75rem 1.1rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; background: #1e3a8a; color: #fff; box-shadow: 0 6px 16px rgba(0,0,0,0.25); border-left: 4px solid #38bdf8; }
+        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 8px; }
+        .toast-msg { min-width: 260px; padding: 0.85rem 1.2rem; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; background: var(--text-main); color: #fff; box-shadow: var(--shadow-md); border-left: 4px solid var(--primary); }
 
         .global-loading-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(5px); z-index: 999999;
+            background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 999999;
             flex-direction: column; align-items: center; justify-content: center; cursor: wait;
         }
         .global-spinner {
-            width: 58px; height: 58px; border: 6px solid #e2e8f0; border-top: 6px solid #38bdf8;
-            border-radius: 50%; animation: spinAnim 0.8s linear infinite; margin-bottom: 1.2rem;
+            width: 46px; height: 46px; border: 4px solid rgba(255,255,255,0.2); border-top: 4px solid #fff;
+            border-radius: 50%; animation: spinAnim 0.8s linear infinite; margin-bottom: 1rem;
         }
         @keyframes spinAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -239,10 +300,9 @@
 
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="global-spinner"></div>
-        <div style="color:#fff;font-weight:700;" id="globalLoadingMsg">Processing Data... Please wait!</div>
+        <div style="color:#fff;font-weight:600;font-size:0.95rem;" id="globalLoadingMsg">Processing Data... Please wait!</div>
     </div>
 
-    <!-- Hidden Raw Print Node for Browser Print -->
     <div id="printableReceipt">
         <div style="text-align:center; border-bottom:1px solid #000; padding-bottom:5px; margin-bottom:5px;">
             <h2 style="font-size:10.5pt; font-weight:800; margin:0 0 3px 0;">RCM Consumer Products Private Limited</h2>
@@ -280,7 +340,6 @@
         </div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -289,8 +348,8 @@
             </div>
             <div class="modal-body" style="background:#f8fafc;">
                 <div class="preview-slip-box" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center;">
-                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); color:#fff; border:none; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
+                <div style="margin-top:1.2rem; text-align:center;">
+                    <button class="btn-new-item" style="width:100%; justify-content:center; padding:0.75rem;" onclick="triggerDirectBrowserPrint()">🖨️ Send to Printer</button>
                 </div>
             </div>
         </div>
@@ -302,19 +361,19 @@
         <div class="brand-section">
             <div class="admin-logo-box">🛡️</div>
             <div>
-                <h3 style="color:var(--theme-top-blue); font-size:0.95rem; font-weight:800;">RCM HEAD OFFICE</h3>
-                <span style="font-size:0.72rem; color:#dc2626; font-weight:800;">MASTER ADMIN PORTAL</span>
+                <h3 style="color:var(--text-main); font-size:0.95rem; font-weight:700; line-height:1.2;">RCM HEAD OFFICE</h3>
+                <span style="font-size:0.72rem; color:var(--danger); font-weight:700;">MASTER ADMIN PORTAL</span>
             </div>
         </div>
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox"></div>
             <div>
-                <h1 style="font-size:1.1rem; font-weight:800; color:var(--theme-top-blue);">Central Administration Control</h1>
+                <h1 style="font-size:1rem; font-weight:700; color:var(--text-main);">Central Administration Control</h1>
                 <p style="font-size:0.78rem; color:var(--text-muted);">Multi-Depot Operations & Ledger Authorization</p>
             </div>
         </div>
         <div class="nav-actions">
-            <span id="adminNameDisplay" style="font-weight:700; color:var(--text-dark); font-size:0.85rem; margin-right:0.3rem;">Admin</span>
+            <span id="adminNameDisplay" style="font-weight:600; color:var(--text-main); font-size:0.85rem; margin-right:0.3rem;">Admin</span>
             <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
         </div>
     </div>
@@ -331,15 +390,14 @@
             <button class="tab-btn" id="tabBtnAdminMaster" onclick="switchAdminTab('adminMasterTab', this)">🛡️ Admin Master</button>
         </div>
 
-        <!-- 1. Pending Approvals Panel -->
         <div id="pendingTab" class="panel-card">
             <div class="panel-header">
                 <h3>⚡ Pending Staff & Transaction Approvals</h3>
-                <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;" onclick="loadAdminData()">🔄 Refresh</button>
+                <button class="btn-tool" onclick="loadAdminData()">🔄 Refresh</button>
             </div>
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem; flex-wrap:wrap; gap:0.6rem;">
-                <h4 style="font-size: 0.95rem; color: #0369a1; font-weight:800;">1. Pending Staff Registrations</h4>
+                <h4 style="font-size: 0.9rem; color: #0284c7; font-weight:700;">1. Pending Staff Registrations</h4>
                 <div class="bulk-actions-bar" id="staffBulkBar" style="display:none;">
                     <button class="btn-approve" onclick="bulkApproveStaff('Active', 'Approved')">✅ Approve All</button>
                     <button class="btn-reject" onclick="bulkApproveStaff('Inactive', 'Rejected')">❌ Reject All</button>
@@ -360,13 +418,13 @@
                         </tr>
                     </thead>
                     <tbody id="pendingStaffBody">
-                        <tr><td colspan="7" class="text-center" style="padding: 2rem;">Loading pending staff...</td></tr>
+                        <tr><td colspan="7" class="text-center" style="padding: 2rem; color:var(--text-muted);">Loading pending staff...</td></tr>
                     </tbody>
                 </table>
             </div>
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.8rem; flex-wrap:wrap; gap:0.6rem;">
-                <h4 style="font-size: 0.95rem; color: #b45309; font-weight:800;">2. Pending Debit / Credit Transactions</h4>
+                <h4 style="font-size: 0.9rem; color: #d97706; font-weight:700;">2. Pending Debit / Credit Transactions</h4>
                 <div class="bulk-actions-bar" id="trxBulkBar" style="display:none;">
                     <button class="btn-approve" onclick="bulkApproveTrx('Approved')">✅ Approve All</button>
                     <button class="btn-reject" onclick="bulkApproveTrx('Rejected')">❌ Reject All</button>
@@ -388,18 +446,17 @@
                         </tr>
                     </thead>
                     <tbody id="pendingTrxBody">
-                        <tr><td colspan="8" class="text-center" style="padding: 2rem;">Loading pending transactions...</td></tr>
+                        <tr><td colspan="8" class="text-center" style="padding: 2rem; color:var(--text-muted);">Loading pending transactions...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 2. Depot Master Panel -->
         <div id="depotTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>🏬 All RCM Depots (Network)</h3>
-                <div style="display: flex; gap: 0.6rem; align-items: center;">
-                    <span id="depotCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">0 depots</span>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <span id="depotCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">0 depots</span>
                     <button class="btn-new-item perm-action-depot" id="btnNewDepot" onclick="openNewDepotModal()">➕ Add New Depot</button>
                 </div>
             </div>
@@ -423,12 +480,11 @@
             </div>
         </div>
 
-        <!-- 3. Staff Master Panel -->
         <div id="staffTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>👥 All Depot Staff Members</h3>
-                <div style="display: flex; gap: 0.6rem; align-items: center;">
-                    <span id="staffCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">0 staff</span>
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <span id="staffCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">0 staff</span>
                     <button class="btn-new-item perm-action-staff" id="btnNewStaff" onclick="openNewStaffModal()">➕ Add New Staff</button>
                 </div>
             </div>
@@ -455,11 +511,10 @@
             </div>
         </div>
 
-        <!-- 4. Staff Ledgers Summary Panel -->
         <div id="ledgerTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>💳 Staff Master Ledger Summary</h3>
-                <span id="ledgerStaffCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">0 staff accounts</span>
+                <span id="ledgerStaffCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">0 staff accounts</span>
             </div>
             <div class="table-responsive">
                 <table class="custom-table">
@@ -480,11 +535,10 @@
             </div>
         </div>
 
-        <!-- 5. Dispatch Reports Panel -->
         <div id="dispatchTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>📦 All Depot Dispatch Reports</h3>
-                <span id="dispatchCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">0 records</span>
+                <span id="dispatchCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">0 records</span>
             </div>
 
             <div class="table-toolbar">
@@ -503,11 +557,10 @@
                         <input type="text" id="adminDispatchSearch" class="search-input" placeholder="Search invoice, vehicle, through..." oninput="filterAdminDispatchTable()">
                     </div>
 
-                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 0.85rem;" onclick="exportAdminDispatchToCSV()">📥 Export Excel</button>
+                    <button class="btn-tool" onclick="exportAdminDispatchToCSV()">📥 Export Excel</button>
                 </div>
             </div>
 
-            <!-- FY Month-wise Summary Table -->
             <div id="dispFySummaryContainer" class="table-responsive" style="display:none; max-height: 640px;">
                 <table class="custom-table">
                     <thead>
@@ -522,11 +575,10 @@
                 </table>
             </div>
 
-            <!-- Standard Transaction Stream Table -->
             <div id="dispRawTableContainer">
-                <div id="dispMonthBackBar" style="display:none; margin-bottom:0.6rem; justify-content:space-between; align-items:center;">
-                    <h4 id="dispMonthBackTitle" style="font-size:0.92rem; font-weight:800; color:#0369a1;">📅 Month Dispatch Records</h4>
-                    <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="backToAdminDispatchFySummary()">⬅️ Back to FY Summary</button>
+                <div id="dispMonthBackBar" style="display:none; margin-bottom:0.75rem; justify-content:space-between; align-items:center;">
+                    <h4 id="dispMonthBackTitle" style="font-size:0.92rem; font-weight:700; color:var(--primary);">📅 Month Dispatch Records</h4>
+                    <button class="btn-tool" onclick="backToAdminDispatchFySummary()">⬅️ Back to FY Summary</button>
                 </div>
                 <div class="table-responsive" style="max-height: 640px;">
                     <table class="custom-table" id="adminDispatchTable">
@@ -553,30 +605,28 @@
             </div>
         </div>
 
-        <!-- 6. Depot Expenses Panel (Admin View) -->
         <div id="expensesTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>💰 Depot Expenses Oversight</h3>
-                <span id="adminExpCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">0 records</span>
+                <span id="adminExpCount" style="color:var(--text-muted); font-size:0.85rem; font-weight:600;">0 records</span>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
-                <div style="display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
-                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Depot:</label>
+            <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-subtle); padding:0.85rem 1.1rem; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:1.2rem; flex-wrap:wrap; gap:0.8rem;">
+                <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                    <label style="font-weight:600; font-size:0.85rem; color:var(--text-muted);">Depot:</label>
                     <select id="adminExpDepotFilter" class="filter-select-box" onchange="renderAdminExpenseSummary()">
                         <option value="" disabled selected>⚠️ Please select depot</option>
                     </select>
 
-                    <label style="font-weight:700; font-size:0.88rem; color:#1e293b; margin-left:0.5rem;">Financial Year:</label>
+                    <label style="font-weight:600; font-size:0.85rem; color:var(--text-muted); margin-left:0.5rem;">Financial Year:</label>
                     <select id="adminExpYearFilter" class="filter-select-box" onchange="renderAdminExpenseSummary()"></select>
                 </div>
                 <div>
-                    <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportAdminExpensesToCSV()">📥 Export Filtered Excel</button>
+                    <button class="btn-tool" onclick="exportAdminExpensesToCSV()">📥 Export Filtered Excel</button>
                 </div>
             </div>
 
-            <!-- Summary Table -->
-            <div id="adminExpSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+            <div id="adminExpSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px;">
                 <table class="custom-table">
                     <thead>
                         <tr>
@@ -589,20 +639,19 @@
                         </tr>
                     </thead>
                     <tbody id="adminExpSummaryTbody">
-                        <tr><td colspan="6" class="text-center" style="padding:2rem; color:#b45309; font-weight:bold;">⚠️ Please select depot from the dropdown above to view expenses.</td></tr>
+                        <tr><td colspan="6" class="text-center" style="padding:2.5rem; color:var(--warning); font-weight:600;">⚠️ Please select depot from the dropdown above to view expenses.</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Detailed Breakdown -->
             <div id="adminExpDetailContainer" style="display:none; margin-top:0.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
-                    <h4 id="adminExpDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Expenses</h4>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="adminExpDetailHeader" style="font-size:0.95rem; font-weight:700; color:var(--primary);">📅 Detailed Expenses</h4>
                     <div>
-                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideAdminExpenseMonthDetails()">⬅️ Back to Summary</button>
+                        <button class="btn-tool" onclick="hideAdminExpenseMonthDetails()">⬅️ Back to Summary</button>
                     </div>
                 </div>
-                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
+                <div class="table-responsive" style="max-height: 620px; min-height: 440px;">
                     <table class="custom-table">
                         <thead>
                             <tr>
@@ -620,7 +669,6 @@
             </div>
         </div>
 
-        <!-- 7. Admin Master Panel -->
         <div id="adminMasterTab" class="panel-card" style="display:none;">
             <div class="panel-header">
                 <h3>🛡️ Admin Master (All 15 Columns)</h3>
@@ -654,7 +702,6 @@
 
     </div>
 
-    <!-- Modals -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>🏬 Add New Depot (All 15 Fields)</span><button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button></div>
@@ -689,7 +736,7 @@
             <div class="modal-body">
                 <form id="editDepotForm">
                     <div class="form-grid">
-                        <div class="form-group"><label>A: Depot Code (Locked)</label><input type="text" id="editDepotCode" class="form-control" readonly style="color:var(--theme-top-blue); font-weight:bold; background:var(--input-readonly);"></div>
+                        <div class="form-group"><label>A: Depot Code (Locked)</label><input type="text" id="editDepotCode" class="form-control" readonly style="color:var(--primary); font-weight:700; background:var(--surface-subtle);"></div>
                         <div class="form-group"><label>B: Depot Name</label><input type="text" id="editDepotName" class="form-control" required></div>
                         <div class="form-group-full"><label>C: Company Name</label><input type="text" id="editDepotCompanyName" class="form-control" required></div>
                         <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="editDepotAddress" class="form-control"></div>
@@ -739,7 +786,7 @@
             <div class="modal-body">
                 <form id="editStaffForm">
                     <div class="form-grid">
-                        <div class="form-group"><label>A: Staff Code (Locked)</label><input type="text" id="editStaffCode" class="form-control" readonly style="color:var(--theme-top-blue); font-weight:bold; background:var(--input-readonly);"></div>
+                        <div class="form-group"><label>A: Staff Code (Locked)</label><input type="text" id="editStaffCode" class="form-control" readonly style="color:var(--primary); font-weight:700; background:var(--surface-subtle);"></div>
                         <div class="form-group"><label>B: Staff Name</label><input type="text" id="editStaffName" class="form-control" required></div>
                         <div class="form-group"><label>C: Mobile Number</label><input type="tel" id="editStaffMobile" class="form-control" required></div>
                         <div class="form-group"><label>D: Joining Date</label><input type="text" id="editStaffJoinDate" class="form-control" required></div>
@@ -761,17 +808,17 @@
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar"><span id="dtlLedgerTitle">📄 Staff Ledger</span><button class="modal-close-btn" onclick="closeLedgerDetailModal()">&times;</button></div>
             <div class="modal-body">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:1rem; flex-wrap:wrap; gap:0.8rem;">
-                    <div style="display:flex; align-items:center; gap:0.6rem;">
-                        <label style="font-weight:700; font-size:0.88rem; color:#1e293b;">Financial Year:</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-subtle); padding:0.85rem 1.1rem; border:1px solid var(--border); border-radius:var(--radius-md); margin-bottom:1.2rem; flex-wrap:wrap; gap:0.8rem;">
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <label style="font-weight:600; font-size:0.85rem; color:var(--text-muted);">Financial Year:</label>
                         <select id="ledgerYearFilter" class="filter-select-box" onchange="renderAdminAnnualSummaryLedger()"></select>
                     </div>
                     <div>
-                        <button class="btn-action-nav" style="background:#dcfce7;border-color:#22c55e;color:#15803d;padding:0.45rem 1rem;font-size:0.85rem;" onclick="exportAdminFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
+                        <button class="btn-tool" onclick="exportAdminFullDetailedLedgerToCSV()">📥 Export As (Excel)</button>
                     </div>
                 </div>
 
-                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
+                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 480px;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
                             <tr>
@@ -788,14 +835,14 @@
                 </div>
 
                 <div id="monthDetailContainer" style="display:none; margin-top:0.5rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
-                        <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:800; color:#0369a1;">📅 Detailed Transactions</h4>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem; flex-wrap:wrap; gap:0.6rem;">
+                        <h4 id="monthDetailHeader" style="font-size:0.95rem; font-weight:700; color:var(--primary);">📅 Detailed Transactions</h4>
                         <div style="display:flex; gap:0.5rem;">
-                            <button class="btn-action-nav" style="background:#fef3c7; border-color:#f59e0b; color:#92400e; padding:0.35rem 0.8rem;" onclick="openAdminPrintPreviewModal()">🖨️ Print Month Statement</button>
-                            <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideAdminMonthDetails()">⬅️ Back to Annual Summary</button>
+                            <button class="btn-tool" style="background:#fef3c7; border-color:#fde68a; color:#92400e;" onclick="openAdminPrintPreviewModal()">🖨️ Print Month Statement</button>
+                            <button class="btn-tool" onclick="hideAdminMonthDetails()">⬅️ Back to Annual Summary</button>
                         </div>
                     </div>
-                    <div class="table-responsive" style="max-height: 620px; min-height: 480px; background:#fff;">
+                    <div class="table-responsive" style="max-height: 620px; min-height: 480px;">
                         <table class="custom-table">
                             <thead>
                                 <tr>
@@ -827,8 +874,8 @@
                     <div class="form-group"><label>Particular</label><input type="text" id="editLedgerParticular" class="form-control" required></div>
                     <div class="form-group"><label>Payment Mode</label><select id="editLedgerMode" class="form-control"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Transfer">Bank Transfer</option><option value="-">-</option></select></div>
                     <div class="form-grid">
-                        <div class="form-group"><label style="color:var(--accent-dr);">Debit Amount (₹)</label><input type="number" id="editLedgerDebit" class="form-control" value="0"></div>
-                        <div class="form-group"><label style="color:var(--accent-cr);">Credit Amount (₹)</label><input type="number" id="editLedgerCredit" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--danger);">Debit Amount (₹)</label><input type="number" id="editLedgerDebit" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--success);">Credit Amount (₹)</label><input type="number" id="editLedgerCredit" class="form-control" value="0"></div>
                     </div>
                     <div class="form-group"><label>Approval Status</label><select id="editLedgerStatus" class="form-control"><option value="Approved">Approved</option><option value="Pending">Pending</option><option value="Rejected">Rejected</option></select></div>
                     <button type="submit" class="btn-submit-modal">💾 Update Ledger Entry</button>
@@ -837,7 +884,6 @@
         </div>
     </div>
 
-    <!-- Modal 8: Add/Edit Admin (All 15 Columns with N and O) -->
     <div id="adminMasterModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span id="adminModalTitle">🛡️ Admin Master & Permissions</span><button class="modal-close-btn" onclick="closeAdminMasterModal()">&times;</button></div>
@@ -1095,7 +1141,7 @@
             }
         }
 
-        // --- Depot Expenses Functions (Admin View with Please Select validation) ---
+        // --- Depot Expenses Functions ---
         function populateAdminExpenseFilters(depots, expenses) {
             const depotSelect = document.getElementById('adminExpDepotFilter');
             let depotOpts = `<option value="" disabled selected>⚠️ Please select depot</option>`;
@@ -1136,7 +1182,7 @@
             
             if (!selectedDepot) {
                 document.getElementById('adminExpCount').textContent = `0 records`;
-                document.getElementById('adminExpSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2rem; color:#b45309; font-weight:bold;">⚠️ Please select depot from the dropdown above to view expenses.</td></tr>`;
+                document.getElementById('adminExpSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2.5rem; color:var(--warning); font-weight:600;">⚠️ Please select depot from the dropdown above to view expenses.</td></tr>`;
                 return;
             }
 
@@ -1199,12 +1245,12 @@
             });
 
             tbodyHtml += `
-            <tr style="background:#ffffff; font-weight:700;">
-                <td style="color:#0f172a;">OPN</td>
-                <td style="text-align:right;">0</td>
-                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
-                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
-                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
+            <tr style="background:#ffffff; font-weight:600;">
+                <td style="color:var(--text-main);">OPN</td>
+                <td style="text-align:right; color:var(--text-muted);">0</td>
+                <td style="text-align:right; color:var(--success); font-weight:700;">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
+                <td style="text-align:right; color:var(--primary); font-weight:700;">${opnBalFormatted}</td>
+                <td style="text-align:center; font-weight:700; color:${opnType === 'CR' ? 'var(--success)' : 'var(--danger)'};">${opnType}</td>
                 <td style="text-align:center;">-</td>
             </tr>`;
 
@@ -1233,13 +1279,13 @@
 
                 tbodyHtml += `
                 <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
-                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
-                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
+                    <td style="font-weight:600; color:var(--text-main);">${mLabel}</td>
+                    <td style="text-align:right; color:${mDr > 0 ? 'var(--danger)' : 'var(--text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; color:${mCr > 0 ? 'var(--success)' : 'var(--text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
+                    <td style="text-align:right; font-weight:700; color:var(--primary);">${balFormatted}</td>
+                    <td style="text-align:center; font-weight:700; color:${balType === 'CR' ? 'var(--success)' : 'var(--danger)'};">${balType}</td>
                     <td style="text-align:center;">
-                        <button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminExpenseMonthDetails(${mIndex})">View</button>
+                        <button class="btn-action-ledger" onclick="viewAdminExpenseMonthDetails(${mIndex})">View</button>
                     </td>
                 </tr>`;
             });
@@ -1280,9 +1326,9 @@
                 <td><strong>01 ${monthName}</strong></td>
                 <td>-</td>
                 <td><strong>Opening Balance</strong></td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="color:${opDr > 0 ? 'var(--danger)' : 'var(--text-muted)'};font-weight:600;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--success)' : 'var(--text-muted)'};font-weight:600;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--primary);font-weight:700;text-align:right;">₹${runningBal.toFixed(2)}</td>
             </tr>`;
 
             mData.rows.forEach(r => {
@@ -1298,9 +1344,9 @@
                     <td><strong>${dt}</strong></td>
                     <td>${depotName}</td>
                     <td>${part}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                    <td style="color:${dr > 0 ? 'var(--danger)' : 'var(--text-muted)'};font-weight:600;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--success)' : 'var(--text-muted)'};font-weight:600;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--primary);font-weight:700;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 </tr>`;
             });
 
@@ -1361,7 +1407,7 @@
             showToast('Depot expenses exported as Excel (.csv)!');
         }
 
-        // --- Other Admin Functions ---
+        // --- Core Admin Functions ---
         function renderPendingApprovals() {
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
@@ -1384,12 +1430,12 @@
                 pStaff.forEach(s => {
                     const code = getField(s, 'Staff Code');
                     html += `<tr>
-                        <td style="color:var(--accent-bal); font-weight:700;">${code}</td>
+                        <td style="color:var(--primary); font-weight:600;">${code}</td>
                         <td><strong>${getField(s, 'Staff Name')}</strong></td>
                         <td>${getField(s, 'Staff Mob.')}</td>
                         <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
                         <td>${getField(s, 'Staff Joining Date')}</td>
-                        <td style="color:#b45309; font-weight:700;">Pending</td>
+                        <td style="color:var(--warning); font-weight:600;">Pending</td>
                         <td>
                             <button class="btn-approve" onclick="approveStaff('${code}', 'Active', 'Approved')">✅ Approve</button>
                             <button class="btn-reject" onclick="approveStaff('${code}', 'Inactive', 'Rejected')">❌ Reject</button>
@@ -1414,8 +1460,8 @@
                         <td>${getField(t, 'Satff Depot Name', 'Staff Depot Name', 'depotName')}</td>
                         <td>${getField(t, 'Particular', 'particular')}</td>
                         <td>${getField(t, 'Payment Mode', 'mode')}</td>
-                        <td style="color:var(--accent-dr); font-weight:700;">${dr > 0 ? '₹' + dr : '-'}</td>
-                        <td style="color:var(--accent-cr); font-weight:700;">${cr > 0 ? '₹' + cr : '-'}</td>
+                        <td style="color:var(--danger); font-weight:600;">${dr > 0 ? '₹' + dr : '-'}</td>
+                        <td style="color:var(--success); font-weight:600;">${cr > 0 ? '₹' + cr : '-'}</td>
                         <td>
                             <button class="btn-approve" onclick="approveTransaction('${trxId}', 'Approved')">✅ Approve</button>
                             <button class="btn-reject" onclick="approveTransaction('${trxId}', 'Rejected')">❌ Reject</button>
@@ -1698,14 +1744,14 @@
                 if (globalIsViewOnlyLedger) actionBtns = `<span style="color:var(--text-muted);font-size:0.8rem;">View Only</span>`;
 
                 html += `<tr>
-                    <td style="color:var(--accent-bal); font-weight:700;">${code}</td>
+                    <td style="color:var(--primary); font-weight:700;">${code}</td>
                     <td><strong>${getField(d, 'Depot Name')}</strong></td>
-                    <td style="color:#2c4263;">${getField(d, 'Compny Name', 'Company Name')}</td>
+                    <td style="color:var(--text-muted);">${getField(d, 'Compny Name', 'Company Name')}</td>
                     <td>${getField(d, 'Dristric', 'District')}</td>
                     <td>${getField(d, 'State Name')}</td>
-                    <td style="color:#b45309; font-weight:700;">${getField(d, 'Invoice No Series')}</td>
+                    <td style="color:var(--warning); font-weight:700;">${getField(d, 'Invoice No Series')}</td>
                     <td>${getField(d, 'Depot Login ID')}</td>
-                    <td style="color:${st.toLowerCase()==='active'?'var(--accent-cr)':'var(--accent-dr)'}; font-weight:700;">${st}</td>
+                    <td style="color:${st.toLowerCase()==='active'?'var(--success)':'var(--danger)'}; font-weight:700;">${st}</td>
                     <td>${actionBtns}</td>
                 </tr>`;
             });
@@ -1736,16 +1782,16 @@
 
                 html += `<tr>
                     <td style="text-align:center;">${avatarHtml}</td>
-                    <td style="color:var(--accent-bal); font-weight:700;">${code}</td>
+                    <td style="color:var(--primary); font-weight:700;">${code}</td>
                     <td><strong>${name}</strong></td>
                     <td>${getField(s, 'Staff Mob.')}</td>
                     <td>${getField(s, 'Staff Joining Date')}</td>
                     <td>${getField(s, 'Staff Working Depot Code')}</td>
                     <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
                     <td>${getField(s, 'Staff Login Id')}</td>
-                    <td style="color:${st.toLowerCase()==='active'?'var(--accent-cr)':'var(--accent-dr)'}; font-weight:700;">${st}</td>
-                    <td style="color:${app.toLowerCase()==='approved'?'var(--accent-cr)':'#b45309'}; font-weight:700;">${app}</td>
-                    <td style="color:#0284c7; font-weight:700;">${approvedBy}</td>
+                    <td style="color:${st.toLowerCase()==='active'?'var(--success)':'var(--danger)'}; font-weight:700;">${st}</td>
+                    <td style="color:${app.toLowerCase()==='approved'?'var(--success)':'var(--warning)'}; font-weight:700;">${app}</td>
+                    <td style="color:var(--primary); font-weight:600;">${approvedBy}</td>
                     <td>${actionBtns}</td>
                 </tr>`;
             });
@@ -1778,15 +1824,15 @@
 
                 const summary = ledgerMap[code.toUpperCase()] || { dr: 0, cr: 0 };
                 const net = summary.cr - summary.dr;
-                const netColor = net >= 0 ? 'var(--accent-cr)' : 'var(--accent-dr)';
+                const netColor = net >= 0 ? 'var(--success)' : 'var(--danger)';
 
                 html += `<tr>
-                    <td style="color:var(--accent-bal); font-weight:700;">${code}</td>
+                    <td style="color:var(--primary); font-weight:700;">${code}</td>
                     <td><strong>${name}</strong></td>
                     <td>${mob}</td>
                     <td>${depot}</td>
-                    <td style="color:var(--accent-cr); font-weight:700;">₹${summary.cr.toLocaleString('en-IN')}</td>
-                    <td style="color:var(--accent-dr); font-weight:700;">₹${summary.dr.toLocaleString('en-IN')}</td>
+                    <td style="color:var(--success); font-weight:700;">₹${summary.cr.toLocaleString('en-IN')}</td>
+                    <td style="color:var(--danger); font-weight:700;">₹${summary.dr.toLocaleString('en-IN')}</td>
                     <td style="color:${netColor}; font-weight:800;">₹${Math.abs(net).toLocaleString('en-IN')} ${net >= 0 ? '(Cr)' : '(Dr)'}</td>
                     <td>
                         <button class="btn-action-ledger" onclick="openStaffLedgerDetails('${code}', '${name}', '${depot}')">📄 View Statement</button>
@@ -1856,748 +1902,4 @@
             });
 
             validRows.forEach(r => {
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-
-                if (!d) return;
-
-                if (d < fyStartDate) {
-                    if (isApproved) openingBalance += (cr - dr);
-                } else if (d >= fyStartDate && d <= fyEndDate) {
-                    const m = d.getMonth();
-                    if (monthlyData[m]) {
-                        monthlyData[m].rows.push(r);
-                        if (isApproved) {
-                            monthlyData[m].debit += dr;
-                            monthlyData[m].credit += cr;
-                        }
-                    }
-                }
-            });
-
-            annualSummaryData = [];
-            let runningBal = openingBalance;
-            let tbodyHtml = '';
-
-            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
-            let opnType = openingBalance >= 0 ? 'CR' : 'DR';
-            annualSummaryData.push({
-                monthLabel: 'OPN',
-                debit: 0,
-                credit: openingBalance > 0 ? openingBalance : 0,
-                balance: runningBal,
-                type: opnType,
-                rows: []
-            });
-
-            tbodyHtml += `
-            <tr style="background:#ffffff; font-weight:700;">
-                <td style="color:#0f172a;">OPN</td>
-                <td style="text-align:right;">0</td>
-                <td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td>
-                <td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td>
-                <td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td>
-                <td style="text-align:center;">-</td>
-            </tr>`;
-
-            fyMonthSequence.forEach(mIndex => {
-                const mObj = monthlyData[mIndex];
-                const mLabel = monthNames[mIndex];
-                const mDr = mObj.debit;
-                const mCr = mObj.credit;
-
-                if (mDr === 0 && mCr === 0 && mObj.rows.length === 0) return;
-
-                runningBal += (mCr - mDr);
-                const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = Math.abs(runningBal).toFixed(2);
-
-                annualSummaryData.push({
-                    monthLabel: mLabel,
-                    monthIndex: mIndex,
-                    year: (mIndex >= 3) ? startYear : startYear + 1,
-                    debit: mDr,
-                    credit: mCr,
-                    balance: runningBal,
-                    type: balType,
-                    rows: mObj.rows
-                });
-
-                tbodyHtml += `
-                <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel}</td>
-                    <td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td>
-                    <td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td>
-                    <td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
-                    <td style="text-align:center;">
-                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminMonthDetails(${mIndex})">View</button>` : '-'}
-                    </td>
-                </tr>`;
-            });
-
-            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
-        }
-
-        function viewAdminMonthDetails(mIndex) {
-            const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
-            if (!mData) return;
-
-            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
-            const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
-            const monthName = monthNames[mIndex];
-
-            document.getElementById('monthDetailHeader').textContent = `📅 Detailed Ledger: ${monthName} ${actualYear} (${activeLedgerStaffName})`;
-
-            let opnBalMonth = 0;
-            const firstOfThisMonth = new Date(actualYear, mIndex, 1);
-
-            activeStaffLedgerRows.forEach(r => {
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
-                if (d && d < firstOfThisMonth && isApproved) {
-                    opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
-                }
-            });
-
-            let runningBal = opnBalMonth;
-            let totalDr = 0, totalCr = 0;
-            let html = '';
-
-            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
-            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
-
-            html += `<tr class="row-opening-balance">
-                <td><strong>01 ${monthName}</strong></td>
-                <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
-                <td>-</td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
-                <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
-                <td>-</td>
-            </tr>`;
-
-            mData.rows.forEach(r => {
-                const trxId = getField(r, 'ID', 'id', 'Trx ID');
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
-                const part = getField(r, 'Particular', 'particular');
-                const mode = getField(r, 'Payment Mode', 'mode') || '-';
-
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-
-                if (isApproved) {
-                    totalDr += dr;
-                    totalCr += cr;
-                    runningBal += (cr - dr);
-                }
-
-                let actionBtns = `
-                    <button class="btn-action-edit" onclick="openEditLedger('${trxId}')">✏️ Edit</button>
-                    <button class="btn-action-delete" onclick="deleteRow('Staff Ledger Entry', 0, '${trxId}')">🗑️ Delete</button>
-                `;
-                if (globalIsViewOnlyLedger) actionBtns = `<span style="color:var(--text-muted);font-size:0.8rem;">View Only</span>`;
-
-                html += `<tr>
-                    <td><strong>${dt}</strong></td>
-                    <td style="white-space:normal;min-width:320px;">${part}</td>
-                    <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
-                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
-                    <td style="text-align:center;">${actionBtns}</td>
-                </tr>`;
-            });
-
-            activeViewingMonthData = {
-                monthLabel: `${monthName} ${actualYear}`,
-                openingBal: opnBalMonth,
-                rows: mData.rows,
-                totalDr: totalDr,
-                totalCr: totalCr,
-                closingBal: runningBal
-            };
-
-            document.getElementById('monthDetailTbody').innerHTML = html;
-            document.getElementById('annualSummaryContainer').style.display = 'none';
-            document.getElementById('monthDetailContainer').style.display = 'block';
-        }
-
-        function hideAdminMonthDetails() {
-            document.getElementById('annualSummaryContainer').style.display = 'block';
-            document.getElementById('monthDetailContainer').style.display = 'none';
-        }
-
-        function openAdminPrintPreviewModal() {
-            if (!activeViewingMonthData) {
-                showToast('No active month data to preview.');
-                return;
-            }
-
-            const depotMatch = (adminBundle.depots || []).find(d => {
-                const dName = (getField(d, 'Depot Name') || '').toLowerCase();
-                const dCode = (getField(d, 'Depot Code') || '').toLowerCase();
-                return dName === activeLedgerDepotName.toLowerCase() || dCode === activeLedgerDepotName.toLowerCase();
-            });
-
-            let fullAddr = "Depot Address";
-            let contact = "Mob: - | GSTIN: -";
-
-            if (depotMatch) {
-                const addr = getField(depotMatch, 'Depot Address');
-                const dist = getField(depotMatch, 'Dristric', 'District');
-                const state = getField(depotMatch, 'State Name');
-                const pin = getField(depotMatch, 'Pin Code', 'Pincode');
-                const mob = getField(depotMatch, 'Mob. No.', 'Mobile');
-                const gstin = getField(depotMatch, 'GSTIN');
-
-                fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
-                contact = `Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}`;
-            }
-
-            const dName = activeLedgerDepotName;
-            const sName = activeLedgerStaffName;
-            const sCode = activeLedgerStaffCode;
-            const period = activeViewingMonthData.monthLabel;
-
-            document.getElementById('rcptFullAddress').textContent = fullAddr;
-            document.getElementById('rcptContact').textContent = contact;
-            document.getElementById('rcptStaffName').textContent = sName;
-            document.getElementById('rcptStaffCode').textContent = sCode;
-            document.getElementById('rcptDepotName').textContent = dName;
-            document.getElementById('rcptPrintPeriod').textContent = period;
-
-            let html = '';
-            let runningBal = activeViewingMonthData.openingBal;
-
-            let opCr = runningBal > 0 ? runningBal : 0;
-            let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-
-            html += `<tr style="font-weight:bold; background:#f8fafc;">
-                <td style="padding:4px 2px;">01-B/F</td>
-                <td style="padding:4px 2px;">Opening Balance</td>
-                <td class="text-right" style="padding:4px 2px;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                <td class="text-right" style="padding:4px 2px;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
-                <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
-            </tr>`;
-
-            activeViewingMonthData.rows.forEach(r => {
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Pending').toString().trim();
-                if (appRaw.toLowerCase() === 'approved') {
-                    const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                    const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    const dt = formatCleanDate(getField(r, 'Transaction Date', 'date'));
-                    const part = getField(r, 'Particular', 'particular');
-                    runningBal += (cr - dr);
-
-                    html += `<tr>
-                        <td style="padding:4px 2px;">${dt}</td>
-                        <td style="padding:4px 2px; word-break:break-word;">${part}</td>
-                        <td class="text-right" style="padding:4px 2px;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td class="text-right" style="padding:4px 2px;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td class="text-right" style="padding:4px 2px;">${runningBal.toFixed(2)}</td>
-                    </tr>`;
-                }
-            });
-
-            document.getElementById('rcptTableBody').innerHTML = html;
-
-            const opBal = activeViewingMonthData.openingBal;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
-            const finalNet = activeViewingMonthData.closingBal;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
-
-            document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
-            document.getElementById('printPreviewModal').style.display = 'block';
-        }
-
-        function closePrintPreviewModal() { document.getElementById('printPreviewModal').style.display = 'none'; }
-        function triggerDirectBrowserPrint() { window.print(); }
-        function closeLedgerDetailModal() { document.getElementById('staffLedgerDetailModal').style.display = 'none'; }
-
-        function openEditLedger(trxId) {
-            const trx = (adminBundle.ledgers || []).find(item => getField(item, 'ID', 'id', 'Trx ID') === trxId);
-            if (!trx) return;
-
-            document.getElementById('editLedgerTrxId').value = trxId;
-            document.getElementById('editLedgerDate').value = getField(trx, 'Transaction Date', 'date');
-            document.getElementById('editLedgerParticular').value = getField(trx, 'Particular', 'particular');
-            document.getElementById('editLedgerMode').value = getField(trx, 'Payment Mode', 'mode') || 'Cash';
-            document.getElementById('editLedgerDebit').value = Number(getField(trx, 'Debit', 'debit') || 0);
-            document.getElementById('editLedgerCredit').value = Number(getField(trx, 'Credit', 'credit') || 0);
-            document.getElementById('editLedgerStatus').value = getField(trx, 'Entry Approvel Status (Admin)', 'approvalStatus') || 'Approved';
-
-            document.getElementById('editLedgerModal').style.display = 'block';
-        }
-        function closeEditLedgerModal() { document.getElementById('editLedgerModal').style.display = 'none'; }
-
-        document.getElementById('editLedgerForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            showBlocker("Updating ledger entry...");
-            const payload = {
-                action: 'editLedgerRecord',
-                trxId: document.getElementById('editLedgerTrxId').value,
-                date: document.getElementById('editLedgerDate').value,
-                particular: document.getElementById('editLedgerParticular').value,
-                mode: document.getElementById('editLedgerMode').value,
-                debit: document.getElementById('editLedgerDebit').value,
-                credit: document.getElementById('editLedgerCredit').value,
-                approvalStatus: document.getElementById('editLedgerStatus').value,
-                approvedBy: adminName
-            };
-            try {
-                const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
-                const res = await jsonp(`${SCRIPT_URL}?${q}`);
-                showToast(res.message || "Updated");
-                closeEditLedgerModal();
-                await loadAdminData();
-                setTimeout(() => { openStaffLedgerDetails(activeLedgerStaffCode, activeLedgerStaffName, activeLedgerDepotName); }, 800);
-            } catch (err) { showToast("Error updating transaction"); }
-            finally { hideBlocker(); }
-        });
-
-        function exportAdminFullDetailedLedgerToCSV() {
-            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
-            const fyStartDate = new Date(startYear, 3, 1);
-            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
-            const periodLabel = `FY_${startYear}_${String(startYear + 1).slice(2)}`;
-
-            const validRows = activeStaffLedgerRows.slice().sort((a, b) => {
-                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
-                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
-                return da - db;
-            });
-
-            let openingBalance = 0;
-            let currentFYRows = [];
-
-            validRows.forEach(r => {
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-
-                if (!d) return;
-
-                if (d < fyStartDate) {
-                    if (isApproved) openingBalance += (cr - dr);
-                } else if (d >= fyStartDate && d <= fyEndDate) {
-                    currentFYRows.push(r);
-                }
-            });
-
-            if (currentFYRows.length === 0 && openingBalance === 0) {
-                showToast('No ledger transactions to export for this FY.');
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += `Staff Name,${activeLedgerStaffName},Staff Code,${activeLedgerStaffCode}\n`;
-            csvContent += `Depot,${activeLedgerDepotName},Period,FY ${startYear}-${startYear + 1}\n\n`;
-            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
-
-            let runningBal = openingBalance;
-            let totalDr = 0, totalCr = 0;
-
-            let opCr = openingBalance > 0 ? openingBalance : 0;
-            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
-
-            currentFYRows.forEach(r => {
-                const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
-                const part = `"${(getField(r, 'Particular', 'particular') || '').replace(/"/g, '""')}"`;
-                const mode = `"${getField(r, 'Payment Mode', 'mode') || '-'}"`;
-                const dr = Number(getField(r, 'Debit', 'debit') || 0);
-                const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
-                const isApproved = appRaw.toLowerCase() === 'approved';
-
-                if (isApproved) {
-                    totalDr += dr;
-                    totalCr += cr;
-                    runningBal += (cr - dr);
-                }
-
-                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
-                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
-            });
-
-            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Full_Ledger_${activeLedgerStaffCode}_${periodLabel}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
-        }
-
-        function populateDispatchDepotFilter(depots, dispatches) {
-            const selectBox = document.getElementById('dispatchDepotFilter');
-            const depotSet = new Map();
-            depots.forEach(d => {
-                const code = getField(d, 'Depot Code'), name = getField(d, 'Depot Name');
-                if (code) depotSet.set(code.toUpperCase(), name || code);
-            });
-            dispatches.forEach(d => {
-                const code = getField(d, 'Depot Code'), name = getField(d, 'Depot Name');
-                if (code && !depotSet.has(code.toUpperCase())) depotSet.set(code.toUpperCase(), name || code);
-            });
-            let opts = `<option value="ALL" selected>🏬 All Depots (${depotSet.size})</option>`;
-            Array.from(depotSet.entries()).sort().forEach(([code, name]) => opts += `<option value="${code}">${name} (${code})</option>`);
-            selectBox.innerHTML = opts;
-        }
-
-        function populateDispatchPeriodFilter(dispatches) {
-            const selectBox = document.getElementById('dispatchPeriodFilter');
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
-
-            const fySet = new Set();
-            fySet.add(curFyStart);
-
-            dispatches.forEach(r => {
-                const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
-                if (d) {
-                    const fy = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
-                    fySet.add(fy);
-                }
-            });
-
-            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option>`;
-            optionsHtml += `<option value="ALL">🌐 All Records</option>`;
-
-            const sortedFys = Array.from(fySet).sort((a, b) => b - a);
-            sortedFys.forEach(fy => {
-                optionsHtml += `<option value="FY_${fy}">💼 FY: ${fy}-${String(fy+1).slice(2)}</option>`;
-            });
-
-            selectBox.innerHTML = optionsHtml;
-        }
-
-        function handleAdminDispatchFilterChange() {
-            const periodVal = document.getElementById('dispatchPeriodFilter').value;
-            const fySummaryContainer = document.getElementById('dispFySummaryContainer');
-            const rawTableContainer = document.getElementById('dispRawTableContainer');
-            const loadOlderBtn = document.getElementById('loadMoreDispatchBar');
-            const searchWrap = document.getElementById('adminDispSearchWrap');
-            const backBar = document.getElementById('dispMonthBackBar');
-
-            if (backBar) backBar.style.display = 'none';
-
-            if (periodVal.startsWith("FY_")) {
-                fySummaryContainer.style.display = 'block';
-                rawTableContainer.style.display = 'none';
-                if (loadOlderBtn) loadOlderBtn.style.display = 'none';
-                if (searchWrap) searchWrap.style.display = 'none';
-                renderAdminDispatchFySummary(parseInt(periodVal.replace("FY_", ""), 10));
-            } else {
-                fySummaryContainer.style.display = 'none';
-                rawTableContainer.style.display = 'block';
-                if (searchWrap) searchWrap.style.display = 'flex';
-                filterAdminDispatchTable();
-            }
-        }
-
-        function renderAdminDispatchFySummary(startYear) {
-            const selectedDepot = document.getElementById('dispatchDepotFilter').value.toUpperCase();
-            const fyStart = new Date(startYear, 3, 1);
-            const fyEnd = new Date(startYear + 1, 2, 31, 23, 59, 59);
-
-            const monthlyMap = {};
-            fyMonthSequence.forEach(mIndex => {
-                monthlyMap[mIndex] = { count: 0, vTypes: {}, rows: [] };
-            });
-
-            (adminBundle.dispatches || []).forEach(r => {
-                const dCode = (getField(r, 'Depot Code') || '').toUpperCase();
-                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return;
-
-                const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
-                if (d && d >= fyStart && d <= fyEnd) {
-                    const m = d.getMonth();
-                    monthlyMap[m].rows.push(r);
-                    monthlyMap[m].count++;
-                    const vt = getField(r, 'Vehicle Type') || 'Auto';
-                    monthlyMap[m].vTypes[vt] = (monthlyMap[m].vTypes[vt] || 0) + 1;
-                }
-            });
-
-            dispatchFySummaryList = [];
-            let tbodyHtml = '';
-            let totalFyCount = 0;
-
-            fyMonthSequence.forEach(mIndex => {
-                const mData = monthlyMap[mIndex];
-                if (mData.count === 0) return;
-
-                totalFyCount += mData.count;
-                const mLabel = monthNames[mIndex];
-                const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
-
-                let topVType = '-';
-                let maxVCount = 0;
-                Object.keys(mData.vTypes).forEach(vt => {
-                    if (mData.vTypes[vt] > maxVCount) {
-                        maxVCount = mData.vTypes[vt];
-                        topVType = vt;
-                    }
-                });
-
-                dispatchFySummaryList.push({
-                    monthIndex: mIndex,
-                    monthLabel: mLabel,
-                    year: actualYear,
-                    count: mData.count,
-                    topVType: topVType,
-                    rows: mData.rows
-                });
-
-                tbodyHtml += `
-                <tr style="background:#ffffff;">
-                    <td style="font-weight:700; color:#1e293b;">${mLabel} ${actualYear}</td>
-                    <td style="text-align:right; font-weight:800; color:#0369a1;">${mData.count}</td>
-                    <td style="color:#475569; font-weight:600;">${topVType}</td>
-                    <td style="text-align:center;">
-                        <button class="btn-action-ledger" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="viewAdminDispatchMonthDetails(${mIndex})">View</button>
-                    </td>
-                </tr>`;
-            });
-
-            document.getElementById('dispFySummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="4" class="text-center" style="padding:2rem;">No dispatch records found in this Financial Year.</td></tr>`;
-            document.getElementById('dispatchCount').textContent = `${totalFyCount} records (FY Summary)`;
-        }
-
-        function viewAdminDispatchMonthDetails(mIndex) {
-            const mData = dispatchFySummaryList.find(d => d.monthIndex === mIndex);
-            if (!mData) return;
-
-            document.getElementById('dispFySummaryContainer').style.display = 'none';
-            document.getElementById('dispRawTableContainer').style.display = 'block';
-            document.getElementById('dispMonthBackBar').style.display = 'flex';
-            document.getElementById('adminDispSearchWrap').style.display = 'flex';
-            document.getElementById('dispMonthBackTitle').textContent = `📅 Dispatch Records: ${mData.monthLabel} ${mData.year}`;
-
-            renderAdminDispatches(mData.rows);
-        }
-
-        function backToAdminDispatchFySummary() {
-            document.getElementById('dispMonthBackBar').style.display = 'none';
-            handleAdminDispatchFilterChange();
-        }
-
-        function filterAdminDispatchTable() {
-            const selectedDepot = document.getElementById('dispatchDepotFilter').value.toUpperCase();
-            const periodFilter = document.getElementById('dispatchPeriodFilter').value;
-            const query = document.getElementById('adminDispatchSearch').value.trim().toLowerCase();
-            const todayStr = getTodayFormatted().toLowerCase();
-            const loadBtn = document.getElementById('loadMoreDispatchBar');
-
-            if (loadBtn) loadBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
-
-            const filtered = (adminBundle.dispatches || []).filter(d => {
-                const dCode = (getField(d, 'Depot Code') || '').toUpperCase();
-                const dName = (getField(d, 'Depot Name') || '').toLowerCase();
-                const cleanDate = formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date')).toLowerCase();
-
-                if (selectedDepot !== "ALL" && dCode !== selectedDepot) return false;
-                if (query) {
-                    const inv = getField(d, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
-                    const vType = getField(d, 'Vehicle Type').toLowerCase();
-                    const through = getField(d, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
-                    const vNo = getField(d, 'Vehicle No').toLowerCase();
-                    return inv.includes(query) || dName.includes(query) || dCode.toLowerCase().includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query);
-                }
-                if (periodFilter === "TODAY") {
-                    if (cleanDate !== todayStr) return false;
-                }
-                return true;
-            });
-            renderAdminDispatches(filtered);
-        }
-
-        function loadAllAdminDispatches() {
-            document.getElementById('dispatchPeriodFilter').value = "ALL";
-            handleAdminDispatchFilterChange();
-            showToast("All historical records loaded!");
-        }
-
-        function renderAdminDispatches(list) {
-            document.getElementById('dispatchCount').textContent = `${list.length} records`;
-            let html = '';
-            list.slice().reverse().forEach(d => {
-                const invId = getField(d, 'ID', 'Invoice No');
-                let delBtn = `<button class="btn-action-delete" onclick="deleteRow('Invoice Dispatch Report', 0, '${invId}')">🗑️ Delete</button>`;
-                if (globalIsViewOnlyDispatch) delBtn = `<span style="color:var(--text-muted);font-size:0.8rem;">View Only</span>`;
-
-                html += `<tr>
-                    <td>${formatCleanDate(getField(d, 'Invoice Dispatch Date', 'Date'))}</td>
-                    <td style="color:var(--accent-cr); font-weight:700;">#${getField(d, 'Inoice No. Last Digit', 'Invoice No')}</td>
-                    <td>${getField(d, 'Depot Code')}</td>
-                    <td><strong>${getField(d, 'Depot Name')}</strong></td>
-                    <td>${getField(d, 'Vehicle Type')}</td>
-                    <td>${getField(d, 'Dispatch Throuch', 'Dispatch Through')}</td>
-                    <td>${getField(d, 'Vehicle No') || '-'}</td>
-                    <td>${getField(d, 'Due- Excess Matter If Any')}</td>
-                    <td>${delBtn}</td>
-                </tr>`;
-            });
-            document.getElementById('adminDispatchBody').innerHTML = html || `<tr><td colspan="9" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
-        }
-
-        function exportAdminDispatchToCSV() {
-            const list = adminBundle.dispatches || [];
-            if (!list.length) return;
-            let csvContent = "data:text/csv;charset=utf-8,Date,Invoice,Depot Code,Depot Name,Vehicle Type,Through,Due-Excess,Vehicle No\n";
-            list.forEach(r => {
-                csvContent += `"${formatCleanDate(getField(r, 'Invoice Dispatch Date'))}","${getField(r, 'Inoice No. Last Digit', 'Invoice No')}","${getField(r, 'Depot Code')}","${getField(r, 'Depot Name')}","${getField(r, 'Vehicle Type')}","${getField(r, 'Dispatch Throuch')}","${getField(r, 'Due- Excess Matter If Any')}","${getField(r, 'Vehicle No')}"\n`;
-            });
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvContent));
-            link.setAttribute("download", `All_Depots_Dispatches.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function renderAdminMaster(list) {
-            let html = '';
-            list.forEach(a => {
-                const id = getField(a, 'Admin Id');
-                const name = getField(a, 'Admin Name');
-                const mob = getField(a, 'Admin Mob');
-                const login = getField(a, 'Admin Login ID');
-                const f = getField(a, 'Can Access Satff Ledger Entry', 'Can Access Staff Ledger Entry', 'Staff Ledger Entry') || 'Deafult';
-                const g = getField(a, 'Can Access Depot Master', 'Depot Master') || 'Deafult';
-                const h = getField(a, 'Can Access Satff Master', 'Can Access Staff Master', 'Staff Master') || 'Deafult';
-                const iCol = getField(a, 'Can Access Invoice Dispatch Report', 'Dispatch Report') || 'Deafult';
-                const j = getField(a, 'Can Access Admin Master', 'Admin Master') || 'Deafult';
-                const k = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
-                const l = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
-                const m = getField(a, 'Pending Approvals', 'Can Access Pending Approvals') || 'Deafult';
-                const n = getField(a, 'Depot Exp Access') || 'Deafult';
-                const o = getField(a, 'Depot Exp View Only') || 'Deafult';
-
-                let actionBtns = `
-                    <button class="btn-action-edit" onclick="openEditAdmin('${id}')">✏️ Edit</button>
-                    <button class="btn-action-delete" onclick="deleteRow('Admin Master', 0, '${id}')">🗑️ Delete</button>
-                `;
-                if (globalIsViewOnlyLedger) actionBtns = `<span style="color:var(--text-muted);font-size:0.8rem;">View Only</span>`;
-
-                html += `<tr>
-                    <td style="color:#7c3aed; font-weight:700;">${id}</td>
-                    <td><strong>${name}</strong></td>
-                    <td>${mob}</td>
-                    <td>${login}</td>
-                    <td>${f}</td>
-                    <td>${g}</td>
-                    <td>${h}</td>
-                    <td>${iCol}</td>
-                    <td>${j}</td>
-                    <td>${k}</td>
-                    <td>${l}</td>
-                    <td>${m}</td>
-                    <td>${n}</td>
-                    <td>${o}</td>
-                    <td>${actionBtns}</td>
-                </tr>`;
-            });
-            document.getElementById('adminMasterBody').innerHTML = html;
-        }
-
-        function openNewAdminModal() {
-            document.getElementById('adminMasterForm').reset();
-            document.getElementById('admId').readOnly = false;
-            document.getElementById('adminModalTitle').textContent = '🛡️ Add New Admin (All 15 Columns)';
-            document.getElementById('adminMasterModal').style.display = 'block';
-        }
-
-        function openEditAdmin(id) {
-            const a = (adminBundle.admins || []).find(item => (getField(item, 'Admin Id') || '').toUpperCase() === id.toUpperCase());
-            if (!a) return;
-
-            document.getElementById('admId').value = id;
-            document.getElementById('admId').readOnly = true;
-            document.getElementById('admName').value = getField(a, 'Admin Name');
-            document.getElementById('admMobile').value = getField(a, 'Admin Mob');
-            document.getElementById('admLoginId').value = getField(a, 'Admin Login ID');
-            document.getElementById('admPass').value = getField(a, 'Admin Login Password');
-            document.getElementById('admColF').value = getField(a, 'Can Access Satff Ledger Entry', 'Can Access Staff Ledger Entry', 'Staff Ledger Entry') || 'Deafult';
-            document.getElementById('admColG').value = getField(a, 'Can Access Depot Master', 'Depot Master') || 'Deafult';
-            document.getElementById('admColH').value = getField(a, 'Can Access Satff Master', 'Can Access Staff Master', 'Staff Master') || 'Deafult';
-            document.getElementById('admColI').value = getField(a, 'Can Access Invoice Dispatch Report', 'Dispatch Report') || 'Deafult';
-            document.getElementById('admColJ').value = getField(a, 'Can Access Admin Master', 'Admin Master') || 'Deafult';
-            document.getElementById('admColK').value = getField(a, 'View Onlt Staff Ledger', 'View Only Staff Ledger') || 'Deafult';
-            document.getElementById('admColL').value = getField(a, 'View Onlt Invoice Dispatche Report', 'View Only Invoice Dispatch Report') || 'Deafult';
-            document.getElementById('admColM').value = getField(a, 'Pending Approvals', 'Can Access Pending Approvals') || 'Deafult';
-            document.getElementById('admColN').value = getField(a, 'Depot Exp Access') || 'Deafult';
-            document.getElementById('admColO').value = getField(a, 'Depot Exp View Only') || 'Deafult';
-
-            document.getElementById('adminModalTitle').textContent = `✏️ Edit Admin (${id})`;
-            document.getElementById('adminMasterModal').style.display = 'block';
-        }
-        function closeAdminMasterModal() { document.getElementById('adminMasterModal').style.display = 'none'; }
-
-        document.getElementById('adminMasterForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            showBlocker("Saving admin permissions...");
-            const isEdit = document.getElementById('admId').readOnly;
-            const payload = {
-                action: isEdit ? 'editAdminRecord' : 'saveNewAdmin',
-                adminId: document.getElementById('admId').value.trim(),
-                name: document.getElementById('admName').value.trim(),
-                mobile: document.getElementById('admMobile').value.trim(),
-                loginId: document.getElementById('admLoginId').value.trim(),
-                password: document.getElementById('admPass').value.trim(),
-                colF: document.getElementById('admColF').value,
-                colG: document.getElementById('admColG').value,
-                colH: document.getElementById('admColH').value,
-                colI: document.getElementById('admColI').value,
-                colJ: document.getElementById('admColJ').value,
-                colK: document.getElementById('admColK').value,
-                colL: document.getElementById('admColL').value,
-                colM: document.getElementById('admColM').value,
-                colN: document.getElementById('admColN').value,
-                colO: document.getElementById('admColO').value
-            };
-            try {
-                const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
-                const res = await jsonp(`${SCRIPT_URL}?${q}`);
-                showToast(res.message || "Admin saved");
-                closeAdminMasterModal();
-                await loadAdminData();
-            } catch (err) { showToast("Error saving admin"); }
-            finally { hideBlocker(); }
-        });
-
-        function switchAdminTab(tabId, btn) {
-            document.querySelectorAll('.admin-nav-tabs .tab-btn').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-
-            document.getElementById('pendingTab').style.display = (tabId === 'pendingTab') ? 'block' : 'none';
-            document.getElementById('depotTab').style.display = (tabId === 'depotTab') ? 'block' : 'none';
-            document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
-            document.getElementById('ledgerTab').style.display = (tabId === 'ledgerTab') ? 'block' : 'none';
-            document.getElementById('dispatchTab').style.display = (tabId === 'dispatchTab') ? 'block' : 'none';
-            document.getElementById('expensesTab').style.display = (tabId === 'expensesTab') ? 'block' : 'none';
-            document.getElementById('adminMasterTab').style.display = (tabId === 'adminMasterTab') ? 'block' : 'none';
-        }
-
-        window.onload = loadAdminData;
-    </script>
-</body>
-</html>
+                const appRaw = (getField(r, 'Entry Appro

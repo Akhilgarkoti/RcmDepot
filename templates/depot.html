@@ -719,12 +719,12 @@
                     
                     <div class="form-group">
                         <label>Vehicle Number</label>
-                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="vehicleNo" list="vehicleNoList" oninput="handleVehicleInput(this.value)">
+                        <input type="text" id="dispVehicleNo" class="form-control" placeholder="Vehicle No" list="vehicleNoList" oninput="handleVehicleInput(this.value)">
                     </div>
 
                     <div class="form-group-full">
                         <label>Invoice Last 5 Digits (Must be exact 5 digits each)</label>
-                        <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 25655, 25667..."></textarea>
+                        <textarea id="dispInvoiceDigits" class="form-control" required placeholder="Example: 12345, 11111..."></textarea>
                     </div>
 
                     <div class="form-group-full">
@@ -813,7 +813,7 @@
             <div id="depotPendingApprovalsCard" style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.5rem; box-shadow:var(--shadow-subtle);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; border-bottom:1px dashed #fcd34d; padding-bottom:0.4rem;">
                     <h4 style="color:#92400e; font-size:0.92rem; font-weight:700; display:flex; align-items:center; gap:6px;">
-                        ⏳ Pending Approval Requests (Current Depot Only)
+                        ⏳ Staff Pending Approval Requests (Your Depot)
                     </h4>
                     <span id="pendingCountBadge" style="background:#d97706; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:12px;">0 Pending</span>
                 </div>

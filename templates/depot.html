@@ -1817,7 +1817,7 @@
         }
 
         async function deleteStaffLedgerRow(rowId) {
-            if (!confirm("क्या आप वाकई इस Staff Transaction एंट्री को डिलीट करना चाहते हैं?")) return;
+            if (!confirm("Are you sure you want to delete this Staff Transaction entry?")) return;
             showScreenBlocker('Deleting transaction...');
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteStaffTransaction&id=${encodeURIComponent(rowId)}&staffCode=${encodeURIComponent(currentActiveStaffCode)}&depotCode=${encodeURIComponent(depotCode)}`);
@@ -2335,7 +2335,7 @@
         }
 
         async function deleteExpenseEntry(rowId, particularText) {
-            if (!confirm("क्या आप वाकई इस Expense एंट्री को डिलीट करना चाहते हैं?")) return;
+            if (!confirm("क्Are you sure you want to delete this Expense entry?")) return;
             
             showScreenBlocker('Deleting expense entry...');
             try {

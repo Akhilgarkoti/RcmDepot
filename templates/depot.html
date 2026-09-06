@@ -522,6 +522,20 @@
             justify-content: center;
             cursor: wait;
         }
+        /* Ledger Modal ki width badhane ke liye */
+#staffLedgerModal .modal-box {
+    max-width: 1200px !important;
+    width: 96% !important;
+}
+
+/* Edit form ko Ledger ke upar lane ke liye (Foreground) */
+#addTrxModal {
+    z-index: 3200 !important;
+}
+#addTrxModal .modal-box {
+    border: 2px solid #2563eb !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+}
 
         .loader-card {
             position: relative;
@@ -2117,7 +2131,7 @@
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
             document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
-            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" class="text-center" style="padding:2rem;">Reading ledger records from database...</td></tr>`;
+           document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem;"><div class="loader-ring" style="width:34px; height:34px; margin:0 auto 10px auto; border-width:3px;"></div><div style="font-weight:600; color:#64748b; font-size:0.85rem;">Reading ledger records from database...</div></td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {

@@ -511,8 +511,7 @@ table.custom-table td:nth-child(3) {
             }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
-
-        /* Glassmorphic Minimal Loader */
+          /* Glassmorphic Minimal Loader */
         .global-loading-overlay {
             display: none;
             position: fixed;
@@ -520,16 +519,28 @@ table.custom-table td:nth-child(3) {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.35);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.4);
             z-index: 999999;
             align-items: center;
             justify-content: center;
             cursor: wait;
         }
 
+        .global-loading-overlay::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 1;
+        }
+
         .loader-card {
+            position: relative;
+            z-index: 2;
             background: #ffffff;
             padding: 2rem 2.5rem;
             border-radius: var(--radius-md);
@@ -541,6 +552,7 @@ table.custom-table td:nth-child(3) {
             min-width: 290px;
             animation: popIn 0.2s ease-out;
         }
+
 
         .loader-ring {
             width: 44px;

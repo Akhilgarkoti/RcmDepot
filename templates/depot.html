@@ -931,7 +931,7 @@
                     <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" class="form-control" required placeholder="Enter full name"></div>
                     <div class="form-group"><label>Mobile Number</label><input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit mobile"></div>
                     <div class="form-group"><label>Photo (Optional)</label><input type="file" class="form-control" accept="image/*" onchange="compressPhoto(this, 'newStaffPhotoBase64')"><input type="hidden" id="newStaffPhotoBase64"></div>
-                    <button type="submit" id="btnReqStaffSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Send Request to Admin</button>
+                    <button type="submit" id="btnReqStaffSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Create Request</button>
                 </form>
             </div>
         </div>
@@ -1756,7 +1756,7 @@
             const btn = document.getElementById('btnReqStaffSubmit');
             btn.disabled = true;
             btn.textContent = 'Sending Request...';
-            showScreenBlocker('Sending New Staff Request to Admin...');
+            showScreenBlocker('Please Check Approval Section And Approve This');
 
             const payload = {
                 action: 'requestNewStaff',
@@ -1782,7 +1782,7 @@
             finally { 
                 hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'Send Request to Admin'; 
+                btn.textContent = ' Request Send '; 
             }
         });
 

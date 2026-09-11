@@ -1097,7 +1097,7 @@
 
         let loadedDepotExpenses = [];
         let expenseAnnualSummaryData = [];
-        let globalInvoiceFrequencyMap = {}; // Global Map for instant duplicate match
+        let globalInvoiceFrequencyMap = {}; 
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
@@ -1296,8 +1296,9 @@
         async function loadDepotData() {
             showScreenBlocker('Loading Depot Data... Please wait!');
             try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getDepotBundle&depotCode=${encodeURIComponent(depotCode)}`);
-                if (!res || !res.success) throw new Error("Failed to load");
+                // Using single unified request getInitialData for optimal loading speed
+                const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
+                if (!res || !res.success) throw new Error("Failed to load initial data");
 
                 const depot = res.depot || {};
                 depotGlobalInfo = depot;
@@ -1349,8 +1350,12 @@
                 handleDispatchFilterChange();
                 renderStaffTable(loadedStaffList);
 
-                await loadDepotPendingApprovals();
-                await loadDepotExpensesData();
+                // Render pending approvals and expenses directly from the single bulk response payload
+                renderDepotPendingApprovalsUI(res.pendingList || []);
+                loadedDepotExpenses = res.expenses || [];
+                populateExpenseYearDropdown(loadedDepotExpenses);
+                renderAnnualSummaryExpenses();
+
             } catch (err) { 
                 console.error(err); 
                 showToast('Error loading data!');
@@ -1360,52 +1365,46 @@
         }
 
         // --- PENDING APPROVAL SYSTEM (SPECIFIC TO CURRENT DEPOT ONLY) ---
-        async function loadDepotPendingApprovals() {
+        function renderDepotPendingApprovalsUI(pendingList) {
             const tbody = document.getElementById('depotPendingListBody');
             const badge = document.getElementById('pendingCountBadge');
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getDepotPendingApprovals&depotCode=${encodeURIComponent(depotCode)}`);
-                const pendingList = (res && res.pendingList) ? res.pendingList : [];
-                
-                // Strict Filter for current depot only
-                const myPending = pendingList.filter(item => {
-                    const itemDepot = (getField(item, 'depotCode', 'Depot Code') || '').trim();
-                    return itemDepot === '' || itemDepot.toLowerCase() === depotCode.toLowerCase();
-                });
+            
+            // Strict Filter for current depot only
+            const myPending = pendingList.filter(item => {
+                const itemDepot = (getField(item, 'depotCode', 'Depot Code') || '').trim();
+                return itemDepot === '' || itemDepot.toLowerCase() === depotCode.toLowerCase();
+            });
 
-                badge.textContent = `${myPending.length} Pending`;
+            badge.textContent = `${myPending.length} Pending`;
 
-                if (myPending.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#15803d; font-size:0.82rem; font-weight:600;">✨ No pending approval requests for this depot!</td></tr>`;
-                    return;
-                }
-
-                let html = '';
-                myPending.forEach(item => {
-                    const type = item.type || 'Transaction';
-                    const id = item.id || item.rowId || '';
-                    const sName = item.staffName || item.name || '-';
-                    const sCode = item.staffCode || item.empCode || '-';
-                    const details = item.particular || item.details || (type === 'Staff Addition' ? `New Staff Request (${item.mobile || ''})` : '-');
-                    const amt = Number(item.debit || item.credit || 0);
-                    const isDebit = Number(item.debit || 0) > 0;
-                    const amtStr = amt > 0 ? `₹${amt} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
-
-                    html += `<tr>
-                        <td style="font-weight:700; color:${type==='Staff Addition'?'#854d0e':'#0369a1'}; font-size:0.78rem;">${type}</td>
-                        <td style="font-weight:600; font-size:0.8rem;">${sName} <span style="color:#64748b; font-size:0.72rem;">(${sCode})</span></td>
-                        <td style="font-size:0.78rem; max-width:240px; white-space:normal;">${details}</td>
-                        <td style="font-weight:700; text-align:right; font-size:0.8rem; color:${isDebit?'#dc2626':'#16a34a'};">${amtStr}</td>
-                        <td style="text-align:center; white-space:nowrap;">
-                            <button class="btn-tool" style="background:#dcfce7; color:#15803d; border-color:#86efac; font-weight:700; padding:2px 8px; margin-right:3px;" onclick="processApprovalDirect('${id}', '${type}', 'Approved')">✔️ Approve</button>
-                            <button class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; font-weight:700; padding:2px 8px;" onclick="processApprovalDirect('${id}', '${type}', 'Rejected')">✖️ Reject</button>
-                        </td>
-                    </tr>`;
-                });
-                tbody.innerHTML = html;
-            } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#dc2626;">Error checking pending requests.</td></tr>`;
+            if (myPending.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#15803d; font-size:0.82rem; font-weight:600;">✨ No pending approval requests for this depot!</td></tr>`;
+                return;
             }
+
+            let html = '';
+            myPending.forEach(item => {
+                const type = item.type || 'Transaction';
+                const id = item.id || item.rowId || '';
+                const sName = item.staffName || item.name || '-';
+                const sCode = item.staffCode || item.empCode || '-';
+                const details = item.particular || item.details || (type === 'Staff Addition' ? `New Staff Request (${item.mobile || ''})` : '-');
+                const amt = Number(item.debit || item.credit || 0);
+                const isDebit = Number(item.debit || 0) > 0;
+                const amtStr = amt > 0 ? `₹${amt} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
+
+                html += `<tr>
+                    <td style="font-weight:700; color:${type==='Staff Addition'?'#854d0e':'#0369a1'}; font-size:0.78rem;">${type}</td>
+                    <td style="font-weight:600; font-size:0.8rem;">${sName} <span style="color:#64748b; font-size:0.72rem;">(${sCode})</span></td>
+                    <td style="font-size:0.78rem; max-width:240px; white-space:normal;">${details}</td>
+                    <td style="font-weight:700; text-align:right; font-size:0.8rem; color:${isDebit?'#dc2626':'#16a34a'};">${amtStr}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tool" style="background:#dcfce7; color:#15803d; border-color:#86efac; font-weight:700; padding:2px 8px; margin-right:3px;" onclick="processApprovalDirect('${id}', '${type}', 'Approved')">✔️ Approve</button>
+                        <button class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; font-weight:700; padding:2px 8px;" onclick="processApprovalDirect('${id}', '${type}', 'Rejected')">✖️ Reject</button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
         }
 
         async function processApprovalDirect(rowId, type, statusDecision) {
@@ -2298,16 +2297,6 @@
             showToast('Full Detailed Ledger downloaded as Excel (.csv)!');
         }
 
-        // Depot Expenses Functions
-        async function loadDepotExpensesData() {
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getDepotExpenses&depotCode=${encodeURIComponent(depotCode)}`);
-                loadedDepotExpenses = (res && res.expenses) ? res.expenses : [];
-                populateExpenseYearDropdown(loadedDepotExpenses);
-                renderAnnualSummaryExpenses();
-            } catch (e) { console.error("Error loading expenses", e); }
-        }
-
         function openAddExpenseModal() {
             document.getElementById('addExpenseForm').reset();
             document.getElementById('expId').value = ''; 
@@ -2335,7 +2324,7 @@
         }
 
         async function deleteExpenseEntry(rowId, particularText) {
-            if (!confirm("क्Are you sure you want to delete this Expense entry?")) return;
+            if (!confirm("Are you sure you want to delete this Expense entry?")) return;
             
             showScreenBlocker('Deleting expense entry...');
             try {
@@ -2345,7 +2334,7 @@
                 
                 if (res && res.success) {
                     showToast(res.message || 'Deleted successfully!');
-                    await loadDepotExpensesData();
+                    await loadDepotData();
                 } else {
                     showToast((res && res.message) ? res.message : 'Failed to delete.');
                 }
@@ -2419,7 +2408,7 @@
                     closeAddExpenseModal();
                     document.getElementById('addExpenseForm').reset();
                     document.getElementById('expId').value = '';
-                    await loadDepotExpensesData();
+                    await loadDepotData();
                 } else {
                     showToast((res && res.message) ? res.message : 'Failed to save.');
                 }

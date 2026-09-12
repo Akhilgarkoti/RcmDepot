@@ -158,7 +158,7 @@
 
         .main-container { width: 100%; max-width: 1540px; margin: 1.5rem auto; padding: 0 1.25rem; }
 
-        /* Modern Segmented Navigation Tabs & 100% Mobile Working Hamburger Menu */
+        /* Modern Segmented Navigation Tabs */
         .depot-nav-tabs { 
             display: flex; 
             gap: 0.5rem; 
@@ -190,12 +190,12 @@
             font-weight: 700; 
         }
 
-        /* Left-Side Mobile-Friendly CSS Checkbox Dropdown */
+        /* 100% Mobile & Desktop Working Checkbox Hack Menu */
         .menu-dropdown-container {
             position: relative;
             display: inline-block;
         }
-        #mobileMenuCheckbox {
+        #mobileMenuToggle {
             display: none;
         }
         .menu-dots-btn {
@@ -228,13 +228,13 @@
             box-shadow: var(--shadow-float);
             border: 1px solid var(--theme-border);
             border-radius: var(--radius-md);
-            z-index: 1100;
+            z-index: 999999 !important;
             padding: 6px;
         }
         
-        /* जब चेकबॉक्स पर टैप/क्लिक होगा, मेनू अपने आप खुल जाएगा */
-        #mobileMenuCheckbox:checked ~ .dropdown-content {
-            display: block;
+        /* चेकबॉक्स चेक होते ही मेनू ऑटोमैटिक मोबाइल और डेस्कटॉप पर खुल जाएगा */
+        #mobileMenuToggle:checked ~ .dropdown-content {
+            display: block !important;
         }
 
         .dropdown-content .tab-btn {
@@ -282,7 +282,6 @@
             letter-spacing: -0.01em; 
         }
 
-        /* Particular Column Typography */
         table.custom-table td:nth-child(3) {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 0.88rem;
@@ -294,14 +293,12 @@
             white-space: normal;
         }
 
-        /* Opening balance text highlight */
         .row-opening-balance td:nth-child(3) {
             color: #0284c7 !important;
             font-weight: 700 !important;
             letter-spacing: 0.02em;
         }
 
-        /* Modern Crisp Form Styles */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         .form-group-full { grid-column: span 2; }
         .form-group { margin-bottom: 0.2rem; }
@@ -311,7 +308,6 @@
             font-weight: 600; 
             color: var(--text-sub); 
             margin-bottom: 0.35rem; 
-            letter-spacing: 0.01em; 
         }
         
         .form-control { 
@@ -333,7 +329,6 @@
             background: var(--input-readonly); 
             color: var(--text-sub); 
             font-weight: 600; 
-            border-style: solid; 
             border-color: #e2e8f0; 
         }
         textarea.form-control { 
@@ -358,14 +353,9 @@
         }
         .btn-submit-dispatch:hover { 
             background: var(--primary-hover); 
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.35); 
             transform: translateY(-1px); 
         }
-        .btn-submit-dispatch:active { 
-            transform: translateY(0); 
-        }
 
-        /* Toolbars & Controls */
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
@@ -378,9 +368,7 @@
             font-size: 0.82rem; 
             font-weight: 600; 
             outline: none; 
-            transition: border-color 0.15s; 
         }
-        .filter-select-box:focus { border-color: var(--theme-border-focus); }
         
         .search-box-wrap { position: relative; min-width: 240px; max-width: 340px; flex: 1; }
         .search-input { 
@@ -392,9 +380,7 @@
             color: var(--text-dark); 
             font-size: 0.84rem; 
             outline: none; 
-            transition: all 0.15s ease; 
         }
-        .search-input:focus { border-color: var(--theme-border-focus); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
         .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
 
         .btn-tool { 
@@ -404,10 +390,7 @@
             font-size: 0.76rem; 
             cursor: pointer; 
             border: 1px solid var(--theme-border); 
-            transition: all 0.15s ease; 
         }
-        .btn-tool:hover { filter: brightness(0.96); }
-        
         .btn-action-ledger { 
             background: #eff6ff; 
             color: #1d4ed8; 
@@ -417,10 +400,7 @@
             font-weight: 600; 
             cursor: pointer; 
             margin-right: 0.3rem; 
-            transition: all 0.15s ease; 
         }
-        .btn-action-ledger:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
-        
         .btn-action-trx { 
             background: #fefce8; 
             color: #854d0e; 
@@ -429,11 +409,8 @@
             border-radius: var(--radius-sm); 
             font-weight: 600; 
             cursor: pointer; 
-            transition: all 0.15s ease; 
         }
-        .btn-action-trx:hover { background: #eab308; color: #fff; border-color: #eab308; }
 
-        /* Premium Data Tables */
         .table-responsive { 
             width: 100%; 
             max-height: 720px; 
@@ -444,7 +421,6 @@
             border-radius: var(--radius-md); 
             background: #ffffff; 
             box-shadow: var(--shadow-subtle); 
-            -webkit-overflow-scrolling: touch; 
         }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
@@ -458,7 +434,6 @@
             text-transform: uppercase; 
             background: #f8fafc; 
             border-bottom: 1px solid #cbd5e1; 
-            letter-spacing: 0.05em; 
         }
         table.custom-table td { 
             padding: 0.68rem 1rem; 
@@ -471,10 +446,7 @@
         table.custom-table tr:hover { background-color: #f8fafc; }
         
         .row-duplicate { background-color: #fff1f2 !important; }
-        .row-duplicate td { border-bottom-color: #fecdd3 !important; }
-
         .row-opening-balance { background-color: #eff6ff !important; font-weight: 600; }
-        .row-opening-balance td { border-bottom: 1px solid #bfdbfe !important; color: #1d4ed8 !important; }
 
         .load-more-bar { text-align: center; padding-top: 1rem; }
         .btn-load-older { 
@@ -484,21 +456,15 @@
             padding: 0.45rem 1.25rem; 
             border-radius: var(--radius-sm); 
             font-weight: 600; 
-            font-size: 0.82rem; 
             cursor: pointer; 
-            transition: all 0.15s ease; 
         }
-        .btn-load-older:hover { background: #e2e8f0; color: var(--text-dark); }
 
-        /* Modern Modals */
         .modal { 
             display: none; 
             position: fixed; 
             z-index: 2000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
             background: rgba(15, 23, 42, 0.45); 
             overflow-y: auto; 
             padding: 1.2rem; 
@@ -506,150 +472,58 @@
         .modal-box { 
             background: #ffffff; 
             margin: 2rem auto; 
-            width: 95%; 
-            max-width: 520px; 
+            width: 95%; max-width: 520px; 
             border-radius: var(--radius-md); 
             border: 1px solid var(--theme-border); 
             box-shadow: var(--shadow-float); 
             overflow: hidden; 
-            animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
         }
         .modal-box-large { width: 98% !important; max-width: 1350px !important; margin: 1.5rem auto !important; }
         .modal-box-compact { max-width: 940px !important; width: 96% !important; }
         
         .modal-top-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0.9rem 1.4rem; 
-            background: #ffffff; 
-            border-bottom: 1px solid var(--theme-border); 
-            color: var(--text-dark); 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0.9rem 1.4rem; background: #ffffff; border-bottom: 1px solid var(--theme-border); 
         }
         .modal-top-bar span { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); }
-        .modal-close-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--text-muted); 
-            font-size: 1.35rem; 
-            cursor: pointer; 
-            line-height: 1; 
-            padding: 0.2rem; 
-            border-radius: 4px; 
-            transition: color 0.15s; 
-        }
-        .modal-close-btn:hover { color: var(--text-dark); }
+        .modal-close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.35rem; cursor: pointer; }
         .modal-body { padding: 1.4rem; background: #ffffff; }
 
-        @keyframes modalIn {
-            from { transform: scale(0.96) translateY(8px); opacity: 0; }
-            to { transform: scale(1) translateY(0); opacity: 1; }
-        }
-
-        /* Toast Notifications */
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
         .toast-msg { 
-            min-width: 270px; 
-            padding: 0.8rem 1.2rem; 
-            border-radius: var(--radius-sm); 
-            font-size: 0.84rem; 
-            font-weight: 600; 
-            background: #0f172a; 
-            color: #ffffff; 
-            box-shadow: var(--shadow-float); 
-            border-left: 4px solid var(--primary); 
-            animation: popIn 0.2s ease-out; 
+            min-width: 270px; padding: 0.8rem 1.2rem; border-radius: var(--radius-sm); 
+            font-size: 0.84rem; font-weight: 600; background: #0f172a; color: #ffffff; 
+            box-shadow: var(--shadow-float); border-left: 4px solid var(--primary); 
         }
 
-        /* Thermal Print Template */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
             @page { size: 80mm auto; margin: 2mm; }
-            body { background: #fff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
             body * { visibility: hidden !important; }
             #printableReceipt, #printableReceipt * { visibility: visible !important; }
             #printableReceipt { 
                 display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
                 width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; 
-                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; line-height: 1.25 !important; 
+                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; 
             }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        /* Crisp Loader */
         .global-loading-overlay {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.25);
-            z-index: 999999;
-            align-items: center;
-            justify-content: center;
-            cursor: wait;
+            display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.25); z-index: 999999; align-items: center; justify-content: center; cursor: wait;
         }
-
-        .tab-btn { display: inline-block; }
-
-        #staffLedgerModal .modal-box {
-            max-width: 1200px !important;
-            width: 96% !important;
-        }
-
-        #addTrxModal, #editDispatchModal {
-            z-index: 3200 !important;
-        }
-        #addTrxModal .modal-box, #editDispatchModal .modal-box {
-            border: 2px solid #2563eb !important;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
-        }
-
         .loader-card {
-            position: relative;
-            z-index: 2;
-            background: #ffffff;
-            padding: 2rem 2.5rem;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-float);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            min-width: 290px;
-            animation: popIn 0.2s ease-out;
-            border: 1px solid var(--theme-border);
+            background: #ffffff; padding: 2rem 2.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-float);
+            display: flex; flex-direction: column; align-items: center; gap: 1rem; border: 1px solid var(--theme-border);
         }
-
         .loader-ring {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 3.5px solid #f1f5f9;
-            border-top: 3.5px solid var(--primary);
-            border-right: 3.5px solid #60a5fa;
-            animation: spinRing 0.75s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+            width: 44px; height: 44px; border-radius: 50%; border: 3.5px solid #f1f5f9;
+            border-top: 3.5px solid var(--primary); animation: spinRing 0.75s linear infinite;
         }
-
-        .loader-text {
-            color: var(--text-dark);
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: -0.01em;
-            text-align: center;
-        }
-
-        @keyframes spinRing {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes popIn {
-            0% { transform: scale(0.95); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
             .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
@@ -658,20 +532,14 @@
             .depot-details-text { align-items: center; }
             .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
             .comfort-panel { padding: 1rem 0.85rem; }
-            .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
-            .form-group-full { grid-column: span 1; }
             .depot-nav-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
             .depot-nav-tabs::-webkit-scrollbar { display: none; }
             .tab-btn { flex: 0 0 auto; white-space: nowrap; }
-            .table-responsive { max-height: 520px; }
-            .search-box-wrap { min-width: 100%; }
-            .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Modern Clean Loader -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-ring"></div>
@@ -679,7 +547,6 @@
         </div>
     </div>
 
-    <!-- Hidden Raw Print Node for PDF / Browser Print -->
     <div id="printableReceipt">
         <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;">
             <div style="padding: 10px;">
@@ -716,7 +583,6 @@
         </div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -767,11 +633,11 @@
         <div class="depot-nav-tabs">
             <!-- 100% Mobile & Desktop Working Checkbox Hack Menu (Left Side) -->
             <div class="menu-dropdown-container">
-                <input type="checkbox" id="mobileMenuCheckbox">
-                <label for="mobileMenuCheckbox" class="menu-dots-btn" title="More Options">☰</label>
+                <input type="checkbox" id="mobileMenuToggle">
+                <label for="mobileMenuToggle" class="menu-dots-btn" title="More Options">☰</label>
                 <div class="dropdown-content">
-                    <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); document.getElementById('mobileMenuCheckbox').checked = false;">👥 Assigned Staff and Ledger Details</button>
-                    <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); document.getElementById('mobileMenuCheckbox').checked = false;">💰 Depot Expenses</button>
+                    <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); document.getElementById('mobileMenuToggle').checked = false;">👥 Assigned Staff and Ledger Details</button>
+                    <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); document.getElementById('mobileMenuToggle').checked = false;">💰 Depot Expenses</button>
                 </div>
             </div>
 
@@ -1299,7 +1165,6 @@
             setInterval(tick, 1000);
         }
 
-        // मोबाइल और डेस्कटॉप दोनों के लिए 100% वर्किंग Fetch API फंक्शन
         function jsonp(url) {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -3233,34 +3098,11 @@
                 </div>
             `;
             document.getElementById('printableReceipt').innerHTML = slipTemplate;
-        document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
-        document.getElementById('printPreviewModal').style.display = 'block';
-    }
-
-    // 100% Mobile & Desktop Working Menu Handler
-    function initMobileMenu() {
-        const menuBtn = document.querySelector('.menu-dots-btn');
-        const dropdown = document.getElementById('myDropdown');
-
-        if (menuBtn && dropdown) {
-            menuBtn.onclick = function(e) {
-                e.stopPropagation();
-                if (dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                } else {
-                    dropdown.style.display = 'block';
-                }
-            };
-
-            document.onclick = function(e) {
-                if (!e.target.closest('.menu-dropdown-container')) {
-                    dropdown.style.display = 'none';
-                }
-            };
+            document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
-    }
-
-    window.onload = () => { startLiveClock(); loadDepotData(); initMobileMenu(); };
-</script>
+        
+        window.onload = () => { startLiveClock(); loadDepotData(); };
+    </script>
 </body>
 </html>

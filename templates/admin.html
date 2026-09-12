@@ -428,6 +428,7 @@
                             <th>Inv Series</th>
                             <th>Login ID</th>
                             <th>Status</th>
+                            <th>Permissions (D / H / S / E)</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -658,7 +659,7 @@
 
     </div>
 
-    <!-- Modal: Add New Depot (UPDATED WITH GOV AUTO-FILL & TABS PERMISSION) -->
+    <!-- Modal: Add New Depot (UPDATED WITH P, Q, R, S PERMISSIONS) -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>🏬 Add New Depot (Master Setup)</span><button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button></div>
@@ -669,9 +670,9 @@
                         <div class="form-group"><label>B: Depot Name</label><input type="text" id="addDepotName" class="form-control" required placeholder="e.g. Kishanganj"></div>
                         <div class="form-group-full"><label>C: Company Name</label><input type="text" id="addDepotCompanyName" class="form-control" value="RCM Consumer Products Private Limited" required></div>
                         <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="addDepotAddress" class="form-control" required placeholder="Full address"></div>
-                        <div class="form-group"><label>E: Pin Code (Auto-fills F, G, H)</label><input type="text" id="addDepotPinCode" class="form-control" required placeholder="6-digit PIN" oninput="handlePinCodeLookup(this.value, 'add')"></div>
+                        <div class="form-group"><label>E: Pin Code</label><input type="text" id="addDepotPinCode" class="form-control" required></div>
                         <div class="form-group"><label>F: State Name</label><input type="text" id="addDepotStateName" class="form-control" required></div>
-                        <div class="form-group"><label>G: State Code</label><input type="text" id="addDepotStateCode" class="form-control" placeholder="e.g. 10"></div>
+                        <div class="form-group"><label>G: State Code</label><input type="text" id="addDepotStateCode" class="form-control"></div>
                         <div class="form-group"><label>H: District</label><input type="text" id="addDepotDistrict" class="form-control" required></div>
                         <div class="form-group"><label>I: GSTIN</label><input type="text" id="addDepotGstin" class="form-control"></div>
                         <div class="form-group"><label>J: FSSAI</label><input type="text" id="addDepotFssai" class="form-control"></div>
@@ -679,9 +680,9 @@
                         <div class="form-group"><label>L: Depot Login ID</label><input type="text" id="addDepotLoginId" class="form-control" required></div>
                         <div class="form-group"><label>M: Depot Login Password</label><input type="text" id="addDepotPass" class="form-control" value="1020" required></div>
                         <div class="form-group"><label>N: Active Status</label><select id="addDepotStatus" class="form-control"><option value="Active" selected>Active</option><option value="Inactive">Inactive</option></select></div>
-                        <div class="form-group-full"><label>O: Invoice No Series</label><input type="text" id="addDepotInvSeries" class="form-control" required placeholder="e.g. 76287"></div>
+                        <div class="form-group-full"><label>O: Invoice No Series</label><input type="text" id="addDepotInvSeries" class="form-control" required></div>
 
-                        <!-- USER-WISE ACCESS CONTROL PERMISSIONS -->
+                        <!-- NAYE 4 PERMISSION FIELDS (P, Q, R, S) -->
                         <div class="form-group-full" style="border-top:1px dashed #cbd5e1; margin-top:0.5rem; padding-top:0.6rem;">
                             <label style="font-weight:700; color:#0369a1; margin-bottom:0.6rem;">🔒 Portal Tabs Access Permissions</label>
                             <div class="form-grid">
@@ -698,7 +699,7 @@
         </div>
     </div>
 
-    <!-- Modal: Edit Depot (UPDATED WITH GOV AUTO-FILL & TABS PERMISSION) -->
+    <!-- Modal: Edit Depot (UPDATED WITH P, Q, R, S PERMISSIONS) -->
     <div id="editDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>✏️ Edit Depot Record</span><button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button></div>
@@ -709,7 +710,7 @@
                         <div class="form-group"><label>B: Depot Name</label><input type="text" id="editDepotName" class="form-control" required></div>
                         <div class="form-group-full"><label>C: Company Name</label><input type="text" id="editDepotCompanyName" class="form-control" required></div>
                         <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="editDepotAddress" class="form-control"></div>
-                        <div class="form-group"><label>E: Pin Code (Auto-fills F, G, H)</label><input type="text" id="editDepotPinCode" class="form-control" required oninput="handlePinCodeLookup(this.value, 'edit')"></div>
+                        <div class="form-group"><label>E: Pin Code</label><input type="text" id="editDepotPinCode" class="form-control" required></div>
                         <div class="form-group"><label>F: State Name</label><input type="text" id="editDepotStateName" class="form-control" required></div>
                         <div class="form-group"><label>G: State Code</label><input type="text" id="editDepotStateCode" class="form-control"></div>
                         <div class="form-group"><label>H: District</label><input type="text" id="editDepotDistrict" class="form-control" required></div>
@@ -719,9 +720,9 @@
                         <div class="form-group"><label>L: Depot Login ID</label><input type="text" id="editDepotLoginId" class="form-control" required></div>
                         <div class="form-group"><label>M: Password</label><input type="text" id="editDepotPass" class="form-control" required></div>
                         <div class="form-group"><label>N: Active Status</label><select id="editDepotStatus" class="form-control"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
-                        <div class="form-group-full"><label>O: Invoice No Series</label><input type="text" id="editDepotInvSeries" class="form-control" required></div>
+                        <div class="form-group"><label>O: Invoice No Series</label><input type="text" id="editDepotInvSeries" class="form-control" required></div>
 
-                        <!-- USER-WISE ACCESS CONTROL PERMISSIONS -->
+                        <!-- NAYE 4 PERMISSION FIELDS (P, Q, R, S) -->
                         <div class="form-group-full" style="border-top:1px dashed #cbd5e1; margin-top:0.5rem; padding-top:0.6rem;">
                             <label style="font-weight:700; color:#0369a1; margin-bottom:0.6rem;">🔒 Portal Tabs Access Permissions</label>
                             <div class="form-grid">
@@ -892,7 +893,7 @@
         </div>
     </div>
 
-<script>
+    <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
         let adminUser = (sessionStorage.getItem("user") || "").trim();
@@ -917,66 +918,6 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
-
-        // --- OFFICIAL GST STATE CODES MAPPING ---
-        const GST_STATE_CODES = {
-            "JAMMU AND KASHMIR": "01", "HIMACHAL PRADESH": "02", "PUNJAB": "03", "CHANDIGARH": "04",
-            "UTTARAKHAND": "05", "HARYANA": "06", "DELHI": "07", "RAJASTHAN": "08", "UTTAR PRADESH": "09",
-            "BIHAR": "10", "SIKKIM": "11", "ARUNACHAL PRADESH": "12", "NAGALAND": "13", "MANIPUR": "14",
-            "MIZORAM": "15", "TRIPURA": "16", "MEGHALAYA": "17", "ASSAM": "18", "WEST BENGAL": "19",
-            "JHARKHAND": "20", "ODISHA": "21", "CHHATTISGARH": "22", "CHATTISGARH": "22", "MADHYA PRADESH": "23",
-            "GUJARAT": "24", "MAHARASHTRA": "27", "ANDHRA PRADESH": "28", "KARNATAKA": "29", "GOA": "30",
-            "KERALA": "32", "TAMIL NADU": "33", "TELANGANA": "36", "ANDAMAN AND NICOBAR ISLANDS": "35", "LADAKH": "38"
-        };
-
-        // --- GOVERNMENT PINCODE AUTO-FILL FUNCTION (FIXED WITH JSONP) ---
-        function handlePinCodeLookup(pin, prefix) {
-            const cleanPin = String(pin).trim().replace(/[^0-9]/g, '');
-            if (cleanPin.length !== 6) return;
-
-            showToast('🔍 Fetching State & District...');
-
-            const cbName = 'postal_cb_' + Math.round(100000 * Math.random());
-            const script = document.createElement('script');
-            script.src = `https://api.postalpincode.in/pincode/${cleanPin}?callback=${cbName}`;
-
-            window[cbName] = function(data) {
-                try {
-                    if (data && data[0] && data[0].Status === "Success" && data[0].PostOffice && data[0].PostOffice.length > 0) {
-                        const info = data[0].PostOffice[0];
-                        const stateName = (info.State || '').trim();
-                        const district = info.District || '';
-
-                        const stateField = document.getElementById(`${prefix}DepotStateName`);
-                        const stateCodeField = document.getElementById(`${prefix}DepotStateCode`);
-                        const districtField = document.getElementById(`${prefix}DepotDistrict`);
-
-                        if (stateField) stateField.value = stateName;
-                        if (districtField) districtField.value = district;
-
-                        const detectedCode = GST_STATE_CODES[stateName.toUpperCase()] || '';
-                        if (stateCodeField) stateCodeField.value = detectedCode;
-
-                        showToast(`✅ Auto-filled: ${district}, ${stateName} (${detectedCode})`);
-                    } else {
-                        showToast('⚠️ Invalid PIN Code or no data found.');
-                    }
-                } catch (err) {
-                    console.error("Postal API parse error:", err);
-                } finally {
-                    delete window[cbName];
-                    if (script.parentNode) script.remove();
-                }
-            };
-
-            script.onerror = function() {
-                showToast('⚠️ Failed to connect to postal API.');
-                delete window[cbName];
-                if (script.parentNode) script.remove();
-            };
-
-            document.body.appendChild(script);
-        }
 
         function showBlocker(msg) {
             const el = document.getElementById('globalLoadingOverlay');
@@ -2031,12 +1972,12 @@
                     <td style="text-align:right; font-weight:600; color:var(--accent-bal);">${balFormatted}</td>
                     <td style="text-align:center; font-weight:700; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
                     <td style="text-align:center;">
-                        <button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminMonthDetails(${mIndex})">View</button>
+                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminMonthDetails(${mIndex})">View</button>` : '-'}
                     </td>
                 </tr>`;
             });
 
-            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="6" class="text-center" style="padding:2rem;">No expense records found for this depot in the selected FY.</td></tr>`;
+            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
         }
 
         function viewAdminMonthDetails(mIndex) {

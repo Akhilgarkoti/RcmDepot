@@ -304,9 +304,7 @@
             transition: all 0.2s;
         }
 
-        .btn-switch-admin:hover {
-            background: #fee2e2;
-        }
+        .btn-switch-admin:hover { background: #fee2e2; }
 
         .dev-footer {
             margin-top: 1.4rem;
@@ -322,7 +320,6 @@
             font-weight: 800;
         }
 
-        /* Modal Contact */
         .modal {
             display: none;
             position: fixed;
@@ -359,8 +356,7 @@
         .modal-body { padding: 1.4rem; text-align: center; background: #f8fafc; }
         .admin-avatar {
             width: 52px; height: 52px; border-radius: 12px;
-            background: #e0f2fe;
-            border: 1px solid #7dd3fc;
+            background: #e0f2fe; border: 1px solid #7dd3fc;
             display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #0369a1;
             margin: 0 auto 0.75rem auto;
         }
@@ -389,7 +385,6 @@
         .contact-item:last-child { border-bottom: none; }
         .contact-item span.label { color: var(--text-muted); font-weight: 700; width: 60px; }
         .contact-item a { color: var(--primary-light); font-weight: 700; text-decoration: none; word-break: break-all; }
-        .contact-item a:hover { text-decoration: underline; }
 
         .btn-modal-close {
             width: 100%;
@@ -562,35 +557,25 @@
             pwdInput.type = (pwdInput.type === 'password') ? 'text' : 'password';
         }
 
-       function jsonpRequest(url) {
-            return new Promise((resolve, reject) => {
-                const cbName = 'login_cb_' + Math.round(100000 * Math.random());
-                const script = document.createElement('script');
+        // Fetch API आधारित सिक्योर रिक्वेस्ट (मोबाइल क्रोम के लिए 100% वर्किंग)
+        async function jsonpRequest(url) {
+            try {
+                // गूगल स्क्रिप्ट पर फेच रिक्वेस्ट भेजने के लिए
+                const response = await fetch(url, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+                const text = await response.text();
                 
-                // मोबाइल के लिए टाइमआउट समय बढ़ाकर 15 सेकंड कर दिया गया है
-                const timer = setTimeout(() => {
-                    cleanup();
-                    reject(new Error("Network Error / Connection Timeout. Please check your internet connection."));
-                }, 15000);
-
-                function cleanup() {
-                    clearTimeout(timer);
-                    if (window[cbName]) delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
+                // अगर रिस्पांस JSONP फॉर्मेट (callback(...)) में है, तो उसे पार्स करें
+                if (text.includes('(') && text.endsWith(')')) {
+                    const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
+                    return JSON.parse(jsonStr);
                 }
-
-                window[cbName] = function(data) {
-                    cleanup();
-                    resolve(data);
-                };
-
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
-                script.onerror = () => {
-                    cleanup();
-                    reject(new Error("Network Error: Unable to connect to server. Check mobile network."));
-                };
-                document.body.appendChild(script);
-            });
+                return JSON.parse(text);
+            } catch (err) {
+                throw new Error("Network Error: Unable to reach server. Please check mobile internet.");
+            }
         }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {

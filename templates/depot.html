@@ -746,14 +746,16 @@
     </div>
 
     <div class="main-container">
-        <div class="depot-nav-tabs">
+       <div class="depot-nav-tabs">
             <!-- पहले 2 टैब सामने दिखेंगे -->
             <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
 
-            <!-- बाक़ी के 2 टैब 3-डॉट (...) मेनू बटन के अंदर -->
+            <!-- 3-डॉट के साथ 'More' लिखा हुआ मेनू बटन -->
             <div class="menu-dropdown-container">
-                <button class="menu-dots-btn" onclick="toggleMenu()" title="More Options">⋮</button>
+                <button class="menu-dots-btn" onclick="toggleMenu()" title="More Options" style="display: flex; align-items: center; gap: 4px; font-size: 0.84rem; font-weight: 600; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); color: var(--text-dark);">
+                    <span>⋮ More</span>
+                </button>
                 <div id="myDropdown" class="dropdown-content">
                     <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); toggleMenu();">👥 Assigned Staff and Ledger Details</button>
                     <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); toggleMenu();">💰 Depot Expenses</button>

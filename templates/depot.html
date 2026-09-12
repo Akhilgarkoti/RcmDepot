@@ -522,20 +522,21 @@
             justify-content: center;
             cursor: wait;
         }
-        /* Ledger Modal ki width badhane ke liye */
-#staffLedgerModal .modal-box {
-    max-width: 1200px !important;
-    width: 96% !important;
-}
 
-/* Edit form ko Ledger ke upar lane ke liye (Foreground) */
-#addTrxModal {
-    z-index: 3200 !important;
-}
-#addTrxModal .modal-box {
-    border: 2px solid #2563eb !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
-}
+        /* Ledger Modal ki width */
+        #staffLedgerModal .modal-box {
+            max-width: 1200px !important;
+            width: 96% !important;
+        }
+
+        /* Edit form Foreground */
+        #addTrxModal, #editDispatchModal {
+            z-index: 3200 !important;
+        }
+        #addTrxModal .modal-box, #editDispatchModal .modal-box {
+            border: 2px solid #2563eb !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+        }
 
         .loader-card {
             position: relative;
@@ -601,7 +602,7 @@
 </head>
 <body>
 
-    <!-- Modern Clean Loader (WITHOUT BLUR) -->
+    <!-- Modern Clean Loader -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-ring"></div>
@@ -962,7 +963,7 @@
         </div>
     </div>
 
-    <!-- Modal 3: Statement View Modal (EXPANDED WIDTH) -->
+    <!-- Modal 3: Statement View Modal -->
     <div id="staffLedgerModal" class="modal">
         <div class="modal-box modal-box-large">
             <div class="modal-top-bar">
@@ -1021,6 +1022,61 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Edit Dispatch Record (NEW) -->
+    <div id="editDispatchModal" class="modal">
+        <div class="modal-box modal-box-compact">
+            <div class="modal-top-bar">
+                <span>✏️ Edit Dispatch Record</span>
+                <button class="modal-close-btn" onclick="closeEditDispatchModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editDispatchForm">
+                    <input type="hidden" id="editDispRowId">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="editDispDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Time</label>
+                            <input type="text" id="editDispTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                            <input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;">
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Type</label>
+                            <select id="editDispVehicleType" class="form-control">
+                                <option value="Auto">Auto</option>
+                                <option value="Pic-Up">Pic-Up</option>
+                                <option value="Toto">Toto</option>
+                                <option value="Bike">Bike</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dispatch Through</label>
+                            <input type="text" id="editDispThrough" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Number</label>
+                            <input type="text" id="editDispVehicleNo" class="form-control">
+                        </div>
+                        <div class="form-group-full">
+                            <label>Due-Excess Matter If Any</label>
+                            <input type="text" id="editDispDueExcess" class="form-control" required>
+                        </div>
+                        <div class="form-group-full">
+                            <label>Remark If Any</label>
+                            <input type="text" id="editDispRemarks" class="form-control">
+                        </div>
+                    </div>
+                    <button type="submit" id="btnUpdateDispatchSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1.2rem;">Update Dispatch Entry</button>
+                </form>
             </div>
         </div>
     </div>
@@ -1293,10 +1349,45 @@
             selectBox.innerHTML = optionsHtml;
         }
 
+        /* --- USER-WISE TAB ACCESS CONTROL LOGIC --- */
+        function applyTabPermissions(depotData) {
+            const checkPerm = (val) => {
+                if (val === undefined || val === null || String(val).trim() === '') return true;
+                const s = String(val).trim().toLowerCase();
+                return s === 'yes' || s === 'true' || s === '1' || s === 'y';
+            };
+
+            const canDispatch = checkPerm(getField(depotData, 'Can_Dispatch', 'can_dispatch'));
+            const canHistory = checkPerm(getField(depotData, 'Can_History', 'can_history'));
+            const canStaff = checkPerm(getField(depotData, 'Can_Staff', 'can_staff'));
+            const canExpenses = checkPerm(getField(depotData, 'Can_Expenses', 'can_expenses'));
+
+            const tabDispatch = document.getElementById('tabBtnDispatch');
+            const tabHistory = document.getElementById('tabBtnRecords');
+            const tabStaff = document.getElementById('tabBtnStaff');
+            const tabExpenses = document.getElementById('tabBtnExpenses');
+
+            if (tabDispatch) tabDispatch.style.display = canDispatch ? 'inline-block' : 'none';
+            if (tabHistory) tabHistory.style.display = canHistory ? 'inline-block' : 'none';
+            if (tabStaff) tabStaff.style.display = canStaff ? 'inline-block' : 'none';
+            if (tabExpenses) tabExpenses.style.display = canExpenses ? 'inline-block' : 'none';
+
+            const tabOrder = [
+                { allowed: canDispatch, id: 'dispatchTab', btn: tabDispatch },
+                { allowed: canHistory, id: 'recordsTab', btn: tabHistory },
+                { allowed: canStaff, id: 'staffTab', btn: tabStaff },
+                { allowed: canExpenses, id: 'expensesTab', btn: tabExpenses }
+            ];
+
+            const firstAllowed = tabOrder.find(t => t.allowed);
+            if (firstAllowed) {
+                switchTab(firstAllowed.id, firstAllowed.btn);
+            }
+        }
+
         async function loadDepotData() {
             showScreenBlocker('Loading Depot Data... Please wait!');
             try {
-                // Using single unified request getInitialData for optimal loading speed
                 const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load initial data");
 
@@ -1306,7 +1397,6 @@
                 loadedStaffList = res.staffMembers || [];
                 globalNextEmpCode = res.nextEmpCode || "EMP012";
 
-                // Map global invoice frequencies across all historical records
                 globalInvoiceFrequencyMap = {};
                 loadedDispatches.forEach(r => {
                     const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
@@ -1350,11 +1440,13 @@
                 handleDispatchFilterChange();
                 renderStaffTable(loadedStaffList);
 
-                // Render pending approvals and expenses directly from the single bulk response payload
                 renderDepotPendingApprovalsUI(res.pendingList || []);
                 loadedDepotExpenses = res.expenses || [];
                 populateExpenseYearDropdown(loadedDepotExpenses);
                 renderAnnualSummaryExpenses();
+
+                // Apply permissions to tabs
+                applyTabPermissions(depot);
 
             } catch (err) { 
                 console.error(err); 
@@ -1364,12 +1456,11 @@
             }
         }
 
-        // --- PENDING APPROVAL SYSTEM (SPECIFIC TO CURRENT DEPOT ONLY) ---
+        // --- PENDING APPROVAL SYSTEM ---
         function renderDepotPendingApprovalsUI(pendingList) {
             const tbody = document.getElementById('depotPendingListBody');
             const badge = document.getElementById('pendingCountBadge');
             
-            // Strict Filter for current depot only
             const myPending = pendingList.filter(item => {
                 const itemDepot = (getField(item, 'depotCode', 'Depot Code') || '').trim();
                 return itemDepot === '' || itemDepot.toLowerCase() === depotCode.toLowerCase();
@@ -1546,7 +1637,7 @@
             handleDispatchFilterChange();
         }
 
-        // GLOBAL DUPLICATE DETECTION PRESERVED
+        // --- RENDER DISPATCH TABLE (WITH EDIT BUTTON) ---
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
@@ -1556,7 +1647,6 @@
 
             list.slice().reverse().forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
-                // Check across the whole history map
                 const isGlobalDuplicate = (globalInvoiceFrequencyMap[inv] || 0) > 1;
                 if (isGlobalDuplicate) duplicates.push(r);
                 else regulars.push(r);
@@ -1569,7 +1659,7 @@
             sortedList.forEach(r => {
                 const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
                 const isDup = (globalInvoiceFrequencyMap[inv] || 0) > 1;
-                const rId = getField(r, 'ID');
+                const rId = getField(r, 'ID', 'id');
                 const vType = getField(r, 'Vehicle Type');
                 const through = getField(r, 'Dispatch Throuch', 'Dispatch Through');
                 const dueExcess = getField(r, 'Due- Excess Matter If Any');
@@ -1587,13 +1677,85 @@
                     <td>${vNo}</td>
                     <td>${time}</td>
                     <td>${remark}</td>
-                    <td><button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" onclick="deleteDispatchRow('${rId}')">🗑️</button></td>
+                    <td style="white-space:nowrap; text-align:center;">
+                        <button class="btn-tool" style="background:#e0f2fe;color:#0369a1;border-color:#7dd3fc;margin-right:4px;" title="Edit" onclick="openEditDispatchModal('${rId}')">✏️</button>
+                        <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" title="Delete" onclick="deleteDispatchRow('${rId}')">🗑️</button>
+                    </td>
                 </tr>`;
             });
             tbody.innerHTML = html || `<tr><td colspan="10" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
             document.getElementById('selectAllCheckbox').checked = false;
             updateSelectedDispatchCount();
         }
+
+        /* --- EDIT DISPATCH LOGIC --- */
+        function openEditDispatchModal(rowId) {
+            const record = loadedDispatches.find(r => String(getField(r, 'ID', 'id')) === String(rowId));
+            if (!record) {
+                showToast('Record not found!');
+                return;
+            }
+
+            document.getElementById('editDispRowId').value = rowId;
+            
+            const rawDate = getField(record, 'Invoice Dispatch Date', 'Date');
+            const dObj = parseDateObj(rawDate);
+            const isoDate = dObj ? `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}` : '';
+            
+            document.getElementById('editDispDate').value = isoDate;
+            document.getElementById('editDispTime').value = getField(record, 'Entry Time', 'Time') || '';
+            document.getElementById('editDispInvoice').value = getField(record, 'Inoice No. Last Digit', 'Invoice No') || '';
+            document.getElementById('editDispVehicleType').value = getField(record, 'Vehicle Type') || 'Auto';
+            document.getElementById('editDispThrough').value = getField(record, 'Dispatch Throuch', 'Dispatch Through') || '';
+            document.getElementById('editDispVehicleNo').value = getField(record, 'Vehicle No') || '';
+            document.getElementById('editDispDueExcess').value = getField(record, 'Due- Excess Matter If Any') || 'No Due/excess';
+            document.getElementById('editDispRemarks').value = getField(record, 'Remark If Any') || '-';
+
+            document.getElementById('editDispatchModal').style.display = 'block';
+        }
+
+        function closeEditDispatchModal() {
+            document.getElementById('editDispatchModal').style.display = 'none';
+            document.getElementById('editDispatchForm').reset();
+        }
+
+        document.getElementById('editDispatchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnUpdateDispatchSubmit');
+            btn.disabled = true;
+            showScreenBlocker('Updating Dispatch Record...');
+
+            const payload = {
+                action: 'editInvoiceDispatch',
+                id: document.getElementById('editDispRowId').value,
+                depotCode: depotCode,
+                invoiceDate: document.getElementById('editDispDate').value,
+                entryTime: document.getElementById('editDispTime').value,
+                invoiceNo: document.getElementById('editDispInvoice').value,
+                vehicleType: document.getElementById('editDispVehicleType').value,
+                dispatchThrough: document.getElementById('editDispThrough').value,
+                vehicleNo: document.getElementById('editDispVehicleNo').value,
+                dueExcess: document.getElementById('editDispDueExcess').value,
+                remarks: document.getElementById('editDispRemarks').value
+            };
+
+            try {
+                const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
+                const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
+                if (res && res.success) {
+                    showToast(res.message || 'Dispatch updated successfully!');
+                    closeEditDispatchModal();
+                    await loadDepotData();
+                } else {
+                    showToast(res.message || 'Failed to update dispatch.');
+                }
+            } catch (err) {
+                showToast('Error updating dispatch record.');
+            } finally {
+                hideScreenBlocker();
+                btn.disabled = false;
+            }
+        });
 
         function toggleSelectAllDispatches(masterCb) {
             const checkboxes = document.querySelectorAll('.dispatch-row-checkbox');
@@ -1798,7 +1960,6 @@
         }
         function closeAddTrxModal() { document.getElementById('addTrxModal').style.display = 'none'; }
 
-        // EDIT & DELETE FOR STAFF TRANSACTION ROWS
         function openEditTrxModal(rowId, sCode, sName, dateStr, part, mode, dr, cr) {
             document.getElementById('requestTrxForm').reset();
             document.getElementById('trxRowId').value = rowId;
@@ -2034,7 +2195,6 @@
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
         }
 
-        // VIEW MONTH DETAILS WITH EDIT & DELETE BUTTONS
         function viewMonthDetails(mIndex) {
             const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
             if (!mData) return;
@@ -2130,7 +2290,7 @@
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
             document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
-           document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem;"><div class="loader-ring" style="width:34px; height:34px; margin:0 auto 10px auto; border-width:3px;"></div><div style="font-weight:600; color:#64748b; font-size:0.85rem;">Reading ledger records from database...</div></td></tr>`;
+            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem;"><div class="loader-ring" style="width:34px; height:34px; margin:0 auto 10px auto; border-width:3px;"></div><div style="font-weight:600; color:#64748b; font-size:0.85rem;">Reading ledger records from database...</div></td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {

@@ -158,7 +158,7 @@
 
         .main-container { width: 100%; max-width: 1540px; margin: 1.5rem auto; padding: 0 1.25rem; }
 
-        /* Modern Segmented Navigation Tabs & 3-Dot Menu */
+        /* Modern Segmented Navigation Tabs & 100% Mobile Working Hamburger Menu */
         .depot-nav-tabs { 
             display: flex; 
             gap: 0.5rem; 
@@ -190,54 +190,72 @@
             font-weight: 700; 
         }
 
-        /* 3-Dot Dropdown Menu Styling */
+        /* Left-Side Mobile-Friendly CSS Checkbox Dropdown */
         .menu-dropdown-container {
             position: relative;
             display: inline-block;
-            margin-left: auto;
+        }
+        #mobileMenuCheckbox {
+            display: none;
         }
         .menu-dots-btn {
-            background: transparent;
-            border: none;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
             color: var(--text-dark);
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: bold;
-            padding: 0.35rem 0.85rem;
+            padding: 0.45rem 0.85rem;
             border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-subtle);
+            user-select: none;
         }
         .menu-dots-btn:hover {
-            background: #cbd5e1;
+            background: #f8fafc;
+            border-color: var(--primary);
+            color: var(--primary);
         }
         .dropdown-content {
             display: none;
             position: absolute;
-            right: 0;
-            top: 110%;
+            left: 0;
+            top: calc(100% + 6px);
             background-color: #ffffff;
-            min-width: 240px;
+            min-width: 270px;
             box-shadow: var(--shadow-float);
             border: 1px solid var(--theme-border);
-            border-radius: var(--radius-sm);
-            z-index: 100;
-            padding: 4px;
+            border-radius: var(--radius-md);
+            z-index: 1100;
+            padding: 6px;
         }
+        
+        /* जब चेकबॉक्स पर टैप/क्लिक होगा, मेनू अपने आप खुल जाएगा */
+        #mobileMenuCheckbox:checked ~ .dropdown-content {
+            display: block;
+        }
+
         .dropdown-content .tab-btn {
             display: block;
             width: 100%;
             text-align: left;
-            padding: 0.65rem 1rem;
-            border-radius: 4px;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
             margin-bottom: 2px;
+            font-size: 0.84rem;
+            color: var(--text-sub);
         }
         .dropdown-content .tab-btn:hover {
-            background: #f1f5f9;
+            background: var(--primary-light);
             color: var(--primary);
+            font-weight: 600;
         }
         .dropdown-content .tab-btn.active {
             background: var(--primary-light);
             color: var(--primary);
+            font-weight: 700;
         }
 
         /* Modern Surface Panels */
@@ -747,18 +765,19 @@
 
     <div class="main-container">
         <div class="depot-nav-tabs">
+            <!-- 100% Mobile & Desktop Working Checkbox Hack Menu (Left Side) -->
+            <div class="menu-dropdown-container">
+                <input type="checkbox" id="mobileMenuCheckbox">
+                <label for="mobileMenuCheckbox" class="menu-dots-btn" title="More Options">☰</label>
+                <div class="dropdown-content">
+                    <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); document.getElementById('mobileMenuCheckbox').checked = false;">👥 Assigned Staff and Ledger Details</button>
+                    <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); document.getElementById('mobileMenuCheckbox').checked = false;">💰 Depot Expenses</button>
+                </div>
+            </div>
+
             <!-- पहले 2 टैब सामने दिखेंगे -->
             <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
-
-            <!-- बाक़ी के 2 टैब 3-डॉट (...) मेनू बटन के अंदर -->
-            <div class="menu-dropdown-container">
-                <button class="menu-dots-btn" onclick="toggleMenu()" title="More Options">⋮</button>
-                <div id="myDropdown" class="dropdown-content">
-                    <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); toggleMenu();">👥 Assigned Staff and Ledger Details</button>
-                    <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); toggleMenu();">💰 Depot Expenses</button>
-                </div>
-            </div>
         </div>
 
         <!-- 1. Dispatch Entry Form -->
@@ -869,7 +888,6 @@
         <!-- 3. Staff & Ledger Tab -->
         <div id="staffTab" class="comfort-panel" style="display:none; max-width: 960px; margin: 0 auto 1.5rem auto;">
             
-            <!-- Specific Depot Pending Requests Card -->
             <div id="depotPendingApprovalsCard" style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.5rem; box-shadow:var(--shadow-subtle);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; border-bottom:1px dashed #fcd34d; padding-bottom:0.4rem;">
                     <h4 style="color:#92400e; font-size:0.92rem; font-weight:700; display:flex; align-items:center; gap:6px;">
@@ -1092,19 +1110,45 @@
                 <form id="editDispatchForm">
                     <input type="hidden" id="editDispRowId">
                     <div class="form-grid">
-                        <div class="form-group"><label>Date</label><input type="date" id="editDispDate" class="form-control" required></div>
-                        <div class="form-group"><label>Time</label><input type="text" id="editDispTime" class="form-control" required></div>
-                        <div class="form-group"><label>Invoice Number</label><input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;"></div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="editDispDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Time</label>
+                            <input type="text" id="editDispTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                            <input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;">
+                        </div>
                         <div class="form-group">
                             <label>Vehicle Type</label>
                             <select id="editDispVehicleType" class="form-control">
-                                <option value="Auto">Auto</option><option value="Self">Self</option><option value="Car">Car</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option>
+                                <option value="Auto">Auto</option>
+                                <option value="Self">Self</option>
+                                <option value="Car">Car</option>
+                                <option value="Pic-Up">Pic-Up</option>
+                                <option value="Toto">Toto</option>
+                                <option value="Bike">Bike</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>Dispatch Through</label><input type="text" id="editDispThrough" class="form-control" required></div>
-                        <div class="form-group"><label>Vehicle Number</label><input type="text" id="editDispVehicleNo" class="form-control"></div>
-                        <div class="form-group-full"><label>Due-Excess Matter If Any</label><input type="text" id="editDispDueExcess" class="form-control" required></div>
-                        <div class="form-group-full"><label>Remark If Any</label><input type="text" id="editDispRemarks" class="form-control"></div>
+                        <div class="form-group">
+                            <label>Dispatch Through</label>
+                            <input type="text" id="editDispThrough" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Number</label>
+                            <input type="text" id="editDispVehicleNo" class="form-control">
+                        </div>
+                        <div class="form-group-full">
+                            <label>Due-Excess Matter If Any</label>
+                            <input type="text" id="editDispDueExcess" class="form-control" required>
+                        </div>
+                        <div class="form-group-full">
+                            <label>Remark If Any</label>
+                            <input type="text" id="editDispRemarks" class="form-control">
+                        </div>
                     </div>
                     <button type="submit" id="btnUpdateDispatchSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1.2rem;">Update Dispatch Entry</button>
                 </form>
@@ -1187,28 +1231,6 @@
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
-        /* 3-Dot Dropdown Menu Toggle Script */
-        function toggleMenu() {
-            const dropdown = document.getElementById("myDropdown");
-            if (dropdown.style.display === "block") {
-                dropdown.style.display = "none";
-            } else {
-                dropdown.style.display = "block";
-            }
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.matches('.menu-dots-btn')) {
-                const dropdowns = document.getElementsByClassName("dropdown-content");
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.style.display === "block") {
-                        openDropdown.style.display = "none";
-                    }
-                }
-            }
-        }
-
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
             if (overlay) {
@@ -1277,15 +1299,27 @@
             setInterval(tick, 1000);
         }
 
+        // मोबाइल और डेस्कटॉप दोनों के लिए 100% वर्किंग Fetch API फंक्शन
         function jsonp(url) {
-            return new Promise((resolve, reject) => {
-                const cbName = 'depot_cb_' + Math.round(100000 * Math.random());
-                const script = document.createElement('script');
-                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 18000);
-                function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
-                window[cbName] = function(data) { cleanup(); resolve(data); };
-                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
-                document.body.appendChild(script);
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const cleanUrl = url.replace(/&callback=[^&]*/, '');
+                    const response = await fetch(cleanUrl, {
+                        method: 'GET',
+                        redirect: 'follow'
+                    });
+                    const text = await response.text();
+                    
+                    if (text.includes('(') && text.endsWith(')')) {
+                        const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
+                        resolve(JSON.parse(jsonStr));
+                    } else {
+                        resolve(JSON.parse(text));
+                    }
+                } catch (err) {
+                    console.error("Fetch Error:", err);
+                    reject(err);
+                }
             });
         }
 
@@ -3199,11 +3233,34 @@
                 </div>
             `;
             document.getElementById('printableReceipt').innerHTML = slipTemplate;
-            document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
-            document.getElementById('printPreviewModal').style.display = 'block';
+        document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+        document.getElementById('printPreviewModal').style.display = 'block';
+    }
+
+    // 100% Mobile & Desktop Working Menu Handler
+    function initMobileMenu() {
+        const menuBtn = document.querySelector('.menu-dots-btn');
+        const dropdown = document.getElementById('myDropdown');
+
+        if (menuBtn && dropdown) {
+            menuBtn.onclick = function(e) {
+                e.stopPropagation();
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                } else {
+                    dropdown.style.display = 'block';
+                }
+            };
+
+            document.onclick = function(e) {
+                if (!e.target.closest('.menu-dropdown-container')) {
+                    dropdown.style.display = 'none';
+                }
+            };
         }
-        
-        window.onload = () => { startLiveClock(); loadDepotData(); };
-    </script>
+    }
+
+    window.onload = () => { startLiveClock(); loadDepotData(); initMobileMenu(); };
+</script>
 </body>
 </html>

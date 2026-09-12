@@ -158,7 +158,7 @@
 
         .main-container { width: 100%; max-width: 1540px; margin: 1.5rem auto; padding: 0 1.25rem; }
 
-        /* Modern Segmented Navigation Tabs */
+        /* Modern Segmented Navigation Tabs & 3-Dot Menu */
         .depot-nav-tabs { 
             display: flex; 
             gap: 0.5rem; 
@@ -190,72 +190,54 @@
             font-weight: 700; 
         }
 
-        /* 100% Mobile & Desktop Working Checkbox Hack Menu */
+        /* 3-Dot Dropdown Menu Styling */
         .menu-dropdown-container {
             position: relative;
             display: inline-block;
-        }
-        #mobileMenuToggle {
-            display: none;
+            margin-left: auto;
         }
         .menu-dots-btn {
-            background: #ffffff;
-            border: 1px solid #cbd5e1;
+            background: transparent;
+            border: none;
             color: var(--text-dark);
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: bold;
-            padding: 0.45rem 0.85rem;
+            padding: 0.35rem 0.85rem;
             border-radius: var(--radius-sm);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow-subtle);
-            user-select: none;
+            transition: background 0.2s;
         }
         .menu-dots-btn:hover {
-            background: #f8fafc;
-            border-color: var(--primary);
-            color: var(--primary);
+            background: #cbd5e1;
         }
         .dropdown-content {
             display: none;
             position: absolute;
-            left: 0;
-            top: calc(100% + 6px);
+            right: 0;
+            top: 110%;
             background-color: #ffffff;
-            min-width: 270px;
+            min-width: 240px;
             box-shadow: var(--shadow-float);
             border: 1px solid var(--theme-border);
-            border-radius: var(--radius-md);
-            z-index: 999999 !important;
-            padding: 6px;
+            border-radius: var(--radius-sm);
+            z-index: 100;
+            padding: 4px;
         }
-        
-        /* चेकबॉक्स चेक होते ही मेनू ऑटोमैटिक मोबाइल और डेस्कटॉप पर खुल जाएगा */
-        #mobileMenuToggle:checked ~ .dropdown-content {
-            display: block !important;
-        }
-
         .dropdown-content .tab-btn {
             display: block;
             width: 100%;
             text-align: left;
-            padding: 0.7rem 1rem;
-            border-radius: 6px;
+            padding: 0.65rem 1rem;
+            border-radius: 4px;
             margin-bottom: 2px;
-            font-size: 0.84rem;
-            color: var(--text-sub);
         }
         .dropdown-content .tab-btn:hover {
-            background: var(--primary-light);
+            background: #f1f5f9;
             color: var(--primary);
-            font-weight: 600;
         }
         .dropdown-content .tab-btn.active {
             background: var(--primary-light);
             color: var(--primary);
-            font-weight: 700;
         }
 
         /* Modern Surface Panels */
@@ -282,6 +264,7 @@
             letter-spacing: -0.01em; 
         }
 
+        /* Particular Column Typography */
         table.custom-table td:nth-child(3) {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 0.88rem;
@@ -293,12 +276,14 @@
             white-space: normal;
         }
 
+        /* Opening balance text highlight */
         .row-opening-balance td:nth-child(3) {
             color: #0284c7 !important;
             font-weight: 700 !important;
             letter-spacing: 0.02em;
         }
 
+        /* Modern Crisp Form Styles */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         .form-group-full { grid-column: span 2; }
         .form-group { margin-bottom: 0.2rem; }
@@ -308,6 +293,7 @@
             font-weight: 600; 
             color: var(--text-sub); 
             margin-bottom: 0.35rem; 
+            letter-spacing: 0.01em; 
         }
         
         .form-control { 
@@ -329,6 +315,7 @@
             background: var(--input-readonly); 
             color: var(--text-sub); 
             font-weight: 600; 
+            border-style: solid; 
             border-color: #e2e8f0; 
         }
         textarea.form-control { 
@@ -353,9 +340,14 @@
         }
         .btn-submit-dispatch:hover { 
             background: var(--primary-hover); 
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.35); 
             transform: translateY(-1px); 
         }
+        .btn-submit-dispatch:active { 
+            transform: translateY(0); 
+        }
 
+        /* Toolbars & Controls */
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
@@ -368,7 +360,9 @@
             font-size: 0.82rem; 
             font-weight: 600; 
             outline: none; 
+            transition: border-color 0.15s; 
         }
+        .filter-select-box:focus { border-color: var(--theme-border-focus); }
         
         .search-box-wrap { position: relative; min-width: 240px; max-width: 340px; flex: 1; }
         .search-input { 
@@ -380,7 +374,9 @@
             color: var(--text-dark); 
             font-size: 0.84rem; 
             outline: none; 
+            transition: all 0.15s ease; 
         }
+        .search-input:focus { border-color: var(--theme-border-focus); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
         .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
 
         .btn-tool { 
@@ -390,7 +386,10 @@
             font-size: 0.76rem; 
             cursor: pointer; 
             border: 1px solid var(--theme-border); 
+            transition: all 0.15s ease; 
         }
+        .btn-tool:hover { filter: brightness(0.96); }
+        
         .btn-action-ledger { 
             background: #eff6ff; 
             color: #1d4ed8; 
@@ -400,7 +399,10 @@
             font-weight: 600; 
             cursor: pointer; 
             margin-right: 0.3rem; 
+            transition: all 0.15s ease; 
         }
+        .btn-action-ledger:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
+        
         .btn-action-trx { 
             background: #fefce8; 
             color: #854d0e; 
@@ -409,8 +411,11 @@
             border-radius: var(--radius-sm); 
             font-weight: 600; 
             cursor: pointer; 
+            transition: all 0.15s ease; 
         }
+        .btn-action-trx:hover { background: #eab308; color: #fff; border-color: #eab308; }
 
+        /* Premium Data Tables */
         .table-responsive { 
             width: 100%; 
             max-height: 720px; 
@@ -421,6 +426,7 @@
             border-radius: var(--radius-md); 
             background: #ffffff; 
             box-shadow: var(--shadow-subtle); 
+            -webkit-overflow-scrolling: touch; 
         }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
@@ -434,6 +440,7 @@
             text-transform: uppercase; 
             background: #f8fafc; 
             border-bottom: 1px solid #cbd5e1; 
+            letter-spacing: 0.05em; 
         }
         table.custom-table td { 
             padding: 0.68rem 1rem; 
@@ -446,7 +453,10 @@
         table.custom-table tr:hover { background-color: #f8fafc; }
         
         .row-duplicate { background-color: #fff1f2 !important; }
+        .row-duplicate td { border-bottom-color: #fecdd3 !important; }
+
         .row-opening-balance { background-color: #eff6ff !important; font-weight: 600; }
+        .row-opening-balance td { border-bottom: 1px solid #bfdbfe !important; color: #1d4ed8 !important; }
 
         .load-more-bar { text-align: center; padding-top: 1rem; }
         .btn-load-older { 
@@ -456,15 +466,21 @@
             padding: 0.45rem 1.25rem; 
             border-radius: var(--radius-sm); 
             font-weight: 600; 
+            font-size: 0.82rem; 
             cursor: pointer; 
+            transition: all 0.15s ease; 
         }
+        .btn-load-older:hover { background: #e2e8f0; color: var(--text-dark); }
 
+        /* Modern Modals */
         .modal { 
             display: none; 
             position: fixed; 
             z-index: 2000; 
-            left: 0; top: 0; 
-            width: 100%; height: 100%; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
             background: rgba(15, 23, 42, 0.45); 
             overflow-y: auto; 
             padding: 1.2rem; 
@@ -472,58 +488,150 @@
         .modal-box { 
             background: #ffffff; 
             margin: 2rem auto; 
-            width: 95%; max-width: 520px; 
+            width: 95%; 
+            max-width: 520px; 
             border-radius: var(--radius-md); 
             border: 1px solid var(--theme-border); 
             box-shadow: var(--shadow-float); 
             overflow: hidden; 
+            animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
         }
         .modal-box-large { width: 98% !important; max-width: 1350px !important; margin: 1.5rem auto !important; }
         .modal-box-compact { max-width: 940px !important; width: 96% !important; }
         
         .modal-top-bar { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 0.9rem 1.4rem; background: #ffffff; border-bottom: 1px solid var(--theme-border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0.9rem 1.4rem; 
+            background: #ffffff; 
+            border-bottom: 1px solid var(--theme-border); 
+            color: var(--text-dark); 
         }
         .modal-top-bar span { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); }
-        .modal-close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.35rem; cursor: pointer; }
+        .modal-close-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            font-size: 1.35rem; 
+            cursor: pointer; 
+            line-height: 1; 
+            padding: 0.2rem; 
+            border-radius: 4px; 
+            transition: color 0.15s; 
+        }
+        .modal-close-btn:hover { color: var(--text-dark); }
         .modal-body { padding: 1.4rem; background: #ffffff; }
 
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
-        .toast-msg { 
-            min-width: 270px; padding: 0.8rem 1.2rem; border-radius: var(--radius-sm); 
-            font-size: 0.84rem; font-weight: 600; background: #0f172a; color: #ffffff; 
-            box-shadow: var(--shadow-float); border-left: 4px solid var(--primary); 
+        @keyframes modalIn {
+            from { transform: scale(0.96) translateY(8px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
+        /* Toast Notifications */
+        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
+        .toast-msg { 
+            min-width: 270px; 
+            padding: 0.8rem 1.2rem; 
+            border-radius: var(--radius-sm); 
+            font-size: 0.84rem; 
+            font-weight: 600; 
+            background: #0f172a; 
+            color: #ffffff; 
+            box-shadow: var(--shadow-float); 
+            border-left: 4px solid var(--primary); 
+            animation: popIn 0.2s ease-out; 
+        }
+
+        /* Thermal Print Template */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
             @page { size: 80mm auto; margin: 2mm; }
-            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             body * { visibility: hidden !important; }
             #printableReceipt, #printableReceipt * { visibility: visible !important; }
             #printableReceipt { 
                 display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
                 width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; 
-                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; 
+                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; line-height: 1.25 !important; 
             }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
+        /* Crisp Loader */
         .global-loading-overlay {
-            display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.25); z-index: 999999; align-items: center; justify-content: center; cursor: wait;
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.25);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            cursor: wait;
         }
+
+        .tab-btn { display: inline-block; }
+
+        #staffLedgerModal .modal-box {
+            max-width: 1200px !important;
+            width: 96% !important;
+        }
+
+        #addTrxModal, #editDispatchModal {
+            z-index: 3200 !important;
+        }
+        #addTrxModal .modal-box, #editDispatchModal .modal-box {
+            border: 2px solid #2563eb !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4) !important;
+        }
+
         .loader-card {
-            background: #ffffff; padding: 2rem 2.5rem; border-radius: var(--radius-md); box-shadow: var(--shadow-float);
-            display: flex; flex-direction: column; align-items: center; gap: 1rem; border: 1px solid var(--theme-border);
+            position: relative;
+            z-index: 2;
+            background: #ffffff;
+            padding: 2rem 2.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-float);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            min-width: 290px;
+            animation: popIn 0.2s ease-out;
+            border: 1px solid var(--theme-border);
         }
+
         .loader-ring {
-            width: 44px; height: 44px; border-radius: 50%; border: 3.5px solid #f1f5f9;
-            border-top: 3.5px solid var(--primary); animation: spinRing 0.75s linear infinite;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 3.5px solid #f1f5f9;
+            border-top: 3.5px solid var(--primary);
+            border-right: 3.5px solid #60a5fa;
+            animation: spinRing 0.75s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
         }
-        @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .loader-text {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
 
         @media (max-width: 768px) {
             .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
@@ -532,14 +640,20 @@
             .depot-details-text { align-items: center; }
             .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
             .comfort-panel { padding: 1rem 0.85rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+            .form-group-full { grid-column: span 1; }
             .depot-nav-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
             .depot-nav-tabs::-webkit-scrollbar { display: none; }
             .tab-btn { flex: 0 0 auto; white-space: nowrap; }
+            .table-responsive { max-height: 520px; }
+            .search-box-wrap { min-width: 100%; }
+            .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Modern Clean Loader -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-ring"></div>
@@ -547,6 +661,7 @@
         </div>
     </div>
 
+    <!-- Hidden Raw Print Node for PDF / Browser Print -->
     <div id="printableReceipt">
         <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;">
             <div style="padding: 10px;">
@@ -583,6 +698,7 @@
         </div>
     </div>
 
+    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -631,19 +747,18 @@
 
     <div class="main-container">
         <div class="depot-nav-tabs">
-            <!-- 100% Mobile & Desktop Working Checkbox Hack Menu (Left Side) -->
-            <div class="menu-dropdown-container">
-                <input type="checkbox" id="mobileMenuToggle">
-                <label for="mobileMenuToggle" class="menu-dots-btn" title="More Options">☰</label>
-                <div class="dropdown-content">
-                    <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); document.getElementById('mobileMenuToggle').checked = false;">👥 Assigned Staff and Ledger Details</button>
-                    <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); document.getElementById('mobileMenuToggle').checked = false;">💰 Depot Expenses</button>
-                </div>
-            </div>
-
             <!-- पहले 2 टैब सामने दिखेंगे -->
             <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
+
+            <!-- बाक़ी के 2 टैब 3-डॉट (...) मेनू बटन के अंदर -->
+            <div class="menu-dropdown-container">
+                <button class="menu-dots-btn" onclick="toggleMenu()" title="More Options">⋮</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this); toggleMenu();">👥 Assigned Staff and Ledger Details</button>
+                    <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this); toggleMenu();">💰 Depot Expenses</button>
+                </div>
+            </div>
         </div>
 
         <!-- 1. Dispatch Entry Form -->
@@ -754,6 +869,7 @@
         <!-- 3. Staff & Ledger Tab -->
         <div id="staffTab" class="comfort-panel" style="display:none; max-width: 960px; margin: 0 auto 1.5rem auto;">
             
+            <!-- Specific Depot Pending Requests Card -->
             <div id="depotPendingApprovalsCard" style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.5rem; box-shadow:var(--shadow-subtle);">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; border-bottom:1px dashed #fcd34d; padding-bottom:0.4rem;">
                     <h4 style="color:#92400e; font-size:0.92rem; font-weight:700; display:flex; align-items:center; gap:6px;">
@@ -976,45 +1092,19 @@
                 <form id="editDispatchForm">
                     <input type="hidden" id="editDispRowId">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Date</label>
-                            <input type="date" id="editDispDate" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Time</label>
-                            <input type="text" id="editDispTime" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Invoice Number</label>
-                            <input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;">
-                        </div>
+                        <div class="form-group"><label>Date</label><input type="date" id="editDispDate" class="form-control" required></div>
+                        <div class="form-group"><label>Time</label><input type="text" id="editDispTime" class="form-control" required></div>
+                        <div class="form-group"><label>Invoice Number</label><input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;"></div>
                         <div class="form-group">
                             <label>Vehicle Type</label>
                             <select id="editDispVehicleType" class="form-control">
-                                <option value="Auto">Auto</option>
-                                <option value="Self">Self</option>
-                                <option value="Car">Car</option>
-                                <option value="Pic-Up">Pic-Up</option>
-                                <option value="Toto">Toto</option>
-                                <option value="Bike">Bike</option>
+                                <option value="Auto">Auto</option><option value="Self">Self</option><option value="Car">Car</option><option value="Pic-Up">Pic-Up</option><option value="Toto">Toto</option><option value="Bike">Bike</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Dispatch Through</label>
-                            <input type="text" id="editDispThrough" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Vehicle Number</label>
-                            <input type="text" id="editDispVehicleNo" class="form-control">
-                        </div>
-                        <div class="form-group-full">
-                            <label>Due-Excess Matter If Any</label>
-                            <input type="text" id="editDispDueExcess" class="form-control" required>
-                        </div>
-                        <div class="form-group-full">
-                            <label>Remark If Any</label>
-                            <input type="text" id="editDispRemarks" class="form-control">
-                        </div>
+                        <div class="form-group"><label>Dispatch Through</label><input type="text" id="editDispThrough" class="form-control" required></div>
+                        <div class="form-group"><label>Vehicle Number</label><input type="text" id="editDispVehicleNo" class="form-control"></div>
+                        <div class="form-group-full"><label>Due-Excess Matter If Any</label><input type="text" id="editDispDueExcess" class="form-control" required></div>
+                        <div class="form-group-full"><label>Remark If Any</label><input type="text" id="editDispRemarks" class="form-control"></div>
                     </div>
                     <button type="submit" id="btnUpdateDispatchSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1.2rem;">Update Dispatch Entry</button>
                 </form>
@@ -1097,6 +1187,28 @@
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
+        /* 3-Dot Dropdown Menu Toggle Script */
+        function toggleMenu() {
+            const dropdown = document.getElementById("myDropdown");
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+            } else {
+                dropdown.style.display = "block";
+            }
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-dots-btn')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.style.display === "block") {
+                        openDropdown.style.display = "none";
+                    }
+                }
+            }
+        }
+
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
             if (overlay) {
@@ -1166,25 +1278,14 @@
         }
 
         function jsonp(url) {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const cleanUrl = url.replace(/&callback=[^&]*/, '');
-                    const response = await fetch(cleanUrl, {
-                        method: 'GET',
-                        redirect: 'follow'
-                    });
-                    const text = await response.text();
-                    
-                    if (text.includes('(') && text.endsWith(')')) {
-                        const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
-                        resolve(JSON.parse(jsonStr));
-                    } else {
-                        resolve(JSON.parse(text));
-                    }
-                } catch (err) {
-                    console.error("Fetch Error:", err);
-                    reject(err);
-                }
+            return new Promise((resolve, reject) => {
+                const cbName = 'depot_cb_' + Math.round(100000 * Math.random());
+                const script = document.createElement('script');
+                const timer = setTimeout(() => { cleanup(); reject(new Error("Timeout")); }, 18000);
+                function cleanup() { clearTimeout(timer); delete window[cbName]; if (script.parentNode) script.remove(); }
+                window[cbName] = function(data) { cleanup(); resolve(data); };
+                script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
+                document.body.appendChild(script);
             });
         }
 

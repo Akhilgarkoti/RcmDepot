@@ -508,9 +508,9 @@
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        /* Crisp Loader - NO BLUR & Initial Hidden Tabs */
+        /* Crisp Loader - NO BLUR */
         .global-loading-overlay {
-            display: flex;
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -523,13 +523,13 @@
             cursor: wait;
         }
 
-        .tab-btn { display: inline-block; }
-
+        /* Ledger Modal ki width */
         #staffLedgerModal .modal-box {
             max-width: 1200px !important;
             width: 96% !important;
         }
 
+        /* Edit form Foreground */
         #addTrxModal, #editDispatchModal {
             z-index: 3200 !important;
         }
@@ -606,7 +606,7 @@
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-ring"></div>
-            <div class="loader-text" id="globalLoadingMsg">Loading Depot Data... Please wait!</div>
+            <div class="loader-text" id="globalLoadingMsg">Saving Data... Please wait!</div>
         </div>
     </div>
 
@@ -696,10 +696,10 @@
 
     <div class="main-container">
         <div class="depot-nav-tabs">
-            <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
-            <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
-            <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
-            <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
+            <button class="tab-btn" style="display:inline-block;" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
+            <button class="tab-btn" style="display:inline-block;" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
+            <button class="tab-btn" style="display:inline-block;" id="tabBtnStaff" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
+            <button class="tab-btn" style="display:inline-block;" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
         </div>
 
         <!-- 1. Dispatch Entry Form -->
@@ -1351,7 +1351,7 @@
             selectBox.innerHTML = optionsHtml;
         }
 
-        /* --- USER-WISE TAB ACCESS CONTROL LOGIC (WITH INITIAL BLINK FIX) --- */
+        /* --- USER-WISE TAB ACCESS CONTROL LOGIC (WITH ZERO BLINK FIX) --- */
         function applyTabPermissions(depotData) {
             const checkPerm = (val) => {
                 if (val === undefined || val === null || String(val).trim() === '') return true;
@@ -1447,7 +1447,6 @@
                 populateExpenseYearDropdown(loadedDepotExpenses);
                 renderAnnualSummaryExpenses();
 
-                // Apply permissions to tabs securely after loading
                 applyTabPermissions(depot);
 
             } catch (err) { 
@@ -1458,7 +1457,6 @@
             }
         }
 
-        // --- PENDING APPROVAL SYSTEM ---
         function renderDepotPendingApprovalsUI(pendingList) {
             const tbody = document.getElementById('depotPendingListBody');
             const badge = document.getElementById('pendingCountBadge');
@@ -1514,7 +1512,6 @@
             }
         }
 
-        // Change Password Handler
         document.getElementById('depotPwdForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const oldPass = document.getElementById('oldDepotPass').value.trim();
@@ -1639,7 +1636,6 @@
             handleDispatchFilterChange();
         }
 
-        // --- RENDER DISPATCH TABLE (WITH EDIT BUTTON) ---
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
             document.getElementById('dispCountBadge').textContent = `${list.length} records`;
@@ -1690,7 +1686,6 @@
             updateSelectedDispatchCount();
         }
 
-        /* --- EDIT DISPATCH LOGIC --- */
         function openEditDispatchModal(rowId) {
             const record = loadedDispatches.find(r => String(getField(r, 'ID', 'id')) === String(rowId));
             if (!record) {
@@ -2197,7 +2192,6 @@
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
         }
 
-        // VIEW MONTH DETAILS WITH EDIT & DELETE BUTTONS
         function viewMonthDetails(mIndex) {
             const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
             if (!mData) return;
@@ -2293,7 +2287,7 @@
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
             document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
-           document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem;"><div class="loader-ring" style="width:34px; height:34px; margin:0 auto 10px auto; border-width:3px;"></div><div style="font-weight:600; color:#64748b; font-size:0.85rem;">Reading ledger records from database...</div></td></tr>`;
+            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem;"><div class="loader-ring" style="width:34px; height:34px; margin:0 auto 10px auto; border-width:3px;"></div><div style="font-weight:600; color:#64748b; font-size:0.85rem;">Reading ledger records from database...</div></td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {
@@ -2790,7 +2784,6 @@
             document.getElementById('expenseDetailContainer').style.display = 'none';
         }
 
-        // Excel Styled Export Functions
         const STYLE_TITLE = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 12, bold: true, color: { rgb: "FF854D0E" } }, alignment: { horizontal: "center", vertical: "center" } };
         const STYLE_MONTH = { fill: { fgColor: { rgb: "FF38BDF8" } }, font: { name: "Calibri", sz: 11, bold: true, color: { rgb: "FFFFFFFF" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
         const STYLE_HEADER = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "FF854D0E" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };

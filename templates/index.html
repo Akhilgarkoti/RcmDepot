@@ -562,15 +562,16 @@
             pwdInput.type = (pwdInput.type === 'password') ? 'text' : 'password';
         }
 
-        function jsonpRequest(url) {
+       function jsonpRequest(url) {
             return new Promise((resolve, reject) => {
                 const cbName = 'login_cb_' + Math.round(100000 * Math.random());
                 const script = document.createElement('script');
                 
+                // मोबाइल के लिए टाइमआउट समय बढ़ाकर 15 सेकंड कर दिया गया है
                 const timer = setTimeout(() => {
                     cleanup();
-                    reject(new Error("Connection Timeout. Please check your internet connection."));
-                }, 8000);
+                    reject(new Error("Network Error / Connection Timeout. Please check your internet connection."));
+                }, 15000);
 
                 function cleanup() {
                     clearTimeout(timer);
@@ -586,7 +587,7 @@
                 script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cbName;
                 script.onerror = () => {
                     cleanup();
-                    reject(new Error("Network Error connecting to backend server."));
+                    reject(new Error("Network Error: Unable to connect to server. Check mobile network."));
                 };
                 document.body.appendChild(script);
             });

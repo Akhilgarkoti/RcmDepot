@@ -892,7 +892,7 @@
         </div>
     </div>
 
-    <script>
+<script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
         let adminUser = (sessionStorage.getItem("user") || "").trim();
@@ -929,35 +929,53 @@
             "KERALA": "32", "TAMIL NADU": "33", "TELANGANA": "36", "ANDAMAN AND NICOBAR ISLANDS": "35", "LADAKH": "38"
         };
 
-        // --- GOVERNMENT PINCODE AUTO-FILL FUNCTION ---
-        async function handlePinCodeLookup(pin, prefix) {
+        // --- GOVERNMENT PINCODE AUTO-FILL FUNCTION (FIXED WITH JSONP) ---
+        function handlePinCodeLookup(pin, prefix) {
             const cleanPin = String(pin).trim().replace(/[^0-9]/g, '');
             if (cleanPin.length !== 6) return;
 
-            const stateField = document.getElementById(`${prefix}DepotStateName`);
-            const stateCodeField = document.getElementById(`${prefix}DepotStateCode`);
-            const districtField = document.getElementById(`${prefix}DepotDistrict`);
+            showToast('🔍 Fetching State & District...');
 
-            try {
-                const response = await fetch(`https://api.postalpincode.in/pincode/${cleanPin}`);
-                const data = await response.json();
+            const cbName = 'postal_cb_' + Math.round(100000 * Math.random());
+            const script = document.createElement('script');
+            script.src = `https://api.postalpincode.in/pincode/${cleanPin}?callback=${cbName}`;
 
-                if (data && data[0] && data[0].Status === "Success" && data[0].PostOffice && data[0].PostOffice.length > 0) {
-                    const info = data[0].PostOffice[0];
-                    const stateName = (info.State || '').trim();
-                    const district = info.District || '';
+            window[cbName] = function(data) {
+                try {
+                    if (data && data[0] && data[0].Status === "Success" && data[0].PostOffice && data[0].PostOffice.length > 0) {
+                        const info = data[0].PostOffice[0];
+                        const stateName = (info.State || '').trim();
+                        const district = info.District || '';
 
-                    if (stateField) stateField.value = stateName;
-                    if (districtField) districtField.value = district;
+                        const stateField = document.getElementById(`${prefix}DepotStateName`);
+                        const stateCodeField = document.getElementById(`${prefix}DepotStateCode`);
+                        const districtField = document.getElementById(`${prefix}DepotDistrict`);
 
-                    const detectedCode = GST_STATE_CODES[stateName.toUpperCase()] || '';
-                    if (stateCodeField) stateCodeField.value = detectedCode;
+                        if (stateField) stateField.value = stateName;
+                        if (districtField) districtField.value = district;
 
-                    showToast(`📍 Auto-filled: ${district}, ${stateName} (Code: ${detectedCode})`);
+                        const detectedCode = GST_STATE_CODES[stateName.toUpperCase()] || '';
+                        if (stateCodeField) stateCodeField.value = detectedCode;
+
+                        showToast(`✅ Auto-filled: ${district}, ${stateName} (${detectedCode})`);
+                    } else {
+                        showToast('⚠️ Invalid PIN Code or no data found.');
+                    }
+                } catch (err) {
+                    console.error("Postal API parse error:", err);
+                } finally {
+                    delete window[cbName];
+                    if (script.parentNode) script.remove();
                 }
-            } catch (err) {
-                console.warn("Postal API lookup error:", err);
-            }
+            };
+
+            script.onerror = function() {
+                showToast('⚠️ Failed to connect to postal API.');
+                delete window[cbName];
+                if (script.parentNode) script.remove();
+            };
+
+            document.body.appendChild(script);
         }
 
         function showBlocker(msg) {
@@ -1163,14 +1181,13 @@
             }
         }
 
-        // --- Depot Expenses Functions ---
         function populateAdminExpenseFilters(depots, expenses) {
             const depotSelect = document.getElementById('adminExpDepotFilter');
             let depotOpts = `<option value="" disabled selected>⚠️ Please select depot</option>`;
             depots.forEach(d => {
                 const code = getField(d, 'Depot Code');
                 const name = getField(d, 'Depot Name');
-                depOpts += `<option value="${code}">${name} (${code})</option>`;
+                depotOpts += `<option value="${code}">${name} (${code})</option>`;
             });
             depotSelect.innerHTML = depotOpts;
 
@@ -1429,7 +1446,6 @@
             showToast('Depot expenses exported as Excel (.csv)!');
         }
 
-        // --- Other Admin Functions ---
         function renderPendingApprovals() {
             const staffList = adminBundle.staff || [];
             const trxList = adminBundle.ledgers || [];
@@ -1577,7 +1593,6 @@
         }
         function closeNewDepotModal() { document.getElementById('newDepotModal').style.display = 'none'; }
 
-        // --- SUBMIT NEW DEPOT WITH TABS PERMISSION ---
         document.getElementById('newDepotForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             showBlocker("Saving new depot...");
@@ -1633,7 +1648,6 @@
             document.getElementById('editDepotStatus').value = getField(d, 'Active Status', 'Status') || 'Active';
             document.getElementById('editDepotInvSeries').value = getField(d, 'Invoice No Series');
 
-            // Load Existing Permissions or Default to Yes
             document.getElementById('editDepotCanDispatch').value = getField(d, 'Can_Dispatch', 'can_dispatch') || 'Yes';
             document.getElementById('editDepotCanHistory').value = getField(d, 'Can_History', 'can_history') || 'Yes';
             document.getElementById('editDepotCanStaff').value = getField(d, 'Can_Staff', 'can_staff') || 'Yes';
@@ -1643,7 +1657,6 @@
         }
         function closeEditDepotModal() { document.getElementById('editDepotModal').style.display = 'none'; }
 
-        // --- SUBMIT EDIT DEPOT WITH TABS PERMISSION ---
         document.getElementById('editDepotForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             showBlocker("Updating depot record...");
@@ -1828,7 +1841,7 @@
                     <td>${getField(s, 'Staff Working Depot Name', 'Depot')}</td>
                     <td>${getField(s, 'Staff Login Id')}</td>
                     <td style="color:${st.toLowerCase()==='active'?'var(--accent-cr)':'var(--accent-dr)'}; font-weight:600;">${st}</td>
-                    <td style="color:${app.toLowerCase()==='approved'?'var(--accent-cr)':'#b45309'}; font-weight:600;">${app}</td>
+                    <td style="color:${app.toLowerCase()==='approved'?'var(--accent-cr)' : '#b45309'}; font-weight:600;">${app}</td>
                     <td style="color:#0284c7; font-weight:600;">${approvedBy}</td>
                     <td>${actionBtns}</td>
                 </tr>`;
@@ -2018,12 +2031,12 @@
                     <td style="text-align:right; font-weight:600; color:var(--accent-bal);">${balFormatted}</td>
                     <td style="text-align:center; font-weight:700; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td>
                     <td style="text-align:center;">
-                        ${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminMonthDetails(${mIndex})">View</button>` : '-'}
+                        <button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewAdminMonthDetails(${mIndex})">View</button>
                     </td>
                 </tr>`;
             });
 
-            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
+            document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="6" class="text-center" style="padding:2rem;">No expense records found for this depot in the selected FY.</td></tr>`;
         }
 
         function viewAdminMonthDetails(mIndex) {

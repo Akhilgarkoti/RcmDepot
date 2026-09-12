@@ -3233,11 +3233,34 @@
                 </div>
             `;
             document.getElementById('printableReceipt').innerHTML = slipTemplate;
-            document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
-            document.getElementById('printPreviewModal').style.display = 'block';
+        document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+        document.getElementById('printPreviewModal').style.display = 'block';
+    }
+
+    // 100% Mobile & Desktop Working Menu Handler
+    function initMobileMenu() {
+        const menuBtn = document.querySelector('.menu-dots-btn');
+        const dropdown = document.getElementById('myDropdown');
+
+        if (menuBtn && dropdown) {
+            menuBtn.onclick = function(e) {
+                e.stopPropagation();
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                } else {
+                    dropdown.style.display = 'block';
+                }
+            };
+
+            document.onclick = function(e) {
+                if (!e.target.closest('.menu-dropdown-container')) {
+                    dropdown.style.display = 'none';
+                }
+            };
         }
-        
-        window.onload = () => { startLiveClock(); loadDepotData(); };
-    </script>
+    }
+
+    window.onload = () => { startLiveClock(); loadDepotData(); initMobileMenu(); };
+</script>
 </body>
 </html>

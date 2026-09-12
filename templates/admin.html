@@ -87,9 +87,9 @@
             font-weight: 600; 
             font-size: 0.88rem; 
             cursor: pointer; 
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.5rem; 
             transition: all 0.2s ease;
         }
         .tab-btn:hover { color: var(--text-main); background: #f1f5f9; }
@@ -658,9 +658,10 @@
 
     </div>
 
+    <!-- Modal: Add New Depot (UPDATED WITH GOV AUTO-FILL & TABS PERMISSION) -->
     <div id="newDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
-            <div class="modal-top-bar"><span>🏬 Add New Depot (All 15 Fields)</span><button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button></div>
+            <div class="modal-top-bar"><span>🏬 Add New Depot (Master Setup)</span><button class="modal-close-btn" onclick="closeNewDepotModal()">&times;</button></div>
             <div class="modal-body">
                 <form id="newDepotForm">
                     <div class="form-grid">
@@ -668,9 +669,9 @@
                         <div class="form-group"><label>B: Depot Name</label><input type="text" id="addDepotName" class="form-control" required placeholder="e.g. Kishanganj"></div>
                         <div class="form-group-full"><label>C: Company Name</label><input type="text" id="addDepotCompanyName" class="form-control" value="RCM Consumer Products Private Limited" required></div>
                         <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="addDepotAddress" class="form-control" required placeholder="Full address"></div>
-                        <div class="form-group"><label>E: Pin Code</label><input type="text" id="addDepotPinCode" class="form-control" required></div>
+                        <div class="form-group"><label>E: Pin Code (Auto-fills F, G, H)</label><input type="text" id="addDepotPinCode" class="form-control" required placeholder="6-digit PIN" oninput="handlePinCodeLookup(this.value, 'add')"></div>
                         <div class="form-group"><label>F: State Name</label><input type="text" id="addDepotStateName" class="form-control" required></div>
-                        <div class="form-group"><label>G: State Code</label><input type="text" id="addDepotStateCode" class="form-control"></div>
+                        <div class="form-group"><label>G: State Code</label><input type="text" id="addDepotStateCode" class="form-control" placeholder="e.g. 10"></div>
                         <div class="form-group"><label>H: District</label><input type="text" id="addDepotDistrict" class="form-control" required></div>
                         <div class="form-group"><label>I: GSTIN</label><input type="text" id="addDepotGstin" class="form-control"></div>
                         <div class="form-group"><label>J: FSSAI</label><input type="text" id="addDepotFssai" class="form-control"></div>
@@ -678,7 +679,18 @@
                         <div class="form-group"><label>L: Depot Login ID</label><input type="text" id="addDepotLoginId" class="form-control" required></div>
                         <div class="form-group"><label>M: Depot Login Password</label><input type="text" id="addDepotPass" class="form-control" value="1020" required></div>
                         <div class="form-group"><label>N: Active Status</label><select id="addDepotStatus" class="form-control"><option value="Active" selected>Active</option><option value="Inactive">Inactive</option></select></div>
-                        <div class="form-group"><label>O: Invoice No Series</label><input type="text" id="addDepotInvSeries" class="form-control" required></div>
+                        <div class="form-group-full"><label>O: Invoice No Series</label><input type="text" id="addDepotInvSeries" class="form-control" required placeholder="e.g. 76287"></div>
+
+                        <!-- USER-WISE ACCESS CONTROL PERMISSIONS -->
+                        <div class="form-group-full" style="border-top:1px dashed #cbd5e1; margin-top:0.5rem; padding-top:0.6rem;">
+                            <label style="font-weight:700; color:#0369a1; margin-bottom:0.6rem;">🔒 Portal Tabs Access Permissions</label>
+                            <div class="form-grid">
+                                <div class="form-group"><label>P: Can Dispatch?</label><select id="addDepotCanDispatch" class="form-control"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+                                <div class="form-group"><label>Q: Can History?</label><select id="addDepotCanHistory" class="form-control"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+                                <div class="form-group"><label>R: Can Staff & Ledger?</label><select id="addDepotCanStaff" class="form-control"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+                                <div class="form-group"><label>S: Can Expenses?</label><select id="addDepotCanExpenses" class="form-control"><option value="Yes" selected>Yes</option><option value="No">No</option></select></div>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="btn-submit-modal">💾 Save Depot to Google Sheet</button>
                 </form>
@@ -686,6 +698,7 @@
         </div>
     </div>
 
+    <!-- Modal: Edit Depot (UPDATED WITH GOV AUTO-FILL & TABS PERMISSION) -->
     <div id="editDepotModal" class="modal">
         <div class="modal-box modal-box-wide">
             <div class="modal-top-bar"><span>✏️ Edit Depot Record</span><button class="modal-close-btn" onclick="closeEditDepotModal()">&times;</button></div>
@@ -696,7 +709,7 @@
                         <div class="form-group"><label>B: Depot Name</label><input type="text" id="editDepotName" class="form-control" required></div>
                         <div class="form-group-full"><label>C: Company Name</label><input type="text" id="editDepotCompanyName" class="form-control" required></div>
                         <div class="form-group-full"><label>D: Depot Address</label><input type="text" id="editDepotAddress" class="form-control"></div>
-                        <div class="form-group"><label>E: Pin Code</label><input type="text" id="editDepotPinCode" class="form-control" required></div>
+                        <div class="form-group"><label>E: Pin Code (Auto-fills F, G, H)</label><input type="text" id="editDepotPinCode" class="form-control" required oninput="handlePinCodeLookup(this.value, 'edit')"></div>
                         <div class="form-group"><label>F: State Name</label><input type="text" id="editDepotStateName" class="form-control" required></div>
                         <div class="form-group"><label>G: State Code</label><input type="text" id="editDepotStateCode" class="form-control"></div>
                         <div class="form-group"><label>H: District</label><input type="text" id="editDepotDistrict" class="form-control" required></div>
@@ -706,7 +719,18 @@
                         <div class="form-group"><label>L: Depot Login ID</label><input type="text" id="editDepotLoginId" class="form-control" required></div>
                         <div class="form-group"><label>M: Password</label><input type="text" id="editDepotPass" class="form-control" required></div>
                         <div class="form-group"><label>N: Active Status</label><select id="editDepotStatus" class="form-control"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
-                        <div class="form-group"><label>O: Invoice No Series</label><input type="text" id="editDepotInvSeries" class="form-control" required></div>
+                        <div class="form-group-full"><label>O: Invoice No Series</label><input type="text" id="editDepotInvSeries" class="form-control" required></div>
+
+                        <!-- USER-WISE ACCESS CONTROL PERMISSIONS -->
+                        <div class="form-group-full" style="border-top:1px dashed #cbd5e1; margin-top:0.5rem; padding-top:0.6rem;">
+                            <label style="font-weight:700; color:#0369a1; margin-bottom:0.6rem;">🔒 Portal Tabs Access Permissions</label>
+                            <div class="form-grid">
+                                <div class="form-group"><label>P: Can Dispatch?</label><select id="editDepotCanDispatch" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                                <div class="form-group"><label>Q: Can History?</label><select id="editDepotCanHistory" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                                <div class="form-group"><label>R: Can Staff & Ledger?</label><select id="editDepotCanStaff" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                                <div class="form-group"><label>S: Can Expenses?</label><select id="editDepotCanExpenses" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="btn-submit-modal">💾 Update Depot</button>
                 </form>
@@ -893,6 +917,48 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
+
+        // --- OFFICIAL GST STATE CODES MAPPING ---
+        const GST_STATE_CODES = {
+            "JAMMU AND KASHMIR": "01", "HIMACHAL PRADESH": "02", "PUNJAB": "03", "CHANDIGARH": "04",
+            "UTTARAKHAND": "05", "HARYANA": "06", "DELHI": "07", "RAJASTHAN": "08", "UTTAR PRADESH": "09",
+            "BIHAR": "10", "SIKKIM": "11", "ARUNACHAL PRADESH": "12", "NAGALAND": "13", "MANIPUR": "14",
+            "MIZORAM": "15", "TRIPURA": "16", "MEGHALAYA": "17", "ASSAM": "18", "WEST BENGAL": "19",
+            "JHARKHAND": "20", "ODISHA": "21", "CHHATTISGARH": "22", "CHATTISGARH": "22", "MADHYA PRADESH": "23",
+            "GUJARAT": "24", "MAHARASHTRA": "27", "ANDHRA PRADESH": "28", "KARNATAKA": "29", "GOA": "30",
+            "KERALA": "32", "TAMIL NADU": "33", "TELANGANA": "36", "ANDAMAN AND NICOBAR ISLANDS": "35", "LADAKH": "38"
+        };
+
+        // --- GOVERNMENT PINCODE AUTO-FILL FUNCTION ---
+        async function handlePinCodeLookup(pin, prefix) {
+            const cleanPin = String(pin).trim().replace(/[^0-9]/g, '');
+            if (cleanPin.length !== 6) return;
+
+            const stateField = document.getElementById(`${prefix}DepotStateName`);
+            const stateCodeField = document.getElementById(`${prefix}DepotStateCode`);
+            const districtField = document.getElementById(`${prefix}DepotDistrict`);
+
+            try {
+                const response = await fetch(`https://api.postalpincode.in/pincode/${cleanPin}`);
+                const data = await response.json();
+
+                if (data && data[0] && data[0].Status === "Success" && data[0].PostOffice && data[0].PostOffice.length > 0) {
+                    const info = data[0].PostOffice[0];
+                    const stateName = (info.State || '').trim();
+                    const district = info.District || '';
+
+                    if (stateField) stateField.value = stateName;
+                    if (districtField) districtField.value = district;
+
+                    const detectedCode = GST_STATE_CODES[stateName.toUpperCase()] || '';
+                    if (stateCodeField) stateCodeField.value = detectedCode;
+
+                    showToast(`📍 Auto-filled: ${district}, ${stateName} (Code: ${detectedCode})`);
+                }
+            } catch (err) {
+                console.warn("Postal API lookup error:", err);
+            }
+        }
 
         function showBlocker(msg) {
             const el = document.getElementById('globalLoadingOverlay');
@@ -1097,14 +1163,14 @@
             }
         }
 
-        // --- Depot Expenses Functions (Admin View with Please Select validation) ---
+        // --- Depot Expenses Functions ---
         function populateAdminExpenseFilters(depots, expenses) {
             const depotSelect = document.getElementById('adminExpDepotFilter');
             let depotOpts = `<option value="" disabled selected>⚠️ Please select depot</option>`;
             depots.forEach(d => {
                 const code = getField(d, 'Depot Code');
                 const name = getField(d, 'Depot Name');
-                depotOpts += `<option value="${code}">${name} (${code})</option>`;
+                depOpts += `<option value="${code}">${name} (${code})</option>`;
             });
             depotSelect.innerHTML = depotOpts;
 
@@ -1511,6 +1577,7 @@
         }
         function closeNewDepotModal() { document.getElementById('newDepotModal').style.display = 'none'; }
 
+        // --- SUBMIT NEW DEPOT WITH TABS PERMISSION ---
         document.getElementById('newDepotForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             showBlocker("Saving new depot...");
@@ -1530,7 +1597,11 @@
                 loginId: document.getElementById('addDepotLoginId').value.trim(),
                 password: document.getElementById('addDepotPass').value.trim(),
                 status: document.getElementById('addDepotStatus').value,
-                invSeries: document.getElementById('addDepotInvSeries').value.trim()
+                invSeries: document.getElementById('addDepotInvSeries').value.trim(),
+                canDispatch: document.getElementById('addDepotCanDispatch').value,
+                canHistory: document.getElementById('addDepotCanHistory').value,
+                canStaff: document.getElementById('addDepotCanStaff').value,
+                canExpenses: document.getElementById('addDepotCanExpenses').value
             };
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
@@ -1562,10 +1633,17 @@
             document.getElementById('editDepotStatus').value = getField(d, 'Active Status', 'Status') || 'Active';
             document.getElementById('editDepotInvSeries').value = getField(d, 'Invoice No Series');
 
+            // Load Existing Permissions or Default to Yes
+            document.getElementById('editDepotCanDispatch').value = getField(d, 'Can_Dispatch', 'can_dispatch') || 'Yes';
+            document.getElementById('editDepotCanHistory').value = getField(d, 'Can_History', 'can_history') || 'Yes';
+            document.getElementById('editDepotCanStaff').value = getField(d, 'Can_Staff', 'can_staff') || 'Yes';
+            document.getElementById('editDepotCanExpenses').value = getField(d, 'Can_Expenses', 'can_expenses') || 'Yes';
+
             document.getElementById('editDepotModal').style.display = 'block';
         }
         function closeEditDepotModal() { document.getElementById('editDepotModal').style.display = 'none'; }
 
+        // --- SUBMIT EDIT DEPOT WITH TABS PERMISSION ---
         document.getElementById('editDepotForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             showBlocker("Updating depot record...");
@@ -1585,7 +1663,11 @@
                 loginId: document.getElementById('editDepotLoginId').value,
                 password: document.getElementById('editDepotPass').value,
                 status: document.getElementById('editDepotStatus').value,
-                invSeries: document.getElementById('editDepotInvSeries').value
+                invSeries: document.getElementById('editDepotInvSeries').value,
+                canDispatch: document.getElementById('editDepotCanDispatch').value,
+                canHistory: document.getElementById('editDepotCanHistory').value,
+                canStaff: document.getElementById('editDepotCanStaff').value,
+                canExpenses: document.getElementById('editDepotCanExpenses').value
             };
             try {
                 const q = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
@@ -2603,4 +2685,3 @@
     </script>
 </body>
 </html>
-

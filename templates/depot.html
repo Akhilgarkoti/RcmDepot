@@ -232,7 +232,6 @@
             padding: 6px;
         }
         
-        /* जब चेकबॉक्स पर टैप/क्लिक होगा, मेनू अपने आप खुल जाएगा */
         #mobileMenuCheckbox:checked ~ .dropdown-content {
             display: block;
         }
@@ -294,14 +293,12 @@
             white-space: normal;
         }
 
-        /* Opening balance text highlight */
         .row-opening-balance td:nth-child(3) {
             color: #0284c7 !important;
             font-weight: 700 !important;
             letter-spacing: 0.02em;
         }
 
-        /* Modern Crisp Form Styles */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         .form-group-full { grid-column: span 2; }
         .form-group { margin-bottom: 0.2rem; }
@@ -365,7 +362,6 @@
             transform: translateY(0); 
         }
 
-        /* Toolbars & Controls */
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
@@ -433,7 +429,6 @@
         }
         .btn-action-trx:hover { background: #eab308; color: #fff; border-color: #eab308; }
 
-        /* Premium Data Tables */
         .table-responsive { 
             width: 100%; 
             max-height: 720px; 
@@ -490,7 +485,6 @@
         }
         .btn-load-older:hover { background: #e2e8f0; color: var(--text-dark); }
 
-        /* Modern Modals */
         .modal { 
             display: none; 
             position: fixed; 
@@ -546,7 +540,6 @@
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        /* Toast Notifications */
         .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
         .toast-msg { 
             min-width: 270px; 
@@ -561,7 +554,6 @@
             animation: popIn 0.2s ease-out; 
         }
 
-        /* Thermal Print Template */
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
@@ -577,7 +569,6 @@
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        /* Crisp Loader */
         .global-loading-overlay {
             display: flex;
             position: fixed;
@@ -651,6 +642,11 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* --- Professional Mobile Bottom Navigation Styles (Added Safely) --- */
+        .mobile-bottom-nav {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
             .nav-left-box { justify-content: space-between; width: 100%; }
@@ -660,18 +656,47 @@
             .comfort-panel { padding: 1rem 0.85rem; }
             .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
             .form-group-full { grid-column: span 1; }
-            .depot-nav-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-            .depot-nav-tabs::-webkit-scrollbar { display: none; }
-            .tab-btn { flex: 0 0 auto; white-space: nowrap; }
+            .depot-nav-tabs { display: none !important; }
             .table-responsive { max-height: 520px; }
             .search-box-wrap { min-width: 100%; }
             .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
+
+            /* Professional Bottom Bar */
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--theme-border);
+                z-index: 3000;
+                justify-content: space-around;
+                padding: 8px 0 10px 0;
+            }
+            .bot-nav-btn {
+                background: transparent;
+                border: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 2px 0;
+                transition: color 0.2s ease;
+            }
+            .bot-nav-btn span { font-size: 1.25rem; line-height: 1; }
+            .bot-nav-btn small { font-size: 0.68rem; font-weight: 600; margin-top: 3px; font-family: 'Inter', sans-serif; }
+            .bot-nav-btn.active { color: var(--primary); }
+            body { padding-bottom: 75px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Modern Clean Loader -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-ring"></div>
@@ -679,7 +704,6 @@
         </div>
     </div>
 
-    <!-- Hidden Raw Print Node for PDF / Browser Print -->
     <div id="printableReceipt">
         <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;">
             <div style="padding: 10px;">
@@ -716,7 +740,6 @@
         </div>
     </div>
 
-    <!-- On-Screen Clean Preview Modal Dialog -->
     <div id="printPreviewModal" class="modal" style="z-index: 2500;">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar">
@@ -765,7 +788,6 @@
 
     <div class="main-container">
         <div class="depot-nav-tabs">
-            <!-- 100% Mobile & Desktop Working Checkbox Hack Menu (Left Side) -->
             <div class="menu-dropdown-container">
                 <input type="checkbox" id="mobileMenuCheckbox">
                 <label for="mobileMenuCheckbox" class="menu-dots-btn" title="More Options">☰</label>
@@ -775,7 +797,6 @@
                 </div>
             </div>
 
-            <!-- पहले 2 टैब सामने दिखेंगे -->
             <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
         </div>
@@ -1204,6 +1225,26 @@
         </div>
     </div>
 
+    <!-- Professional Mobile Bottom Navigation Bar (Added) -->
+    <div class="mobile-bottom-nav">
+        <button class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
+            <span>📦</span>
+            <small>Dispatch</small>
+        </button>
+        <button class="bot-nav-btn" onclick="switchTab('recordsTab', null); updateBottomNavActive(this);">
+            <span>📊</span>
+            <small>History</small>
+        </button>
+        <button class="bot-nav-btn" onclick="switchTab('staffTab', null); updateBottomNavActive(this);">
+            <span>👥</span>
+            <small>Staff</small>
+        </button>
+        <button class="bot-nav-btn" onclick="switchTab('expensesTab', null); updateBottomNavActive(this);">
+            <span>💰</span>
+            <small>Expenses</small>
+        </button>
+    </div>
+
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
@@ -1299,7 +1340,6 @@
             setInterval(tick, 1000);
         }
 
-        // मोबाइल और डेस्कटॉप दोनों के लिए 100% वर्किंग Fetch API फंक्शन
         function jsonp(url) {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -3128,6 +3168,11 @@
             document.getElementById('expensesTab').style.display = (tabId === 'expensesTab') ? 'block' : 'none';
         }
 
+        function updateBottomNavActive(clickedBtn) {
+            document.querySelectorAll('.mobile-bottom-nav .bot-nav-btn').forEach(b => b.classList.remove('active'));
+            if (clickedBtn) clickedBtn.classList.add('active');
+        }
+
         function openThermalFyPrintPreview() {
             const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
             const fyStartDate = new Date(startYear, 3, 1);
@@ -3233,34 +3278,11 @@
                 </div>
             `;
             document.getElementById('printableReceipt').innerHTML = slipTemplate;
-        document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
-        document.getElementById('printPreviewModal').style.display = 'block';
-    }
-
-    // 100% Mobile & Desktop Working Menu Handler
-    function initMobileMenu() {
-        const menuBtn = document.querySelector('.menu-dots-btn');
-        const dropdown = document.getElementById('myDropdown');
-
-        if (menuBtn && dropdown) {
-            menuBtn.onclick = function(e) {
-                e.stopPropagation();
-                if (dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                } else {
-                    dropdown.style.display = 'block';
-                }
-            };
-
-            document.onclick = function(e) {
-                if (!e.target.closest('.menu-dropdown-container')) {
-                    dropdown.style.display = 'none';
-                }
-            };
+            document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
-    }
 
-    window.onload = () => { startLiveClock(); loadDepotData(); initMobileMenu(); };
-</script>
+        window.onload = () => { startLiveClock(); loadDepotData(); };
+    </script>
 </body>
 </html>

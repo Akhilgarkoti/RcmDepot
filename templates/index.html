@@ -99,6 +99,7 @@
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
             cursor: pointer;
             transition: transform 0.2s ease;
+            overflow: hidden;
         }
 
         .company-logo-wrap:hover {
@@ -109,7 +110,6 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            filter: brightness(0) invert(1);
         }
 
         .auth-header h2 {
@@ -367,7 +367,7 @@
         <div class="auth-header">
             <!-- Logo par 3 baar click karne se Admin Mode khul jayega -->
             <div class="company-logo-wrap" id="logoBox" onclick="handleLogoClick()" title="RCM Portal">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" id="defaultSvg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
             </div>
             <h2>RCM Depot <span>Portal</span></h2>
             <p id="portalSubText">Depot & Staff Unified Login</p>
@@ -425,15 +425,15 @@
                 <div class="contact-info-list">
                     <div class="contact-item">
                         <span class="label">Status:</span>
-                        <span style="color: #0f172a; font-weight: 700;">Active</span>
+                        <span style="color: #0f172a; font-weight: 700;">Not Active</span>
                     </div>
                     <div class="contact-item">
                         <span class="label">Email:</span>
-                        <a href="mailto:support@rcmdepot.com">support@rcmdepot.com</a>
+                        <a href="mailto:support@rcmdepot.com">--</a>
                     </div>
                     <div class="contact-item">
                         <span class="label">Phone:</span>
-                        <a href="tel:+919053690281">+91 9053690281</a>
+                        <a href="tel:+919053690281">+91 --</a>
                     </div>
                 </div>
 
@@ -449,7 +449,6 @@
         let logoClickCount = 0;
         let logoClickTimer = null;
 
-        // Logo par 3 baar click karne se Admin Mode enable ho jayega
         function handleLogoClick() {
             logoClickCount++;
             if (logoClickCount === 1) {

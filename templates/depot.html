@@ -712,7 +712,21 @@
 </head>
 <body>
 
-    <div id="globalLoadingOverlay" class="global-loading-overlay">
+    <!-- FY Selection Modal (Appears Immediately on Login/Load) -->
+    <div id="fyModal" class="modal" style="display:none; z-index: 999999; background: rgba(15, 23, 42, 0.8);">
+        <div class="modal-box" style="max-width: 420px; text-align: center; padding: 2rem 1.5rem;">
+            <div style="font-size: 1.3rem; font-weight: 800; color: var(--text-dark); margin-bottom: 0.5rem;">📅 Select Financial Year</div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; line-height: 1.4;">Please select the Financial Year you want to log in & work with:</p>
+            <div class="form-group" style="margin-bottom: 1.5rem; text-align: left;">
+                <label style="font-weight: 700; color: var(--text-dark);">Financial Year Mode</label>
+                <select id="popupFySelect" class="form-control" style="font-weight: 700; color: var(--primary); padding: 0.75rem;">
+                </select>
+            </div>
+            <button type="button" class="btn-submit-dispatch" style="width: 100%; margin-top: 0; padding: 0.8rem; font-size: 0.95rem;" onclick="confirmFySelection()">Proceed to Portal 🚀</button>
+        </div>
+    </div>
+
+    <div id="globalLoadingOverlay" class="global-loading-overlay" style="display:none;">
         <div class="loader-card">
             <div class="loader-ring"></div>
             <div class="loader-text" id="globalLoadingMsg">Loading Depot Data... Please wait!</div>
@@ -805,7 +819,7 @@
         <!-- Global Financial Year Selector Bar -->
         <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 0.6rem 1rem; border: 1px solid var(--theme-border); border-radius: var(--radius-md); margin-bottom: 1.2rem; box-shadow: var(--shadow-subtle); flex-wrap: wrap; gap: 0.8rem;">
             <div style="display: flex; align-items: center; gap: 0.6rem;">
-                <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark);">📅 Select Financial Year Mode:</span>
+                <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-dark);">📅 Active Financial Year:</span>
                 <select id="globalFySelect" class="filter-select-box" style="padding: 0.35rem 0.85rem; font-size: 0.85rem; font-weight: 700; color: var(--primary);" onchange="handleGlobalFyChange(this.value)">
                 </select>
             </div>
@@ -880,7 +894,7 @@
             <div class="table-toolbar">
                 <div class="toolbar-left">
                     <select id="historyPeriodFilter" class="filter-select-box" onchange="handleDispatchFilterChange()">
-                        <option value="TODAY" selected>📅 Today's Entries</option>
+                        <option value="TODAY">📅 Today's Entries</option>
                         <option value="ALL">🌐 All Records</option>
                     </select>
                     <div class="search-box-wrap" id="dispSearchWrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search invoices, driver, vehicle..." oninput="filterHistoryTable()"></div>
@@ -1299,7 +1313,6 @@
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
-        // Global Financial Year Management
         function getCurrentFyStart() {
             const now = new Date();
             const currentYear = now.getFullYear();
@@ -1513,6 +1526,40 @@
                 optionsHtml += `<option value="FY_${fy}" ${sel}>💼 FY: ${fy}-${String(fy+1).slice(2)}</option>`;
             });
             selectBox.innerHTML = optionsHtml;
+        }
+
+        // Popup FY Dropdown Setup on Page Load
+        function initFyPopup() {
+            const curFy = getCurrentFyStart();
+            const yearsSet = new Set();
+            yearsSet.add(curFy);
+            yearsSet.add(curFy - 1);
+            yearsSet.add(curFy - 2);
+
+            const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+            const popupSelect = document.getElementById('popupFySelect');
+            if (!popupSelect) return;
+
+            let html = '';
+            sortedYears.forEach(y => {
+                const label = `FY: ${y}-${String(y + 1).slice(2)} ${y === curFy ? '(Current FY - Full Access)' : '(Old FY - View Only)'}`;
+                const sel = (y === curFy) ? 'selected' : '';
+                html += `<option value="${y}" ${sel}>${label}</option>`;
+            });
+            popupSelect.innerHTML = html;
+
+            // Show popup immediately upon login/load
+            document.getElementById('fyModal').style.display = 'flex';
+        }
+
+        function confirmFySelection() {
+            const val = document.getElementById('popupFySelect').value;
+            globalActiveFyStart = parseInt(val, 10);
+            document.getElementById('fyModal').style.display = 'none';
+
+            // Populate top bar select and start loading data
+            populateGlobalFyDropdown();
+            loadDepotData();
         }
 
         function populateGlobalFyDropdown() {
@@ -3458,7 +3505,10 @@
             document.getElementById('printPreviewModal').style.display = 'block';
         }
 
-        window.onload = () => { startLiveClock(); loadDepotData(); };
+        window.onload = () => { 
+            startLiveClock(); 
+            initFyPopup(); 
+        };
     </script>
 </body>
 </html>

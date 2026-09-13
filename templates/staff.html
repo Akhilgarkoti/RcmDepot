@@ -504,7 +504,6 @@
             return str.split(' 05:')[0].split('T')[0] || '-';
         }
 
-        // मोबाइल और डेस्कटॉप दोनों के लिए 100% वर्किंग Fetch API फंक्शन
         function jsonp(url) {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -742,7 +741,6 @@
                     rows: mObj.rows
                 });
 
-                // Desktop View Row
                 desktopTbody += `
                 <tr>
                     <td style="font-weight:700; color:var(--text-dark);">${mLabel}</td>
@@ -755,7 +753,6 @@
                     </td>
                 </tr>`;
 
-                // Mobile View: Easy Passbook Card
                 mobileFeedHtml += `
                 <div class="passbook-card" id="mCard_${mIndex}">
                     <div class="passbook-header" onclick="toggleMobilePassbook(${mIndex})">
@@ -790,7 +787,6 @@
             document.getElementById('mobileLedgerFeed').innerHTML = mobileFeedHtml;
         }
 
-        // Accordion Toggle for Mobile View
         function toggleMobilePassbook(mIndex) {
             const card = document.getElementById(`mCard_${mIndex}`);
             const drawer = document.getElementById(`mDrawer_${mIndex}`);
@@ -886,7 +882,6 @@
             hideMonthDetails();
         }
 
-        // Desktop Detailed View
         function viewMonthDetails(mIndex) {
             const mData = annualSummaryData.find(d => d.monthIndex === mIndex);
             if (!mData) return;

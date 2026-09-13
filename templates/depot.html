@@ -750,6 +750,47 @@
                 margin: 1rem auto !important;
             }
         }
+
+        /* 📱 Screen-Fitting Strict Overrides (Prevents Mobile Shrink & Zoom-out) */
+        @media screen and (max-width: 768px) {
+            html, body {
+                width: 100% !important;
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .navbar, .main-container, .comfort-panel {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .form-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 0.75rem !important;
+            }
+            .form-group, .form-group-full {
+                width: 100% !important;
+            }
+            .form-control {
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            #printableReceipt {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
+            }
+            .table-responsive {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1475,9 +1516,7 @@
                 const vType = getField(match, 'Vehicle Type');
                 const vNo = getField(match, 'Vehicle No');
                 if (vType) document.getElementById('dispVehicleType').value = vType;
-                if (vNo && vNo !== '-' && !document.getElementById('dispVehicleNo').value) {
-                    document.getElementById('dispVehicleNo').value = vNo;
-                }
+                if (vNo && vNo !== '-') document.getElementById('dispVehicleNo').value = vNo;
             }
         }
 
@@ -1488,9 +1527,7 @@
                 const vType = getField(match, 'Vehicle Type');
                 const th = getField(match, 'Dispatch Throuch', 'Dispatch Through');
                 if (vType) document.getElementById('dispVehicleType').value = vType;
-                if (th && th !== '-' && !document.getElementById('dispThrough').value) {
-                    document.getElementById('dispThrough').value = th;
-                }
+                if (th && th !== '-') document.getElementById('dispThrough').value = th;
             }
         }
 
@@ -2233,7 +2270,7 @@
                 showToast('Entry dispatched & recorded.');
                 await loadDepotData();
             } finally { 
-                hideScreenBlocker();
+                hideScreenBlocker(); 
                 btn.disabled = false;
             }
         });

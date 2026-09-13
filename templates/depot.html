@@ -232,7 +232,6 @@
             padding: 6px;
         }
         
-        /* जब चेकबॉक्स पर टैप/क्लिक होगा, मेनू अपने आप खुल जाएगा */
         #mobileMenuCheckbox:checked ~ .dropdown-content {
             display: block;
         }
@@ -651,11 +650,12 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
+        /* 📱 Mobile Responsive Fix (Aapke Screenshot ke mutabiq UI proper align karne ke liye) */
         @media (max-width: 768px) {
             .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
             .nav-left-box { justify-content: space-between; width: 100%; }
             .depot-center-section { align-items: center; text-align: center; width: 100%; border-top: 1px solid var(--theme-border); padding-top: 0.6rem; }
-            .depot-details-text { align-items: center; }
+            .depot-details-text { align-items: center; text-align: center; }
             .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
             .comfort-panel { padding: 1rem 0.85rem; }
             .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
@@ -666,6 +666,10 @@
             .table-responsive { max-height: 520px; }
             .search-box-wrap { min-width: 100%; }
             .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
+            
+            /* Inputs & Buttons full width on mobile */
+            .form-control, .btn-submit-dispatch { width: 100% !important; font-size: 16px; }
+            .company-logo-badge { width: 140px; height: 32px; }
         }
     </style>
 </head>
@@ -3237,7 +3241,6 @@
         document.getElementById('printPreviewModal').style.display = 'block';
     }
 
-    // 100% Mobile & Desktop Working Menu Handler
     function initMobileMenu() {
         const menuBtn = document.querySelector('.menu-dots-btn');
         const dropdown = document.getElementById('myDropdown');

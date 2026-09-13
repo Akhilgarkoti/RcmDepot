@@ -85,6 +85,7 @@
             padding: 4px 8px;
             overflow: hidden;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer; /* Secret trigger hint */
         }
 
         .company-logo-wrap img {
@@ -108,69 +109,18 @@
             font-weight: 600;
         }
 
-        .role-selector-title {
-            font-size: 0.74rem;
-            font-weight: 800;
-            color: var(--text-muted);
-            margin-bottom: 0.6rem;
+        .active-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #eff6ff;
+            color: var(--primary-light);
+            border: 1px solid #bfdbfe;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            text-align: center;
-        }
-
-        .role-options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.65rem;
-            margin-bottom: 1.3rem;
-        }
-
-        .role-btn {
-            background: #ffffff;
-            border: 1.5px solid var(--border-color);
-            border-radius: 10px;
-            padding: 0.7rem 0.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            user-select: none;
-        }
-
-        .role-btn .role-icon { font-size: 1.1rem; }
-        .role-btn .role-label { font-size: 0.85rem; font-weight: 700; }
-
-        .role-btn:hover {
-            border-color: #cbd5e1;
-            background: #f8fafc;
-        }
-
-        .role-btn.active[data-role="depot"] {
-            border-color: var(--accent-depot);
-            background: #e0f2fe;
-            color: #0369a1;
-            font-weight: 800;
-            box-shadow: 0 0 0 1px var(--accent-depot);
-        }
-
-        .role-btn.active[data-role="staff"] {
-            border-color: var(--accent-staff);
-            background: #fef3c7;
-            color: #92400e;
-            font-weight: 800;
-            box-shadow: 0 0 0 1px var(--accent-staff);
-        }
-
-        .role-btn.active[data-role="admin"] {
-            border-color: var(--accent-admin);
-            background: #fee2e2;
-            color: #991b1b;
-            font-weight: 800;
-            box-shadow: 0 0 0 1px var(--accent-admin);
+            letter-spacing: 0.5px;
         }
 
         .form-group {
@@ -282,30 +232,6 @@
 
         .auth-link:hover { text-decoration: underline; }
 
-        .admin-footer-wrap {
-            margin-top: 0.9rem;
-            text-align: center;
-            padding-top: 0.8rem;
-            border-top: 1px dashed var(--border-color);
-        }
-
-        .btn-switch-admin {
-            background: #fff;
-            color: var(--accent-admin);
-            border: 1px solid #fca5a5;
-            padding: 0.45rem 0.95rem;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.78rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            transition: all 0.2s;
-        }
-
-        .btn-switch-admin:hover { background: #fee2e2; }
-
         .dev-footer {
             margin-top: 1.4rem;
             text-align: center;
@@ -409,34 +335,26 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <div class="company-logo-wrap" id="logoBox">
+            <!-- Logo par 3 baar click karne se Admin Mode khul jayega -->
+            <div class="company-logo-wrap" id="logoBox" onclick="handleLogoClick()" title="RCM Portal">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="#1e3a8a"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
             </div>
             <h2>RCM Depot <span>Portal</span></h2>
-            <p id="portalSubText">Depot Management Login</p>
+            <p id="portalSubText">Depot & Staff Unified Login</p>
         </div>
 
-        <div class="role-selector-title">Select Portal Role</div>
-
-        <div class="role-options-grid">
-            <div class="role-btn active" data-role="depot" onclick="selectRole('depot', true)">
-                <span class="role-icon">🏬</span>
-                <span class="role-label">1. Depot</span>
-            </div>
-            <div class="role-btn" data-role="staff" onclick="selectRole('staff', true)">
-                <span class="role-icon">👤</span>
-                <span class="role-label">2. Staff</span>
-            </div>
+        <div style="text-align: center;">
+            <span id="roleBadge" class="active-badge">Secure Portal Access</span>
         </div>
 
         <form id="loginForm">
-            <input type="hidden" id="selectedRoleInput" value="depot">
+            <input type="hidden" id="selectedRoleInput" value="auto">
 
             <div class="form-group">
-                <label for="userName" id="userLabel">Depot Code / Username</label>
+                <label for="userName" id="userLabel">Depot Code / Staff ID</label>
                 <div class="input-box">
                     <span class="input-icon">👤</span>
-                    <input type="text" id="userName" required placeholder="Enter Depot Code (e.g. D001)" autocomplete="username">
+                    <input type="text" id="userName" required placeholder="Enter ID (e.g. D001 or EMP001)" autocomplete="username" oninput="detectRoleOnInput(this.value)">
                 </div>
             </div>
 
@@ -449,7 +367,7 @@
                 </div>
             </div>
 
-            <button type="submit" id="loginBtn" class="btn-submit">Login to Depot Portal</button>
+            <button type="submit" id="loginBtn" class="btn-submit">Login to Portal</button>
             <div id="loginMsg" class="status-msg"></div>
         </form>
 
@@ -457,16 +375,10 @@
             <a class="auth-link" onclick="openContactModal('Password Reset Assistance')">🔑 Forgot Password?</a>
             <a class="auth-link" onclick="openContactModal('New User Registration')">📝 Register User</a>
         </div>
-
-        <div class="admin-footer-wrap">
-            <button type="button" class="btn-switch-admin" onclick="selectRole('admin', true)">
-                🛡️ Master Admin Login
-            </button>
-        </div>
     </div>
 
     <div class="dev-footer">
-        Developed for <strong>RCM DepotManagement</strong>
+        Developed for <strong>RCM Depot Management</strong>
     </div>
 
     <div id="adminContactModal" class="modal">
@@ -483,15 +395,15 @@
                 <div class="contact-info-list">
                     <div class="contact-item">
                         <span class="label">Status:</span>
-                        <span style="color: #0f172a; font-weight: 700;">Not Active</span>
+                        <span style="color: #0f172a; font-weight: 700;">Active</span>
                     </div>
                     <div class="contact-item">
                         <span class="label">Email:</span>
-                        <a href="mailto:support@rcmdepot.com">-- </a>
+                        <a href="mailto:support@rcmdepot.com">support@rcmdepot.com</a>
                     </div>
                     <div class="contact-item">
                         <span class="label">Phone:</span>
-                        <a href="tel:+919053690281">+91 --</a>
+                        <a href="tel:+919053690281">+91 9053690281</a>
                     </div>
                 </div>
 
@@ -503,53 +415,60 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
 
-        let currentRole = "depot";
+        let currentRole = "auto";
+        let logoClickCount = 0;
+        let logoClickTimer = null;
 
-        function selectRole(role, clearError = false) {
-            currentRole = role;
-            document.getElementById('selectedRoleInput').value = role;
+        // Logo par 3 baar click karne se Admin Mode enable ho jayega
+        function handleLogoClick() {
+            logoClickCount++;
+            if (logoClickCount === 1) {
+                logoClickTimer = setTimeout(() => {
+                    logoClickCount = 0;
+                }, 1000);
+            } else if (logoClickCount === 3) {
+                clearTimeout(logoClickTimer);
+                logoClickCount = 0;
+                enableAdminMode();
+            }
+        }
 
-            document.querySelectorAll('.role-btn').forEach(btn => {
-                if (btn.getAttribute('data-role') === role) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
+        function enableAdminMode() {
+            currentRole = "admin";
+            document.getElementById('selectedRoleInput').value = "admin";
+            document.getElementById('userLabel').textContent = "Master Admin Username";
+            document.getElementById('userName').placeholder = "Enter Admin Username";
+            document.getElementById('portalSubText').textContent = "Master Admin Portal Login";
+            document.getElementById('roleBadge').textContent = "🛡️ Admin Mode Unlocked";
+            document.getElementById('roleBadge').style.background = "#fee2e2";
+            document.getElementById('roleBadge').style.color = "#991b1b";
+            document.getElementById('roleBadge').style.borderColor = "#fca5a5";
+            document.getElementById('loginBtn').textContent = "Login to Master Admin";
+            document.getElementById('loginBtn').style.background = "linear-gradient(180deg, #ef4444 0%, #dc2626 100%)";
+            alert("🔒 Admin mode activated successfully!");
+        }
 
-            const userLabel = document.getElementById('userLabel');
-            const userNameInput = document.getElementById('userName');
-            const loginBtn = document.getElementById('loginBtn');
+        function detectRoleOnInput(val) {
+            if (currentRole === "admin") return; // Agar admin mode on hai toh auto-detect bypass karein
+
+            const v = val.trim().toUpperCase();
+            const badge = document.getElementById('roleBadge');
             const subText = document.getElementById('portalSubText');
-            
-            if (clearError) {
-                const errBox = document.getElementById('loginMsg');
-                errBox.style.display = 'none';
-                errBox.textContent = '';
-            }
 
-            if (role === "depot") {
-                userLabel.textContent = "Depot Code / Username";
-                userNameInput.placeholder = "Enter Depot Code (e.g. D121)";
-                loginBtn.textContent = "Login to Depot Portal";
-                loginBtn.style.background = "var(--primary-light)";
-                loginBtn.style.boxShadow = "0 4px 12px rgba(37, 99, 235, 0.25)";
-                subText.textContent = "Depot Management Login";
-            } else if (role === "staff") {
-                userLabel.textContent = "Staff Code / Login ID";
-                userNameInput.placeholder = "Enter Login ID (e.g. EMP001)";
-                loginBtn.textContent = "Login to Staff Portal";
-                loginBtn.style.background = "linear-gradient(180deg, #f59e0b 0%, #d97706 100%)";
-                loginBtn.style.boxShadow = "0 4px 12px rgba(217, 119, 6, 0.25)";
+            if (v.startsWith('EMP') || v.startsWith('STF')) {
+                currentRole = "staff";
+                badge.textContent = "👤 Staff Portal Mode";
                 subText.textContent = "Staff Portal Login";
-            } else if (role === "admin") {
-                userLabel.textContent = "Admin Username";
-                userNameInput.placeholder = "Enter Admin Username";
-                loginBtn.textContent = "Login to Master Admin";
-                loginBtn.style.background = "linear-gradient(180deg, #ef4444 0%, #dc2626 100%)";
-                loginBtn.style.boxShadow = "0 4px 12px rgba(220, 38, 38, 0.25)";
-                subText.textContent = "Master Admin Portal Login";
+            } else if (v.startsWith('D') || v.startsWith('DEP')) {
+                currentRole = "depot";
+                badge.textContent = "🏬 Depot Portal Mode";
+                subText.textContent = "Depot Management Login";
+            } else {
+                currentRole = "auto";
+                badge.textContent = "Secure Portal Access";
+                subText.textContent = "Depot & Staff Unified Login";
             }
+            document.getElementById('selectedRoleInput').value = currentRole;
         }
 
         function togglePasswordVisibility() {
@@ -557,17 +476,14 @@
             pwdInput.type = (pwdInput.type === 'password') ? 'text' : 'password';
         }
 
-        // Fetch API आधारित सिक्योर रिक्वेस्ट (मोबाइल क्रोम के लिए 100% वर्किंग)
         async function jsonpRequest(url) {
             try {
-                // गूगल स्क्रिप्ट पर फेच रिक्वेस्ट भेजने के लिए
                 const response = await fetch(url, {
                     method: 'GET',
                     redirect: 'follow'
                 });
                 const text = await response.text();
                 
-                // अगर रिस्पांस JSONP फॉर्मेट (callback(...)) में है, तो उसे पार्स करें
                 if (text.includes('(') && text.endsWith(')')) {
                     const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
                     return JSON.parse(jsonStr);
@@ -581,10 +497,17 @@
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const role = document.getElementById('selectedRoleInput').value.trim();
+            let role = document.getElementById('selectedRoleInput').value.trim();
             const username = document.getElementById('userName').value.trim();
             const password = document.getElementById('userPassword').value.trim();
             
+            // Agar auto hai toh username ke prefix se role tay karein ya default depot lein
+            if (role === "auto" || !role) {
+                const uUp = username.toUpperCase();
+                if (uUp.startsWith('EMP') || uUp.startsWith('STF')) role = "staff";
+                else role = "depot";
+            }
+
             const btn = document.getElementById('loginBtn');
             const msgBox = document.getElementById('loginMsg');
 
@@ -617,13 +540,11 @@
                     msgBox.textContent = (res && res.message) ? ("⚠️ " + res.message) : "⚠️ Invalid username or password.";
                     msgBox.style.display = 'block';
                     btn.disabled = false;
-                    selectRole(role, false);
                 }
             } catch (err) {
                 msgBox.textContent = "⚠️ " + (err.message || "Failed to login. Please try again.");
                 msgBox.style.display = 'block';
                 btn.disabled = false;
-                selectRole(role, false);
             }
         });
 

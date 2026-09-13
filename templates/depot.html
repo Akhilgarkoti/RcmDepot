@@ -661,7 +661,7 @@
             .search-box-wrap { min-width: 100%; }
             .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
             
-/* Tables ko aur zyada compact aur zoom-out karne ke liye */
+    /* Tables ko aur zyada compact aur zoom-out karne ke liye */
     table.custom-table th {
         padding: 0.4rem 0.5rem !important;
         font-size: 0.62rem !important;
@@ -1240,21 +1240,21 @@
         </div>
     </div>
 
-    <!-- Professional Mobile Bottom Navigation Bar (Added) -->
+    <!-- Professional Mobile Bottom Navigation Bar (With Permission IDs) -->
     <div class="mobile-bottom-nav">
-        <button class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
+        <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
             <span>📦</span>
             <small>Dispatch</small>
         </button>
-        <button class="bot-nav-btn" onclick="switchTab('recordsTab', null); updateBottomNavActive(this);">
+        <button id="botNavHistory" class="bot-nav-btn" onclick="switchTab('recordsTab', null); updateBottomNavActive(this);">
             <span>📊</span>
             <small>History</small>
         </button>
-        <button class="bot-nav-btn" onclick="switchTab('staffTab', null); updateBottomNavActive(this);">
+        <button id="botNavStaff" class="bot-nav-btn" onclick="switchTab('staffTab', null); updateBottomNavActive(this);">
             <span>👥</span>
             <small>Staff</small>
         </button>
-        <button class="bot-nav-btn" onclick="switchTab('expensesTab', null); updateBottomNavActive(this);">
+        <button id="botNavExpenses" class="bot-nav-btn" onclick="switchTab('expensesTab', null); updateBottomNavActive(this);">
             <span>💰</span>
             <small>Expenses</small>
         </button>
@@ -1510,6 +1510,17 @@
             if (tabHistory) tabHistory.style.display = canHistory ? 'inline-block' : 'none';
             if (tabStaff) tabStaff.style.display = canStaff ? 'block' : 'none';
             if (tabExpenses) tabExpenses.style.display = canExpenses ? 'block' : 'none';
+
+            // Mobile Bottom Navigation Bar Permission Check
+            const botNavDispatch = document.getElementById('botNavDispatch');
+            const botNavHistory = document.getElementById('botNavHistory');
+            const botNavStaff = document.getElementById('botNavStaff');
+            const botNavExpenses = document.getElementById('botNavExpenses');
+
+            if (botNavDispatch) botNavDispatch.style.display = canDispatch ? 'flex' : 'none';
+            if (botNavHistory) botNavHistory.style.display = canHistory ? 'flex' : 'none';
+            if (botNavStaff) botNavStaff.style.display = canStaff ? 'flex' : 'none';
+            if (botNavExpenses) botNavExpenses.style.display = canExpenses ? 'flex' : 'none';
         }
 
         async function loadDepotData() {

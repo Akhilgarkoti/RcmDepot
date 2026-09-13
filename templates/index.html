@@ -86,24 +86,26 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Yahan logo ki width aur height pehle ki tarah set kar di gayi hai */
         .company-logo-wrap {
-            width: 70px;
-            height: 70px;
+            width: 180px;
+            height: 48px;
             margin: 0 auto 1.2rem auto;
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-            border-radius: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
-            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+            padding: 4px 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             cursor: pointer;
             transition: transform 0.2s ease;
             overflow: hidden;
         }
 
         .company-logo-wrap:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         .company-logo-wrap img {
@@ -367,7 +369,7 @@
         <div class="auth-header">
             <!-- Logo par 3 baar click karne se Admin Mode khul jayega -->
             <div class="company-logo-wrap" id="logoBox" onclick="handleLogoClick()" title="RCM Portal">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" id="defaultSvg"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#1e3a8a"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
             </div>
             <h2>RCM Depot <span>Portal</span></h2>
             <p id="portalSubText">Depot & Staff Unified Login</p>
@@ -408,7 +410,7 @@
     </div>
 
     <div class="dev-footer">
-        Developed for <strong>RCM Depot Management</strong>
+        Developed for <strong> Depot & Depot Staff </strong>
     </div>
 
     <div id="adminContactModal" class="modal">
@@ -429,11 +431,11 @@
                     </div>
                     <div class="contact-item">
                         <span class="label">Email:</span>
-                        <a href="mailto:support@rcmdepot.com">--</a>
+                        <a href="mailto:support@rcmdepot.com">-----------</a>
                     </div>
                     <div class="contact-item">
                         <span class="label">Phone:</span>
-                        <a href="tel:+919053690281">+91 --</a>
+                        <a href="tel:+919053690281">+91 ---------</a>
                     </div>
                 </div>
 

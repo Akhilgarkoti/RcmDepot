@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RCM Depot Manager Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -650,26 +650,105 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* 📱 Mobile Responsive Fix (Aapke Screenshot ke mutabiq UI proper align karne ke liye) */
+        /* 📱 Complete Native Mobile-Friendly Layout Fix */
         @media (max-width: 768px) {
-            .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
-            .nav-left-box { justify-content: space-between; width: 100%; }
-            .depot-center-section { align-items: center; text-align: center; width: 100%; border-top: 1px solid var(--theme-border); padding-top: 0.6rem; }
-            .depot-details-text { align-items: center; text-align: center; }
-            .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
-            .comfort-panel { padding: 1rem 0.85rem; }
-            .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
-            .form-group-full { grid-column: span 1; }
-            .depot-nav-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-            .depot-nav-tabs::-webkit-scrollbar { display: none; }
-            .tab-btn { flex: 0 0 auto; white-space: nowrap; }
-            .table-responsive { max-height: 520px; }
-            .search-box-wrap { min-width: 100%; }
-            .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
-            
-            /* Inputs & Buttons full width on mobile */
-            .form-control, .btn-submit-dispatch { width: 100% !important; font-size: 16px; }
-            .company-logo-badge { width: 140px; height: 32px; }
+            html, body {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
+            .navbar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 0.75rem !important;
+                padding: 0.75rem !important;
+            }
+
+            .nav-left-box {
+                justify-content: space-between !important;
+                width: 100% !important;
+            }
+
+            .depot-center-section {
+                align-items: flex-start !important;
+                text-align: left !important;
+                width: 100% !important;
+                border-top: 1px solid var(--theme-border) !important;
+                padding-top: 0.6rem !important;
+            }
+
+            .depot-details-text {
+                align-items: flex-start !important;
+                text-align: left !important;
+            }
+
+            .main-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 0.6rem !important;
+                margin: 0.6rem auto !important;
+            }
+
+            .comfort-panel {
+                width: 100% !important;
+                padding: 1rem 0.75rem !important;
+                border-radius: var(--radius-sm) !important;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+
+            .form-group-full {
+                grid-column: span 1 !important;
+            }
+
+            .form-control, input, select, textarea {
+                width: 100% !important;
+                font-size: 16px !important; /* Mobile keyboard zoom prevention */
+            }
+
+            .btn-submit-dispatch {
+                width: 100% !important;
+                font-size: 1rem !important;
+                padding: 0.75rem 1rem !important;
+            }
+
+            .depot-nav-tabs {
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                scrollbar-width: none !important;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 4px !important;
+            }
+
+            .depot-nav-tabs::-webkit-scrollbar {
+                display: none !important;
+            }
+
+            .tab-btn {
+                flex: 0 0 auto !important;
+                white-space: nowrap !important;
+                padding: 0.5rem 0.85rem !important;
+                font-size: 0.8rem !important;
+            }
+
+            .table-responsive {
+                max-height: 520px !important;
+                width: 100% !important;
+            }
+
+            .search-box-wrap {
+                min-width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .modal-box, .modal-box-large, .modal-box-compact {
+                width: 96% !important;
+                margin: 1rem auto !important;
+            }
         }
     </style>
 </head>
@@ -1303,7 +1382,6 @@
             setInterval(tick, 1000);
         }
 
-        // मोबाइल और डेस्कटॉप दोनों के लिए 100% वर्किंग Fetch API फंक्शन
         function jsonp(url) {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -3237,33 +3315,33 @@
                 </div>
             `;
             document.getElementById('printableReceipt').innerHTML = slipTemplate;
-        document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
-        document.getElementById('printPreviewModal').style.display = 'block';
-    }
-
-    function initMobileMenu() {
-        const menuBtn = document.querySelector('.menu-dots-btn');
-        const dropdown = document.getElementById('myDropdown');
-
-        if (menuBtn && dropdown) {
-            menuBtn.onclick = function(e) {
-                e.stopPropagation();
-                if (dropdown.style.display === 'block') {
-                    dropdown.style.display = 'none';
-                } else {
-                    dropdown.style.display = 'block';
-                }
-            };
-
-            document.onclick = function(e) {
-                if (!e.target.closest('.menu-dropdown-container')) {
-                    dropdown.style.display = 'none';
-                }
-            };
+            document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
-    }
 
-    window.onload = () => { startLiveClock(); loadDepotData(); initMobileMenu(); };
-</script>
+        function initMobileMenu() {
+            const menuBtn = document.querySelector('.menu-dots-btn');
+            const dropdown = document.getElementById('myDropdown');
+
+            if (menuBtn && dropdown) {
+                menuBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    if (dropdown.style.display === 'block') {
+                        dropdown.style.display = 'none';
+                    } else {
+                        dropdown.style.display = 'block';
+                    }
+                };
+
+                document.onclick = function(e) {
+                    if (!e.target.closest('.menu-dropdown-container')) {
+                        dropdown.style.display = 'none';
+                    }
+                };
+            }
+        }
+
+        window.onload = () => { startLiveClock(); loadDepotData(); initMobileMenu(); };
+    </script>
 </body>
 </html>

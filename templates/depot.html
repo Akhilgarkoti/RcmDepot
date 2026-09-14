@@ -481,18 +481,38 @@
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; }
+        /* Professional Toast Notifications */
+        .toast-container { 
+            position: fixed; 
+            top: 24px; 
+            right: 24px; 
+            z-index: 999999; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            pointer-events: none; 
+        }
         .toast-msg { 
-            min-width: 270px; 
-            padding: 0.8rem 1.2rem; 
-            border-radius: var(--radius-sm); 
-            font-size: 0.84rem; 
+            pointer-events: auto;
+            min-width: 290px; 
+            max-width: 380px;
+            padding: 0.9rem 1.25rem; 
+            border-radius: var(--radius-md); 
+            font-size: 0.85rem; 
             font-weight: 600; 
-            background: #0f172a; 
-            color: #ffffff; 
-            box-shadow: var(--shadow-float); 
+            background: #ffffff; 
+            color: var(--text-dark); 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1); 
+            border: 1px solid var(--theme-border);
             border-left: 4px solid var(--primary); 
-            animation: popIn 0.2s ease-out; 
+            animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideInToast {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
@@ -510,15 +530,16 @@
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
+        /* Loading overlay covers the content area below the visible navbar */
         .global-loading-overlay {
             display: flex;
             position: fixed;
-            top: 0;
+            top: 73px; /* leaves header visible */
             left: 0;
             width: 100%;
-            height: 100%;
+            height: calc(100vh - 73px);
             background: #f8fafc;
-            z-index: 999999;
+            z-index: 99999;
             align-items: center;
             justify-content: center;
             cursor: wait;
@@ -653,6 +674,34 @@
 </head>
 <body>
 
+    <div class="navbar">
+        <div class="nav-left-box">
+            <div class="brand-section">
+                <div class="depot-logo-box" id="depotLogoBox">
+                    <svg width="28" height="24" viewBox="0 0 24 24" fill="#2563eb"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                </div>
+                <div>
+                    <h3 style="color:var(--text-dark);font-size:0.95rem;font-weight:800;line-height:1.2;letter-spacing:-0.01em;">RCM DEPOT PORTAL</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Easy To Manage Your Daily Depot Records </span>
+                </div>
+            </div>
+            
+            <div class="nav-actions-left">
+                <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
+                <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
+            </div>
+        </div>
+
+        <div class="depot-center-section">
+            <div class="company-logo-badge" id="companyLogoBox"></div>
+            <div class="depot-details-text">
+                <h1 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;"><span id="headerDepotTitle">Depot Management</span></h1>
+                <div id="topDepotAddress" style="font-size:0.75rem;color:var(--text-muted);margin:0;">Loading depot details...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay positioned below header so header is always visible -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-ring"></div>
@@ -714,33 +763,6 @@
     <div id="toastContainer" class="toast-container"></div>
     <datalist id="dispatchThroughList"></datalist>
     <datalist id="vehicleNoList"></datalist>
-
-    <div class="navbar">
-        <div class="nav-left-box">
-            <div class="brand-section">
-                <div class="depot-logo-box" id="depotLogoBox">
-                    <svg width="28" height="24" viewBox="0 0 24 24" fill="#2563eb"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                </div>
-                <div>
-                    <h3 style="color:var(--text-dark);font-size:0.95rem;font-weight:800;line-height:1.2;letter-spacing:-0.01em;">RCM DEPOT PORTAL</h3>
-                    <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Easy To Manage Your Daily Depot Records </span>
-                </div>
-            </div>
-            
-            <div class="nav-actions-left">
-                <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
-                <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-            </div>
-        </div>
-
-        <div class="depot-center-section">
-            <div class="company-logo-badge" id="companyLogoBox"></div>
-            <div class="depot-details-text">
-                <h1 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;"><span id="headerDepotTitle">Depot Management</span></h1>
-                <div id="topDepotAddress" style="font-size:0.75rem;color:var(--text-muted);margin:0;">Loading depot details...</div>
-            </div>
-        </div>
-    </div>
 
     <div class="main-container">
         <div class="depot-nav-tabs">
@@ -1238,9 +1260,12 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = 'toast-msg';
-            toast.textContent = msg;
+            toast.innerHTML = `<span>💬</span> <div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 2500);
+            setTimeout(() => { 
+                toast.style.animation = 'slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         function parseDateObj(raw) {

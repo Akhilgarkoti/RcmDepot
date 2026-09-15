@@ -155,7 +155,7 @@
             color: #dc2626; 
         }
         .btn-nav-logout:hover { 
-            background: linear-gradient(135deg, #fef2f2 100%, #fee2e2 100%); 
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
             border-color: #f87171; 
             color: #b91c1c;
             box-shadow: 0 6px 15px -3px rgba(220, 38, 38, 0.15);
@@ -1237,13 +1237,6 @@
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
-
-        // Helper function to format amount without .00 if whole number, and show blank if 0 or empty
-        function fmtAmt(val) {
-            let num = Number(val);
-            if (isNaN(num) || num === 0) return '';
-            return Number.isInteger(num) ? num.toString() : num.toFixed(2).replace(/\.00$/, '');
-        }
 
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
@@ -2578,13 +2571,13 @@
 
         async function deleteExpenseEntry(rowId, particularText) {
             if (!confirm("Are you sure you want to delete this Expense entry?")) return;
-             
+            
             showScreenBlocker('Deleting expense entry...');
             try {
                 const cleanId = String(rowId || '').trim();
                 const cleanPart = encodeURIComponent(particularText || '');
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&particular=${cleanPart}&depotCode=${encodeURIComponent(depotCode)}`);
-                 
+                
                 if (res && res.success) {
                     showToast(res.message || 'Deleted successfully!');
                     await loadDepotData();
@@ -2798,6 +2791,88 @@
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
         }
 
+        function viewExpenseMonthDetails(mIndex) {
+            const mData = expenseAnnualSummaryData.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+
+            const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
+            const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+            const monthName = monthNames[mIndex];
+
+            const now = new Date();
+            const isCurrentMonth = (actualYear === now.getFullYear() && mIndex === now.getMonth());
+
+            document.getElementById('expenseDetailHeader').textContent = `📅 Detailed Expenses: ${monthName} ${actualYear}`;
+
+            let opnBalMonth = 0;
+            const firstOfThisMonth = new Date(actualYear, mIndex, 1);
+
+            loadedDepotExpenses.forEach(r => {
+                const d = parseDateObj(getField(r, 'Date', 'date'));
+                if (d && d < firstOfThisMonth) {
+                    opnBalMonth += (Number(getField(r, 'Credit', 'credit') || 0) - Number(getField(r, 'Debit', 'debit') || 0));
+                }
+            });
+
+            let runningBal = opnBalMonth;
+            let html = '';
+
+            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
+            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
+
+            html += `<tr class="row-opening-balance">
+                <td style="text-align:center;">-</td>
+                <td><strong>01 ${monthName}</strong></td>
+                <td><strong>Opening Balance</strong></td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+            </tr>`;
+
+            mData.rows.forEach((r, idx) => {
+                const rowId = getField(r, 'id', 'ID', 'Id', 'Row ID', 'rowId') || r._rowIndex || String(idx + 2);
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const rawDate = getField(r, 'Date', 'date');
+                const dt = formatCleanDate(rawDate);
+                const part = getField(r, 'Particular', 'particular');
+
+                runningBal += (cr - dr);
+
+                let actionBtn = '-';
+                if (isCurrentMonth) {
+                    let dObj = parseDateObj(rawDate);
+                    let isoDate = dObj ? `${dObj.getFullYear()}-${String(dObj.getMonth() + 1).padStart(2, '0')}-${String(dObj.getDate()).padStart(2, '0')}` : '';
+                    
+                    const safeId = encodeURIComponent(rowId);
+                    const safePart = encodeURIComponent(part);
+
+                    actionBtn = `
+                        <button type="button" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:4px;" title="Edit" onclick="triggerExpenseEdit('${safeId}', '${isoDate}', '${safePart}', ${dr}, ${cr})">✏️</button>
+                        <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}', decodeURIComponent('${safePart}'))">🗑️</button>
+                    `;
+                }
+
+                html += `<tr>
+                    <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
+                    <td><strong>${dt}</strong></td>
+                    <td>${part}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                </tr>`;
+            });
+
+            document.getElementById('expenseDetailTbody').innerHTML = html;
+            document.getElementById('expenseSummaryContainer').style.display = 'none';
+            document.getElementById('expenseDetailContainer').style.display = 'block';
+        }
+
+        function hideExpenseMonthDetails() {
+            document.getElementById('expenseSummaryContainer').style.display = 'block';
+            document.getElementById('expenseDetailContainer').style.display = 'none';
+        }
+
         const STYLE_TITLE = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 12, bold: true, color: { rgb: "FF854D0E" } }, alignment: { horizontal: "center", vertical: "center" } };
         const STYLE_MONTH = { fill: { fgColor: { rgb: "FF38BDF8" } }, font: { name: "Calibri", sz: 11, bold: true, color: { rgb: "FFFFFFFF" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
         const STYLE_HEADER = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "FF854D0E" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
@@ -2834,21 +2909,11 @@
             const merges = [];
             let rIdx = 0;
 
-            function setCell(r, c, val, style, numFmt, isFormula = false) {
+            function setCell(r, c, val, style, numFmt) {
                 const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
-                const cell = { s: style };
-                if (isFormula) {
-                    cell.t = 'n';
-                    cell.f = val;
-                    if (numFmt) cell.z = numFmt;
-                } else if (typeof val === 'number') {
-                    cell.t = 'n';
-                    cell.v = val;
-                    if (numFmt) cell.z = numFmt;
-                } else {
-                    cell.t = 's';
-                    cell.v = val;
-                }
+                const cell = { v: val, s: style };
+                if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
+                else { cell.t = 's'; }
                 ws[cellRef] = cell;
             }
 
@@ -2872,55 +2937,38 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
+                let monthDr = 0; let monthCr = 0;
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-                
-                let opRowExcel = rIdx + 1;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : 0, STYLE_DATA, '#,##0;-#,##0;""');
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : 0, STYLE_DATA, '#,##0;-#,##0;""');
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, '#,##0;-#,##0;""');
-                let prevBalanceRow = opRowExcel;
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                 rIdx++;
 
-                // Chronological (old to new) inside month so formula chaining works properly from top to bottom
-                const chronMonthRows = rowsInMonth.slice().sort((a, b) => {
-                    let da = parseDateObj(getField(a, 'Date', 'date')) || new Date(0);
-                    let db = parseDateObj(getField(b, 'Date', 'date')) || new Date(0);
-                    return da - db;
-                });
-
-                chronMonthRows.forEach(r => {
+                rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    let currentRowExcel = rIdx + 1;
-                    let balanceFormula = `E${prevBalanceRow}+N(C${currentRowExcel})-N(D${currentRowExcel})`;
-
-                    runningBal += (cr - dr);
+                    monthDr += dr; monthCr += cr; runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : 0, STYLE_DATA, '#,##0;-#,##0;""');
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : 0, STYLE_DATA, '#,##0;-#,##0;""');
-                    setCell(rIdx, 4, balanceFormula, STYLE_DATA, '#,##0;-#,##0;""', true);
-                    
-                    prevBalanceRow = currentRowExcel;
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                     rIdx++;
                 });
 
-                let startMonthRowExcel = opRowExcel + 1;
-                let endMonthRowExcel = rIdx;
-
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                setCell(rIdx, 2, `SUM(C${startMonthRowExcel}:C${endMonthRowExcel})`, STYLE_TOTAL, '#,##0;-#,##0;""', true);
-                setCell(rIdx, 3, `SUM(D${startMonthRowExcel}:D${endMonthRowExcel})`, STYLE_TOTAL, '#,##0;-#,##0;""', true);
-                setCell(rIdx, 4, `E${endMonthRowExcel}`, STYLE_TOTAL, '#,##0;-#,##0;""', true);
+                setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
                 rIdx += 2; 
             });
 

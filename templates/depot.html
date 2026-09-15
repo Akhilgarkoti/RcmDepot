@@ -2954,8 +2954,8 @@
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : 0, STYLE_DATA, "0.00");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : 0, STYLE_DATA, "0.00");
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                 let prevBalanceRow = opRowExcel;
                 rIdx++;
@@ -2967,14 +2967,15 @@
                     const part = getField(r, 'Particular', 'particular');
 
                     let currentRowExcel = rIdx + 1;
-                    let balanceFormula = `E${prevBalanceRow}+C${currentRowExcel}-D${currentRowExcel}`;
+                    // Safe Excel formula handling blank/text cells using N() function to avoid #VALUE! error
+                    let balanceFormula = `E${prevBalanceRow}+N(C${currentRowExcel})-N(D${currentRowExcel})`;
 
                     runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : 0, STYLE_DATA, "0.00");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : 0, STYLE_DATA, "0.00");
                     setCell(rIdx, 4, balanceFormula, STYLE_DATA, "0.00", true);
                     
                     prevBalanceRow = currentRowExcel;
@@ -2998,7 +2999,7 @@
 
             return ws;
         }
-
+        
         function exportCurrentFyExpensesToExcel() {
             if (typeof XLSX === 'undefined') { showToast('Excel Library loading, please try again.'); return; }
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);

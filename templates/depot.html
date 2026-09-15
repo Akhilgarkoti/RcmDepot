@@ -2961,9 +2961,9 @@
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : 0, STYLE_DATA, "0.##");
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : 0, STYLE_DATA, "0.##");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.##");
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : 0, STYLE_DATA, "0");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : 0, STYLE_DATA, "0");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0");
                 let prevBalanceRow = opRowExcel;
                 rIdx++;
 
@@ -2974,16 +2974,15 @@
                     const part = getField(r, 'Particular', 'particular');
 
                     let currentRowExcel = rIdx + 1;
-                    // Safe Excel formula handling blank/text cells using N() function to avoid #VALUE! error
                     let balanceFormula = `E${prevBalanceRow}+N(C${currentRowExcel})-N(D${currentRowExcel})`;
 
                     runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : 0, STYLE_DATA, "0.##");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : 0, STYLE_DATA, "0.##");
-                    setCell(rIdx, 4, balanceFormula, STYLE_DATA, "0.##", true);
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : 0, STYLE_DATA, "0");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : 0, STYLE_DATA, "0");
+                    setCell(rIdx, 4, balanceFormula, STYLE_DATA, "0", true);
                     
                     prevBalanceRow = currentRowExcel;
                     rIdx++;
@@ -2994,9 +2993,9 @@
 
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                setCell(rIdx, 2, `SUM(C${startMonthRowExcel}:C${endMonthRowExcel})`, STYLE_TOTAL, "0.##", true);
-                setCell(rIdx, 3, `SUM(D${startMonthRowExcel}:D${endMonthRowExcel})`, STYLE_TOTAL, "0.##", true);
-                setCell(rIdx, 4, `E${endMonthRowExcel}`, STYLE_TOTAL, "0.##", true);
+                setCell(rIdx, 2, `SUM(C${startMonthRowExcel}:C${endMonthRowExcel})`, STYLE_TOTAL, "0", true);
+                setCell(rIdx, 3, `SUM(D${startMonthRowExcel}:D${endMonthRowExcel})`, STYLE_TOTAL, "0", true);
+                setCell(rIdx, 4, `E${endMonthRowExcel}`, STYLE_TOTAL, "0", true);
                 rIdx += 2; 
             });
 

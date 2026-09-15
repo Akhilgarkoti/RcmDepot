@@ -155,7 +155,7 @@
             color: #dc2626; 
         }
         .btn-nav-logout:hover { 
-            background: linear-gradient(135deg, #fef2f2 100%, #fee2e2 100%); 
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
             border-color: #f87171; 
             color: #b91c1c;
             box-shadow: 0 6px 15px -3px rgba(220, 38, 38, 0.15);
@@ -1238,13 +1238,6 @@
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
 
-        // Helper function to format amount without .00 if whole number, or clean decimal
-        function fmtAmt(val) {
-            let num = Number(val);
-            if (isNaN(num)) return val;
-            return Number.isInteger(num) ? num.toString() : num.toFixed(2).replace(/\.00$/, '');
-        }
-
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
             if (overlay) {
@@ -1579,7 +1572,7 @@
                 const details = item.particular || item.details || (type === 'Staff Addition' ? `New Staff Request (${item.mobile || ''})` : '-');
                 const amt = Number(item.debit || item.credit || 0);
                 const isDebit = Number(item.debit || 0) > 0;
-                const amtStr = amt > 0 ? `₹${fmtAmt(amt)} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
+                const amtStr = amt > 0 ? `₹${amt} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
 
                 html += `<tr>
                     <td style="font-weight:700; color:${type==='Staff Addition'?'#854d0e':'#0369a1'}; font-size:0.78rem;">${type}</td>
@@ -1961,7 +1954,7 @@
                     }
                 });
                 const net = totalCr - totalDr;
-                return `₹${fmtAmt(Math.abs(net))} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+                return `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
             } catch (e) { return '-'; }
         }
 
@@ -2263,11 +2256,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = fmtAmt(Math.abs(openingBalance));
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? fmtAmt(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -2279,11 +2272,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = fmtAmt(Math.abs(runningBal));
+                const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 annualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? fmtAmt(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? fmtAmt(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
@@ -2323,9 +2316,9 @@
                 <td><strong>01 ${monthName}</strong></td>
                 <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
                 <td>-</td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + fmtAmt(opDr) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + fmtAmt(opCr) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${fmtAmt(runningBal)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
             </tr>`;
 
@@ -2362,9 +2355,9 @@
                     <td><strong>${dt}</strong></td>
                     <td style="white-space:normal;min-width:320px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + fmtAmt(dr) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + fmtAmt(cr) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + fmtAmt(runningBal) : 'Pending'}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
                     <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
@@ -2431,9 +2424,9 @@
             html += `<tr style="font-weight:bold; background:#f8fafc;">
                 <td style="border:1px solid #000; padding:4px;">01-B/F</td>
                 <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? fmtAmt(opDr) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? fmtAmt(opCr) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${fmtAmt(runningBal)}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -2448,9 +2441,9 @@
                     html += `<tr>
                         <td style="border:1px solid #000; padding:4px;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? fmtAmt(dr) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? fmtAmt(cr) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${fmtAmt(runningBal)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
             });
@@ -2458,11 +2451,11 @@
             document.getElementById('rcptTableBody').innerHTML = html;
 
             const opBal = activeViewingMonthData.openingBal;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${fmtAmt(Math.abs(opBal))} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${fmtAmt(activeViewingMonthData.totalDr)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${fmtAmt(activeViewingMonthData.totalCr)}`;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
             const finalNet = activeViewingMonthData.closingBal;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${fmtAmt(Math.abs(finalNet))} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
@@ -2517,7 +2510,7 @@
 
             let opCr = openingBalance > 0 ? openingBalance : 0;
             let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr},${opCr},${runningBal},"Opening"\n`;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
 
             currentFYRows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
@@ -2534,11 +2527,11 @@
                     runningBal += (cr - dr);
                 }
 
-                const balStr = isApproved ? runningBal : "Pending";
-                csvContent += `${dt},${part},${mode},${dr},${cr},${balStr},${appRaw}\n`;
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
             });
 
-            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr}","Total Credit: ${totalCr}","Net Balance: ${Math.abs(runningBal)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2772,11 +2765,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = fmtAmt(Math.abs(openingBalance));
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             expenseAnnualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? fmtAmt(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -2788,11 +2781,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = fmtAmt(Math.abs(runningBal));
+                const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 expenseAnnualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? fmtAmt(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? fmtAmt(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
@@ -2831,9 +2824,9 @@
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
                 <td><strong>Opening Balance</strong></td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + fmtAmt(opDr) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + fmtAmt(opCr) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${fmtAmt(runningBal)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
             </tr>`;
 
             mData.rows.forEach((r, idx) => {
@@ -2864,9 +2857,9 @@
                     <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + fmtAmt(dr) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + fmtAmt(cr) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${fmtAmt(runningBal)}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 </tr>`;
             });
 
@@ -2916,21 +2909,11 @@
             const merges = [];
             let rIdx = 0;
 
-            function setCell(r, c, val, style, numFmt, isFormula = false) {
+            function setCell(r, c, val, style, numFmt) {
                 const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
-                const cell = { s: style };
-                if (isFormula) {
-                    cell.t = 'n';
-                    cell.f = val;
-                    if (numFmt) cell.z = numFmt;
-                } else if (typeof val === 'number') {
-                    cell.t = 'n';
-                    cell.v = val;
-                    if (numFmt) cell.z = numFmt;
-                } else {
-                    cell.t = 's';
-                    cell.v = val;
-                }
+                const cell = { v: val, s: style };
+                if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
+                else { cell.t = 's'; }
                 ws[cellRef] = cell;
             }
 
@@ -2954,25 +2937,15 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
+                let monthDr = 0; let monthCr = 0;
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
-                
-                let opRowExcel = rIdx + 1;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : 0, STYLE_DATA, "0");
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : 0, STYLE_DATA, "0");
-                
-                // Opening balance cell value (if first month, or linked to previous month's closing balance)
-                if (rIdx === 2 || opRowExcel === 5) {
-                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0");
-                } else {
-                    // Link opening balance of current month to previous month's closing balance row
-                    setCell(rIdx, 4, `E${opRowExcel - 3}`, STYLE_DATA, "0", true);
-                }
-
-                let prevBalanceRow = opRowExcel;
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                 rIdx++;
 
                 rowsInMonth.forEach(r => {
@@ -2981,30 +2954,21 @@
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    let currentRowExcel = rIdx + 1;
-                    // Fully dynamic formula: Previous Balance + Credit - Debit
-                    let balanceFormula = `E${prevBalanceRow}+N(C${currentRowExcel})-N(D${currentRowExcel})`;
-
-                    runningBal += (cr - dr);
+                    monthDr += dr; monthCr += cr; runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : 0, STYLE_DATA, "0");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : 0, STYLE_DATA, "0");
-                    setCell(rIdx, 4, balanceFormula, STYLE_DATA, "0", true);
-                    
-                    prevBalanceRow = currentRowExcel;
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                     rIdx++;
                 });
 
-                let startMonthRowExcel = opRowExcel + 1;
-                let endMonthRowExcel = rIdx;
-
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                setCell(rIdx, 2, `SUM(C${startMonthRowExcel}:C${endMonthRowExcel})`, STYLE_TOTAL, "0", true);
-                setCell(rIdx, 3, `SUM(D${startMonthRowExcel}:D${endMonthRowExcel})`, STYLE_TOTAL, "0", true);
-                setCell(rIdx, 4, `E${endMonthRowExcel}`, STYLE_TOTAL, "0", true);
+                setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
                 rIdx += 2; 
             });
 
@@ -3014,6 +2978,7 @@
 
             return ws;
         }
+
         function exportCurrentFyExpensesToExcel() {
             if (typeof XLSX === 'undefined') { showToast('Excel Library loading, please try again.'); return; }
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
@@ -3092,9 +3057,9 @@
                 monthRowsHtml += `<tr>
                     <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
                     <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? fmtAmt(opCr) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? fmtAmt(opDr) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${fmtAmt(runningBal)}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                 </tr>`;
 
                 rowsInMonth.forEach(r => {
@@ -3110,9 +3075,9 @@
                     monthRowsHtml += `<tr>
                         <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? fmtAmt(cr) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? fmtAmt(dr) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${fmtAmt(runningBal)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 });
 
@@ -3136,9 +3101,9 @@
                                 <tr style="background:#e0f2fe; font-weight:bold;">
                                     <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
                                     <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${fmtAmt(monthCr + opCr)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${fmtAmt(monthDr + opDr)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${fmtAmt(runningBal)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + opCr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthDr + opDr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${runningBal.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -3232,9 +3197,9 @@
             rowsHtml += `
                 <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
                     <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? fmtAmt(opDr) : '-'}</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? fmtAmt(opCr) : '-'}</td>
-                    <td style="padding: 3px 1px; text-align: right;">${fmtAmt(runningBal)}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
                 </tr>
             `;
 
@@ -3250,9 +3215,9 @@
                     <tr style="border-bottom: 1px dotted #ccc;">
                         <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
                         <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? fmtAmt(dr) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? fmtAmt(cr) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${fmtAmt(runningBal)}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -3282,11 +3247,11 @@
                         <tbody>${rowsHtml}</tbody>
                     </table>
                     <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
-                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${fmtAmt(Math.abs(openingBalance))} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${fmtAmt(totalDr)}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${fmtAmt(totalCr)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
                         <div style="display: flex; justify-content: space-space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
-                            <span>Net Balance:</span> <span>Rs. ${fmtAmt(Math.abs(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
+                            <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">*** Thank You ***</div>

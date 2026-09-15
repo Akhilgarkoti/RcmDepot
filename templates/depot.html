@@ -2963,7 +2963,15 @@
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : 0, STYLE_DATA, "0");
                 setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : 0, STYLE_DATA, "0");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0");
+                
+                // Opening balance cell value (if first month, or linked to previous month's closing balance)
+                if (rIdx === 2 || opRowExcel === 5) {
+                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0");
+                } else {
+                    // Link opening balance of current month to previous month's closing balance row
+                    setCell(rIdx, 4, `E${opRowExcel - 3}`, STYLE_DATA, "0", true);
+                }
+
                 let prevBalanceRow = opRowExcel;
                 rIdx++;
 
@@ -2974,6 +2982,7 @@
                     const part = getField(r, 'Particular', 'particular');
 
                     let currentRowExcel = rIdx + 1;
+                    // Fully dynamic formula: Previous Balance + Credit - Debit
                     let balanceFormula = `E${prevBalanceRow}+N(C${currentRowExcel})-N(D${currentRowExcel})`;
 
                     runningBal += (cr - dr);
@@ -3005,7 +3014,6 @@
 
             return ws;
         }
-
         function exportCurrentFyExpensesToExcel() {
             if (typeof XLSX === 'undefined') { showToast('Excel Library loading, please try again.'); return; }
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);

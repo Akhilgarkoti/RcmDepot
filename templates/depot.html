@@ -2909,11 +2909,21 @@
             const merges = [];
             let rIdx = 0;
 
-            function setCell(r, c, val, style, numFmt) {
+            function setCell(r, c, val, style, numFmt, isFormula = false) {
                 const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
-                const cell = { v: val, s: style };
-                if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
-                else { cell.t = 's'; }
+                const cell = { s: style };
+                if (isFormula) {
+                    cell.t = 'n';
+                    cell.f = val;
+                    if (numFmt) cell.z = numFmt;
+                } else if (typeof val === 'number') {
+                    cell.t = 'n';
+                    cell.v = val;
+                    if (numFmt) cell.z = numFmt;
+                } else {
+                    cell.t = 's';
+                    cell.v = val;
+                }
                 ws[cellRef] = cell;
             }
 
@@ -2937,15 +2947,17 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let monthDr = 0; let monthCr = 0;
                 let opCr = runningBal > 0 ? runningBal : 0;
                 let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                
+                let opRowExcel = rIdx + 1;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
                 setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                let prevBalanceRow = opRowExcel;
                 rIdx++;
 
                 rowsInMonth.forEach(r => {
@@ -2954,21 +2966,29 @@
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    monthDr += dr; monthCr += cr; runningBal += (cr - dr);
+                    let currentRowExcel = rIdx + 1;
+                    let balanceFormula = `E${prevBalanceRow}+C${currentRowExcel}-D${currentRowExcel}`;
+
+                    runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
                     setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
                     setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                    setCell(rIdx, 4, balanceFormula, STYLE_DATA, "0.00", true);
+                    
+                    prevBalanceRow = currentRowExcel;
                     rIdx++;
                 });
 
+                let startMonthRowExcel = opRowExcel + 1;
+                let endMonthRowExcel = rIdx;
+
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
-                setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 2, `SUM(C${startMonthRowExcel}:C${endMonthRowExcel})`, STYLE_TOTAL, "0.00", true);
+                setCell(rIdx, 3, `SUM(D${startMonthRowExcel}:D${endMonthRowExcel})`, STYLE_TOTAL, "0.00", true);
+                setCell(rIdx, 4, `E${endMonthRowExcel}`, STYLE_TOTAL, "0.00", true);
                 rIdx += 2; 
             });
 

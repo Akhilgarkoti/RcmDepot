@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RCM Depot Dashboard</title>
+  <title>RCM Depot Management Portal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .sidebar { min-height: 100vh; background: #343a40; color: #fff; position: fixed; width: 250px; top: 0; left: 0; padding-top: 20px; z-index: 100; }
-    .sidebar a { padding: 12px 20px; color: #adb5bd; display: block; text-decoration: none; transition: 0.3s; }
-    .sidebar a:hover, .sidebar a.active { color: #fff; background: #495057; border-left: 4px solid #0d6efd; }
-    .main-content { margin-left: 250px; padding: 30px; }
+    body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .sidebar { min-height: 100vh; background: #212529; color: #fff; position: fixed; width: 260px; top: 0; left: 0; padding-top: 20px; z-index: 100; }
+    .sidebar a { padding: 12px 20px; color: #adb5bd; display: block; text-decoration: none; transition: 0.2s; font-size: 15px; }
+    .sidebar a:hover, .sidebar a.active { color: #fff; background: #343a40; border-left: 4px solid #0d6efd; }
+    .main-content { margin-left: 260px; padding: 30px; }
     .card-stat { border-left: 4px solid #0d6efd; transition: transform 0.2s; }
     .card-stat:hover { transform: translateY(-3px); }
-    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
     @media (max-width: 768px) {
       .sidebar { width: 100%; position: relative; min-height: auto; }
       .main-content { margin-left: 0; padding: 15px; }
@@ -23,57 +23,60 @@
 </head>
 <body>
 
-  <!-- Loader -->
+  <!-- Loader Overlay -->
   <div id="loaderOverlay">
     <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
-    <h5 class="text-secondary" id="loaderText">Loading Depot Data...</h5>
+    <h5 class="text-secondary fw-bold" id="loaderText">Loading Data... Please Wait</h5>
   </div>
 
-  <!-- Sidebar -->
-  <div class="sidebar d-none d-md-block">
-    <div class="text-center mb-4">
-      <img id="depotLogoImg" src="https://ibb.co/MkJwfsf8" alt="Logo" class="rounded-circle mb-2" width="60" height="60" style="object-fit: cover;">
-      <h5 id="sidebarDepotName" class="text-white px-2">Depot Portal</h5>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar d-none d-md-block shadow">
+    <div class="text-center mb-4 px-3">
+      <img id="depotLogoImg" src="https://ibb.co/MkJwfsf8" alt="Logo" class="rounded-circle mb-2 border border-2 border-light" width="60" height="60" style="object-fit: cover;">
+      <h5 id="sidebarDepotName" class="text-white fw-bold mb-0">Depot Portal</h5>
+      <small class="text-muted" id="sidebarDepotCode">Loading...</small>
     </div>
+    <hr class="text-secondary mx-3">
     <a href="#" onclick="switchTab('dashboard')" class="active" id="nav-dashboard"><i class="fas fa-home me-2"></i> Dashboard</a>
     <a href="#" onclick="switchTab('dispatch')" id="nav-dispatch"><i class="fas fa-truck me-2"></i> Invoice Dispatch</a>
-    <a href="#" onclick="switchTab('staff')" id="nav-staff"><i class="fas fa-users me-2"></i> Staff Management</a>
+    <a href="#" onclick="switchTab('staff')" id="nav-staff"><i class="fas fa-users me-2"></i> Staff & Approvals</a>
     <a href="#" onclick="switchTab('expenses')" id="nav-expenses"><i class="fas fa-wallet me-2"></i> Depot Expenses</a>
-    <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2 text-danger"></i> Logout</a>
+    <a href="#" onclick="switchTab('settings')" id="nav-settings"><i class="fas fa-cog me-2"></i> Settings & Password</a>
+    <a href="#" onclick="logout()" class="text-danger mt-4"><i class="fas fa-sign-out-alt me-2"></i> Logout</a>
   </div>
 
-  <!-- Main Content -->
+  <!-- Main Content Area -->
   <div class="main-content">
     <div class="container-fluid">
       
-      <!-- Top Header -->
+      <!-- Top Header Bar -->
       <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm">
         <div>
           <h3 class="fw-bold mb-0 text-dark" id="headerTitle">Welcome, Depot Manager</h3>
-          <small class="text-muted" id="headerSub">Manage your inventory, dispatches, and staff efficiently.</small>
+          <small class="text-muted" id="headerSub">Manage your inventory, dispatch reports, and expenses seamlessly.</small>
         </div>
         <div>
-          <button class="btn btn-outline-primary btn-sm" onclick="fetchDepotData(true)"><i class="fas fa-sync-alt me-1"></i> Refresh</button>
+          <button class="btn btn-outline-primary btn-sm fw-bold" onclick="loadInitialData(true)"><i class="fas fa-sync-alt me-1"></i> Refresh Data</button>
         </div>
       </div>
 
-      <!-- TAB 1: DASHBOARD -->
+      <!-- 1. DASHBOARD TAB -->
       <div id="tab-dashboard" class="content-tab">
         <div class="row g-3 mb-4">
           <div class="col-md-4">
-            <div class="card card-stat shadow-sm p-3 bg-white rounded">
+            <div class="card card-stat shadow-sm p-3 bg-white rounded border-0">
               <div class="text-muted small fw-bold">TOTAL DISPATCHES</div>
               <h2 class="fw-bold text-primary mt-2" id="statTotalDispatch">0</h2>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="card card-stat shadow-sm p-3 bg-white rounded" style="border-left-color: #198754;">
+            <div class="card card-stat shadow-sm p-3 bg-white rounded border-0" style="border-left-color: #198754;">
               <div class="text-muted small fw-bold">ACTIVE STAFF</div>
               <h2 class="fw-bold text-success mt-2" id="statActiveStaff">0</h2>
             </div>
           </div>
           <div class="col-md-4">
-            <div class="card card-stat shadow-sm p-3 bg-white rounded" style="border-left-color: #ffc107;">
+            <div class="card card-stat shadow-sm p-3 bg-white rounded border-0" style="border-left-color: #ffc107;">
               <div class="text-muted small fw-bold">PENDING APPROVALS</div>
               <h2 class="fw-bold text-warning mt-2" id="statPendingCount">0</h2>
             </div>
@@ -97,18 +100,62 @@
                 </tr>
               </thead>
               <tbody id="recentDispatchTableBody">
-                <tr><td colspan="6" class="text-center text-muted py-4">No data loaded yet.</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">Loading dispatches...</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- TAB 2: DISPATCH -->
+      <!-- 2. INVOICE DISPATCH TAB -->
       <div id="tab-dispatch" class="content-tab" style="display: none;">
         <div class="card shadow-sm border-0 mb-4">
           <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold">Invoice Dispatch Report</h5>
+            <h5 class="mb-0 fw-bold"><i class="fas fa-truck me-2 text-primary"></i> New Invoice Dispatch Entry</h5>
+          </div>
+          <div class="card-body">
+            <form id="dispatchForm" onsubmit="submitDispatch(event)">
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold">Invoice Date</label>
+                  <input type="date" class="form-control" id="invDate" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold">Vehicle Type</label>
+                  <select class="form-select" id="vehicleType">
+                    <option value="Auto">Auto</option>
+                    <option value="Pickup">Pickup</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold">Dispatch Through</label>
+                  <input type="text" class="form-control" id="dispatchThrough" placeholder="Transporter name" required>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold">Vehicle No</label>
+                  <input type="text" class="form-control" id="vehicleNo" placeholder="UP32XX0000" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">Invoice List (Comma Separated)</label>
+                  <textarea class="form-control" id="invoiceList" rows="2" placeholder="INV-101, INV-102, INV-103" required></textarea>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">Remarks / Due Excess</label>
+                  <input type="text" class="form-control" id="remarks" value="No Due/excess">
+                </div>
+                <div class="col-12 text-end">
+                  <button type="submit" class="btn btn-primary px-4 fw-bold"><i class="fas fa-save me-1"></i> Save Dispatch</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">Dispatch History</h5>
           </div>
           <div class="card-body table-responsive">
             <table class="table table-striped align-middle" id="dispatchTable">
@@ -121,18 +168,41 @@
                   <th>Through</th>
                   <th>Vehicle No</th>
                   <th>Remarks</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="dispatchTableBody">
-                <tr><td colspan="7" class="text-center py-4">Loading...</td></tr>
+                <tr><td colspan="8" class="text-center py-4">Loading history...</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- TAB 3: STAFF -->
+      <!-- 3. STAFF & APPROVALS TAB -->
       <div id="tab-staff" class="content-tab" style="display: none;">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold text-warning"><i class="fas fa-exclamation-circle me-2"></i> Pending Approvals</h5>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>ID / Code</th>
+                  <th>Type</th>
+                  <th>Name / Details</th>
+                  <th>Particulars / Mobile</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="pendingTableBody">
+                <tr><td colspan="5" class="text-center py-3 text-muted">No pending approvals found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white py-3">
             <h5 class="mb-0 fw-bold">Depot Staff Members</h5>
@@ -149,18 +219,49 @@
                 </tr>
               </thead>
               <tbody id="staffTableBody">
-                <tr><td colspan="5" class="text-center py-4">Loading...</td></tr>
+                <tr><td colspan="5" class="text-center py-4">Loading staff...</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- TAB 4: EXPENSES -->
+      <!-- 4. DEPOT EXPENSES TAB -->
       <div id="tab-expenses" class="content-tab" style="display: none;">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="fas fa-wallet me-2 text-success"></i> Add Depot Expense</h5>
+          </div>
+          <div class="card-body">
+            <form id="expenseForm" onsubmit="submitExpense(event)">
+              <div class="row g-3">
+                <div class="col-md-3">
+                  <label class="form-label small fw-bold">Date</label>
+                  <input type="date" class="form-control" id="expDate" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label small fw-bold">Particulars</label>
+                  <input type="text" class="form-control" id="expParticular" placeholder="Expense description" required>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label small fw-bold">Credit (₹)</label>
+                  <input type="number" class="form-control" id="expCredit" value="0">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label small fw-bold">Debit (₹)</label>
+                  <input type="number" class="form-control" id="expDebit" value="0">
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                  <button type="submit" class="btn btn-success w-100 fw-bold"><i class="fas fa-plus"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <div class="card shadow-sm border-0">
           <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold">Depot Expenses</h5>
+            <h5 class="mb-0 fw-bold">Expenses Ledger</h5>
           </div>
           <div class="card-body table-responsive">
             <table class="table table-bordered align-middle">
@@ -171,12 +272,39 @@
                   <th>Credit</th>
                   <th>Debit</th>
                   <th>Balance</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody id="expensesTableBody">
-                <tr><td colspan="5" class="text-center py-4">Loading...</td></tr>
+                <tr><td colspan="6" class="text-center py-4">Loading expenses...</td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. SETTINGS TAB (PASSWORD CHANGE) -->
+      <div id="tab-settings" class="content-tab" style="display: none;">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+              <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-key me-2 text-warning"></i> Change Depot Password</h5>
+              </div>
+              <div class="card-body">
+                <form onsubmit="changePassword(event)">
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold">Current Password</label>
+                    <input type="password" class="form-control" id="oldPass" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold">New Password</label>
+                    <input type="password" class="form-control" id="newPass" required>
+                  </div>
+                  <button type="submit" class="btn btn-warning w-100 fw-bold text-dark">Update Password</button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -184,37 +312,37 @@
     </div>
   </div>
 
-  <!-- JavaScript Optimization & Caching -->
+  <!-- JavaScript Implementation with Caching & All Functions -->
   <script>
-    // Apne Google Apps Script Web App ka URL yahan dalein
-    const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL"; 
+    const SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL"; // Apna Apps Script URL yahan dalein
     
-    // Local storage cache implementation to prevent repetitive heavy fetches
     let cachedAppData = null;
     const urlParams = new URLSearchParams(window.location.search);
     const depotCode = urlParams.get('depotCode') || localStorage.getItem('depotCode') || "D121";
 
     document.addEventListener("DOMContentLoaded", function() {
-      fetchDepotData(false);
+      loadInitialData(false);
+      document.getElementById('invDate').valueAsDate = new Date();
+      document.getElementById('expDate').valueAsDate = new Date();
     });
 
-    function fetchDepotData(forceRefresh = false) {
+    // Optimized Data Loader with Caching
+    function loadInitialData(forceRefresh = false) {
       const loader = document.getElementById("loaderOverlay");
       loader.style.display = "flex";
 
       if (!forceRefresh && cachedAppData) {
-        // Use cached data instantly without hitting the network/sheet again
-        renderDashboard(cachedAppData);
+        renderAllData(cachedAppData);
         loader.style.display = "none";
         return;
       }
 
       fetch(`${SCRIPT_URL}?action=getInitialData&depotCode=${depotCode}`)
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
           if (data.success) {
-            cachedAppData = data; // Save to cache
-            renderDashboard(data);
+            cachedAppData = data;
+            renderAllData(data);
           } else {
             alert("Error: " + data.message);
           }
@@ -222,18 +350,18 @@
         })
         .catch(err => {
           console.error(err);
-          alert("Failed to connect to server.");
+          alert("Server connection failed.");
           loader.style.display = "none";
         });
     }
 
-    function renderDashboard(data) {
-      // Header details
+    // Render Data to UI Elements
+    function renderAllData(data) {
       document.getElementById("headerTitle").innerText = `Welcome, ${data.depotName || 'Depot Manager'}`;
       document.getElementById("sidebarDepotName").innerText = data.depotName || 'Depot';
+      document.getElementById("sidebarDepotCode").innerText = `Code: ${data.depotCode || depotCode}`;
       if(data.depotLogo) document.getElementById("depotLogoImg").src = data.depotLogo;
 
-      // Stats
       const dispatches = data.dispatches || [];
       const staffMembers = data.staffMembers || [];
       const pendingList = data.pendingList || [];
@@ -243,7 +371,7 @@
       document.getElementById("statActiveStaff").innerText = staffMembers.filter(s => s.Status === 'Active').length;
       document.getElementById("statPendingCount").innerText = pendingList.length;
 
-      // Render Recent Dispatches (Limit to top 10 for speed)
+      // Recent Dispatches Table
       let recentHtml = "";
       dispatches.slice(0, 10).forEach((d, idx) => {
         recentHtml += `<tr>
@@ -257,10 +385,10 @@
       });
       document.getElementById("recentDispatchTableBody").innerHTML = recentHtml || '<tr><td colspan="6" class="text-center text-muted">No dispatches found.</td></tr>';
 
-      // Render Full Dispatch Table
+      // Full Dispatch History Table
       let dispHtml = "";
       dispatches.forEach((d, idx) => {
-        disphtml += `<tr>
+        dispHtml += `<tr>
           <td>${d.ID || idx+1}</td>
           <td>${d["Invoice Date"] || '-'}</td>
           <td><b>${d["Invoice List"] || '-'}</b></td>
@@ -268,11 +396,12 @@
           <td>${d["Dispatch Through"] || '-'}</td>
           <td>${d["Vehicle No"] || '-'}</td>
           <td>${d.Remarks || '-'}</td>
+          <td><button class="btn btn-outline-danger btn-sm" onclick="deleteDispatch('${d.ID || d["Invoice List"]}')"><i class="fas fa-trash"></i></button></td>
         </tr>`;
       });
-      document.getElementById("dispatchTableBody").innerHTML = dispHtml || '<tr><td colspan="7" class="text-center text-muted">No records found.</td></tr>';
+      document.getElementById("dispatchTableBody").innerHTML = dispHtml || '<tr><td colspan="8" class="text-center text-muted">No records found.</td></tr>';
 
-      // Render Staff Table
+      // Staff Table
       let staffHtml = "";
       staffMembers.forEach(s => {
         staffHtml += `<tr>
@@ -285,7 +414,23 @@
       });
       document.getElementById("staffTableBody").innerHTML = staffHtml || '<tr><td colspan="5" class="text-center text-muted">No staff found.</td></tr>';
 
-      // Render Expenses Table
+      // Pending Approvals Table
+      let pendingHtml = "";
+      pendingList.forEach(p => {
+        pendingHtml += `<tr>
+          <td>${p.id || p.empCode || '-'}</td>
+          <td><span class="badge bg-warning text-dark">${p.type}</span></td>
+          <td>${p.staffName || p.particular || '-'}</td>
+          <td>${p.mobile || p.mode || '-'}</td>
+          <td>
+            <button class="btn btn-success btn-sm me-1" onclick="updateApproval('${p.id}', '${p.type}', 'Approved')"><i class="fas fa-check"></i></button>
+            <button class="btn btn-danger btn-sm" onclick="updateApproval('${p.id}', '${p.type}', 'Rejected')"><i class="fas fa-times"></i></button>
+          </td>
+        </tr>`;
+      });
+      document.getElementById("pendingTableBody").innerHTML = pendingHtml || '<tr><td colspan="5" class="text-center text-muted py-3">No pending approvals.</td></tr>';
+
+      // Expenses Table
       let expHtml = "";
       expenses.forEach(e => {
         expHtml += `<tr>
@@ -294,9 +439,78 @@
           <td class="text-success">${e.Credit || 0}</td>
           <td class="text-danger">${e.Debit || 0}</td>
           <td><b>${e.Balance || 0}</b></td>
+          <td><button class="btn btn-outline-danger btn-sm" onclick="deleteExpense('${e.id || e.Particulars}')"><i class="fas fa-trash"></i></button></td>
         </tr>`;
       });
-      document.getElementById("expensesTableBody").innerHTML = expHtml || '<tr><td colspan="5" class="text-center text-muted">No expenses recorded.</td></tr>';
+      document.getElementById("expensesTableBody").innerHTML = expHtml || '<tr><td colspan="6" class="text-center text-muted">No expenses recorded.</td></tr>';
+    }
+
+    // Action Functions
+    function submitDispatch(e) {
+      e.preventDefault();
+      const payload = {
+        action: "saveInvoiceDispatch",
+        depotCode: data.depotCode || depotCode,
+        depotName: data.depotName || "",
+        invoiceDate: document.getElementById('invDate').value,
+        vehicleType: document.getElementById('vehicleType').value,
+        dispatchThrough: document.getElementById('dispatchThrough').value,
+        vehicleNo: document.getElementById('vehicleNo').value,
+        invoiceList: document.getElementById('invoiceList').value,
+        remarks: document.getElementById('remarks').value
+      };
+      
+      // Send data
+      fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams(payload) })
+        .then(res => res.json())
+        .then(res => {
+          alert(res.message);
+          loadInitialData(true); // Refresh cache
+        });
+    }
+
+    function deleteDispatch(id) {
+      if(!confirm("Are you sure you want to delete this dispatch?")) return;
+      fetch(`${SCRIPT_URL}?action=deleteDispatch&ids=${id}`)
+        .then(res => res.json())
+        .then(res => { alert(res.message); loadInitialData(true); });
+    }
+
+    function updateApproval(id, type, status) {
+      fetch(`${SCRIPT_URL}?action=updateApprovalStatus&id=${id}&type=${type}&status=${status}&depotCode=${depotCode}`)
+        .then(res => res.json())
+        .then(res => { alert(res.message); loadInitialData(true); });
+    }
+
+    function submitExpense(e) {
+      e.preventDefault();
+      const payload = {
+        action: "saveDepotExpense",
+        depotCode: depotCode,
+        date: document.getElementById('expDate').value,
+        particular: document.getElementById('expParticular').value,
+        credit: document.getElementById('expCredit').value,
+        debit: document.getElementById('expDebit').value
+      };
+      fetch(SCRIPT_URL, { method: 'POST', body: new URLSearchParams(payload) })
+        .then(res => res.json())
+        .then(res => { alert(res.message); loadInitialData(true); });
+    }
+
+    function deleteExpense(id) {
+      if(!confirm("Delete this expense?")) return;
+      fetch(`${SCRIPT_URL}?action=deleteDepotExpense&id=${id}&depotCode=${depotCode}`)
+        .then(res => res.json())
+        .then(res => { alert(res.message); loadInitialData(true); });
+    }
+
+    function changePassword(e) {
+      e.preventDefault();
+      const oldPass = document.getElementById('oldPass').value;
+      const newPass = document.getElementById('newPass').value;
+      fetch(`${SCRIPT_URL}?action=changeDepotPassword&depotCode=${depotCode}&oldPass=${oldPass}&newPass=${newPass}`)
+        .then(res => res.json())
+        .then(res => { alert(res.message); if(res.success) document.getElementById('oldPass').value = ''; document.getElementById('newPass').value = ''; });
     }
 
     function switchTab(tabName) {

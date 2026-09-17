@@ -37,6 +37,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
+        /* Modern Sleek Header */
         .navbar {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -53,142 +54,555 @@
             flex-wrap: wrap;
         }
 
-        .nav-left-box { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
-        .brand-section { display: flex; align-items: center; gap: 0.85rem; }
+        .nav-left-box {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-section { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.85rem; 
+        }
 
         .depot-logo-box { 
-            width: 44px; height: 44px; border-radius: var(--radius-md); 
+            width: 44px; 
+            height: 44px; 
+            border-radius: var(--radius-md); 
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
-            border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 6px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+            border: 1px solid var(--theme-border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            padding: 6px; 
+            flex-shrink: 0; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
         }
         .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        .nav-actions-left { display: flex; align-items: center; gap: 0.65rem; }
-        .depot-center-section { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 0.25rem; text-align: right; flex: 1; }
+        .nav-actions-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.65rem; 
+        }
+
+        .depot-center-section { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end; 
+            justify-content: center; 
+            gap: 0.25rem; 
+            text-align: right; 
+            flex: 1; 
+        }
 
         .company-logo-badge { 
-            width: 160px; height: 38px; border-radius: var(--radius-sm); 
-            background: #ffffff; border: 1px solid var(--theme-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); 
+            width: 160px; 
+            height: 38px; 
+            border-radius: var(--radius-sm); 
+            background: #ffffff; 
+            border: 1px solid var(--theme-border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            padding: 2px 8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03); 
         }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .depot-details-text { display: flex; flex-direction: column; align-items: flex-end; text-align: right; line-height: 1.35; }
-
-        .btn-action-nav { 
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); color: var(--text-dark); border: 1px solid #cbd5e1; 
-            padding: 0.5rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.82rem; 
-            cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 4px rgba(0,0,0,0.02); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; 
+        .depot-details-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            line-height: 1.35;
         }
-        .btn-action-nav:hover { background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); border-color: var(--primary); color: var(--primary); transform: translateY(-2px); box-shadow: 0 6px 15px -3px rgba(37, 99, 235, 0.15); }
-        .btn-nav-logout { background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%); border-color: #fecaca; color: #dc2626; }
-        .btn-nav-logout:hover { background: linear-gradient(135deg, #fef2f2 100%, #fee2e2 100%); border-color: #f87171; color: #b91c1c; box-shadow: 0 6px 15px -3px rgba(220, 38, 38, 0.15); }
+
+        /* Buttons & Actions Styling */
+        .btn-action-nav { 
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
+            color: var(--text-dark); 
+            border: 1px solid #cbd5e1; 
+            padding: 0.5rem 1rem; 
+            border-radius: var(--radius-md); 
+            font-weight: 600; 
+            font-size: 0.82rem; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .btn-action-nav:hover { 
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); 
+            border-color: var(--primary); 
+            color: var(--primary);
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px -3px rgba(37, 99, 235, 0.15);
+        }
+        .btn-action-nav:active { 
+            transform: translateY(0); 
+        }
+        .btn-nav-logout { 
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%); 
+            border-color: #fecaca; 
+            color: #dc2626; 
+        }
+        .btn-nav-logout:hover { 
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
+            border-color: #f87171; 
+            color: #b91c1c;
+            box-shadow: 0 6px 15px -3px rgba(220, 38, 38, 0.15);
+        }
 
         .main-container { width: 100%; max-width: 1540px; margin: 1.5rem auto; padding: 0 1.25rem; }
 
+        /* Modern Segmented Navigation Tabs */
         .depot-nav-tabs { 
-            display: flex; gap: 0.75rem; background: #ffffff; padding: 6px; 
-            border-radius: var(--radius-lg); margin-bottom: 1.5rem; align-items: center; flex-wrap: wrap; 
-            border: 1px solid var(--theme-border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); 
+            display: flex; 
+            gap: 0.75rem; 
+            background: #ffffff; 
+            padding: 6px; 
+            border-radius: var(--radius-lg); 
+            margin-bottom: 1.5rem; 
+            align-items: center;
+            flex-wrap: wrap; 
+            border: 1px solid var(--theme-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
         }
         .tab-btn { 
-            background: transparent; border: none; color: var(--text-muted); padding: 0.65rem 1.35rem; 
-            border-radius: var(--radius-md); font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.25s ease; 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            padding: 0.65rem 1.35rem; 
+            border-radius: var(--radius-md); 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
         }
-        .tab-btn:hover { background: var(--primary-light); color: var(--primary); }
-        .tab-btn.active { background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); color: #ffffff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); font-weight: 700; }
+        .tab-btn:hover { 
+            background: var(--primary-light); 
+            color: var(--primary); 
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); 
+            color: #ffffff; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); 
+            font-weight: 700; 
+        }
 
+        /* Modern Surface Panels */
         .comfort-panel { 
-            background: var(--theme-panel-bg); border: 1px solid var(--theme-border); 
-            border-radius: var(--radius-md); padding: 1.75rem; box-shadow: var(--shadow-card); margin-bottom: 1.5rem; 
+            background: var(--theme-panel-bg); 
+            border: 1px solid var(--theme-border); 
+            border-radius: var(--radius-md); 
+            padding: 1.75rem; 
+            box-shadow: var(--shadow-card); 
+            margin-bottom: 1.5rem; 
         }
-        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--theme-border); padding-bottom: 0.75rem; }
-        .panel-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+        .panel-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 1.25rem; 
+            border-bottom: 1px solid var(--theme-border); 
+            padding-bottom: 0.75rem; 
+        }
+        .panel-header h3 { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: var(--text-dark); 
+            letter-spacing: -0.01em; 
+        }
 
-        table.custom-table td:nth-child(3) { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 600; color: #1e293b; text-transform: capitalize; }
-        .row-opening-balance td:nth-child(3) { color: #0284c7 !important; font-weight: 700 !important; }
+        /* Particular Column Typography */
+        table.custom-table td:nth-child(3) {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.01em;
+            text-transform: capitalize;
+            line-height: 1.4;
+            white-space: normal;
+        }
+
+        .row-opening-balance td:nth-child(3) {
+            color: #0284c7 !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.02em;
+        }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         .form-group-full { grid-column: span 2; }
         .form-group { margin-bottom: 0.2rem; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-sub); margin-bottom: 0.35rem; }
+        .form-group label { 
+            display: block; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: var(--text-sub); 
+            margin-bottom: 0.35rem; 
+            letter-spacing: 0.01em; 
+        }
         
         .form-control { 
-            width: 100%; padding: 0.6rem 0.85rem; background: var(--input-bg); 
-            border: 1px solid #cbd5e1; border-radius: var(--radius-sm); color: var(--text-dark); 
-            font-size: 0.875rem; outline: none; transition: all 0.15s ease-in-out; 
+            width: 100%; 
+            padding: 0.6rem 0.85rem; 
+            background: var(--input-bg); 
+            border: 1px solid #cbd5e1; 
+            border-radius: var(--radius-sm); 
+            color: var(--text-dark); 
+            font-size: 0.875rem; 
+            outline: none; 
+            transition: all 0.15s ease-in-out; 
         }
-        .form-control:focus { border-color: var(--theme-border-focus); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
-        .form-control:read-only { background: var(--input-readonly); color: var(--text-sub); font-weight: 600; border-color: #e2e8f0; }
-        textarea.form-control { resize: vertical; min-height: 85px; font-family: 'JetBrains Mono', Consolas, monospace; line-height: 1.5; }
+        .form-control:focus { 
+            border-color: var(--theme-border-focus); 
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); 
+        }
+        .form-control:read-only { 
+            background: var(--input-readonly); 
+            color: var(--text-sub); 
+            font-weight: 600; 
+            border-style: solid; 
+            border-color: #e2e8f0; 
+        }
+        textarea.form-control { 
+            resize: vertical; 
+            min-height: 85px; 
+            font-family: 'JetBrains Mono', Consolas, monospace; 
+            line-height: 1.5; 
+        }
 
         .btn-submit-dispatch { 
-            background: var(--primary); color: #fff; border: 1px solid transparent; 
-            padding: 0.65rem 1.6rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.875rem; 
-            cursor: pointer; margin-top: 1.25rem; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3); transition: all 0.18s ease; 
+            background: var(--primary); 
+            color: #fff; 
+            border: 1px solid transparent; 
+            padding: 0.65rem 1.6rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            font-size: 0.875rem; 
+            cursor: pointer; 
+            margin-top: 1.25rem; 
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3); 
+            transition: all 0.18s ease; 
         }
-        .btn-submit-dispatch:hover { background: var(--primary-hover); transform: translateY(-1px); }
+        .btn-submit-dispatch:hover { 
+            background: var(--primary-hover); 
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.35); 
+            transform: translateY(-1px); 
+        }
+        .btn-submit-dispatch:active { 
+            transform: translateY(0); 
+        }
 
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
-        .filter-select-box { padding: 0.45rem 0.85rem; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); color: var(--text-dark); font-size: 0.82rem; font-weight: 600; outline: none; }
+        .filter-select-box { 
+            padding: 0.45rem 0.85rem; 
+            background: #fff; 
+            border: 1px solid #cbd5e1; 
+            border-radius: var(--radius-sm); 
+            color: var(--text-dark); 
+            font-size: 0.82rem; 
+            font-weight: 600; 
+            outline: none; 
+            transition: border-color 0.15s; 
+        }
+        .filter-select-box:focus { border-color: var(--theme-border-focus); }
+        
         .search-box-wrap { position: relative; min-width: 240px; max-width: 340px; flex: 1; }
-        .search-input { width: 100%; padding: 0.48rem 0.85rem 0.48rem 2.2rem; background: #fff; border: 1px solid #cbd5e1; border-radius: var(--radius-sm); color: var(--text-dark); font-size: 0.84rem; outline: none; }
+        .search-input { 
+            width: 100%; 
+            padding: 0.48rem 0.85rem 0.48rem 2.2rem; 
+            background: #fff; 
+            border: 1px solid #cbd5e1; 
+            border-radius: var(--radius-sm); 
+            color: var(--text-dark); 
+            font-size: 0.84rem; 
+            outline: none; 
+            transition: all 0.15s ease; 
+        }
+        .search-input:focus { border-color: var(--theme-border-focus); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
         .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
 
-        .btn-tool { padding: 0.32rem 0.65rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.76rem; cursor: pointer; border: 1px solid var(--theme-border); }
-        .btn-action-ledger { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; padding: 0.32rem 0.7rem; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; margin-right: 0.3rem; }
-        .btn-action-ledger:hover { background: #2563eb; color: #fff; }
-        .btn-action-trx { background: #fefce8; color: #854d0e; border: 1px solid #fef08a; padding: 0.32rem 0.7rem; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; }
-        .btn-action-trx:hover { background: #eab308; color: #fff; }
+        .btn-tool { 
+            padding: 0.32rem 0.65rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            font-size: 0.76rem; 
+            cursor: pointer; 
+            border: 1px solid var(--theme-border); 
+            transition: all 0.15s ease; 
+        }
+        .btn-tool:hover { filter: brightness(0.96); }
+        
+        .btn-action-ledger { 
+            background: #eff6ff; 
+            color: #1d4ed8; 
+            border: 1px solid #bfdbfe; 
+            padding: 0.32rem 0.7rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-right: 0.3rem; 
+            transition: all 0.15s ease; 
+        }
+        .btn-action-ledger:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
+        
+        .btn-action-trx { 
+            background: #fefce8; 
+            color: #854d0e; 
+            border: 1px solid #fef08a; 
+            padding: 0.32rem 0.7rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.15s ease; 
+        }
+        .btn-action-trx:hover { background: #eab308; color: #fff; border-color: #eab308; }
 
         .table-responsive { 
-            width: 100%; max-height: 720px; min-height: 380px; 
-            overflow-y: auto; overflow-x: auto; border: 1px solid var(--theme-border); 
-            border-radius: var(--radius-md); background: #ffffff; box-shadow: var(--shadow-subtle); 
+            width: 100%; 
+            max-height: 720px; 
+            min-height: 380px; 
+            overflow-y: auto; 
+            overflow-x: auto; 
+            border: 1px solid var(--theme-border); 
+            border-radius: var(--radius-md); 
+            background: #ffffff; 
+            box-shadow: var(--shadow-subtle); 
+            -webkit-overflow-scrolling: touch; 
         }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
         table.custom-table th { 
-            position: sticky; top: 0; z-index: 20; padding: 0.75rem 1rem; 
-            color: #475569; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; 
-            background: #f8fafc; border-bottom: 1px solid #cbd5e1; letter-spacing: 0.05em; 
+            position: sticky; 
+            top: 0; 
+            z-index: 20; 
+            padding: 0.75rem 1rem; 
+            color: #475569; 
+            font-size: 0.74rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            background: #f8fafc; 
+            border-bottom: 1px solid #cbd5e1; 
+            letter-spacing: 0.05em; 
         }
         table.custom-table td { 
-            padding: 0.68rem 1rem; font-size: 0.84rem; border-bottom: 1px solid #f1f5f9; 
-            white-space: nowrap; vertical-align: middle; color: var(--text-dark); 
+            padding: 0.68rem 1rem; 
+            font-size: 0.84rem; 
+            border-bottom: 1px solid #f1f5f9; 
+            white-space: nowrap; 
+            vertical-align: middle; 
+            color: var(--text-dark); 
         }
         table.custom-table tr:hover { background-color: #f8fafc; }
         
         .row-duplicate { background-color: #fff1f2 !important; }
+        .row-duplicate td { border-bottom-color: #fecdd3 !important; }
+
         .row-opening-balance { background-color: #eff6ff !important; font-weight: 600; }
+        .row-opening-balance td { border-bottom: 1px solid #bfdbfe !important; color: #1d4ed8 !important; }
 
         .load-more-bar { text-align: center; padding-top: 1rem; }
-        .btn-load-older { background: #f1f5f9; color: var(--text-sub); border: 1px solid #cbd5e1; padding: 0.45rem 1.25rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.82rem; cursor: pointer; }
+        .btn-load-older { 
+            background: #f1f5f9; 
+            color: var(--text-sub); 
+            border: 1px solid #cbd5e1; 
+            padding: 0.45rem 1.25rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            font-size: 0.82rem; 
+            cursor: pointer; 
+            transition: all 0.15s ease; 
+        }
+        .btn-load-older:hover { background: #e2e8f0; color: var(--text-dark); }
 
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.45); overflow-y: auto; padding: 1.2rem; }
-        .modal-box { background: #ffffff; margin: 2rem auto; width: 95%; max-width: 520px; border-radius: var(--radius-md); border: 1px solid var(--theme-border); box-shadow: var(--shadow-float); overflow: hidden; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(15, 23, 42, 0.45); 
+            overflow-y: auto; 
+            padding: 1.2rem; 
+        }
+        .modal-box { 
+            background: #ffffff; 
+            margin: 2rem auto; 
+            width: 95%; 
+            max-width: 520px; 
+            border-radius: var(--radius-md); 
+            border: 1px solid var(--theme-border); 
+            box-shadow: var(--shadow-float); 
+            overflow: hidden; 
+            animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
         .modal-box-large { width: 98% !important; max-width: 1350px !important; margin: 1.5rem auto !important; }
         .modal-box-compact { max-width: 940px !important; width: 96% !important; }
         
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.4rem; background: #ffffff; border-bottom: 1px solid var(--theme-border); color: var(--text-dark); }
+        .modal-top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0.9rem 1.4rem; 
+            background: #ffffff; 
+            border-bottom: 1px solid var(--theme-border); 
+            color: var(--text-dark); 
+        }
         .modal-top-bar span { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); }
-        .modal-close-btn { background: transparent; border: none; color: var(--text-muted); font-size: 1.35rem; cursor: pointer; padding: 0.2rem; }
+        .modal-close-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            font-size: 1.35rem; 
+            cursor: pointer; 
+            line-height: 1; 
+            padding: 0.2rem; 
+            border-radius: 4px; 
+            transition: color 0.15s; 
+        }
+        .modal-close-btn:hover { color: var(--text-dark); }
         .modal-body { padding: 1.4rem; background: #ffffff; }
 
-        .toast-container { position: fixed; top: 24px; right: 24px; z-index: 999999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
-        .toast-msg { pointer-events: auto; min-width: 290px; max-width: 380px; padding: 0.9rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; background: #ffffff; color: var(--text-dark); box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid var(--theme-border); border-left: 4px solid var(--primary); display: flex; align-items: center; gap: 10px; }
+        @keyframes modalIn {
+            from { transform: scale(0.96) translateY(8px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Professional Toast Notifications */
+        .toast-container { 
+            position: fixed; 
+            top: 24px; 
+            right: 24px; 
+            z-index: 999999; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            pointer-events: none; 
+        }
+        .toast-msg { 
+            pointer-events: auto;
+            min-width: 290px; 
+            max-width: 380px;
+            padding: 0.9rem 1.25rem; 
+            border-radius: var(--radius-md); 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            background: #ffffff; 
+            color: var(--text-dark); 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1); 
+            border: 1px solid var(--theme-border);
+            border-left: 4px solid var(--primary); 
+            animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideInToast {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
 
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
-        .global-loading-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); z-index: 999999; align-items: center; justify-content: center; }
-        .loader-card { background: rgba(255, 255, 255, 0.85); padding: 2.75rem 3.5rem; border-radius: var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15); display: flex; flex-direction: column; align-items: center; gap: 1.25rem; min-width: 340px; border: 1px solid rgba(226, 232, 240, 0.8); }
-        .loader-ring { width: 52px; height: 52px; border-radius: 50%; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); animation: spinRing 0.8s linear infinite; }
-        @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @media print {
+            @page { size: 80mm auto; margin: 2mm; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body * { visibility: hidden !important; }
+            #printableReceipt, #printableReceipt * { visibility: visible !important; }
+            #printableReceipt { 
+                display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
+                width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; 
+                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; line-height: 1.25 !important; 
+            }
+            .modal, .modal-box, .navbar, .main-container { display: none !important; }
+        }
 
-        .fy-popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(15, 23, 42, 0.7); z-index: 9999999; align-items: center; justify-content: center; }
-        .fy-popup-card { background: #fff; padding: 2rem; border-radius: var(--radius-md); width: 90%; max-width: 400px; box-shadow: 0 20px 25px rgba(0,0,0,0.2); text-align: center; }
+        /* Stunning Premium Loading Screen */
+        .global-loading-overlay {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            cursor: wait;
+        }
 
-        .mobile-bottom-nav { display: none; }
+        .loader-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 2.75rem 3.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            min-width: 340px;
+            animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .loader-ring {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-right: 4px solid #60a5fa;
+            animation: spinRing 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+        }
+
+        .loader-brand {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .loader-text {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- Professional Mobile Bottom Navigation Styles (Added Safely) --- */
+        .mobile-bottom-nav {
+            display: none;
+        }
 
         @media (max-width: 768px) {
             .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
@@ -197,27 +611,63 @@
             .depot-details-text { align-items: center; }
             .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
             .comfort-panel { padding: 1rem 0.85rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+            .form-group-full { grid-column: span 1; }
             .depot-nav-tabs { display: none !important; }
-            .mobile-bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); border-top: 1px solid var(--theme-border); z-index: 3000; justify-content: space-around; padding: 8px 0 10px 0; }
-            .bot-nav-btn { background: transparent; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: var(--text-muted); cursor: pointer; }
-            .bot-nav-btn span { font-size: 1.25rem; }
-            .bot-nav-btn small { font-size: 0.68rem; font-weight: 600; margin-top: 3px; }
+            .table-responsive { max-height: 520px; }
+            .search-box-wrap { min-width: 100%; }
+            .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
+            
+    /* Tables ko aur zyada compact aur zoom-out karne ke liye */
+    table.custom-table th {
+        padding: 0.4rem 0.5rem !important;
+        font-size: 0.62rem !important;
+    }
+    table.custom-table td {
+        padding: 0.35rem 0.5rem !important;
+        font-size: 0.72rem !important;
+    }
+
+    /* Agar form ke inputs aur buttons ko bhi chhota karna ho */
+    .form-control {
+        padding: 0.45rem 0.6rem !important;
+        font-size: 0.8rem !important;
+    }
+            /* Professional Bottom Bar */
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--theme-border);
+                z-index: 3000;
+                justify-content: space-around;
+                padding: 8px 0 10px 0;
+            }
+            .bot-nav-btn {
+                background: transparent;
+                border: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 2px 0;
+                transition: color 0.2s ease;
+            }
+            .bot-nav-btn span { font-size: 1.25rem; line-height: 1; }
+            .bot-nav-btn small { font-size: 0.68rem; font-weight: 600; margin-top: 3px; font-family: 'Inter', sans-serif; }
             .bot-nav-btn.active { color: var(--primary); }
             body { padding-bottom: 75px; }
         }
     </style>
 </head>
 <body>
-
-    <!-- FY Year Selection Modal on Login -->
-    <div id="fyPopupOverlay" class="fy-popup-overlay">
-        <div class="fy-popup-card">
-            <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem; color: var(--text-dark);">📅 Select Financial Year</h3>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1.2rem;">Please select the Financial Year to load records for this session.</p>
-            <select id="popupFySelect" class="form-control" style="margin-bottom: 1.2rem; font-weight: 700; text-align: center;"></select>
-            <button class="btn-submit-dispatch" style="width: 100%; margin-top: 0;" onclick="confirmFySelection()">Proceed to Portal</button>
-        </div>
-    </div>
 
     <div class="navbar">
         <div class="nav-left-box">
@@ -226,15 +676,17 @@
                     <svg width="28" height="24" viewBox="0 0 24 24" fill="#2563eb"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
                 </div>
                 <div>
-                    <h3 style="color:var(--text-dark);font-size:0.95rem;font-weight:800;line-height:1.2;">RCM DEPOT PORTAL</h3>
-                    <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Easy To Manage Your Daily Depot Records</span>
+                    <h3 style="color:var(--text-dark);font-size:0.95rem;font-weight:800;line-height:1.2;letter-spacing:-0.01em;">RCM DEPOT PORTAL</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Easy To Manage Your Daily Depot Records </span>
                 </div>
             </div>
+            
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
                 <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
             </div>
         </div>
+
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox"></div>
             <div class="depot-details-text">
@@ -252,7 +704,6 @@
         </div>
     </div>
 
-    <!-- Printable Receipt / Statement Template (With Full Company & GST Details) -->
     <div id="printableReceipt">
         <div id="pdfStatementContentRender" style="width:100%; font-family: 'Segoe UI', Arial, sans-serif; color:#000;">
             <div style="padding: 10px;">
@@ -367,17 +818,35 @@
             </div>
             <div class="table-toolbar">
                 <div class="toolbar-left">
-                    <select id="historyPeriodFilter" class="filter-select-box" onchange="filterHistoryTable()">
+                    <select id="historyPeriodFilter" class="filter-select-box" onchange="handleDispatchFilterChange()">
                         <option value="TODAY" selected>📅 Today's Entries</option>
-                        <option value="MONTH">📅 This Month Entries</option>
+                        <option value="ALL">🌐 All Records</option>
                     </select>
                     <div class="search-box-wrap" id="dispSearchWrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search invoices, driver, vehicle..." oninput="filterHistoryTable()"></div>
                     <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;padding:0.45rem 0.85rem;" onclick="exportDispatchToCSV()">📥 Export Excel</button>
                 </div>
             </div>
 
+            <div id="dispFySummaryContainer" class="table-responsive" style="display:none; max-height: 640px;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th style="width:20%;">Month</th>
+                            <th style="width:30%; text-align:right;">Total Dispatches</th>
+                            <th style="width:30%;">Top Vehicle Type</th>
+                            <th style="width:20%; text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dispFySummaryTbody"></tbody>
+                </table>
+            </div>
+
             <div id="dispRawTableContainer">
-                <div class="table-responsive">
+                <div id="dispMonthBackBar" style="display:none; margin-bottom:0.6rem; justify-content:space-between; align-items:center;">
+                    <h4 id="dispMonthBackTitle" style="font-size:0.92rem; font-weight:700; color:#0369a1;">📅 Month Dispatch Records</h4>
+                    <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="backToDispatchFySummary()">⬅️ Back to FY Summary</button>
+                </div>
+                <div class="table-responsive" style="max-height: 640px;">
                     <table class="custom-table" id="historyTable">
                         <thead>
                             <tr>
@@ -399,12 +868,38 @@
             </div>
 
             <div class="load-more-bar" id="loadOlderBar">
-                <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load Older Records</button>
+                <button class="btn-load-older" onclick="loadAllOlderRecords()">📥 Load All Older Records</button>
             </div>
         </div>
 
         <!-- 3. Staff & Ledger Tab -->
         <div id="staffTab" class="comfort-panel" style="display:none; max-width: 960px; margin: 0 auto 1.5rem auto;">
+            
+            <div id="depotPendingApprovalsCard" style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.5rem; box-shadow:var(--shadow-subtle);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; border-bottom:1px dashed #fcd34d; padding-bottom:0.4rem;">
+                    <h4 style="color:#92400e; font-size:0.92rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+                        ⏳ Staff Pending Approval Requests (Your Depot)
+                    </h4>
+                    <span id="pendingCountBadge" style="background:#d97706; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:12px;">0 Pending</span>
+                </div>
+                <div class="table-responsive" style="max-height: 220px; min-height: auto; border: 1px solid #fef08a;">
+                    <table class="custom-table" style="background:#fff;">
+                        <thead>
+                            <tr style="background:#fefce8;">
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem;">Type</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem;">Staff</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem;">Details</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem; text-align:right;">Amount</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem; text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="depotPendingListBody">
+                            <tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#92400e; font-size:0.8rem;">Checking pending approvals...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="panel-header" style="margin-bottom: 0.8rem;">
                 <h3>👥 Assigned Staff and Ledger Details</h3>
                 <button class="btn-action-nav" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8; padding:0.35rem 0.8rem;" onclick="openAddStaffModal()">➕ Request New Staff</button>
@@ -433,6 +928,9 @@
             
             <div style="background:#ffffff; padding:0.75rem 1rem; border:1px solid #e2e8f0; border-radius:var(--radius-sm); margin-bottom:1rem;">
                 <div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:0.6rem;">
+                    <label style="font-weight:600; font-size:0.84rem; color:var(--text-sub);">Financial Year:</label>
+                    <select id="expenseYearFilter" class="filter-select-box" style="padding:0.35rem 0.7rem; font-size:0.82rem; margin-right:0.4rem;" onchange="renderAnnualSummaryExpenses()"></select>
+                    
                     <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="exportCurrentFyExpensesToExcel()">📥 Export Current FY</button>
                     <button class="btn-action-nav" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="exportAllFyExpensesToExcel()">📊 Export All FY</button>
                     <button class="btn-action-nav" style="background:#fefce8;border-color:#fef08a;color:#854d0e;padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="downloadExpensePdfDirect()">📄 Download PDF</button>
@@ -448,9 +946,9 @@
                     <thead>
                         <tr>
                             <th style="width:14%;">Month</th>
-                            <th style="width:20%; text-align:right;">Debit</th>
-                            <th style="width:20%; text-align:right;">Credit</th>
-                            <th style="width:20%; text-align:right;">Balance</th>
+                            <th style="width:20%; text-align:right;">Debit (₹)</th>
+                            <th style="width:20%; text-align:right;">Credit (₹)</th>
+                            <th style="width:20%; text-align:right;">Balance (₹)</th>
                             <th style="width:12%; text-align:center;">Type</th>
                             <th style="width:14%; text-align:center;">Action</th>
                         </tr>
@@ -473,9 +971,9 @@
                                 <th style="width:80px; text-align:center;">Action</th>
                                 <th style="width:110px;">Date</th>
                                 <th style="min-width:350px;">Particular</th>
-                                <th style="width:120px;text-align:right;">Debit</th>
-                                <th style="width:120px;text-align:right;">Credit</th>
-                                <th style="width:140px;text-align:right;">Balance</th>
+                                <th style="width:120px;text-align:right;">Debit (₹)</th>
+                                <th style="width:120px;text-align:right;">Credit (₹)</th>
+                                <th style="width:140px;text-align:right;">Balance (₹)</th>
                             </tr>
                         </thead>
                         <tbody id="expenseDetailTbody"></tbody>
@@ -519,8 +1017,8 @@
                     <div class="form-group"><label>Particular / Purpose</label><input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Advance, Salary, Unloading"></div>
                     <div class="form-group"><label>Payment Mode</label><select id="trxMode" class="form-control"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Transfer">Bank Transfer</option><option value="-">-</option></select></div>
                     <div class="form-grid">
-                        <div class="form-group"><label style="color:var(--accent-dr);">Debit Amount</label><input type="number" id="trxDebitAmount" class="form-control" value="0"></div>
-                        <div class="form-group"><label style="color:var(--accent-cr);">Credit Amount</label><input type="number" id="trxCreditAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--accent-dr);">Debit Amount (₹)</label><input type="number" id="trxDebitAmount" class="form-control" value="0"></div>
+                        <div class="form-group"><label style="color:var(--accent-cr);">Credit Amount (₹)</label><input type="number" id="trxCreditAmount" class="form-control" value="0"></div>
                     </div>
                     <button type="submit" id="btnReqTrxSubmit" class="btn-submit-dispatch" style="width:100%;justify-content:center;">Send Transaction Request</button>
                 </form>
@@ -536,7 +1034,10 @@
             </div>
             <div class="modal-body" style="padding: 1.25rem;">
                 <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.6rem 0.8rem; border:1px solid #e2e8f0; border-radius:var(--radius-sm); margin-bottom:0.8rem; flex-wrap:wrap; gap:0.5rem;">
-                    <div style="font-weight: 700; font-size: 0.8rem; color: var(--text-dark);" id="ledgerFyLabelDisplay">Financial Year Statement</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <label style="font-weight:600; font-size:0.82rem; color:var(--text-sub);">Financial Year:</label>
+                        <select id="ledgerYearFilter" class="filter-select-box" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onchange="renderAnnualSummaryLedger()"></select>
+                    </div>
                     <div>
                         <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;padding:0.35rem 0.7rem;font-size:0.8rem;margin-right:0.3rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export Detailed Excel</button>
                         <button class="btn-action-nav" style="background:#fefce8;border-color:#fef08a;color:#854d0e;padding:0.35rem 0.8rem;font-size:0.8rem;" onclick="openThermalFyPrintPreview()">🖨️ Print Preview</button>
@@ -572,9 +1073,10 @@
                                     <th style="width:110px;">Date</th>
                                     <th style="min-width:320px;">Particular</th>
                                     <th style="width:80px;">Mode</th>
-                                    <th style="width:110px;text-align:right;">Debit</th>
-                                    <th style="width:110px;text-align:right;">Credit</th>
-                                    <th style="width:130px;text-align:right;">Balance</th>
+                                    <th style="width:110px;text-align:right;">Debit (₹)</th>
+                                    <th style="width:110px;text-align:right;">Credit (₹)</th>
+                                    <th style="width:130px;text-align:right;">Balance (₹)</th>
+                                    <th style="width:100px;text-align:center;">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="monthDetailTbody"></tbody>
@@ -595,14 +1097,45 @@
                 <form id="editDispatchForm">
                     <input type="hidden" id="editDispRowId">
                     <div class="form-grid">
-                        <div class="form-group"><label>Date</label><input type="date" id="editDispDate" class="form-control" required></div>
-                        <div class="form-group"><label>Time</label><input type="text" id="editDispTime" class="form-control" required></div>
-                        <div class="form-group"><label>Invoice Number</label><input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;"></div>
-                        <div class="form-group"><label>Vehicle Type</label><select id="editDispVehicleType" class="form-control"><option value="Three Wheeler">Three Wheeler</option><option value="By Hand">By Hand</option><option value="Car">Car</option><option value="PickUp">PickUp</option><option value="Bike">Bike</option></select></div>
-                        <div class="form-group"><label>Dispatch Through</label><input type="text" id="editDispThrough" class="form-control" required></div>
-                        <div class="form-group"><label>Vehicle Number</label><input type="text" id="editDispVehicleNo" class="form-control"></div>
-                        <div class="form-group-full"><label>Due-Excess Matter If Any</label><input type="text" id="editDispDueExcess" class="form-control" required></div>
-                        <div class="form-group-full"><label>Remark If Any</label><input type="text" id="editDispRemarks" class="form-control"></div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="editDispDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Time</label>
+                            <input type="text" id="editDispTime" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Invoice Number</label>
+                            <input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;">
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Type</label>
+                            <select id="editDispVehicleType" class="form-control">
+                                <option value="Three Wheeler">Three Wheeler</option>
+                                <option value="By Hand">By Hand</option>
+                                <option value="Car">Car</option>
+                                <option value="PickUp">PickUp</option>
+                                <option value="Bike">Bike</option>
+                                
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Dispatch Through</label>
+                            <input type="text" id="editDispThrough" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Number</label>
+                            <input type="text" id="editDispVehicleNo" class="form-control">
+                        </div>
+                        <div class="form-group-full">
+                            <label>Due-Excess Matter If Any</label>
+                            <input type="text" id="editDispDueExcess" class="form-control" required>
+                        </div>
+                        <div class="form-group-full">
+                            <label>Remark If Any</label>
+                            <input type="text" id="editDispRemarks" class="form-control">
+                        </div>
                     </div>
                     <button type="submit" id="btnUpdateDispatchSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1.2rem;">Update Dispatch Entry</button>
                 </form>
@@ -626,8 +1159,8 @@
                         <div id="expenseSuggestionsBox" style="position:absolute; top:100%; left:0; width:100%; background:#fff; border:1px solid #cbd5e1; border-radius:var(--radius-sm); z-index:3000; display:none; max-height:160px; overflow-y:auto; box-shadow:var(--shadow-card);"></div>
                     </div>
                     <div class="form-grid">
-                        <div class="form-group"><label style="color:var(--accent-dr);">Debit</label><input type="number" id="expDebit" class="form-control" value="0" step="any"></div>
-                        <div class="form-group"><label style="color:var(--accent-cr);">Credit</label><input type="number" id="expCredit" class="form-control" value="0" step="any"></div>
+                        <div class="form-group"><label style="color:var(--accent-dr);">Debit (₹)</label><input type="number" id="expDebit" class="form-control" value="0" step="any"></div>
+                        <div class="form-group"><label style="color:var(--accent-cr);">Credit (₹)</label><input type="number" id="expCredit" class="form-control" value="0" step="any"></div>
                     </div>
                     <button type="submit" id="btnSaveExpense" class="btn-submit-dispatch" style="width:100%;justify-content:center;margin-top:1rem;">Save Expense Entry</button>
                 </form>
@@ -640,20 +1173,42 @@
             <div class="modal-top-bar"><span>🔑 Change Depot Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
             <div style="padding:1.4rem;">
                 <form id="depotPwdForm">
-                    <div style="margin-bottom:0.8rem;"><label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">Current Password</label><input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password"></div>
-                    <div style="margin-bottom:0.8rem;"><label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">New Password</label><input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password"></div>
-                    <div style="margin-bottom:0.8rem;"><label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">Confirm New Password</label><input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password"></div>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">Current Password</label>
+                        <input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password">
+                    </div>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">New Password</label>
+                        <input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password">
+                    </div>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">Confirm New Password</label>
+                        <input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password">
+                    </div>
                     <button type="submit" id="btnDepotPwdSubmit" class="btn-submit-dispatch" style="width:100%;">Update Password</button>
                 </form>
             </div>
         </div>
     </div>
 
+    <!-- Professional Mobile Bottom Navigation Bar (With Permission IDs) -->
     <div class="mobile-bottom-nav">
-        <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);"><span>📦</span><small>Dispatch</small></button>
-        <button id="botNavHistory" class="bot-nav-btn" onclick="switchTab('recordsTab', null); updateBottomNavActive(this);"><span>📊</span><small>History</small></button>
-        <button id="botNavStaff" class="bot-nav-btn" onclick="switchTab('staffTab', null); updateBottomNavActive(this);"><span>👥</span><small>Staff</small></button>
-        <button id="botNavExpenses" class="bot-nav-btn" onclick="switchTab('expensesTab', null); updateBottomNavActive(this);"><span>💰</span><small>Expenses</small></button>
+        <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
+            <span>📦</span>
+            <small>Dispatch</small>
+        </button>
+        <button id="botNavHistory" class="bot-nav-btn" onclick="switchTab('recordsTab', null); updateBottomNavActive(this);">
+            <span>📊</span>
+            <small>History</small>
+        </button>
+        <button id="botNavStaff" class="bot-nav-btn" onclick="switchTab('staffTab', null); updateBottomNavActive(this);">
+            <span>👥</span>
+            <small>Staff</small>
+        </button>
+        <button id="botNavExpenses" class="bot-nav-btn" onclick="switchTab('expensesTab', null); updateBottomNavActive(this);">
+            <span>💰</span>
+            <small>Expenses</small>
+        </button>
     </div>
 
     <script>
@@ -673,21 +1228,15 @@
         let currentActiveStaffName = "";
         let currentActiveStaffLedger = [];
         let annualSummaryData = [];
+        let dispatchFySummaryList = [];
         let activeViewingMonthData = null;
+
         let loadedDepotExpenses = [];
         let expenseAnnualSummaryData = [];
         let globalInvoiceFrequencyMap = {}; 
-        let selectedFyStart = null;
-        let isCurrentFinancialYear = true;
 
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const fyMonthSequence = [3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2];
-
-        function cleanAmt(val) {
-            let n = Number(val);
-            if (isNaN(n)) return "0";
-            return n % 1 === 0 ? n.toString() : n.toFixed(2).replace(/\.?0+$/, '');
-        }
 
         function showScreenBlocker(msg) {
             const overlay = document.getElementById('globalLoadingOverlay');
@@ -708,7 +1257,10 @@
             toast.className = 'toast-msg';
             toast.innerHTML = `<span>💬</span> <div>${msg}</div>`;
             container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
+            setTimeout(() => { 
+                toast.style.animation = 'slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         function parseDateObj(raw) {
@@ -761,15 +1313,22 @@
             return new Promise(async (resolve, reject) => {
                 try {
                     const cleanUrl = url.replace(/&callback=[^&]*/, '');
-                    const response = await fetch(cleanUrl, { method: 'GET', redirect: 'follow' });
+                    const response = await fetch(cleanUrl, {
+                        method: 'GET',
+                        redirect: 'follow'
+                    });
                     const text = await response.text();
+                    
                     if (text.includes('(') && text.endsWith(')')) {
                         const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
                         resolve(JSON.parse(jsonStr));
                     } else {
                         resolve(JSON.parse(text));
                     }
-                } catch (err) { reject(err); }
+                } catch (err) {
+                    console.error("Fetch Error:", err);
+                    reject(err);
+                }
             });
         }
 
@@ -862,6 +1421,28 @@
             }
         }
 
+        function populateHistoryMonthDropdown(dispatches) {
+            const selectBox = document.getElementById('historyPeriodFilter');
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
+            const fySet = new Set();
+            fySet.add(curFyStart);
+            dispatches.forEach(r => {
+                const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
+                if (d) {
+                    const fy = (d.getMonth() >= 3) ? d.getFullYear() : d.getFullYear() - 1;
+                    fySet.add(fy);
+                }
+            });
+            let optionsHtml = `<option value="TODAY" selected>📅 Today's Entries</option><option value="ALL">🌐 All Records</option>`;
+            const sortedFys = Array.from(fySet).sort((a, b) => b - a);
+            sortedFys.forEach(fy => {
+                optionsHtml += `<option value="FY_${fy}">💼 FY: ${fy}-${String(fy+1).slice(2)}</option>`;
+            });
+            selectBox.innerHTML = optionsHtml;
+        }
+
         function applyTabPermissions(depotData) {
             const checkPerm = (val) => {
                 if (val === undefined || val === null || String(val).trim() === '') return true;
@@ -884,6 +1465,7 @@
             if (tabStaff) tabStaff.style.display = canStaff ? 'inline-block' : 'none';
             if (tabExpenses) tabExpenses.style.display = canExpenses ? 'inline-block' : 'none';
 
+            // Mobile Bottom Navigation Bar Permission Check
             const botNavDispatch = document.getElementById('botNavDispatch');
             const botNavHistory = document.getElementById('botNavHistory');
             const botNavStaff = document.getElementById('botNavStaff');
@@ -895,47 +1477,7 @@
             if (botNavExpenses) botNavExpenses.style.display = canExpenses ? 'flex' : 'none';
         }
 
-        function initFyPopup() {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const curFyStart = (now.getMonth() >= 3) ? currentYear : currentYear - 1;
-            
-            const select = document.getElementById('popupFySelect');
-            let html = '';
-            for (let y = curFyStart; y >= curFyStart - 5; y--) {
-                html += `<option value="${y}">FY ${y}-${String(y+1).slice(2)}</option>`;
-            }
-            select.innerHTML = html;
-            document.getElementById('fyPopupOverlay').style.display = 'flex';
-        }
-
-        function confirmFySelection() {
-            selectedFyStart = parseInt(document.getElementById('popupFySelect').value, 10);
-            const now = new Date();
-            const curFyStart = (now.getMonth() >= 3) ? now.getFullYear() : now.getFullYear() - 1;
-            isCurrentFinancialYear = (selectedFyStart === curFyStart);
-
-            document.getElementById('fyPopupOverlay').style.display = 'none';
-
-            const tabDispatch = document.getElementById('tabBtnDispatch');
-            const botNavDispatch = document.getElementById('botNavDispatch');
-
-            if (!isCurrentFinancialYear) {
-                if (tabDispatch) tabDispatch.style.display = 'none';
-                if (botNavDispatch) botNavDispatch.style.display = 'none';
-                switchTab('recordsTab', document.getElementById('tabBtnRecords'));
-                updateBottomNavActive(document.getElementById('botNavHistory'));
-            } else {
-                if (tabDispatch) tabDispatch.style.display = 'inline-block';
-                if (botNavDispatch) botNavDispatch.style.display = 'flex';
-            }
-
-            loadDepotData();
-        }
-
         async function loadDepotData() {
-            if (selectedFyStart === null) { initFyPopup(); return; }
-
             showScreenBlocker('Loading Depot Data... Please wait!');
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
@@ -943,20 +1485,7 @@
 
                 const depot = res.depot || {};
                 depotGlobalInfo = depot;
-                
-                const fyStart = new Date(selectedFyStart, 3, 1);
-                const fyEnd = new Date(selectedFyStart + 1, 2, 31, 23, 59, 59);
-
-                loadedDispatches = (res.dispatches || []).filter(r => {
-                    let d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
-                    return d && d >= fyStart && d <= fyEnd;
-                });
-
-                loadedDepotExpenses = (res.expenses || []).filter(r => {
-                    let d = parseDateObj(getField(r, 'Date', 'date'));
-                    return d && d >= fyStart && d <= fyEnd;
-                });
-
+                loadedDispatches = res.dispatches || [];
                 loadedStaffList = res.staffMembers || [];
                 globalNextEmpCode = res.nextEmpCode || "EMP012";
 
@@ -988,7 +1517,7 @@
                 if (gstin && gstin !== '-') contactParts.push(`GST: ${gstin}`);
                 if (fssai && fssai !== '-') contactParts.push(`FSSAI: ${fssai}`);
 
-                document.getElementById('headerDepotTitle').textContent = `${dName} Depot (FY ${selectedFyStart}-${String(selectedFyStart+1).slice(2)})`;
+                document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
                 document.getElementById('topDepotAddress').innerHTML = `
                     <span>${fullAddrText}</span>
                     ${contactParts.length > 0 ? `<br><span style="font-weight:600; color:#334155;">${contactParts.join(' | ')}</span>` : ''}
@@ -999,9 +1528,11 @@
                 document.getElementById('dispPrefixSeries').value = depotPrefix;
 
                 buildHistoricalDataLists(loadedDispatches);
-                filterHistoryTable();
+                populateHistoryMonthDropdown(loadedDispatches);
+                handleDispatchFilterChange();
                 renderStaffTable(loadedStaffList);
 
+                renderDepotPendingApprovalsUI(res.pendingList || []);
                 loadedDepotExpenses = res.expenses || [];
                 populateExpenseYearDropdown(loadedDepotExpenses);
                 renderAnnualSummaryExpenses();
@@ -1011,6 +1542,61 @@
             } catch (err) { 
                 console.error(err); 
                 showToast('Error loading data!');
+            } finally {
+                hideScreenBlocker();
+            }
+        }
+
+        function renderDepotPendingApprovalsUI(pendingList) {
+            const tbody = document.getElementById('depotPendingListBody');
+            const badge = document.getElementById('pendingCountBadge');
+            
+            const myPending = pendingList.filter(item => {
+                const itemDepot = (getField(item, 'depotCode', 'Depot Code') || '').trim();
+                return itemDepot === '' || itemDepot.toLowerCase() === depotCode.toLowerCase();
+            });
+
+            badge.textContent = `${myPending.length} Pending`;
+
+            if (myPending.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#15803d; font-size:0.82rem; font-weight:600;">✨ No pending approval requests for this depot!</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            myPending.forEach(item => {
+                const type = item.type || 'Transaction';
+                const id = item.id || item.rowId || '';
+                const sName = item.staffName || item.name || '-';
+                const sCode = item.staffCode || item.empCode || '-';
+                const details = item.particular || item.details || (type === 'Staff Addition' ? `New Staff Request (${item.mobile || ''})` : '-');
+                const amt = Number(item.debit || item.credit || 0);
+                const isDebit = Number(item.debit || 0) > 0;
+                const amtStr = amt > 0 ? `₹${amt} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
+
+                html += `<tr>
+                    <td style="font-weight:700; color:${type==='Staff Addition'?'#854d0e':'#0369a1'}; font-size:0.78rem;">${type}</td>
+                    <td style="font-weight:600; font-size:0.8rem;">${sName} <span style="color:#64748b; font-size:0.72rem;">(${sCode})</span></td>
+                    <td style="font-size:0.78rem; max-width:240px; white-space:normal;">${details}</td>
+                    <td style="font-weight:700; text-align:right; font-size:0.8rem; color:${isDebit?'#dc2626':'#16a34a'};">${amtStr}</td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-tool" style="background:#dcfce7; color:#15803d; border-color:#86efac; font-weight:700; padding:2px 8px; margin-right:3px;" onclick="processApprovalDirect('${id}', '${type}', 'Approved')">✔️ Approve</button>
+                        <button class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; font-weight:700; padding:2px 8px;" onclick="processApprovalDirect('${id}', '${type}', 'Rejected')">✖️ Reject</button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+
+        async function processApprovalDirect(rowId, type, statusDecision) {
+            if (!confirm(`Are you sure you want to set status as "${statusDecision}"?`)) return;
+            showScreenBlocker(`Processing ${statusDecision}...`);
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=updateApprovalStatus&id=${encodeURIComponent(rowId)}&type=${encodeURIComponent(type)}&status=${encodeURIComponent(statusDecision)}&depotCode=${encodeURIComponent(depotCode)}`);
+                showToast(res.message || `Request ${statusDecision}!`);
+                await loadDepotData();
+            } catch (e) {
+                showToast("Error processing approval request.");
             } finally {
                 hideScreenBlocker();
             }
@@ -1050,43 +1636,94 @@
             }
         });
 
-        function filterHistoryTable() {
-            const periodFilter = document.getElementById('historyPeriodFilter').value;
-            const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
-            const todayStr = getTodayFormatted().toLowerCase();
-            const now = new Date();
-            const currentMonthIndex = now.getMonth();
-            const currentYearVal = now.getFullYear();
+        function handleDispatchFilterChange() {
+            const periodVal = document.getElementById('historyPeriodFilter').value;
+            const fySummaryContainer = document.getElementById('dispFySummaryContainer');
+            const rawTableContainer = document.getElementById('dispRawTableContainer');
+            const loadOlderBtn = document.getElementById('loadOlderBar');
+            const searchWrap = document.getElementById('dispSearchWrap');
+            const backBar = document.getElementById('dispMonthBackBar');
 
-            const filtered = loadedDispatches.filter(r => {
-                const rawDate = getField(r, 'Invoice Dispatch Date', 'Date');
-                const cleanDate = formatCleanDate(rawDate).toLowerCase();
-                const dObj = parseDateObj(rawDate);
+            if (backBar) backBar.style.display = 'none';
 
-                if (query) {
-                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
-                    const vType = getField(r, 'Vehicle Type').toLowerCase();
-                    const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
-                    const vNo = getField(r, 'Vehicle No').toLowerCase();
-                    const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
-                    return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
-                }
-
-                if (periodFilter === "TODAY") { 
-                    if (cleanDate !== todayStr) return false; 
-                } else if (periodFilter === "MONTH") {
-                    if (!dObj || dObj.getMonth() !== currentMonthIndex || dObj.getFullYear() !== currentYearVal) return false;
-                }
-                return true;
-            });
-
-            renderDispatchTable(filtered);
+            if (periodVal.startsWith("FY_")) {
+                fySummaryContainer.style.display = 'block';
+                rawTableContainer.style.display = 'none';
+                if (loadOlderBtn) loadOlderBtn.style.display = 'none';
+                if (searchWrap) searchWrap.style.display = 'none';
+                renderDispatchFySummary(parseInt(periodVal.replace("FY_", ""), 10));
+            } else {
+                fySummaryContainer.style.display = 'none';
+                rawTableContainer.style.display = 'block';
+                if (searchWrap) searchWrap.style.display = 'flex';
+                filterHistoryTable();
+            }
         }
 
-        function loadAllOlderRecords() {
-            document.getElementById('historyPeriodFilter').value = "";
-            filterHistoryTable();
-            showToast('All historical records loaded!');
+        function renderDispatchFySummary(startYear) {
+            const fyStart = new Date(startYear, 3, 1);
+            const fyEnd = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const monthlyMap = {};
+            fyMonthSequence.forEach(mIndex => {
+                monthlyMap[mIndex] = { count: 0, vTypes: {}, rows: [] };
+            });
+
+            loadedDispatches.forEach(r => {
+                const d = parseDateObj(getField(r, 'Invoice Dispatch Date', 'Date'));
+                if (d && d >= fyStart && d <= fyEnd) {
+                    const m = d.getMonth();
+                    monthlyMap[m].rows.push(r);
+                    monthlyMap[m].count++;
+                    const vt = getField(r, 'Vehicle Type') || 'Auto';
+                    monthlyMap[m].vTypes[vt] = (monthlyMap[m].vTypes[vt] || 0) + 1;
+                }
+            });
+
+            dispatchFySummaryList = [];
+            let tbodyHtml = '';
+            let totalFyCount = 0;
+
+            fyMonthSequence.forEach(mIndex => {
+                const mData = monthlyMap[mIndex];
+                if (mData.count === 0) return;
+
+                totalFyCount += mData.count;
+                const mLabel = monthNames[mIndex];
+                const actualYear = (mIndex >= 3) ? startYear : startYear + 1;
+
+                let topVType = '-';
+                let maxVCount = 0;
+                Object.keys(mData.vTypes).forEach(vt => {
+                    if (mData.vTypes[vt] > maxVCount) {
+                        maxVCount = mData.vTypes[vt];
+                        topVType = vt;
+                    }
+                });
+
+                dispatchFySummaryList.push({ monthIndex: mIndex, monthLabel: mLabel, year: actualYear, count: mData.count, topVType: topVType, rows: mData.rows });
+
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel} ${actualYear}</td><td style="text-align:right; font-weight:800; color:#0369a1;">${mData.count}</td><td style="color:#475569; font-weight:600;">${topVType}</td><td style="text-align:center;"><button class="btn-action-ledger" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="viewDispatchMonthDetails(${mIndex})">View</button></td></tr>`;
+            });
+
+            document.getElementById('dispFySummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="4" class="text-center" style="padding:2rem;">No dispatch records found in this Financial Year.</td></tr>`;
+            document.getElementById('dispCountBadge').textContent = `${totalFyCount} records (FY Summary)`;
+        }
+
+        function viewDispatchMonthDetails(mIndex) {
+            const mData = dispatchFySummaryList.find(d => d.monthIndex === mIndex);
+            if (!mData) return;
+            document.getElementById('dispFySummaryContainer').style.display = 'none';
+            document.getElementById('dispRawTableContainer').style.display = 'block';
+            document.getElementById('dispMonthBackBar').style.display = 'flex';
+            document.getElementById('dispSearchWrap').style.display = 'flex';
+            document.getElementById('dispMonthBackTitle').textContent = `📅 Dispatch Records: ${mData.monthLabel} ${mData.year}`;
+            renderDispatchTable(mData.rows);
+        }
+
+        function backToDispatchFySummary() {
+            document.getElementById('dispMonthBackBar').style.display = 'none';
+            handleDispatchFilterChange();
         }
 
         function renderDispatchTable(list) {
@@ -1237,6 +1874,40 @@
             finally { hideScreenBlocker(); }
         }
 
+        function filterHistoryTable() {
+            const periodFilter = document.getElementById('historyPeriodFilter').value;
+            const query = document.getElementById('historySearchInput').value.trim().toLowerCase();
+            const todayStr = getTodayFormatted().toLowerCase();
+            const loadOlderBtn = document.getElementById('loadOlderBar');
+
+            if (loadOlderBtn) loadOlderBtn.style.display = (periodFilter === "ALL" || query !== "") ? "none" : "block";
+
+            const filtered = loadedDispatches.filter(r => {
+                const rawDate = getField(r, 'Invoice Dispatch Date', 'Date');
+                const cleanDate = formatCleanDate(rawDate).toLowerCase();
+
+                if (query) {
+                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No').toLowerCase();
+                    const vType = getField(r, 'Vehicle Type').toLowerCase();
+                    const through = getField(r, 'Dispatch Throuch', 'Dispatch Through').toLowerCase();
+                    const vNo = getField(r, 'Vehicle No').toLowerCase();
+                    const remark = getField(r, 'Remark If Any', 'Remark').toLowerCase();
+                    return inv.includes(query) || vType.includes(query) || through.includes(query) || vNo.includes(query) || cleanDate.includes(query) || remark.includes(query);
+                }
+
+                if (periodFilter === "TODAY") { if (cleanDate !== todayStr) return false; }
+                return true;
+            });
+
+            renderDispatchTable(filtered);
+        }
+
+        function loadAllOlderRecords() {
+            document.getElementById('historyPeriodFilter').value = "ALL";
+            handleDispatchFilterChange();
+            showToast('All historical records loaded!');
+        }
+
         function exportDispatchToCSV() {
             if (!currentlyFilteredDispatches || currentlyFilteredDispatches.length === 0) {
                 showToast('No dispatch records to export.');
@@ -1283,7 +1954,7 @@
                     }
                 });
                 const net = totalCr - totalDr;
-                return `₹${cleanAmt(Math.abs(net))} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+                return `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
             } catch (e) { return '-'; }
         }
 
@@ -1332,8 +2003,8 @@
             e.preventDefault();
             const btn = document.getElementById('btnReqStaffSubmit');
             btn.disabled = true;
-            btn.textContent = 'Saving...';
-            showScreenBlocker('Saving Staff...');
+            btn.textContent = 'Sending Request...';
+            showScreenBlocker('Login ID Is (EMP Id),Pass-1010 ,  Frist Approve This Staff');
 
             const payload = {
                 action: 'requestNewStaff',
@@ -1349,17 +2020,17 @@
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
-                    showToast(res.message || 'Staff added successfully!');
+                    showToast(res.message);
                     closeAddStaffModal();
                     await loadDepotData();
                 } else {
-                    showToast(res.message || 'Failed to save staff.');
+                    showToast(res.message || 'Failed to submit staff request.');
                 }
-            } catch (err) { showToast('Error saving staff.'); }
+            } catch (err) { showToast('Error submitting staff request.'); }
             finally { 
-                hideScreenBlocker(); 
+                hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'Create Request'; 
+                btn.textContent = ' Request Send '; 
             }
         });
 
@@ -1370,8 +2041,8 @@
             document.getElementById('trxStaffName').value = sName;
             document.getElementById('trxStaffDisplay').value = `${sName} (${sCode})`;
             document.getElementById('trxDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('trxModalHeaderTitle').textContent = '💳 Staff Debit & Credit';
-            document.getElementById('btnReqTrxSubmit').textContent = 'Save Transaction';
+            document.getElementById('trxModalHeaderTitle').textContent = '💳 Request Staff Debit & Credit';
+            document.getElementById('btnReqTrxSubmit').textContent = 'Send Transaction Request';
             document.getElementById('addTrxModal').style.display = 'block';
         }
         function closeAddTrxModal() { document.getElementById('addTrxModal').style.display = 'none'; }
@@ -1416,8 +2087,8 @@
 
             const btn = document.getElementById('btnReqTrxSubmit');
             btn.disabled = true;
-            btn.textContent = 'Saving...';
-            showScreenBlocker(rowId ? 'Updating Staff Transaction...' : 'Saving Staff Transaction...');
+            btn.textContent = 'Submitting...';
+            showScreenBlocker(rowId ? 'Updating Staff Transaction...' : 'Please Check Approval Section And Approve This...');
 
             const payload = {
                 action: rowId ? 'editStaffTransaction' : 'requestStaffTransaction',
@@ -1437,7 +2108,7 @@
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
-                    showToast(res.message || 'Saved successfully!');
+                    showToast(res.message);
                     closeAddTrxModal();
                     if (currentActiveStaffCode) {
                         await openStaffLedger(currentActiveStaffCode, currentActiveStaffName);
@@ -1448,7 +2119,7 @@
                 }
             } catch (err) { showToast('Error submitting transaction.'); }
             finally { 
-                hideScreenBlocker(); 
+                hideScreenBlocker();
                 btn.disabled = false; 
                 btn.textContent = 'Send Transaction Request'; 
             }
@@ -1585,11 +2256,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = cleanAmt(Math.abs(openingBalance));
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? cleanAmt(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -1601,11 +2272,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = cleanAmt(Math.abs(runningBal));
+                const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 annualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? cleanAmt(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? cleanAmt(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
@@ -1645,9 +2316,9 @@
                 <td><strong>01 ${monthName}</strong></td>
                 <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
                 <td>-</td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + cleanAmt(opDr) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + cleanAmt(opCr) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${cleanAmt(runningBal)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
             </tr>`;
 
@@ -1684,9 +2355,9 @@
                     <td><strong>${dt}</strong></td>
                     <td style="white-space:normal;min-width:320px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + cleanAmt(dr) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cleanAmt(cr) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + cleanAmt(runningBal) : 'Pending'}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
                     <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
@@ -1753,9 +2424,9 @@
             html += `<tr style="font-weight:bold; background:#f8fafc;">
                 <td style="border:1px solid #000; padding:4px;">01-B/F</td>
                 <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? cleanAmt(opDr) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? cleanAmt(opCr) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${cleanAmt(runningBal)}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -1770,9 +2441,9 @@
                     html += `<tr>
                         <td style="border:1px solid #000; padding:4px;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? cleanAmt(dr) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cleanAmt(cr) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cleanAmt(runningBal)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
             });
@@ -1780,11 +2451,11 @@
             document.getElementById('rcptTableBody').innerHTML = html;
 
             const opBal = activeViewingMonthData.openingBal;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${cleanAmt(Math.abs(opBal))} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${cleanAmt(activeViewingMonthData.totalDr)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${cleanAmt(activeViewingMonthData.totalCr)}`;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
             const finalNet = activeViewingMonthData.closingBal;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${cleanAmt(Math.abs(finalNet))} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
@@ -1839,7 +2510,7 @@
 
             let opCr = openingBalance > 0 ? openingBalance : 0;
             let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${cleanAmt(opDr)},${cleanAmt(opCr)},${cleanAmt(runningBal)},"Opening"\n`;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
 
             currentFYRows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
@@ -1856,11 +2527,11 @@
                     runningBal += (cr - dr);
                 }
 
-                const balStr = isApproved ? cleanAmt(runningBal) : "Pending";
-                csvContent += `${dt},${part},${mode},${cleanAmt(dr)},${cleanAmt(cr)},${balStr},${appRaw}\n`;
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
             });
 
-            csvContent += `\nSUMMARY,,,"Total Debit: ${cleanAmt(totalDr)}","Total Credit: ${cleanAmt(totalCr)}","Net Balance: ${cleanAmt(Math.abs(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2094,11 +2765,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = cleanAmt(Math.abs(openingBalance));
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             expenseAnnualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? cleanAmt(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -2110,11 +2781,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = cleanAmt(Math.abs(runningBal));
+                const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 expenseAnnualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? cleanAmt(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? cleanAmt(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
@@ -2153,9 +2824,9 @@
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
                 <td><strong>Opening Balance</strong></td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + cleanAmt(opDr) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + cleanAmt(opCr) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${cleanAmt(runningBal)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
             </tr>`;
 
             mData.rows.forEach((r, idx) => {
@@ -2186,9 +2857,9 @@
                     <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + cleanAmt(dr) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cleanAmt(cr) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${cleanAmt(runningBal)}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 </tr>`;
             });
 
@@ -2475,6 +3146,120 @@
             document.getElementById('recordsTab').style.display = (tabId === 'recordsTab') ? 'block' : 'none';
             document.getElementById('staffTab').style.display = (tabId === 'staffTab') ? 'block' : 'none';
             document.getElementById('expensesTab').style.display = (tabId === 'expensesTab') ? 'block' : 'none';
+        }
+
+        function updateBottomNavActive(clickedBtn) {
+            document.querySelectorAll('.mobile-bottom-nav .bot-nav-btn').forEach(b => b.classList.remove('active'));
+            if (clickedBtn) clickedBtn.classList.add('active');
+        }
+
+        function openThermalFyPrintPreview() {
+            const startYear = parseInt(document.getElementById('ledgerYearFilter').value, 10);
+            const fyStartDate = new Date(startYear, 3, 1);
+            const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
+
+            const validRows = currentActiveStaffLedger.slice().sort((a, b) => {
+                let da = parseDateObj(getField(a, 'Transaction Date', 'date')) || new Date(0);
+                let db = parseDateObj(getField(b, 'Transaction Date', 'date')) || new Date(0);
+                return da - db;
+            });
+
+            let openingBalance = 0; let fyRows = [];
+
+            validRows.forEach(r => {
+                const appRaw = (getField(r, 'Entry Approvel Status (Admin)', 'approvalStatus', 'Status') || 'Pending').toString().trim();
+                const isApproved = appRaw.toLowerCase() === 'approved';
+                const d = parseDateObj(getField(r, 'Transaction Date', 'date'));
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+
+                if (!d) return;
+                if (d < fyStartDate) { if (isApproved) openingBalance += (cr - dr); } 
+                else if (d >= fyStartDate && d <= fyEndDate) { if (isApproved) fyRows.push(r); }
+            });
+
+            const depot = depotGlobalInfo || {};
+            const dName = getField(depot, 'Depot Name') || depotNameStored;
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile');
+            const gstin = getField(depot, 'GSTIN');
+            const fullAddr = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+
+            let runningBal = openingBalance;
+            let totalDr = 0; let totalCr = 0;
+            let rowsHtml = '';
+            let opCr = openingBalance > 0 ? openingBalance : 0;
+            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+
+            rowsHtml += `
+                <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
+                    <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
+                </tr>
+            `;
+
+            fyRows.forEach(r => {
+                const dr = Number(getField(r, 'Debit', 'debit') || 0);
+                const cr = Number(getField(r, 'Credit', 'credit') || 0);
+                const dt = formatCleanDate(getField(r, 'Transaction Date', 'date')).slice(0, 6);
+                const part = getField(r, 'Particular', 'particular');
+
+                totalDr += dr; totalCr += cr; runningBal += (cr - dr);
+
+                rowsHtml += `
+                    <tr style="border-bottom: 1px dotted #ccc;">
+                        <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
+                        <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const slipTemplate = `
+                <div style="width: 100%; max-width: 320px; margin: 0 auto; font-family: 'Courier New', monospace; font-size: 8.5pt; color: #000; padding: 5px;">
+                    <div style="text-align: center; font-weight: 800; font-size: 11pt; border-bottom: 1px dashed #000; padding-bottom: 4px; margin-bottom: 4px;">
+                        ${dName} Depot
+                    </div>
+                    <div style="text-align: center; font-size: 7.5pt; line-height: 1.2; margin-bottom: 6px;">
+                        ${fullAddr}<br>Mob: ${mob || '-'} | GSTIN: ${gstin || '-'}
+                    </div>
+                    <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; padding: 4px 0; font-size: 8pt; margin-bottom: 6px;">
+                        <div><strong>Staff:</strong> ${currentActiveStaffName} (${currentActiveStaffCode})</div>
+                        <div><strong>Period:</strong> FY ${startYear}-${startYear + 1}</div>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 7.8pt;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid #000;">
+                                <th style="text-align: left; padding: 2px 1px; width: 16%;">Date</th>
+                                <th style="text-align: left; padding: 2px 1px; width: 38%;">Particular</th>
+                                <th style="text-align: right; padding: 2px 1px; width: 15%;">Dr</th>
+                                <th style="text-align: right; padding: 2px 1px; width: 15%;">Cr</th>
+                                <th style="text-align: right; padding: 2px 1px; width: 16%;">Bal</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rowsHtml}</tbody>
+                    </table>
+                    <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
+                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
+                            <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">*** Thank You ***</div>
+                </div>
+            `;
+            document.getElementById('printableReceipt').innerHTML = slipTemplate;
+            document.getElementById('previewSlipDisplay').innerHTML = slipTemplate;
+            document.getElementById('printPreviewModal').style.display = 'block';
         }
 
         window.onload = () => { startLiveClock(); loadDepotData(); };

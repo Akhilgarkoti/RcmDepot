@@ -589,7 +589,7 @@
             document.getElementById('adminContactModal').style.display = 'block';
         }
 
-        function openEmployeeRegistrationForm() {
+        async function openEmployeeRegistrationForm() {
             document.getElementById('modalActionTitle').textContent = "📝 Employee Registration";
             const bodyContent = document.getElementById('modalBodyContent');
             bodyContent.innerHTML = `
@@ -599,10 +599,7 @@
                         <div class="input-box">
                             <span class="input-icon">🏢</span>
                             <select id="regSelectDepot" required style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                                <option value="" disabled selected>-- Select Depot --</option>
-                                <option value="DEP001">Kishanganj Depot (DEP001)</option>
-                                <option value="DEP002">Bhilwara Depot (DEP002)</option>
-                                <option value="DEP003">Patna Depot (DEP003)</option>
+                                <option value="" disabled selected>Loading depots from master...</option>
                             </select>
                         </div>
                     </div>
@@ -637,6 +634,26 @@
                     <button type="button" class="btn-modal-close" onclick="openRegistrationTypeModal()" style="margin-top: 0.5rem;">&larr; Back</button>
                 </form>
             `;
+
+            // Fetch Depot List from Depot Master via Google Apps Script
+            try {
+                const res = await jsonpRequest(`${SCRIPT_URL}?action=getDepotList`);
+                const selectBox = document.getElementById('regSelectDepot');
+                if (res && res.success && res.depots && res.depots.length > 0) {
+                    selectBox.innerHTML = '<option value="" disabled selected>-- Select Depot --</option>';
+                    res.depots.forEach(dep => {
+                        const opt = document.createElement('option');
+                        opt.value = dep.code;
+                        opt.textContent = `${dep.name} (${dep.code})`;
+                        selectBox.appendChild(opt);
+                    });
+                } else {
+                    selectBox.innerHTML = '<option value="" disabled selected>No depots found</option>';
+                }
+            } catch (err) {
+                const selectBox = document.getElementById('regSelectDepot');
+                if(selectBox) selectBox.innerHTML = '<option value="" disabled selected>Failed to load depots</option>';
+            }
         }
 
         function openDepotRegistrationForm() {

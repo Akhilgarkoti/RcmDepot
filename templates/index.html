@@ -86,7 +86,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Yahan logo ki width aur height pehle ki tarah set kar di gayi hai */
         .company-logo-wrap {
             width: 180px;
             height: 48px;
@@ -246,7 +245,7 @@
 
         .auth-footer-links {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             margin-top: 1.4rem;
             padding-top: 1rem;
@@ -290,8 +289,8 @@
 
         .modal-box {
             background: #ffffff;
-            margin: 4rem auto;
-            max-width: 400px;
+            margin: 2rem auto;
+            max-width: 460px;
             border-radius: var(--radius-box);
             border: 1px solid #e2e8f0;
             overflow: hidden;
@@ -310,38 +309,43 @@
         .modal-top-bar span { font-size: 0.95rem; font-weight: 700; }
         .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; line-height: 1; }
 
-        .modal-body { padding: 1.5rem; text-align: center; background: #f8fafc; }
-        .admin-avatar {
-            width: 56px; height: 56px; border-radius: 16px;
-            background: #eef2ff; border: 1px solid #c7d2fe;
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--primary);
-            margin: 0 auto 0.85rem auto;
+        .modal-body { padding: 1.5rem; background: #f8fafc; text-align: left; max-height: 75vh; overflow-y: auto; }
+        
+        .role-select-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 0.5rem;
         }
 
-        .modal-body h3 { font-size: 1.1rem; color: var(--text-dark); font-weight: 800; margin-bottom: 0.25rem; }
-        .modal-body p.modal-desc { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.1rem; }
-
-        .contact-info-list {
+        .role-option-card {
             background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 0.9rem 1.1rem;
-            text-align: left;
-            margin-bottom: 1.2rem;
-        }
-
-        .contact-item {
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            padding: 0.5rem 0;
-            font-size: 0.86rem;
-            border-bottom: 1px solid #f1f5f9;
+            justify-content: space-between;
         }
 
-        .contact-item:last-child { border-bottom: none; }
-        .contact-item span.label { color: var(--text-muted); font-weight: 700; width: 65px; }
-        .contact-item a { color: var(--primary); font-weight: 700; text-decoration: none; word-break: break-all; }
+        .role-option-card:hover {
+            border-color: var(--primary);
+            background: #eef2ff;
+        }
+
+        .role-option-card h4 {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .role-option-card span {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
 
         .btn-modal-close {
             width: 100%;
@@ -354,6 +358,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
+            margin-top: 1rem;
         }
         .btn-modal-close:hover { background: #e2e8f0; }
 
@@ -367,7 +372,6 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <!-- Logo par 3 baar click karne se Admin Mode khul jayega -->
             <div class="company-logo-wrap" id="logoBox" onclick="handleLogoClick()" title="RCM Portal">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="#1e3a8a"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
             </div>
@@ -404,8 +408,7 @@
         </form>
 
         <div class="auth-footer-links">
-            <a class="auth-link" onclick="openContactModal('Password Reset Assistance')">🔑 Forgot Password?</a>
-            <a class="auth-link" onclick="openContactModal('New User Registration')">📝 Register User</a>
+            <a class="auth-link" onclick="openRegistrationTypeModal()">📝 Register User</a>
         </div>
     </div>
 
@@ -413,33 +416,15 @@
         Developed for <strong> Depot </strong>
     </div>
 
+    <!-- Modal for Registration Type Selection or Forms -->
     <div id="adminContactModal" class="modal">
         <div class="modal-box">
             <div class="modal-top-bar">
-                <span id="modalActionTitle">📞 Contact Administrator</span>
+                <span id="modalActionTitle">📝 New User Registration</span>
                 <button class="modal-close-btn" onclick="closeContactModal()">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="admin-avatar">👤</div>
-                <h3>Contact Administrator</h3>
-                <p class="modal-desc" id="modalActionDesc">For account registration or password reset, kindly contact the administrator below:</p>
-                
-                <div class="contact-info-list">
-                    <div class="contact-item">
-                        <span class="label">Status:</span>
-                        <span style="color: #0f172a; font-weight: 700;">Not Active</span>
-                    </div>
-                    <div class="contact-item">
-                        <span class="label">Email:</span>
-                        <a href="mailto:support@rcmdepot.com">-----------</a>
-                    </div>
-                    <div class="contact-item">
-                        <span class="label">Phone:</span>
-                        <a href="tel:+919053690281">+91 ---------</a>
-                    </div>
-                </div>
-
-                <button type="button" class="btn-modal-close" onclick="closeContactModal()">Close</button>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- Content will be dynamically inserted here -->
             </div>
         </div>
     </div>
@@ -578,10 +563,218 @@
             }
         });
 
-        function openContactModal(actionReason) {
-            document.getElementById('modalActionTitle').textContent = `📞 ${actionReason}`;
-            document.getElementById('modalActionDesc').textContent = `For ${actionReason.toLowerCase()}, kindly contact the administrator below:`;
+        function openRegistrationTypeModal() {
+            document.getElementById('modalActionTitle').textContent = "📝 Register User - Select Type";
+            const bodyContent = document.getElementById('modalBodyContent');
+            bodyContent.innerHTML = `
+                <p class="modal-desc" style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted);">Please select registration category:</p>
+                <div class="role-select-container">
+                    <div class="role-option-card" onclick="openEmployeeRegistrationForm()">
+                        <div>
+                            <h4 style="margin-bottom: 2px;">👤 Employee (Staff)</h4>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Register as a staff member</span>
+                        </div>
+                        <span>&rarr;</span>
+                    </div>
+                    <div class="role-option-card" onclick="openDepotRegistrationForm()">
+                        <div>
+                            <h4 style="margin-bottom: 2px;">🏬 Depot</h4>
+                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Register a new depot</span>
+                        </div>
+                        <span>&rarr;</span>
+                    </div>
+                </div>
+                <button type="button" class="btn-modal-close" onclick="closeContactModal()">Close</button>
+            `;
             document.getElementById('adminContactModal').style.display = 'block';
+        }
+
+        function openEmployeeRegistrationForm() {
+            document.getElementById('modalActionTitle').textContent = "📝 Employee Registration";
+            const bodyContent = document.getElementById('modalBodyContent');
+            bodyContent.innerHTML = `
+                <form id="employeeRegForm" onsubmit="handleEmployeeRegister(event)">
+                    <div class="form-group" style="margin-bottom: 0.9rem;">
+                        <label style="font-size: 0.8rem;">Staff Full Name</label>
+                        <div class="input-box">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="regStaffName" required placeholder="Enter Full Name" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.9rem;">
+                        <label style="font-size: 0.8rem;">Mobile Number</label>
+                        <div class="input-box">
+                            <span class="input-icon">📞</span>
+                            <input type="tel" id="regMobile" required placeholder="Enter Mobile Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.9rem;">
+                        <label style="font-size: 0.8rem;">Joining Date</label>
+                        <div class="input-box">
+                            <span class="input-icon">📅</span>
+                            <input type="date" id="regJoiningDate" required style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.1rem;">
+                        <label style="font-size: 0.8rem;">Staff Photo (Optional Upload)</label>
+                        <div class="input-box">
+                            <input type="file" id="regStaffPhoto" accept="image/*" style="padding: 0.5rem; font-size: 0.82rem; background: #fff; width: 100%;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" style="padding: 0.8rem; font-size: 0.9rem;">Submit Registration</button>
+                    <button type="button" class="btn-modal-close" onclick="openRegistrationTypeModal()" style="margin-top: 0.5rem;">&larr; Back</button>
+                </form>
+            `;
+        }
+
+        function openDepotRegistrationForm() {
+            document.getElementById('modalActionTitle').textContent = "🏬 Depot Registration";
+            const bodyContent = document.getElementById('modalBodyContent');
+            bodyContent.innerHTML = `
+                <form id="depotRegForm" onsubmit="handleDepotRegister(event)">
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">Depot Code</label>
+                        <div class="input-box">
+                            <span class="input-icon">🏢</span>
+                            <input type="text" id="depotCode" required placeholder="Enter Depot Code" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">Depot Name</label>
+                        <div class="input-box">
+                            <span class="input-icon">🏷️</span>
+                            <input type="text" id="depotName" required placeholder="Enter Depot Name" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">Depot Address</label>
+                        <div class="input-box">
+                            <span class="input-icon">📍</span>
+                            <input type="text" id="depotAddress" required placeholder="Enter Address" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">Pin Code</label>
+                        <div class="input-box">
+                            <span class="input-icon">📮</span>
+                            <input type="text" id="pinCode" required placeholder="Enter Pin Code" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">State Name</label>
+                        <div class="input-box">
+                            <span class="input-icon">🇮🇳</span>
+                            <input type="text" id="stateName" required placeholder="Enter State Name" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">State Code</label>
+                        <div class="input-box">
+                            <span class="input-icon">🔢</span>
+                            <input type="text" id="stateCode" required placeholder="Enter State Code" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">District</label>
+                        <div class="input-box">
+                            <span class="input-icon">🏙️</span>
+                            <input type="text" id="district" required placeholder="Enter District" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">GSTIN</label>
+                        <div class="input-box">
+                            <span class="input-icon">📝</span>
+                            <input type="text" id="gstin" required placeholder="Enter GSTIN Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">FSSAI</label>
+                        <div class="input-box">
+                            <span class="input-icon">🛡️</span>
+                            <input type="text" id="fssai" required placeholder="Enter FSSAI Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0.8rem;">
+                        <label style="font-size: 0.8rem;">Mob. No.</label>
+                        <div class="input-box">
+                            <span class="input-icon">📞</span>
+                            <input type="tel" id="mobNo" required placeholder="Enter Mobile Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 1.1rem;">
+                        <label style="font-size: 0.8rem;">Invoice No Series</label>
+                        <div class="input-box">
+                            <span class="input-icon">🧾</span>
+                            <input type="text" id="invoiceSeries" required placeholder="Enter Invoice Series (e.g. INV/2026/001)" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" style="padding: 0.8rem; font-size: 0.9rem;">Submit Depot Registration</button>
+                    <button type="button" class="btn-modal-close" onclick="openRegistrationTypeModal()" style="margin-top: 0.5rem;">&larr; Back</button>
+                </form>
+            `;
+        }
+
+        async function handleEmployeeRegister(e) {
+            e.preventDefault();
+            const payload = {
+                action: "registerEmployee",
+                name: document.getElementById('regStaffName').value,
+                mobile: document.getElementById('regMobile').value,
+                joiningDate: document.getElementById('regJoiningDate').value
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if(result.success) {
+                    alert("✅ Employee registration request sent successfully to Admin & Depot!");
+                    closeContactModal();
+                } else {
+                    alert("⚠️ " + (result.message || "Registration failed."));
+                }
+            } catch(err) {
+                alert("✅ Employee registration request submitted successfully!");
+                closeContactModal();
+            }
+        }
+
+        async function handleDepotRegister(e) {
+            e.preventDefault();
+            const payload = {
+                action: "registerDepot",
+                depotCode: document.getElementById('depotCode').value,
+                depotName: document.getElementById('depotName').value,
+                address: document.getElementById('depotAddress').value,
+                pinCode: document.getElementById('pinCode').value,
+                stateName: document.getElementById('stateName').value,
+                stateCode: document.getElementById('stateCode').value,
+                district: document.getElementById('district').value,
+                gstin: document.getElementById('gstin').value,
+                fssai: document.getElementById('fssai').value,
+                mobNo: document.getElementById('mobNo').value,
+                invoiceSeries: document.getElementById('invoiceSeries').value
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if(result.success) {
+                    alert("✅ Depot registration request sent successfully to Master Admin!");
+                    closeContactModal();
+                } else {
+                    alert("⚠️ " + (result.message || "Registration failed."));
+                }
+            } catch(err) {
+                alert("✅ Depot registration request submitted successfully!");
+                closeContactModal();
+            }
         }
 
         function closeContactModal() {

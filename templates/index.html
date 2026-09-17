@@ -718,7 +718,10 @@
                         <label style="font-size: 0.8rem;">Invoice No Series</label>
                         <div class="input-box">
                             <span class="input-icon">🧾</span>
-                            <input type="text" id="invoiceSeries" required placeholder="Enter Invoice Series (e.g. INV/2026/001)" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
+                            <input type="text" id="invoiceSeries" required maxlength="5" pattern="[0-9]{5}" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);" 
+                                   placeholder="your depot invoice first 5 digit" 
+                                   style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
                         </div>
                     </div>
                     <button type="submit" class="btn-submit" style="padding: 0.8rem; font-size: 0.9rem;">Submit Depot Registration</button>
@@ -757,6 +760,12 @@
 
         async function handleDepotRegister(e) {
             e.preventDefault();
+            const invSeries = document.getElementById('invoiceSeries').value.trim();
+            if(invSeries.length !== 5 || isNaN(invSeries)) {
+                alert("⚠️ Invoice No Series must be exactly 5 digits!");
+                return;
+            }
+
             const payload = {
                 action: "registerDepot",
                 depotCode: document.getElementById('depotCode').value,
@@ -769,7 +778,7 @@
                 gstin: document.getElementById('gstin').value,
                 fssai: document.getElementById('fssai').value,
                 mobNo: document.getElementById('mobNo').value,
-                invoiceSeries: document.getElementById('invoiceSeries').value
+                invoiceSeries: invSeries
             };
 
             try {

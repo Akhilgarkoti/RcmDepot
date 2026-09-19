@@ -56,6 +56,13 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Hidden Admin Trigger Zone */
+        .admin-trigger-area {
+            cursor: pointer;
+            user-select: none;
+            display: inline-block;
+        }
+
         .auth-header h2 {
             font-size: 1.6rem;
             font-weight: 800;
@@ -182,8 +189,11 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <h2>RCM Depot <span>Portal</span></h2>
-            <p id="portalSubText">Depot & Staff Unified Login</p>
+            <!-- Secret triple-click trigger area -->
+            <div class="admin-trigger-area" onclick="handleSecretAdminClick()" title="RCM Portal">
+                <h2>RCM Depot <span>Portal</span></h2>
+                <p id="portalSubText">Depot & Staff Unified Login</p>
+            </div>
         </div>
 
         <div style="text-align: center;">
@@ -222,8 +232,43 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
         let currentRole = "auto";
+        let clickCount = 0;
+        let clickTimer = null;
+
+        // Secret Admin Trigger Logic
+        function handleSecretAdminClick() {
+            clickCount++;
+            if (clickCount === 1) {
+                clickTimer = setTimeout(() => { clickCount = 0; }, 1000);
+            } else if (clickCount === 3) {
+                clearTimeout(clickTimer);
+                clickCount = 0;
+                enableAdminMode();
+            }
+        }
+
+        function enableAdminMode() {
+            currentRole = "admin";
+            document.getElementById('selectedRoleInput').value = "admin";
+            document.getElementById('userLabel').textContent = "Master Admin Username";
+            document.getElementById('userName').placeholder = "Enter Admin Username";
+            document.getElementById('portalSubText').textContent = "Master Admin Portal Login";
+            
+            const badge = document.getElementById('roleBadge');
+            badge.textContent = "🛡️ Admin Mode Unlocked";
+            badge.style.background = "#fee2e2";
+            badge.style.color = "#991b1b";
+            badge.style.borderColor = "#fca5a5";
+
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.textContent = "Login to Master Admin";
+            loginBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)";
+            
+            alert("🔒 Admin mode activated successfully!");
+        }
 
         function detectRoleOnInput(val) {
+            if (currentRole === "admin") return;
             const v = val.trim().toUpperCase();
             const badge = document.getElementById('roleBadge');
             const subText = document.getElementById('portalSubText');
@@ -300,13 +345,13 @@
                     msgBox.textContent = "⚠️ " + (res.message || "Invalid username or password.");
                     msgBox.style.display = 'block';
                     btn.disabled = false;
-                    btn.textContent = "Login to Portal";
+                    btn.textContent = currentRole === "admin" ? "Login to Master Admin" : "Login to Portal";
                 }
             } catch (err) {
                 msgBox.textContent = "⚠️ Network Error: Unable to reach server.";
                 msgBox.style.display = 'block';
                 btn.disabled = false;
-                btn.textContent = "Login to Portal";
+                btn.textContent = currentRole === "admin" ? "Login to Master Admin" : "Login to Portal";
             }
         });
     </script>

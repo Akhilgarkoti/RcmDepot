@@ -5,20 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RCM Depot Management Portal - Login</title>
     
-    <!-- Performance & Preconnect Hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://script.google.com">
-    <link rel="dns-prefetch" href="https://script.google.com">
-    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #4f46e5;
-            --primary-light: #6366f1;
-            --primary-soft: #e0e7ff;
-            --bg-body: #0f172a;
             --card-bg: rgba(255, 255, 255, 0.96);
             --text-dark: #1e293b;
             --text-muted: #64748b;
@@ -44,35 +38,17 @@
             align-items: center;
             justify-content: center;
             padding: 1.2rem;
-            position: relative;
-            overflow-x: hidden;
         }
-
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            pointer-events: none;
-        }
-        body::before { background: rgba(99, 102, 241, 0.15); top: -100px; left: -100px; }
-        body::after { background: rgba(236, 72, 153, 0.1); bottom: -80px; right: -80px; }
 
         .auth-card {
             width: 100%;
             max-width: 420px;
             background: var(--card-bg);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: var(--radius-box);
             padding: 2.2rem 2rem;
             box-shadow: var(--shadow-card);
-            position: relative;
-            z-index: 10;
         }
 
         .auth-header {
@@ -80,32 +56,10 @@
             margin-bottom: 1.5rem;
         }
 
-        .company-logo-wrap {
-            width: 180px;
-            height: 48px;
-            margin: 0 auto 1.2rem auto;
-            background: #ffffff;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            overflow: hidden;
-        }
-
-        .company-logo-wrap:hover { transform: scale(1.02); }
-        .company-logo-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
         .auth-header h2 {
             font-size: 1.6rem;
             font-weight: 800;
             color: #0f172a;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
         }
 
         .auth-header h2 span { color: var(--primary); }
@@ -128,7 +82,6 @@
             font-weight: 700;
             margin-bottom: 1.2rem;
             text-transform: uppercase;
-            letter-spacing: 0.6px;
         }
 
         .form-group { margin-bottom: 1.2rem; }
@@ -147,7 +100,7 @@
             align-items: center;
         }
 
-        .input-box input, .input-box select {
+        .input-box input {
             width: 100%;
             padding: 0.85rem 1rem 0.85rem 2.8rem;
             background: #f8fafc;
@@ -160,7 +113,7 @@
             transition: all 0.2s ease;
         }
 
-        .input-box input:focus, .input-box select:focus {
+        .input-box input:focus {
             background: #ffffff;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
@@ -171,7 +124,6 @@
             left: 1rem;
             font-size: 1rem;
             color: var(--text-muted);
-            pointer-events: none;
         }
 
         .toggle-password {
@@ -198,15 +150,10 @@
             transition: all 0.2s ease;
             margin-top: 0.5rem;
             box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
 
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
         .btn-submit:active { transform: scale(0.98); }
-        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; box-shadow: none; transform: none; }
+        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
         .status-msg {
             margin-top: 1rem;
@@ -221,119 +168,20 @@
             display: none;
         }
 
-        .auth-footer-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 1.4rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e2e8f0;
-            font-size: 0.84rem;
-        }
-
-        .auth-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .auth-link:hover { text-decoration: underline; }
-
         .dev-footer {
             margin-top: 1.6rem;
             text-align: center;
             font-size: 0.82rem;
             color: #94a3b8;
             font-weight: 600;
-            z-index: 10;
         }
-        .dev-footer strong { color: #ffffff; font-weight: 800; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            overflow-y: auto;
-            padding: 1rem;
-        }
-
-        .modal-box {
-            background: #ffffff;
-            margin: 2rem auto;
-            max-width: 460px;
-            border-radius: var(--radius-box);
-            border: 1px solid #e2e8f0;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-        }
-
-        .modal-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.25rem;
-            background: var(--primary);
-            color: #ffffff;
-        }
-        .modal-top-bar span { font-size: 0.95rem; font-weight: 700; }
-        .modal-close-btn { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; line-height: 1; }
-
-        .modal-body { padding: 1.5rem; background: #f8fafc; text-align: left; max-height: 75vh; overflow-y: auto; }
-        
-        .role-select-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .role-option-card {
-            background: #ffffff;
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            padding: 1rem 1.2rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .role-option-card:hover { border-color: var(--primary); background: #eef2ff; }
-        .role-option-card h4 { font-size: 0.95rem; color: var(--text-dark); font-weight: 700; }
-        .role-option-card span { color: var(--primary); font-size: 1.2rem; font-weight: 700; }
-
-        .btn-modal-close {
-            width: 100%;
-            background: #f1f5f9;
-            color: var(--text-dark);
-            border: 1px solid #e2e8f0;
-            padding: 0.75rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 1rem;
-        }
-        .btn-modal-close:hover { background: #e2e8f0; }
-
-        @media (max-width: 480px) {
-            .auth-card { padding: 1.8rem 1.4rem; border-radius: 20px; }
-            .auth-header h2 { font-size: 1.4rem; }
-        }
+        .dev-footer strong { color: #ffffff; }
     </style>
 </head>
 <body>
 
     <div class="auth-card">
         <div class="auth-header">
-            <div class="company-logo-wrap" id="logoBox" onclick="handleLogoClick()" title="RCM Portal">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="#1e3a8a"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-            </div>
             <h2>RCM Depot <span>Portal</span></h2>
             <p id="portalSubText">Depot & Staff Unified Login</p>
         </div>
@@ -358,74 +206,24 @@
                 <div class="input-box">
                     <span class="input-icon">🔒</span>
                     <input type="password" id="userPassword" required placeholder="••••••••" autocomplete="current-password">
-                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" aria-label="Toggle password">👁️</button>
+                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">👁️</button>
                 </div>
             </div>
 
             <button type="submit" id="loginBtn" class="btn-submit">Login to Portal</button>
             <div id="loginMsg" class="status-msg"></div>
         </form>
-
-        <div class="auth-footer-links">
-            <a class="auth-link" onclick="openRegistrationTypeModal()">📝 Register User</a>
-        </div>
     </div>
 
     <div class="dev-footer">
         Developed for <strong>Depot</strong>
     </div>
 
-    <!-- Modal for Registration Type Selection or Forms -->
-    <div id="adminContactModal" class="modal">
-        <div class="modal-box">
-            <div class="modal-top-bar">
-                <span id="modalActionTitle">📝 New User Registration</span>
-                <button class="modal-close-btn" onclick="closeContactModal()">&times;</button>
-            </div>
-            <div class="modal-body" id="modalBodyContent"></div>
-        </div>
-    </div>
-
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
-
         let currentRole = "auto";
-        let logoClickCount = 0;
-        let logoClickTimer = null;
-
-        function handleLogoClick() {
-            logoClickCount++;
-            if (logoClickCount === 1) {
-                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 1000);
-            } else if (logoClickCount === 3) {
-                clearTimeout(logoClickTimer);
-                logoClickCount = 0;
-                enableAdminMode();
-            }
-        }
-
-        function enableAdminMode() {
-            currentRole = "admin";
-            document.getElementById('selectedRoleInput').value = "admin";
-            document.getElementById('userLabel').textContent = "Master Admin Username";
-            document.getElementById('userName').placeholder = "Enter Admin Username";
-            document.getElementById('portalSubText').textContent = "Master Admin Portal Login";
-            
-            const badge = document.getElementById('roleBadge');
-            badge.textContent = "🛡️ Admin Mode Unlocked";
-            badge.style.background = "#fee2e2";
-            badge.style.color = "#991b1b";
-            badge.style.borderColor = "#fca5a5";
-
-            const btn = document.getElementById('loginBtn');
-            btn.textContent = "Login to Master Admin";
-            btn.style.background = "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)";
-            alert("🔒 Admin mode activated successfully!");
-        }
 
         function detectRoleOnInput(val) {
-            if (currentRole === "admin") return;
-
             const v = val.trim().toUpperCase();
             const badge = document.getElementById('roleBadge');
             const subText = document.getElementById('portalSubText');
@@ -452,18 +250,12 @@
         }
 
         async function jsonpRequest(url) {
-            try {
-                const response = await fetch(url, { method: 'GET', redirect: 'follow' });
-                const text = await response.text();
-                
-                if (text.includes('(') && text.endsWith(')')) {
-                    const jsonStr = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
-                    return JSON.parse(jsonStr);
-                }
-                return JSON.parse(text);
-            } catch (err) {
-                throw new Error("Network Error: Unable to reach server. Please check mobile internet.");
+            const response = await fetch(url, { method: 'GET', redirect: 'follow' });
+            const text = await response.text();
+            if (text.includes('(') && text.endsWith(')')) {
+                return JSON.parse(text.substring(text.indexOf('(') + 1, text.lastIndexOf(')')));
             }
+            return JSON.parse(text);
         }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -474,8 +266,7 @@
             const password = document.getElementById('userPassword').value.trim();
             
             if (role === "auto" || !role) {
-                const uUp = username.toUpperCase();
-                role = (uUp.startsWith('EMP') || uUp.startsWith('STF')) ? "staff" : "depot";
+                role = (username.toUpperCase().startsWith('EMP') || username.toUpperCase().startsWith('STF')) ? "staff" : "depot";
             }
 
             const btn = document.getElementById('loginBtn');
@@ -484,7 +275,6 @@
             btn.disabled = true;
             btn.textContent = "Verifying credentials...";
             msgBox.style.display = 'none';
-            msgBox.textContent = "";
 
             try {
                 const url = `${SCRIPT_URL}?action=login&role=${encodeURIComponent(role)}&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
@@ -505,284 +295,19 @@
 
                     if (role === "depot") window.location.href = "/depot";
                     else if (role === "staff") window.location.href = "/staff";
-                    else if (role === "admin") window.location.href = "/admin";
+                    else window.location.href = "/admin";
                 } else {
-                    msgBox.textContent = (res && res.message) ? ("⚠️ " + res.message) : "⚠️ Invalid username or password.";
+                    msgBox.textContent = "⚠️ " + (res.message || "Invalid username or password.");
                     msgBox.style.display = 'block';
                     btn.disabled = false;
                     btn.textContent = "Login to Portal";
                 }
             } catch (err) {
-                msgBox.textContent = "⚠️ " + (err.message || "Failed to login. Please try again.");
+                msgBox.textContent = "⚠️ Network Error: Unable to reach server.";
                 msgBox.style.display = 'block';
                 btn.disabled = false;
                 btn.textContent = "Login to Portal";
             }
-        });
-
-        function openRegistrationTypeModal() {
-            document.getElementById('modalActionTitle').textContent = "📝 Register User - Select Type";
-            document.getElementById('modalBodyContent').innerHTML = `
-                <p class="modal-desc" style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted);">Please select registration category:</p>
-                <div class="role-select-container">
-                    <div class="role-option-card" onclick="openEmployeeRegistrationForm()">
-                        <div>
-                            <h4 style="margin-bottom: 2px;">👤 Employee (Staff)</h4>
-                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Register as a staff member</span>
-                        </div>
-                        <span>&rarr;</span>
-                    </div>
-                    <div class="role-option-card" onclick="openDepotRegistrationForm()">
-                        <div>
-                            <h4 style="margin-bottom: 2px;">🏬 Depot</h4>
-                            <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: normal;">Register a new depot</span>
-                        </div>
-                        <span>&rarr;</span>
-                    </div>
-                </div>
-                <button type="button" class="btn-modal-close" onclick="closeContactModal()">Close</button>
-            `;
-            document.getElementById('adminContactModal').style.display = 'block';
-        }
-
-        async function openEmployeeRegistrationForm() {
-            document.getElementById('modalActionTitle').textContent = "📝 Employee Registration";
-            document.getElementById('modalBodyContent').innerHTML = `
-                <form id="employeeRegForm" onsubmit="handleEmployeeRegister(event)">
-                    <div class="form-group" style="margin-bottom: 0.9rem;">
-                        <label style="font-size: 0.8rem;">Select Depot</label>
-                        <div class="input-box">
-                            <span class="input-icon">🏢</span>
-                            <select id="regSelectDepot" required style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                                <option value="" disabled selected>Loading depots from master...</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.9rem;">
-                        <label style="font-size: 0.8rem;">Staff Full Name</label>
-                        <div class="input-box">
-                            <span class="input-icon">👤</span>
-                            <input type="text" id="regStaffName" required placeholder="Enter Full Name" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.9rem;">
-                        <label style="font-size: 0.8rem;">Mobile Number</label>
-                        <div class="input-box">
-                            <span class="input-icon">📞</span>
-                            <input type="tel" id="regMobile" required placeholder="Enter Mobile Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.9rem;">
-                        <label style="font-size: 0.8rem;">Joining Date</label>
-                        <div class="input-box">
-                            <span class="input-icon">📅</span>
-                            <input type="date" id="regJoiningDate" required style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" style="padding: 0.8rem; font-size: 0.9rem;">Submit Registration</button>
-                    <button type="button" class="btn-modal-close" onclick="openRegistrationTypeModal()" style="margin-top: 0.5rem;">&larr; Back</button>
-                </form>
-            `;
-
-            try {
-                const res = await jsonpRequest(`${SCRIPT_URL}?action=getDepotList`);
-                const selectBox = document.getElementById('regSelectDepot');
-                if (res && res.success && res.depots && res.depots.length > 0) {
-                    selectBox.innerHTML = '<option value="" disabled selected>-- Select Depot --</option>';
-                    res.depots.forEach(dep => {
-                        const opt = document.createElement('option');
-                        opt.value = dep.code;
-                        opt.textContent = `${dep.name} (${dep.code})`;
-                        selectBox.appendChild(opt);
-                    });
-                } else {
-                    selectBox.innerHTML = '<option value="" disabled selected>No depots found</option>';
-                }
-            } catch (err) {
-                const selectBox = document.getElementById('regSelectDepot');
-                if (selectBox) selectBox.innerHTML = '<option value="" disabled selected>Failed to load depots</option>';
-            }
-        }
-
-        function openDepotRegistrationForm() {
-            document.getElementById('modalActionTitle').textContent = "🏬 Depot Registration";
-            document.getElementById('modalBodyContent').innerHTML = `
-                <form id="depotRegForm" onsubmit="handleDepotRegister(event)">
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">Depot Code</label>
-                        <div class="input-box">
-                            <span class="input-icon">🏢</span>
-                            <input type="text" id="depotCode" required placeholder="Enter Depot Code" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">Depot Name</label>
-                        <div class="input-box">
-                            <span class="input-icon">🏷️</span>
-                            <input type="text" id="depotName" required placeholder="Enter Depot Name" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">Depot Address</label>
-                        <div class="input-box">
-                            <span class="input-icon">📍</span>
-                            <input type="text" id="depotAddress" required placeholder="Enter Address" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">Pin Code</label>
-                        <div class="input-box">
-                            <span class="input-icon">📮</span>
-                            <input type="text" id="pinCode" required placeholder="Enter Pin Code" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">State Name</label>
-                        <div class="input-box">
-                            <span class="input-icon">🇮🇳</span>
-                            <input type="text" id="stateName" required placeholder="Enter State Name" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">State Code</label>
-                        <div class="input-box">
-                            <span class="input-icon">🔢</span>
-                            <input type="text" id="stateCode" required placeholder="Enter State Code" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">District</label>
-                        <div class="input-box">
-                            <span class="input-icon">🏙️</span>
-                            <input type="text" id="district" required placeholder="Enter District" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">GSTIN</label>
-                        <div class="input-box">
-                            <span class="input-icon">📝</span>
-                            <input type="text" id="gstin" required placeholder="Enter GSTIN Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">FSSAI</label>
-                        <div class="input-box">
-                            <span class="input-icon">🛡️</span>
-                            <input type="text" id="fssai" required placeholder="Enter FSSAI Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0.8rem;">
-                        <label style="font-size: 0.8rem;">Mob. No.</label>
-                        <div class="input-box">
-                            <span class="input-icon">📞</span>
-                            <input type="tel" id="mobNo" required placeholder="Enter Mobile Number" style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 1.1rem;">
-                        <label style="font-size: 0.8rem;">Invoice No Series</label>
-                        <div class="input-box">
-                            <span class="input-icon">🧾</span>
-                            <input type="text" id="invoiceSeries" required maxlength="5" pattern="[0-9]{5}" 
-                                   oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);" 
-                                   placeholder="First 5 digits" 
-                                   style="padding: 0.7rem 0.7rem 0.7rem 2.5rem; font-size: 0.9rem;">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" style="padding: 0.8rem; font-size: 0.9rem;">Submit Depot Registration</button>
-                    <button type="button" class="btn-modal-close" onclick="openRegistrationTypeModal()" style="margin-top: 0.5rem;">&larr; Back</button>
-                </form>
-            `;
-        }
-
-        async function handleEmployeeRegister(e) {
-            e.preventDefault();
-            const payload = {
-                action: "registerEmployee",
-                depot: document.getElementById('regSelectDepot').value,
-                name: document.getElementById('regStaffName').value,
-                mobile: document.getElementById('regMobile').value,
-                joiningDate: document.getElementById('regJoiningDate').value
-            };
-
-            try {
-                const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const result = await response.json();
-                if (result.success) {
-                    alert("✅ Employee registration request sent successfully!");
-                    closeContactModal();
-                } else {
-                    alert("⚠️ " + (result.message || "Registration failed."));
-                }
-            } catch(err) {
-                alert("✅ Employee registration request submitted successfully!");
-                closeContactModal();
-            }
-        }
-
-        async function handleDepotRegister(e) {
-            e.preventDefault();
-            const invSeries = document.getElementById('invoiceSeries').value.trim();
-            if (invSeries.length !== 5 || isNaN(invSeries)) {
-                alert("⚠️ Invoice No Series must be exactly 5 digits!");
-                return;
-            }
-
-            const payload = {
-                action: "registerDepot",
-                depotCode: document.getElementById('depotCode').value,
-                depotName: document.getElementById('depotName').value,
-                address: document.getElementById('depotAddress').value,
-                pinCode: document.getElementById('pinCode').value,
-                stateName: document.getElementById('stateName').value,
-                stateCode: document.getElementById('stateCode').value,
-                district: document.getElementById('district').value,
-                gstin: document.getElementById('gstin').value,
-                fssai: document.getElementById('fssai').value,
-                mobNo: document.getElementById('mobNo').value,
-                invoiceSeries: invSeries
-            };
-
-            try {
-                const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const result = await response.json();
-                if (result.success) {
-                    alert("✅ Depot registration request sent successfully!");
-                    closeContactModal();
-                } else {
-                    alert("⚠️ " + (result.message || "Registration failed."));
-                }
-            } catch(err) {
-                alert("✅ Depot registration request submitted successfully!");
-                closeContactModal();
-            }
-        }
-
-        function closeContactModal() {
-            document.getElementById('adminContactModal').style.display = 'none';
-        }
-
-        async function loadLoginLogo() {
-            try {
-                const res = await jsonpRequest(`${SCRIPT_URL}?action=getStaffBundle&staffCode=EMP001`);
-                if (res && res.companyLogo) {
-                    let u = res.companyLogo.trim();
-                    if (u.indexOf('ibb.co/') !== -1 && u.indexOf('i.ibb.co/') === -1) {
-                        u = `https://images.weserv.nl/?url=${encodeURIComponent(u)}`;
-                    }
-                    const img = new Image();
-                    img.onload = () => {
-                        const box = document.getElementById('logoBox');
-                        box.innerHTML = '';
-                        box.appendChild(img);
-                    };
-                    img.src = u;
-                }
-            } catch (e) {}
-        }
-
-        // Defer logo loading slightly to prioritize core view rendering
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(loadLoginLogo, 100);
         });
     </script>
 </body>

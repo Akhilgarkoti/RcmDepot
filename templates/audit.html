@@ -22,9 +22,9 @@
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
 
-    <!-- Header (Compact) -->
+    <!-- Header (Full Width & Compact) -->
     <header class="bg-indigo-900 text-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <div class="w-full px-4 sm:px-6 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center space-x-2">
                 <div class="bg-indigo-700 p-2 rounded-lg">
                     <i class="fa-solid fa-boxes-stacked text-lg text-amber-400"></i>
@@ -37,11 +37,11 @@
 
             <!-- Global Search & Depot Info -->
             <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-56">
+                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-64">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400">
                         <i class="fa-solid fa-search text-xs"></i>
                     </span>
-                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
+                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search Code or Desc..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
                 </div>
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-[11px] px-2.5 py-1 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
                 <button onclick="resetPortal()" class="hidden id-reset-btn px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap">
@@ -51,8 +51,8 @@
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-4">
+    <!-- Main Container (Full Width for Desktop) -->
+    <main class="w-full px-4 sm:px-6 py-4">
 
         <!-- Initial Upload Section -->
         <div id="uploadSection" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center max-w-xl mx-auto transition-all hover:border-indigo-300 mt-10">
@@ -71,7 +71,7 @@
         <!-- Dashboard Section (Hidden initially) -->
         <div id="dashboardSection" class="hidden space-y-4">
             
-            <!-- Compact Summary Dashboard Cards -->
+            <!-- Summary Dashboard Cards -->
             <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200">
                     <p class="text-[10px] text-slate-500 font-bold uppercase">Total Items</p>
@@ -124,7 +124,7 @@
                 </div>
             </div>
 
-            <!-- TAB 1: LIVE WEB ENTRY VIEW -->
+            <!-- TAB 1: LIVE WEB ENTRY VIEW (Desktop Table + Mobile Cards) -->
             <div id="liveEntryView" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-3 bg-indigo-50/50 border-b border-slate-200 flex justify-between items-center">
                     <div>
@@ -133,11 +133,12 @@
                     </div>
                 </div>
                 
-                <div class="table-container overflow-x-auto max-h-[65vh]">
+                <!-- Desktop Table View -->
+                <div class="hidden md:block table-container overflow-x-auto max-h-[68vh]">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
-                                <th class="p-2.5 border-r border-slate-200 w-36">
+                                <th class="p-2.5 border-r border-slate-200 w-40">
                                     Material Code
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Code..." class="col-filter-code w-full px-1.5 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
@@ -145,18 +146,23 @@
                                     Material Description
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Desc..." class="col-filter-desc w-full px-1.5 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-indigo-50 w-28">Unrestricted Stock</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50 w-28">Physical (Fresh Qty)</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50 w-24">DAMAGE QTY</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50 w-24">EXPIRY QTY</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">TOTAL PHYSICAL</th>
-                                <th class="p-2.5 text-right font-bold bg-slate-100 w-20">DIFF QTY</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-indigo-50 w-32">Unrestricted Stock</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50 w-32">Physical (Fresh Qty)</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50 w-28">DAMAGE QTY</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50 w-28">EXPIRY QTY</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-28">TOTAL PHYSICAL</th>
+                                <th class="p-2.5 text-right font-bold bg-slate-100 w-24">DIFF QTY</th>
                             </tr>
                         </thead>
                         <tbody id="liveTableBody" class="divide-y divide-slate-200">
                             <!-- Live rows populated via JS -->
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Mobile Card Optimized View -->
+                <div id="mobileCardContainer" class="md:hidden divide-y divide-slate-200 max-h-[70vh] overflow-y-auto p-3 space-y-3">
+                    <!-- Mobile cards populated via JS -->
                 </div>
             </div>
 
@@ -177,7 +183,7 @@
                     </div>
                 </div>
                 
-                <div class="table-container overflow-x-auto max-h-[65vh]">
+                <div class="table-container overflow-x-auto max-h-[68vh]">
                     <table class="w-full min-w-custom text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
@@ -354,7 +360,6 @@
             renderTables();
         }
 
-        // Bulk Preview Handler
         function handleBulkPreview(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -442,7 +447,7 @@
 
             updateSummaryCards();
             renderTables();
-            alert(`Success! Quantities submitted and applied for ${previewBulkData.length} items. You can check Tab 1 or Tab 2.`);
+            alert(`Success! Quantities submitted and applied for ${previewBulkData.length} items.`);
             switchTab('live');
         }
 
@@ -538,6 +543,7 @@
 
         function renderTables() {
             renderLiveTable();
+            renderMobileCards();
             renderDownloadTable();
         }
 
@@ -596,6 +602,56 @@
             });
         }
 
+        function renderMobileCards() {
+            const container = document.getElementById('mobileCardContainer');
+            container.innerHTML = '';
+
+            processedData.forEach((item, index) => {
+                let fresh = item.freshQty !== '' ? item.freshQty : '';
+                let damage = item.damageQty !== '' ? item.damageQty : '';
+                let expiry = item.expiryQty !== '' ? item.expiryQty : '';
+
+                let fNum = parseVal(fresh);
+                let dNum = parseVal(damage);
+                let eNum = parseVal(expiry);
+                let hasInput = fresh !== '' || damage !== '' || expiry !== '';
+                
+                let totalPhy = hasInput ? (fNum + dNum + eNum) : '-';
+                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '-';
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 live-row";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="font-mono font-bold text-xs text-indigo-600 col-code">${item.materialCode}</span>
+                            <h4 class="text-xs font-semibold text-slate-800 col-desc mt-0.5">${item.materialDescription}</h4>
+                        </div>
+                        <span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Sys: ${item.unrestrictedStock}</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
+                        <div>
+                            <label class="block text-[10px] font-bold text-emerald-700 mb-0.5">Fresh Qty</label>
+                            <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-full text-center p-1 border border-emerald-300 rounded bg-emerald-50/20 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-amber-700 mb-0.5">Damage Qty</label>
+                            <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-full text-center p-1 border border-amber-300 rounded bg-amber-50/20 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-orange-700 mb-0.5">Expiry Qty</label>
+                            <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-full text-center p-1 border border-orange-300 rounded bg-orange-50/20 text-xs">
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] pt-1 text-slate-500 font-bold">
+                        <span>Total Phy: <span class="text-slate-800 live-total-phy">${totalPhy}</span></span>
+                        <span>Diff: <span class="live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</span></span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         function renderDownloadTable() {
             const tbody = document.getElementById('downloadTableBody');
             tbody.innerHTML = '';
@@ -646,23 +702,22 @@
         function updateQty(index, field, value) {
             processedData[index][field] = value;
             const item = processedData[index];
-            const rows = document.querySelectorAll('#liveTableBody tr');
-            const row = rows[index];
-            if (!row) return;
-
-            let fNum = parseVal(item.freshQty);
-            let dNum = parseVal(item.damageQty);
-            let eNum = parseVal(item.expiryQty);
             
-            let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
-            let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
-            let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
+            const desktopRows = document.querySelectorAll('#liveTableBody tr');
+            if (desktopRows[index]) {
+                let row = desktopRows[index];
+                let fNum = parseVal(item.freshQty);
+                let dNum = parseVal(item.damageQty);
+                let eNum = parseVal(item.expiryQty);
+                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
+                let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
+                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
 
-            row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
-            
-            const diffCell = row.querySelector('.live-diff-qty');
-            diffCell.textContent = diffQty !== '' ? diffQty : '-';
-            diffCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+                row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
+                const diffCell = row.querySelector('.live-diff-qty');
+                diffCell.textContent = diffQty !== '' ? diffQty : '-';
+                diffCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
 
             updateSummaryCards();
             renderDownloadTable();
@@ -673,20 +728,9 @@
             const colCodeQuery = document.querySelector('.col-filter-code') ? document.querySelector('.col-filter-code').value.toLowerCase() : '';
             const colDescQuery = document.querySelector('.col-filter-desc') ? document.querySelector('.col-filter-desc').value.toLowerCase() : '';
 
-            document.querySelectorAll('#liveTableBody tr.live-row').forEach(row => {
+            document.querySelectorAll('.live-row').forEach(row => {
                 const code = row.querySelector('.col-code').textContent.toLowerCase();
                 const desc = row.querySelector('.col-desc').textContent.toLowerCase();
-
-                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
-                const matchCode = (colCodeQuery === '' || code.includes(colCodeQuery));
-                const matchDesc = (colDescQuery === '' || desc.includes(colDescQuery));
-
-                row.style.display = (matchGlobal && matchCode && matchDesc) ? '' : 'none';
-            });
-
-            document.querySelectorAll('#downloadTableBody tr.dl-row').forEach(row => {
-                const code = row.querySelector('.dl-code').textContent.toLowerCase();
-                const desc = row.querySelector('.dl-desc').textContent.toLowerCase();
 
                 const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
                 const matchCode = (colCodeQuery === '' || code.includes(colCodeQuery));

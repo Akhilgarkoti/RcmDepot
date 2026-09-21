@@ -445,9 +445,10 @@
 
                     btn.textContent = "Success! Redirecting...";
 
-                    if (role === "depot") window.location.href = "/depot";
-                    else if (role === "staff") window.location.href = "/staff";
-                    else window.location.href = "/admin";
+                    // Fixed redirection paths with .html to prevent 404 errors on Vercel
+                    if (role === "depot") window.location.href = "depot.html";
+                    else if (role === "staff") window.location.href = "staff.html";
+                    else window.location.href = "admin.html";
                 } else {
                     msgBox.textContent = "⚠️ " + (res.message || "Invalid username or password.");
                     msgBox.style.display = 'block';

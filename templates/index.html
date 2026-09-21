@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://script.google.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -57,6 +56,7 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Hidden Admin Trigger Zone */
         .admin-trigger-area {
             cursor: pointer;
             user-select: none;
@@ -162,28 +162,6 @@
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
-        /* Direct Redirect Button */
-        .btn-audit-trigger {
-            width: 100%;
-            padding: 0.8rem;
-            background: #f8fafc;
-            color: var(--primary);
-            border: 1.5px dashed var(--primary);
-            border-radius: 14px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-audit-trigger:hover {
-            background: #eef2ff;
-        }
-
         .status-msg {
             margin-top: 1rem;
             font-size: 0.84rem;
@@ -245,11 +223,6 @@
             <button type="submit" id="loginBtn" class="btn-submit">Login to Portal</button>
             <div id="loginMsg" class="status-msg"></div>
         </form>
-
-        <!-- Redirects to audit.html -->
-        <button type="button" class="btn-audit-trigger" onclick="window.location.href='audit.html'">
-            <i class="fas fa-clipboard-check"></i> Create Your Self Audit Report
-        </button>
     </div>
 
     <div class="dev-footer">
@@ -262,6 +235,7 @@
         let clickCount = 0;
         let clickTimer = null;
 
+        // Secret Admin Trigger Logic
         function handleSecretAdminClick() {
             clickCount++;
             if (clickCount === 1) {
@@ -364,9 +338,9 @@
 
                     btn.textContent = "Success! Redirecting...";
 
-                    if (role === "depot") window.location.href = "depot.html";
-                    else if (role === "staff") window.location.href = "staff.html";
-                    else window.location.href = "admin.html";
+                    if (role === "depot") window.location.href = "/depot";
+                    else if (role === "staff") window.location.href = "/staff";
+                    else window.location.href = "/admin";
                 } else {
                     msgBox.textContent = "⚠️ " + (res.message || "Invalid username or password.");
                     msgBox.style.display = 'block';

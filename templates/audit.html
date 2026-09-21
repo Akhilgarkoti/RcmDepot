@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RCM Portal - Self Audit</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://script.google.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --shadow-card: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+            --radius-box: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+        }
+
+        .portal-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-box);
+            padding: 2.2rem 2rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .portal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .portal-header h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .portal-header h2 span { color: var(--primary); }
+
+        .portal-header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.35rem;
+            font-weight: 600;
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.45rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background: #f8fafc;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            background: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-back {
+            display: inline-block;
+            margin-top: 1rem;
+            text-align: center;
+            width: 100%;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-container">
+        <div class="portal-header">
+            <h2>Depot <span>Self Audit</span></h2>
+            <p>स्टॉक और ऑपरेशन्स की नियमित जांच रिपोर्ट</p>
+        </div>
+
+        <form id="selfAuditForm" onsubmit="submitSelfAuditData(event)">
+            <div class="form-group">
+                <label for="auditType">ऑडिट प्रकार (Audit Type)</label>
+                <select id="auditType" class="form-control">
+                    <option value="Stock Verification">Stock Verification</option>
+                    <option value="Daily Operations">Daily Operations</option>
+                    <option value="Compliance & Accounts">Compliance & Accounts</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="auditNotes">ऑडिट विवरण / टिप्पणियाँ (Remarks)</label>
+                <textarea id="auditNotes" class="form-control" rows="4" placeholder="यहाँ ऑडिट से संबंधित विवरण लिखें..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit Audit Record</button>
+        </form>
+
+        <a href="depot.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Depot Portal</a>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz1cdsjmQpRCr33ruM-6XLHfkkLoqA_mpV6CZ1hcQITB2LemAXGtuV0aqcHxpRRc7xc-A/exec";
+
+        async function jsonpRequest(url) {
+            const response = await fetch(url, { method: 'GET', redirect: 'follow' });
+            const text = await response.text();
+            if (text.includes('(') && text.endsWith(')')) {
+                return JSON.parse(text.substring(text.indexOf('(') + 1, text.lastIndexOf(')')));
+            }
+            return JSON.parse(text);
+        }
+
+        async function submitSelfAuditData(e) {
+            e.preventDefault();
+            const auditType = document.getElementById('auditType').value;
+            const auditNotes = document.getElementById('auditNotes').value.trim();
+            const username = sessionStorage.getItem("user") || "Unknown";
+            const depot = sessionStorage.getItem("depot") || "";
+
+            if (!auditNotes) {
+                alert("कृपया ऑडिट विवरण भरें।");
+                return;
+            }
+
+            try {
+                const url = `${SCRIPT_URL}?action=saveAudit&username=${encodeURIComponent(username)}&depot=${encodeURIComponent(depot)}&type=${encodeURIComponent(auditType)}&notes=${encodeURIComponent(auditNotes)}`;
+                
+                const res = await jsonpRequest(url);
+                if (res && res.success) {
+                    alert("✅ Self Audit सफलतापूर्वक सबमिट हो गया है!");
+                    document.getElementById('selfAuditForm').reset();
+                } else {
+                    alert("⚠️ " + (res.message || "डेटा सेव करने में विफल।"));
+                }
+            } catch (err) {
+                console.error(err);
+                alert("⚠️ सर्वर से कनेक्ट करने में त्रुटि हुई।");
+            }
+        }
+    </script>
+</body>
+</html>

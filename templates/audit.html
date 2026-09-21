@@ -6,8 +6,8 @@
     <title>RCM Stock Audit Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS (xlsx) Library -->
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- SheetJS (xlsx) Library with Style support -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -21,7 +21,7 @@
 
     <!-- Header -->
     <header class="bg-indigo-900 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+        <div class="max-w-full px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
             <div class="flex items-center space-x-3">
                 <div class="bg-indigo-700 p-2.5 rounded-lg">
                     <i class="fa-solid fa-boxes-stacked text-2xl text-amber-400"></i>
@@ -38,7 +38,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
+    <main class="max-w-full px-4 sm:px-6 py-8">
 
         <!-- Upload Section -->
         <div id="uploadSection" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center max-w-2xl mx-auto transition-all hover:border-indigo-300">
@@ -86,12 +86,12 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
                     <h3 class="font-semibold text-slate-700 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Stock Audit Preview & Physical Entry</h3>
-                    <span class="text-xs text-slate-500 font-medium">Note: You can edit Fresh, Damage & Expiry quantities below directly.</span>
+                    <span class="text-xs text-slate-500 font-medium">Note: Type quantities below. Calculations update instantly without losing focus.</span>
                 </div>
                 
-                <div class="table-container overflow-x-auto max-h-[600px]">
+                <div class="table-container overflow-x-auto max-h-[70vh]">
                     <table id="auditTable" class="w-full text-left border-collapse text-xs">
-                        <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200">
+                        <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
                                 <th class="p-3 border-r border-slate-200">Plant</th>
                                 <th class="p-3 border-r border-slate-200">Material Code</th>
@@ -113,7 +113,7 @@
                             </tr>
                         </thead>
                         <tbody id="tableBody" class="divide-y divide-slate-200">
-                            <!-- Rows will be populated via JS -->
+                            <!-- Rows populated via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -138,7 +138,7 @@
                     const workbook = XLSX.read(data, { type: 'array' });
                     const firstSheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[firstSheetName];
-                    const rawJson = XLSX.utils.sheet_to_json(worksheet);
+                    const rawJson = XLSX.utils.sheet_to_json(worksheet, { raw: false });
 
                     processRawStockData(rawJson);
                 } catch (error) {
@@ -149,14 +149,24 @@
             reader.readAsArrayBuffer(file);
         }
 
+        function cleanMaterialCode(code) {
+            if (!code) return '';
+            // Convert to string and remove leading zeros
+            let clean = String(code).trim();
+            if (!isNaN(clean)) {
+                return String(Number(clean)); // removes leading zeros for numeric codes
+            }
+            return clean.replace(/^0+/, '');
+        }
+
         function processRawStockData(rows) {
             const groupedMap = new Map();
 
             rows.forEach(row => {
-                let code = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                let code = cleanMaterialCode(rawCode);
                 if (!code) return;
 
-                code = String(code).trim();
                 let plant = row['Plant'] || row['PLANT'] || 'D121';
                 let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || '';
                 let price = parseFloat(row['Material Price'] || row['Sp'] || row['SP'] || 0);
@@ -181,7 +191,7 @@
 
                 let item = groupedMap.get(code);
                 item.unrestrictedStock += (unrestricted + returnQty + blocked);
-                if (price > 0) item.sp = price; // update price if available
+                if (price > 0) item.sp = price;
                 if (!item.materialDescription && desc) item.materialDescription = desc;
             });
 
@@ -192,7 +202,6 @@
                 return;
             }
 
-            // Update UI
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
             document.getElementById('totalItemsCount').textContent = processedData.length;
@@ -213,7 +222,6 @@
                 let damage = item.damageQty !== '' ? item.damageQty : '';
                 let expiry = item.expiryQty !== '' ? item.expiryQty : '';
 
-                // Calculate values for preview
                 let fNum = fresh !== '' ? parseFloat(fresh) : 0;
                 let dNum = damage !== '' ? parseFloat(damage) : 0;
                 let eNum = expiry !== '' ? parseFloat(expiry) : 0;
@@ -229,6 +237,7 @@
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+                tr.id = `row-${index}`;
                 tr.innerHTML = `
                     <td class="p-3 border-r border-slate-200 font-medium text-slate-600">${item.plant}</td>
                     <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
@@ -244,14 +253,14 @@
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
                         <input type="number" min="0" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-20 text-right p-1 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
-                    <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700">${totalPhy !== '' ? totalPhy : '-'}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-bold ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 cell-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold cell-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
                     <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${unrtAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${freshAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${damageAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${expiryAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-semibold text-slate-700">₹${totalPhyAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-semibold ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffAmt !== '' ? '₹' + diffAmt.toFixed(2) : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600 cell-fresh-amt">₹${freshAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600 cell-damage-amt">₹${damageAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600 cell-expiry-amt">₹${expiryAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-semibold text-slate-700 cell-total-amt">₹${totalPhyAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-semibold cell-diff-amt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffAmt !== '' ? '₹' + diffAmt.toFixed(2) : '-'}</td>
                     <td class="p-3 text-center p-1">
                         <input type="text" value="${item.remark || ''}" oninput="updateRemark(${index}, this.value)" placeholder="Add remark" class="w-28 text-center p-1 border border-slate-200 rounded text-xs bg-slate-50">
                     </td>
@@ -260,24 +269,47 @@
             });
         }
 
+        // Live update without re-rendering the whole table (Prevents slow typing and focus loss)
         function updateQty(index, field, value) {
             processedData[index][field] = value;
-            // Re-render table cells locally or fully update row without losing focus
-            renderTableKeepFocus(index);
+            const item = processedData[index];
+            const row = document.getElementById(`row-${index}`);
+            if (!row) return;
+
+            let fresh = item.freshQty !== '' ? parseFloat(item.freshQty) : 0;
+            let damage = item.damageQty !== '' ? parseFloat(item.damageQty) : 0;
+            let expiry = item.expiryQty !== '' ? parseFloat(item.expiryQty) : 0;
+            
+            let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
+            let totalPhy = hasInput ? (fresh + damage + expiry) : '';
+            let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
+
+            let freshAmt = item.freshQty !== '' ? (fresh * item.sp) : 0;
+            let damageAmt = item.damageQty !== '' ? (damage * item.sp) : 0;
+            let expiryAmt = item.expiryQty !== '' ? (expiry * item.sp) : 0;
+            let totalPhyAmt = hasInput ? (freshAmt + damageAmt + expiryAmt) : 0;
+            let unrtAmt = item.unrestrictedStock * item.sp;
+            let diffAmt = hasInput ? (totalPhyAmt - unrtAmt) : '';
+
+            // Update live cells instantly
+            row.querySelector('.cell-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
+            
+            const diffQtyCell = row.querySelector('.cell-diff-qty');
+            diffQtyCell.textContent = diffQty !== '' ? diffQty : '-';
+            diffQtyCell.className = `p-3 border-r border-slate-200 text-right font-bold cell-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+            row.querySelector('.cell-fresh-amt').textContent = `₹${freshAmt.toFixed(2)}`;
+            row.querySelector('.cell-damage-amt').textContent = `₹${damageAmt.toFixed(2)}`;
+            row.querySelector('.cell-expiry-amt').textContent = `₹${expiryAmt.toFixed(2)}`;
+            row.querySelector('.cell-total-amt').textContent = `₹${totalPhyAmt.toFixed(2)}`;
+
+            const diffAmtCell = row.querySelector('.cell-diff-amt');
+            diffAmtCell.textContent = diffAmt !== '' ? `₹${diffAmt.toFixed(2)}` : '-';
+            diffAmtCell.className = `p-3 border-r border-slate-200 text-right font-semibold cell-diff-amt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
         }
 
         function updateRemark(index, value) {
             processedData[index].remark = value;
-        }
-
-        function renderTableKeepFocus(changedIndex) {
-            // Save scroll position
-            const container = document.querySelector('.table-container');
-            const scrollTop = container.scrollTop;
-            
-            renderTable();
-            
-            container.scrollTop = scrollTop;
         }
 
         function filterTable() {
@@ -310,7 +342,6 @@
                 return;
             }
 
-            // Prepare worksheet data with exact headers and formulas
             const headers = [
                 "Plant", "Material Code", "Material Description", "Sp", "Unrestricted Stock",
                 "Physcial (Fresh Qty)", "DAMAGE QTY", "EXPIRY QTY", "TOTAL PHYSCAL", "DIFF QTY",
@@ -321,38 +352,78 @@
             const aoa = [headers];
 
             processedData.forEach((item, idx) => {
-                const rowNum = idx + 2; // Excel rows start at 1, header is row 1
+                const rowNum = idx + 2;
                 
                 const freshVal = item.freshQty !== '' ? Number(item.freshQty) : null;
                 const damageVal = item.damageQty !== '' ? Number(item.damageQty) : null;
                 const expiryVal = item.expiryQty !== '' ? Number(item.expiryQty) : null;
 
                 aoa.push([
-                    item.plant,                                                    // A: Plant
-                    item.materialCode,                                             // B: Material Code
-                    item.materialDescription,                                      // C: Material Description
-                    item.sp,                                                       // D: Sp
-                    item.unrestrictedStock,                                        // E: Unrestricted Stock
-                    freshVal,                                                      // F: Fresh Qty
-                    damageVal,                                                     // G: Damage Qty
-                    expiryVal,                                                     // H: Expiry Qty
-                    { f: `SUM(F${rowNum}:H${rowNum})` },                           // I: TOTAL PHYSCAL
-                    { f: `I${rowNum}-E${rowNum}` },                                // J: DIFF QTY
-                    { f: `E${rowNum}*D${rowNum}` },                                // K: Unrt. Amt
-                    { f: `F${rowNum}*D${rowNum}` },                                // L: Fresh Amt
-                    { f: `G${rowNum}*D${rowNum}` },                                // M: Damage Amt
-                    { f: `H${rowNum}*D${rowNum}` },                                // N: Expiry Amt
-                    { f: `SUM(L${rowNum}:N${rowNum})` },                           // O: Total Physical Amt
-                    { f: `O${rowNum}-K${rowNum}` },                                // P: Diff Amt
-                    item.remark || ''                                              // Q: Remark
+                    item.plant,
+                    item.materialCode,
+                    item.materialDescription,
+                    item.sp,
+                    item.unrestrictedStock,
+                    freshVal,
+                    damageVal,
+                    expiryVal,
+                    { f: `SUM(F${rowNum}:H${rowNum})` },
+                    { f: `I${rowNum}-E${rowNum}` },
+                    { f: `E${rowNum}*D${rowNum}` },
+                    { f: `F${rowNum}*D${rowNum}` },
+                    { f: `G${rowNum}*D${rowNum}` },
+                    { f: `H${rowNum}*D${rowNum}` },
+                    { f: `SUM(L${rowNum}:N${rowNum})` },
+                    { f: `O${rowNum}-K${rowNum}` },
+                    item.remark || ''
                 ]);
             });
 
             const ws = XLSX.utils.aoa_to_sheet(aoa);
 
-            // Set column widths for clean appearance
+            // Styling configuration using xlsx-js-style
+            const headerStyle = {
+                font: { bold: true, color: { rgb: "000000" } },
+                fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
+                alignment: { horizontal: "center", vertical: "center" },
+                border: {
+                    top: { style: "thin", color: { rgb: "000000" } },
+                    bottom: { style: "thin", color: { rgb: "000000" } },
+                    left: { style: "thin", color: { rgb: "000000" } },
+                    right: { style: "thin", color: { rgb: "000000" } }
+                }
+            };
+
+            const cellStyle = {
+                border: {
+                    top: { style: "thin", color: { rgb: "D3D3D3" } },
+                    bottom: { style: "thin", color: { rgb: "D3D3D3" } },
+                    left: { style: "thin", color: { rgb: "D3D3D3" } },
+                    right: { style: "thin", color: { rgb: "D3D3D3" } }
+                }
+            };
+
+            // Apply styles to all cells
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            for (let R = range.s.r; R <= range.e.r; ++R) {
+                for (let C = range.s.c; C <= range.e.c; ++C) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
+                    if (!ws[cellAddress]) continue;
+                    
+                    if (R === 0) {
+                        ws[cellAddress].s = headerStyle;
+                    } else {
+                        ws[cellAddress].s = cellStyle;
+                    }
+                }
+            }
+
+            // Freeze first row (Header)
+            ws['!freeze'] = { xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft', state: 'frozen' };
+
+            // Column widths
             ws['!cols'] = [
-                {wch: 8}, {wch: 15}, {wch: 35}, {wch: 10}, {wch: 15},
+                {wch: 8}, {wch: 18}, {wch: 35}, {wch: 10}, {wch: 15},
                 {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 12},
                 {wch: 12}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 18}, {wch: 12}, {wch: 20}
             ];
@@ -360,7 +431,6 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "MASTER");
 
-            // Generate filename with current date
             const dateStr = new Date().toISOString().slice(0, 10);
             const plantName = processedData[0].plant || 'D121';
             const filename = `SELF AUDIT REPORT ${dateStr} (${plantName}).xlsx`;

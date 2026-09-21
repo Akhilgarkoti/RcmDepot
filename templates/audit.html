@@ -1,1 +1,372 @@
-121
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCM Stock Audit Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS (xlsx) Library -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .table-container::-webkit-scrollbar { width: 8px; height: 8px; }
+        .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <!-- Header -->
+    <header class="bg-indigo-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-700 p-2.5 rounded-lg">
+                    <i class="fa-solid fa-boxes-stacked text-2xl text-amber-400"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">RCM Consumer Products - Stock Audit Portal</h1>
+                    <p class="text-xs text-indigo-200">Automated Inventory Matching & Report Generator</p>
+                </div>
+            </div>
+            <div class="mt-3 sm:mt-0 flex items-center space-x-2">
+                <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-xs px-3 py-1 rounded-full border border-indigo-600 font-medium"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+        <!-- Upload Section -->
+        <div id="uploadSection" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center max-w-2xl mx-auto transition-all hover:border-indigo-300">
+            <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+            </div>
+            <h2 class="text-lg font-bold text-slate-800 mb-1">Upload Stock Report (Excel)</h2>
+            <p class="text-sm text-slate-500 mb-6">Drag and drop your raw stock report `.xlsx` file here, or browse from your computer.</p>
+            
+            <label class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg cursor-pointer transition shadow-sm">
+                <i class="fa-solid fa-file-excel mr-2"></i> Browse Excel File
+                <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="hidden" onchange="handleFileUpload(event)">
+            </label>
+            <p class="text-xs text-slate-400 mt-3">Supports standard RCM stock export formats</p>
+        </div>
+
+        <!-- Dashboard / Data View (Hidden initially) -->
+        <div id="dashboardSection" class="hidden space-y-6">
+            
+            <!-- Control Bar -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-4 w-full md:w-auto">
+                    <div class="relative flex-1 md:w-80">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by Material Code or Description..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div class="text-sm text-slate-600 font-medium whitespace-nowrap">
+                        Total Items: <span id="totalItemsCount" class="font-bold text-indigo-600">0</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
+                    <button onclick="resetPortal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition">
+                        <i class="fa-solid fa-rotate-left mr-1.5"></i> Upload New File
+                    </button>
+                    <button onclick="downloadAuditReport()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-sm transition flex items-center">
+                        <i class="fa-solid fa-file-arrow-down mr-2"></i> Download Audit Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Preview -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-semibold text-slate-700 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Stock Audit Preview & Physical Entry</h3>
+                    <span class="text-xs text-slate-500 font-medium">Note: You can edit Fresh, Damage & Expiry quantities below directly.</span>
+                </div>
+                
+                <div class="table-container overflow-x-auto max-h-[600px]">
+                    <table id="auditTable" class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-3 border-r border-slate-200">Plant</th>
+                                <th class="p-3 border-r border-slate-200">Material Code</th>
+                                <th class="p-3 border-r border-slate-200">Material Description</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Sp</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50">Sys Stock (Unr+Ret+Blk)</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50">Fresh Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50">Damage Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50">Expiry Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right font-bold">Total Physical</th>
+                                <th class="p-3 border-r border-slate-200 text-right font-bold">Diff Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Unrt. Amt</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Fresh Amt</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Damage Amt</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Expiry Amt</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Total Phy. Amt</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Diff Amt</th>
+                                <th class="p-3 text-center">Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-slate-200">
+                            <!-- Rows will be populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let processedData = [];
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rawJson = XLSX.utils.sheet_to_json(worksheet);
+
+                    processRawStockData(rawJson);
+                } catch (error) {
+                    alert('Error reading Excel file: ' + error.message);
+                    console.error(error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processRawStockData(rows) {
+            const groupedMap = new Map();
+
+            rows.forEach(row => {
+                let code = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                if (!code) return;
+
+                code = String(code).trim();
+                let plant = row['Plant'] || row['PLANT'] || 'D121';
+                let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || '';
+                let price = parseFloat(row['Material Price'] || row['Sp'] || row['SP'] || 0);
+                
+                let unrestricted = parseFloat(row['Unrestricted Stock'] || row['UnrestrictedStock'] || 0);
+                let returnQty = parseFloat(row['Return'] || row['RETURN'] || 0);
+                let blocked = parseFloat(row['Blocked Stock'] || row['BlockedStock'] || 0);
+
+                if (!groupedMap.has(code)) {
+                    groupedMap.set(code, {
+                        plant: plant,
+                        materialCode: code,
+                        materialDescription: desc,
+                        sp: price,
+                        unrestrictedStock: 0,
+                        freshQty: '',
+                        damageQty: '',
+                        expiryQty: '',
+                        remark: ''
+                    });
+                }
+
+                let item = groupedMap.get(code);
+                item.unrestrictedStock += (unrestricted + returnQty + blocked);
+                if (price > 0) item.sp = price; // update price if available
+                if (!item.materialDescription && desc) item.materialDescription = desc;
+            });
+
+            processedData = Array.from(groupedMap.values());
+
+            if (processedData.length === 0) {
+                alert('No valid material records found in the uploaded file. Please check column headers.');
+                return;
+            }
+
+            // Update UI
+            document.getElementById('uploadSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('totalItemsCount').textContent = processedData.length;
+            
+            const depotBadge = document.getElementById('depotBadge');
+            depotBadge.textContent = `Plant / Depot: ${processedData[0].plant}`;
+            depotBadge.classList.remove('hidden');
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            processedData.forEach((item, index) => {
+                let fresh = item.freshQty !== '' ? item.freshQty : '';
+                let damage = item.damageQty !== '' ? item.damageQty : '';
+                let expiry = item.expiryQty !== '' ? item.expiryQty : '';
+
+                // Calculate values for preview
+                let fNum = fresh !== '' ? parseFloat(fresh) : 0;
+                let dNum = damage !== '' ? parseFloat(damage) : 0;
+                let eNum = expiry !== '' ? parseFloat(expiry) : 0;
+                let totalPhy = (fresh !== '' || damage !== '' || expiry !== '') ? (fNum + dNum + eNum) : '';
+                let diffQty = totalPhy !== '' ? (totalPhy - item.unrestrictedStock) : '';
+                
+                let unrtAmt = item.unrestrictedStock * item.sp;
+                let freshAmt = fresh !== '' ? (fNum * item.sp) : 0;
+                let damageAmt = damage !== '' ? (dNum * item.sp) : 0;
+                let expiryAmt = expiry !== '' ? (eNum * item.sp) : 0;
+                let totalPhyAmt = (fresh !== '' || damage !== '' || expiry !== '') ? (freshAmt + damageAmt + expiryAmt) : 0;
+                let diffAmt = totalPhy !== '' ? (totalPhyAmt - unrtAmt) : '';
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+                tr.innerHTML = `
+                    <td class="p-3 border-r border-slate-200 font-medium text-slate-600">${item.plant}</td>
+                    <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
+                    <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-medium">₹${item.sp.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
+                    <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
+                        <input type="number" min="0" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-20 text-right p-1 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                    </td>
+                    <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
+                        <input type="number" min="0" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-20 text-right p-1 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                    </td>
+                    <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
+                        <input type="number" min="0" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-20 text-right p-1 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                    </td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700">${totalPhy !== '' ? totalPhy : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${unrtAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${freshAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${damageAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${expiryAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-semibold text-slate-700">₹${totalPhyAmt.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-semibold ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffAmt !== '' ? '₹' + diffAmt.toFixed(2) : '-'}</td>
+                    <td class="p-3 text-center p-1">
+                        <input type="text" value="${item.remark || ''}" oninput="updateRemark(${index}, this.value)" placeholder="Add remark" class="w-28 text-center p-1 border border-slate-200 rounded text-xs bg-slate-50">
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateQty(index, field, value) {
+            processedData[index][field] = value;
+            // Re-render table cells locally or fully update row without losing focus
+            renderTableKeepFocus(index);
+        }
+
+        function updateRemark(index, value) {
+            processedData[index].remark = value;
+        }
+
+        function renderTableKeepFocus(changedIndex) {
+            // Save scroll position
+            const container = document.querySelector('.table-container');
+            const scrollTop = container.scrollTop;
+            
+            renderTable();
+            
+            container.scrollTop = scrollTop;
+        }
+
+        function filterTable() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const code = rows[i].cells[1].textContent.toLowerCase();
+                const desc = rows[i].cells[2].textContent.toLowerCase();
+                if (code.includes(query) || desc.includes(query)) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        function resetPortal() {
+            if (confirm('Are you sure you want to start a new audit? Unsaved changes will be lost.')) {
+                processedData = [];
+                document.getElementById('excelFileInput').value = '';
+                document.getElementById('dashboardSection').classList.add('hidden');
+                document.getElementById('uploadSection').classList.remove('hidden');
+            }
+        }
+
+        function downloadAuditReport() {
+            if (processedData.length === 0) {
+                alert('No data available to export.');
+                return;
+            }
+
+            // Prepare worksheet data with exact headers and formulas
+            const headers = [
+                "Plant", "Material Code", "Material Description", "Sp", "Unrestricted Stock",
+                "Physcial (Fresh Qty)", "DAMAGE QTY", "EXPIRY QTY", "TOTAL PHYSCAL", "DIFF QTY",
+                "Unrt. Amt", "Physcial (Fresh Qty) Amt", "Physical (Damage) Amt", "Physical Expiry Amt",
+                "Total Physical Amt", "Diff Amt", "Remark"
+            ];
+
+            const aoa = [headers];
+
+            processedData.forEach((item, idx) => {
+                const rowNum = idx + 2; // Excel rows start at 1, header is row 1
+                
+                const freshVal = item.freshQty !== '' ? Number(item.freshQty) : null;
+                const damageVal = item.damageQty !== '' ? Number(item.damageQty) : null;
+                const expiryVal = item.expiryQty !== '' ? Number(item.expiryQty) : null;
+
+                aoa.push([
+                    item.plant,                                                    // A: Plant
+                    item.materialCode,                                             // B: Material Code
+                    item.materialDescription,                                      // C: Material Description
+                    item.sp,                                                       // D: Sp
+                    item.unrestrictedStock,                                        // E: Unrestricted Stock
+                    freshVal,                                                      // F: Fresh Qty
+                    damageVal,                                                     // G: Damage Qty
+                    expiryVal,                                                     // H: Expiry Qty
+                    { f: `SUM(F${rowNum}:H${rowNum})` },                           // I: TOTAL PHYSCAL
+                    { f: `I${rowNum}-E${rowNum}` },                                // J: DIFF QTY
+                    { f: `E${rowNum}*D${rowNum}` },                                // K: Unrt. Amt
+                    { f: `F${rowNum}*D${rowNum}` },                                // L: Fresh Amt
+                    { f: `G${rowNum}*D${rowNum}` },                                // M: Damage Amt
+                    { f: `H${rowNum}*D${rowNum}` },                                // N: Expiry Amt
+                    { f: `SUM(L${rowNum}:N${rowNum})` },                           // O: Total Physical Amt
+                    { f: `O${rowNum}-K${rowNum}` },                                // P: Diff Amt
+                    item.remark || ''                                              // Q: Remark
+                ]);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+            // Set column widths for clean appearance
+            ws['!cols'] = [
+                {wch: 8}, {wch: 15}, {wch: 35}, {wch: 10}, {wch: 15},
+                {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 12},
+                {wch: 12}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 18}, {wch: 12}, {wch: 20}
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "MASTER");
+
+            // Generate filename with current date
+            const dateStr = new Date().toISOString().slice(0, 10);
+            const plantName = processedData[0].plant || 'D121';
+            const filename = `SELF AUDIT REPORT ${dateStr} (${plantName}).xlsx`;
+
+            XLSX.writeFile(wb, filename);
+        }
+    </script>
+</body>
+</html>

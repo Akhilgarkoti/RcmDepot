@@ -133,18 +133,20 @@
                     </div>
                 </div>
                 
-                <!-- Desktop Table View (Order: Code -> Unrestricted -> Description -> Qties) -->
+                <!-- Desktop Table View -->
                 <div class="hidden md:block table-container overflow-x-auto max-h-[68vh]">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
                                 <th class="p-2.5 border-r border-slate-200 w-36">
-                                    Material Code
+                                    <div class="flex justify-between items-center"><span>Material Code</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Code..." class="col-filter-code w-full px-1.5 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-indigo-50 w-28">Unrestricted Stock</th>
-                                <th class="p-2.5 border-r border-slate-200 max-w-xs">
-                                    Material Description
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-indigo-50 w-28">
+                                    <div class="flex justify-end items-center space-x-1"><span>Unrestricted Stock</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 max-w-sm">
+                                    <div class="flex justify-between items-center"><span>Material Description</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Desc..." class="col-filter-desc w-full px-1.5 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50 w-28">Physical (Fresh Qty)</th>
@@ -187,9 +189,9 @@
                     <table class="w-full min-w-custom text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
-                                <th class="p-2.5 border-r border-slate-200 w-16">Plant</th>
-                                <th class="p-2.5 border-r border-slate-200 w-36">Material Code</th>
-                                <th class="p-2.5 border-r border-slate-200">Material Description</th>
+                                <th class="p-2.5 border-r border-slate-200 w-16"><div class="flex justify-between items-center"><span>Plant</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div></th>
+                                <th class="p-2.5 border-r border-slate-200 w-36"><div class="flex justify-between items-center"><span>Material Code</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div></th>
+                                <th class="p-2.5 border-r border-slate-200 max-w-sm"><div class="flex justify-between items-center"><span>Material Description</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div></th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">Sp</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-28">Unrestricted Stock</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">Fresh Qty</th>
@@ -231,7 +233,7 @@
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200">
                             <tr>
                                 <th class="p-2.5 border-r border-slate-200">Material Code</th>
-                                <th class="p-2.5 border-r border-slate-200">Material Description</th>
+                                <th class="p-2.5 border-r border-slate-200 max-w-sm">Material Description</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right">System Stock</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50">Preview Fresh</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50">Preview Damage</th>
@@ -423,7 +425,7 @@
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
                 tr.innerHTML = `
                     <td class="p-2.5 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-slate-800 max-w-sm truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 font-semibold">${item.freshQty !== '' ? item.freshQty : '-'}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 font-semibold">${item.damageQty !== '' ? item.damageQty : '-'}</td>
@@ -585,7 +587,7 @@
                 tr.innerHTML = `
                     <td class="p-2.5 border-r border-slate-200 font-mono font-semibold text-indigo-700 col-code">${item.materialCode}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-slate-800 col-desc max-w-xs truncate" title="${item.materialDescription}">${item.materialDescription}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-slate-800 col-desc max-w-sm truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
                         <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
@@ -671,7 +673,7 @@
                 tr.innerHTML = `
                     <td class="p-2.5 border-r border-slate-200 text-slate-600">${item.plant}</td>
                     <td class="p-2.5 border-r border-slate-200 font-mono font-semibold text-indigo-700 dl-code">${item.materialCode}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-slate-800 dl-desc">${item.materialDescription}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-slate-800 dl-desc max-w-sm truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right">₹${item.sp.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right">${item.freshQty !== '' ? item.freshQty : '-'}</td>
@@ -828,6 +830,9 @@
             }
 
             const ws = XLSX.utils.aoa_to_sheet(aoa);
+
+            // Enable Native Excel Autofit Filters (Dropdown arrows in Excel header)
+            ws['!autofilter'] = { ref: ws['!ref'] };
 
             const thinBorder = {
                 top: { style: "thin", color: { rgb: "000000" } },

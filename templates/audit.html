@@ -314,20 +314,19 @@
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
-                tr.id = `live-row-${index}`;
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200 live-row";
                 tr.innerHTML = `
                     <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
                     <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" id="fresh-${index}" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleKey(event, ${index}, 'freshQty')" class="w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this, 'fresh')" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" id="damage-${index}" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleKey(event, ${index}, 'damageQty')" class="w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this, 'damage')" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" id="expiry-${index}" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleKey(event, ${index}, 'expiryQty')" class="w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this, 'expiry')" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
                     <td class="p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
@@ -336,13 +335,15 @@
             });
         }
 
-        // Handle Enter key to jump to the next row automatically
-        function handleKey(event, index, field) {
+        // Universal Enter Key Handler (Jumps directly to the next visible input box)
+        function handleEnterKey(event, currentInput, fieldType) {
             if (event.key === 'Enter') {
                 event.preventDefault();
-                let nextIndex = index + 1;
-                let nextInput = document.getElementById(`${field}-${nextIndex}`);
-                if (nextInput) {
+                const allInputs = Array.from(document.querySelectorAll('#liveTableBody tr:not([style*="display: none"]) .audit-input'));
+                const currentIndex = allInputs.indexOf(currentInput);
+                
+                if (currentIndex !== -1 && currentIndex + 1 < allInputs.length) {
+                    const nextInput = allInputs[currentIndex + 1];
                     nextInput.focus();
                     nextInput.select();
                 }
@@ -385,7 +386,8 @@
         function updateQty(index, field, value) {
             processedData[index][field] = value;
             const item = processedData[index];
-            const row = document.getElementById(`live-row-${index}`);
+            const rows = document.querySelectorAll('#liveTableBody tr');
+            const row = rows[index];
             if (!row) return;
 
             let fNum = parseVal(item.freshQty);

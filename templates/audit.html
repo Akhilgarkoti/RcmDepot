@@ -30,92 +30,119 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-wide">RCM Consumer Products - Stock Audit Portal</h1>
-                    <p class="text-xs text-indigo-200">Automated Inventory Matching & Report Generator</p>
+                    <p class="text-xs text-indigo-200">Multi-Depot Inventory & Audit Management</p>
                 </div>
             </div>
-            <div class="mt-3 sm:mt-0 flex items-center space-x-2">
+            <div class="mt-3 sm:mt-0 flex items-center space-x-3">
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-xs px-3 py-1 rounded-full border border-indigo-600 font-medium"></span>
+                <button onclick="resetPortal()" class="hidden id-reset-btn px-3 py-1.5 bg-indigo-800 hover:bg-indigo-700 text-white text-xs rounded-lg transition border border-indigo-600">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset / New Upload
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-full px-4 sm:px-6 py-8">
+    <main class="max-w-full px-4 sm:px-6 py-6">
 
-        <!-- Upload Section -->
-        <div id="uploadSection" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center max-w-2xl mx-auto transition-all hover:border-indigo-300">
+        <!-- Initial Upload Section -->
+        <div id="uploadSection" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center max-w-xl mx-auto transition-all hover:border-indigo-300 mt-10">
             <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
             </div>
             <h2 class="text-lg font-bold text-slate-800 mb-1">Upload Stock Report (Excel)</h2>
-            <p class="text-sm text-slate-500 mb-6">Drag and drop your raw stock report `.xlsx` file here, or browse from your computer.</p>
+            <p class="text-sm text-slate-500 mb-6">Upload your raw stock report to proceed with Live Entry or Full Report Download.</p>
             
             <label class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg cursor-pointer transition shadow-sm">
                 <i class="fa-solid fa-file-excel mr-2"></i> Browse Excel File
                 <input type="file" id="excelFileInput" accept=".xlsx, .xls" class="hidden" onchange="handleFileUpload(event)">
             </label>
-            <p class="text-xs text-slate-400 mt-3">Supports standard RCM stock export formats</p>
         </div>
 
-        <!-- Dashboard / Data View (Hidden initially) -->
+        <!-- Dashboard Section (Hidden initially) -->
         <div id="dashboardSection" class="hidden space-y-6">
             
-            <!-- Control Bar -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center space-x-4 w-full md:w-auto">
-                    <div class="relative flex-1 md:w-80">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                            <i class="fa-solid fa-search"></i>
-                        </span>
-                        <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by Material Code or Description..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    </div>
-                    <div class="text-sm text-slate-600 font-medium whitespace-nowrap">
-                        Total Items: <span id="totalItemsCount" class="font-bold text-indigo-600">0</span>
-                    </div>
+            <!-- Mode Selection Tabs -->
+            <div class="flex flex-col sm:flex-row justify-between items-center bg-white p-3 rounded-xl shadow-sm border border-slate-200 gap-4">
+                <div class="flex space-x-2 w-full sm:w-auto">
+                    <button onclick="switchTab('live')" id="tabLiveBtn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm">
+                        <i class="fa-solid fa-pen-to-square mr-2"></i> 1. Live Web Entry Mode
+                    </button>
+                    <button onclick="switchTab('download')" id="tabDownloadBtn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-file-arrow-down mr-2"></i> 2. Download Report Mode
+                    </button>
                 </div>
 
-                <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
-                    <button onclick="resetPortal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-lg transition">
-                        <i class="fa-solid fa-rotate-left mr-1.5"></i> Upload New File
-                    </button>
-                    <button onclick="downloadAuditReport()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-sm transition flex items-center">
-                        <i class="fa-solid fa-file-arrow-down mr-2"></i> Download Audit Report
-                    </button>
+                <div class="relative w-full sm:w-80">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search Material Code or Description..." class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
             </div>
 
-            <!-- Table Preview -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-                    <h3 class="font-semibold text-slate-700 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Stock Audit Preview & Physical Entry</h3>
-                    <span class="text-xs text-slate-500 font-medium">Note: Type quantities below. Fast & smooth performance guaranteed.</span>
+            <!-- TAB 1: LIVE WEB ENTRY VIEW -->
+            <div id="liveEntryView" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-indigo-50/50 border-b border-slate-200 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Live Stock Entry Portal</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Enter Physical Fresh, Damage, & Expiry quantities directly below. Difference updates live.</p>
+                    </div>
+                    <span class="text-xs bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-bold">Total Items: <span id="liveCount">0</span></span>
                 </div>
                 
                 <div class="table-container overflow-x-auto max-h-[70vh]">
-                    <table id="auditTable" class="w-full text-left border-collapse text-xs">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
+                            <tr>
+                                <th class="p-3 border-r border-slate-200">Material Code</th>
+                                <th class="p-3 border-r border-slate-200">Material Description</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50">Unrestricted Stock</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50">Physical (Fresh Qty)</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50">DAMAGE QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50">EXPIRY QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right font-bold bg-slate-100">TOTAL PHYSICAL</th>
+                                <th class="p-3 text-right font-bold bg-slate-100">DIFF QTY</th>
+                            </tr>
+                        </thead>
+                        <tbody id="liveTableBody" class="divide-y divide-slate-200">
+                            <!-- Live rows populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: DOWNLOAD REPORT VIEW -->
+            <div id="downloadReportView" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-emerald-50/50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Full Audit Report Preview & Download</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Preview generated data. Click download to get the formatted Excel sheet with embedded formulas.</p>
+                    </div>
+                    <button onclick="downloadAuditReport()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg shadow-sm transition flex items-center whitespace-nowrap">
+                        <i class="fa-solid fa-file-arrow-down mr-2 text-sm"></i> Download Full Formatted Excel Report
+                    </button>
+                </div>
+                
+                <div class="table-container overflow-x-auto max-h-[70vh]">
+                    <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
                                 <th class="p-3 border-r border-slate-200">Plant</th>
                                 <th class="p-3 border-r border-slate-200">Material Code</th>
                                 <th class="p-3 border-r border-slate-200">Material Description</th>
                                 <th class="p-3 border-r border-slate-200 text-right">Sp</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50">Sys Stock (Unr+Ret+Blk)</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50">Fresh Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50">Damage Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50">Expiry Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right font-bold">Total Physical</th>
-                                <th class="p-3 border-r border-slate-200 text-right font-bold">Diff Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Unrt. Amt</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Fresh Amt</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Damage Amt</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Expiry Amt</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Total Phy. Amt</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Diff Amt</th>
-                                <th class="p-3 text-center">Remark</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Unrestricted Stock</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Fresh Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Damage Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Expiry Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Total Physical</th>
+                                <th class="p-3 border-r border-slate-200 text-right">Diff Qty</th>
+                                <th class="p-3 text-right">Total Phy. Amt</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody" class="divide-y divide-slate-200">
-                            <!-- Rows populated via JS -->
+                        <tbody id="downloadTableBody" class="divide-y divide-slate-200">
+                            <!-- Download preview rows populated via JS -->
                         </tbody>
                     </table>
                 </div>
@@ -128,6 +155,7 @@
     <!-- JavaScript Logic -->
     <script>
         let processedData = [];
+        let currentTab = 'live';
 
         function handleFileUpload(event) {
             const file = event.target.files[0];
@@ -205,17 +233,43 @@
 
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
-            document.getElementById('totalItemsCount').textContent = processedData.length;
+            document.querySelector('.id-reset-btn').classList.remove('hidden');
+            document.getElementById('liveCount').textContent = processedData.length;
             
             const depotBadge = document.getElementById('depotBadge');
             depotBadge.textContent = `Plant / Depot: ${processedData[0].plant}`;
             depotBadge.classList.remove('hidden');
 
-            renderTable();
+            renderTables();
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
+        function switchTab(tab) {
+            currentTab = tab;
+            const liveBtn = document.getElementById('tabLiveBtn');
+            const downloadBtn = document.getElementById('tabDownloadBtn');
+            const liveView = document.getElementById('liveEntryView');
+            const downloadView = document.getElementById('downloadReportView');
+
+            if (tab === 'live') {
+                liveBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm";
+                downloadBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+                liveView.classList.remove('hidden');
+                downloadView.classList.add('hidden');
+            } else {
+                downloadBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-emerald-600 text-white shadow-sm";
+                liveBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+                downloadView.classList.remove('hidden');
+                liveView.classList.add('hidden');
+            }
+        }
+
+        function renderTables() {
+            renderLiveTable();
+            renderDownloadTable();
+        }
+
+        function renderLiveTable() {
+            const tbody = document.getElementById('liveTableBody');
             tbody.innerHTML = '';
 
             processedData.forEach((item, index) => {
@@ -230,53 +284,68 @@
                 
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
-                
-                let unrtAmt = item.unrestrictedStock * item.sp;
-                let freshAmt = fresh !== '' ? (fNum * item.sp) : 0;
-                let damageAmt = damage !== '' ? (dNum * item.sp) : 0;
-                let expiryAmt = expiry !== '' ? (eNum * item.sp) : 0;
-                let totalPhyAmt = hasInput ? (freshAmt + damageAmt + expiryAmt) : 0;
-                let diffAmt = hasInput ? (totalPhyAmt - unrtAmt) : '';
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
-                tr.id = `row-${index}`;
+                tr.id = `live-row-${index}`;
                 tr.innerHTML = `
-                    <td class="p-3 border-r border-slate-200 font-medium text-slate-600">${item.plant}</td>
                     <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
                     <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-medium">₹${item.sp.toFixed(2)}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" inputmode="numeric" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-20 text-right p-1 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                        <input type="text" inputmode="numeric" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" inputmode="numeric" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-20 text-right p-1 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                        <input type="text" inputmode="numeric" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" inputmode="numeric" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-20 text-right p-1 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                        <input type="text" inputmode="numeric" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
-                    <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 cell-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-bold cell-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600">₹${unrtAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600 cell-fresh-amt">₹${freshAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600 cell-damage-amt">₹${damageAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right text-slate-600 cell-expiry-amt">₹${expiryAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-semibold text-slate-700 cell-total-amt">₹${totalPhyAmt.toFixed(2)}</td>
-                    <td class="p-3 border-r border-slate-200 text-right font-semibold cell-diff-amt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffAmt !== '' ? '₹' + diffAmt.toFixed(2) : '-'}</td>
-                    <td class="p-3 text-center p-1">
-                        <input type="text" value="${item.remark || ''}" oninput="updateRemark(${index}, this.value)" placeholder="Add remark" class="w-28 text-center p-1 border border-slate-200 rounded text-xs bg-slate-50">
-                    </td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
+                    <td class="p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // Ultra-fast live update without lagging
+        function renderDownloadTable() {
+            const tbody = document.getElementById('downloadTableBody');
+            tbody.innerHTML = '';
+
+            processedData.forEach((item) => {
+                let fresh = item.freshQty !== '' ? parseFloat(item.freshQty) : 0;
+                let damage = item.damageQty !== '' ? parseFloat(item.damageQty) : 0;
+                let expiry = item.expiryQty !== '' ? parseFloat(item.expiryQty) : 0;
+                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
+                
+                let totalPhy = hasInput ? (fresh + damage + expiry) : 0;
+                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
+                let totalPhyAmt = hasInput ? (totalPhy * item.sp) : 0;
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+                tr.innerHTML = `
+                    <td class="p-3 border-r border-slate-200 text-slate-600">${item.plant}</td>
+                    <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
+                    <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
+                    <td class="p-3 border-r border-slate-200 text-right">₹${item.sp.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
+                    <td class="p-3 border-r border-slate-200 text-right">${item.freshQty !== '' ? item.freshQty : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right">${item.damageQty !== '' ? item.damageQty : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold">${hasInput ? totalPhy : '-'}</td>
+                    <td class="p-3 border-r border-slate-200 text-right font-bold">${hasInput ? diffQty : '-'}</td>
+                    <td class="p-3 text-right font-semibold">₹${totalPhyAmt.toFixed(2)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Fast live update for Tab 1
         function updateQty(index, field, value) {
             processedData[index][field] = value;
             const item = processedData[index];
-            const row = document.getElementById(`row-${index}`);
+            const row = document.getElementById(`live-row-${index}`);
             if (!row) return;
 
             let fresh = item.freshQty !== '' ? parseFloat(item.freshQty) : 0;
@@ -287,54 +356,46 @@
             let totalPhy = hasInput ? (fresh + damage + expiry) : '';
             let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
 
-            let freshAmt = item.freshQty !== '' ? (fresh * item.sp) : 0;
-            let damageAmt = item.damageQty !== '' ? (damage * item.sp) : 0;
-            let expiryAmt = item.expiryQty !== '' ? (expiry * item.sp) : 0;
-            let totalPhyAmt = hasInput ? (freshAmt + damageAmt + expiryAmt) : 0;
-            let unrtAmt = item.unrestrictedStock * item.sp;
-            let diffAmt = hasInput ? (totalPhyAmt - unrtAmt) : '';
-
-            row.querySelector('.cell-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
+            row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
             
-            const diffQtyCell = row.querySelector('.cell-diff-qty');
-            diffQtyCell.textContent = diffQty !== '' ? diffQty : '-';
-            diffQtyCell.className = `p-3 border-r border-slate-200 text-right font-bold cell-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            const diffCell = row.querySelector('.live-diff-qty');
+            diffCell.textContent = diffQty !== '' ? diffQty : '-';
+            diffCell.className = `p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
 
-            row.querySelector('.cell-fresh-amt').textContent = `₹${freshAmt.toFixed(2)}`;
-            row.querySelector('.cell-damage-amt').textContent = `₹${damageAmt.toFixed(2)}`;
-            row.querySelector('.cell-expiry-amt').textContent = `₹${expiryAmt.toFixed(2)}`;
-            row.querySelector('.cell-total-amt').textContent = `₹${totalPhyAmt.toFixed(2)}`;
-
-            const diffAmtCell = row.querySelector('.cell-diff-amt');
-            diffAmtCell.textContent = diffAmt !== '' ? `₹${diffAmt.toFixed(2)}` : '-';
-            diffAmtCell.className = `p-3 border-r border-slate-200 text-right font-semibold cell-diff-amt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-        }
-
-        function updateRemark(index, value) {
-            processedData[index].remark = value;
+            // Also update download table background preview
+            renderDownloadTable();
         }
 
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
+            
+            // Filter live table
+            const liveRows = document.getElementById('liveTableBody').getElementsByTagName('tr');
+            for (let i = 0; i < liveRows.length; i++) {
+                const code = liveRows[i].cells[0].textContent.toLowerCase();
+                const desc = liveRows[i].cells[1].textContent.toLowerCase();
+                liveRows[i].style.display = (code.includes(query) || desc.includes(query)) ? "" : "none";
+            }
 
-            for (let i = 0; i < rows.length; i++) {
-                const code = rows[i].cells[1].textContent.toLowerCase();
-                const desc = rows[i].cells[2].textContent.toLowerCase();
-                if (code.includes(query) || desc.includes(query)) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
+            // Filter download table
+            const dlRows = document.getElementById('downloadTableBody').getElementsByTagName('tr');
+            for (let i = 0; i < dlRows.length; i++) {
+                const code = dlRows[i].cells[1].textContent.toLowerCase();
+                const desc = dlRows[i].cells[2].textContent.toLowerCase();
+                dlRows[i].style.display = (code.includes(query) || desc.includes(query)) ? "" : "none";
             }
         }
 
         function resetPortal() {
-            if (confirm('Are you sure you want to start a new audit? Unsaved changes will be lost.')) {
+            if (confirm('Are you sure you want to start a new audit? Unsaved entries will be cleared.')) {
                 processedData = [];
+                currentTab = 'live';
                 document.getElementById('excelFileInput').value = '';
                 document.getElementById('dashboardSection').classList.add('hidden');
                 document.getElementById('uploadSection').classList.remove('hidden');
+                document.querySelector('.id-reset-btn').classList.add('hidden');
+                document.getElementById('depotBadge').classList.add('hidden');
+                switchTab('live');
             }
         }
 
@@ -362,7 +423,7 @@
 
                 aoa.push([
                     item.plant,
-                    { v: item.materialCode, t: 's' }, // Clean code string format
+                    { v: item.materialCode, t: 's' },
                     item.materialDescription,
                     item.sp,
                     item.unrestrictedStock,
@@ -433,7 +494,7 @@
             XLSX.utils.book_append_sheet(wb, ws, "MASTER");
 
             const dateStr = new Date().toISOString().slice(0, 10);
-            const plantName = processedData[0].plant || 'D121';
+            const plantName = processedData[0].plant || 'AUDIT';
             const filename = `SELF AUDIT REPORT ${dateStr} (${plantName}).xlsx`;
 
             XLSX.writeFile(wb, filename);

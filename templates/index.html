@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://script.google.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -57,6 +56,7 @@
             margin-bottom: 1.5rem;
         }
 
+        /* Hidden Admin Trigger Zone */
         .admin-trigger-area {
             cursor: pointer;
             user-select: none;
@@ -107,7 +107,7 @@
             align-items: center;
         }
 
-        .input-box input, .form-control {
+        .input-box input {
             width: 100%;
             padding: 0.85rem 1rem 0.85rem 2.8rem;
             background: #f8fafc;
@@ -120,11 +120,7 @@
             transition: all 0.2s ease;
         }
 
-        .form-control {
-            padding-left: 1rem;
-        }
-
-        .input-box input:focus, .form-control:focus {
+        .input-box input:focus {
             background: #ffffff;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
@@ -166,64 +162,6 @@
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
-        /* नया सेल्फ ऑडिट ट्रिगर बटन स्टाइल */
-        .btn-audit-trigger {
-            width: 100%;
-            padding: 0.8rem;
-            background: #f1f5f9;
-            color: #0f172a;
-            border: 1.5px dashed var(--primary);
-            border-radius: 14px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 1rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-audit-trigger:hover {
-            background: #eef2ff;
-            color: var(--primary);
-        }
-
-        /* Modal Popup for Self Audit */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(5px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-        }
-
-        .modal-card {
-            background: #fff;
-            width: 100%;
-            max-width: 440px;
-            border-radius: var(--radius-box);
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.2rem; right: 1.2rem;
-            background: #f1f5f9;
-            border: none;
-            width: 32px; height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-muted);
-        }
-
         .status-msg {
             margin-top: 1rem;
             font-size: 0.84rem;
@@ -251,7 +189,7 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <!-- Secret triple-click trigger area (Old function preserved) -->
+            <!-- Secret triple-click trigger area -->
             <div class="admin-trigger-area" onclick="handleSecretAdminClick()" title="RCM Portal">
                 <h2>RCM Depot <span>Portal</span></h2>
                 <p id="portalSubText">Depot & Staff Unified Login</p>
@@ -285,45 +223,6 @@
             <button type="submit" id="loginBtn" class="btn-submit">Login to Portal</button>
             <div id="loginMsg" class="status-msg"></div>
         </form>
-
-        <!-- नया विकल्प: बिना लॉगिन के सेल्फ ऑडिट रिपोर्ट बनाने के लिए बटन -->
-        <button type="button" class="btn-audit-trigger" onclick="openSelfAuditModal()">
-            <i class="fas fa-clipboard-check"></i> Create Your Self Audit Report
-        </button>
-    </div>
-
-    <!-- Self Audit Modal / Popup -->
-    <div id="auditModal" class="modal-overlay">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeSelfAuditModal()">&times;</button>
-            <div style="margin-bottom: 1.2rem;">
-                <h3 style="font-size: 1.3rem; font-weight: 800; color: #0f172a;">Depot Self Audit</h3>
-                <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">अपनी जांच रिपोर्ट सीधे यहाँ दर्ज करें।</p>
-            </div>
-
-            <form id="directAuditForm" onsubmit="submitDirectAudit(event)">
-                <div class="form-group">
-                    <label for="directDepotCode">Depot Code / Name</label>
-                    <input type="text" id="directDepotCode" required class="form-control" placeholder="डिपो कोड दर्ज करें">
-                </div>
-
-                <div class="form-group">
-                    <label for="directAuditType">Audit Type</label>
-                    <select id="directAuditType" class="form-control" style="padding-left: 1rem;">
-                        <option value="Stock Verification">Stock Verification</option>
-                        <option value="Daily Operations">Daily Operations</option>
-                        <option value="Compliance & Accounts">Compliance & Accounts</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="directAuditNotes">Audit Remarks / Notes</label>
-                    <textarea id="directAuditNotes" class="form-control" rows="3" placeholder="विवरण यहाँ लिखें..." style="padding-left: 1rem;"></textarea>
-                </div>
-
-                <button type="submit" id="directAuditBtn" class="btn-submit">Submit Audit Report</button>
-            </form>
-        </div>
     </div>
 
     <div class="dev-footer">
@@ -336,7 +235,7 @@
         let clickCount = 0;
         let clickTimer = null;
 
-        // --- Purane Functions (Bilkul Safe & Unchanged) ---
+        // Secret Admin Trigger Logic
         function handleSecretAdminClick() {
             clickCount++;
             if (clickCount === 1) {
@@ -363,7 +262,7 @@
 
             const loginBtn = document.getElementById('loginBtn');
             loginBtn.textContent = "Login to Master Admin";
-            loginBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #dc2626 100)";
+            loginBtn.style.background = "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)";
             
             alert("🔒 Admin mode activated successfully!");
         }
@@ -439,9 +338,9 @@
 
                     btn.textContent = "Success! Redirecting...";
 
-                    if (role === "depot") window.location.href = "depot.html";
-                    else if (role === "staff") window.location.href = "staff.html";
-                    else window.location.href = "admin.html";
+                    if (role === "depot") window.location.href = "/depot";
+                    else if (role === "staff") window.location.href = "/staff";
+                    else window.location.href = "/admin";
                 } else {
                     msgBox.textContent = "⚠️ " + (res.message || "Invalid username or password.");
                     msgBox.style.display = 'block';
@@ -455,50 +354,6 @@
                 btn.textContent = currentRole === "admin" ? "Login to Master Admin" : "Login to Portal";
             }
         });
-
-        // --- नए सेल्फ ऑडिट फीचर्स (Modal & Submit Logic) ---
-        function openSelfAuditModal() {
-            document.getElementById('auditModal').style.display = 'flex';
-        }
-
-        function closeSelfAuditModal() {
-            document.getElementById('auditModal').style.display = 'none';
-        }
-
-        async function submitDirectAudit(e) {
-            e.preventDefault();
-            const depotCode = document.getElementById('directDepotCode').value.trim();
-            const auditType = document.getElementById('directAuditType').value;
-            const auditNotes = document.getElementById('directAuditNotes').value.trim();
-
-            if (!depotCode || !auditNotes) {
-                alert("कृपया डिपो कोड और विवरण भरें।");
-                return;
-            }
-
-            const btn = document.getElementById('directAuditBtn');
-            btn.disabled = true;
-            btn.textContent = "Submitting Report...";
-
-            try {
-                const url = `${SCRIPT_URL}?action=saveAudit&username=DirectUser&depot=${encodeURIComponent(depotCode)}&type=${encodeURIComponent(auditType)}&notes=${encodeURIComponent(auditNotes)}`;
-                
-                const res = await jsonpRequest(url);
-                if (res && res.success) {
-                    alert("✅ Self Audit Report सफलतापूर्वक सबमिट हो गई है!");
-                    document.getElementById('directAuditForm').reset();
-                    closeSelfAuditModal();
-                } else {
-                    alert("⚠️ " + (res.message || "डेटा सेव करने में विफल।"));
-                }
-            } catch (err) {
-                console.error(err);
-                alert("⚠️ सर्वर से कनेक्ट करने में त्रुटि हुई।");
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Submit Audit Report";
-            }
-        }
     </script>
 </body>
 </html>

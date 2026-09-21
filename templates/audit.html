@@ -86,7 +86,7 @@
                 <div class="p-4 bg-indigo-50/50 border-b border-slate-200 flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Enter Physical Fresh, Damage, & Expiry quantities directly below. Difference updates live.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Enter quantities directly (you can also use math expressions like 10+20+5). Difference updates live.</p>
                     </div>
                     <span class="text-xs bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-bold">Total Items: <span id="liveCount">0</span></span>
                 </div>
@@ -183,7 +183,7 @@
             if (!code) return '';
             let clean = String(code).trim();
             if (!isNaN(clean)) {
-                return String(Number(clean)); // removes leading zeros
+                return String(Number(clean));
             }
             return clean.replace(/^0+/, '');
         }
@@ -268,6 +268,22 @@
             renderDownloadTable();
         }
 
+        function parseVal(val) {
+            if (val === '' || val === null || val === undefined) return 0;
+            // If it's a valid number string
+            let num = Number(val);
+            if (!isNaN(num)) return num;
+            // If it's a math expression like 10+5+2
+            try {
+                // sanitize string to allow only numbers and basic math operators (+, -, *, /)
+                let sanitized = String(val).replace(/[^0-9+\-*/().]/g, '');
+                let res = Function('"use strict";return (' + sanitized + ')')();
+                return isNaN(res) ? 0 : Number(res);
+            } catch (e) {
+                return 0;
+            }
+        }
+
         function renderLiveTable() {
             const tbody = document.getElementById('liveTableBody');
             tbody.innerHTML = '';
@@ -277,9 +293,9 @@
                 let damage = item.damageQty !== '' ? item.damageQty : '';
                 let expiry = item.expiryQty !== '' ? item.expiryQty : '';
 
-                let fNum = fresh !== '' ? parseFloat(fresh) : 0;
-                let dNum = damage !== '' ? parseFloat(damage) : 0;
-                let eNum = expiry !== '' ? parseFloat(expiry) : 0;
+                let fNum = parseVal(fresh);
+                let dNum = parseVal(damage);
+                let eNum = parseVal(expiry);
                 let hasInput = fresh !== '' || damage !== '' || expiry !== '';
                 
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
@@ -293,13 +309,13 @@
                     <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" inputmode="numeric" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" inputmode="numeric" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" inputmode="numeric" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
                     <td class="p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
@@ -313,9 +329,9 @@
             tbody.innerHTML = '';
 
             processedData.forEach((item) => {
-                let fresh = item.freshQty !== '' ? parseFloat(item.freshQty) : 0;
-                let damage = item.damageQty !== '' ? parseFloat(item.damageQty) : 0;
-                let expiry = item.expiryQty !== '' ? parseFloat(item.expiryQty) : 0;
+                let fresh = parseVal(item.freshQty);
+                let damage = parseVal(item.damageQty);
+                let expiry = parseVal(item.expiryQty);
                 let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
                 
                 let totalPhy = hasInput ? (fresh + damage + expiry) : 0;
@@ -341,19 +357,18 @@
             });
         }
 
-        // Fast live update for Tab 1
         function updateQty(index, field, value) {
             processedData[index][field] = value;
             const item = processedData[index];
             const row = document.getElementById(`live-row-${index}`);
             if (!row) return;
 
-            let fresh = item.freshQty !== '' ? parseFloat(item.freshQty) : 0;
-            let damage = item.damageQty !== '' ? parseFloat(item.damageQty) : 0;
-            let expiry = item.expiryQty !== '' ? parseFloat(item.expiryQty) : 0;
+            let fNum = parseVal(item.freshQty);
+            let dNum = parseVal(item.damageQty);
+            let eNum = parseVal(item.expiryQty);
             
             let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
-            let totalPhy = hasInput ? (fresh + damage + expiry) : '';
+            let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
             let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
 
             row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
@@ -362,14 +377,12 @@
             diffCell.textContent = diffQty !== '' ? diffQty : '-';
             diffCell.className = `p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
 
-            // Also update download table background preview
             renderDownloadTable();
         }
 
         function filterTable() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             
-            // Filter live table
             const liveRows = document.getElementById('liveTableBody').getElementsByTagName('tr');
             for (let i = 0; i < liveRows.length; i++) {
                 const code = liveRows[i].cells[0].textContent.toLowerCase();
@@ -377,7 +390,6 @@
                 liveRows[i].style.display = (code.includes(query) || desc.includes(query)) ? "" : "none";
             }
 
-            // Filter download table
             const dlRows = document.getElementById('downloadTableBody').getElementsByTagName('tr');
             for (let i = 0; i < dlRows.length; i++) {
                 const code = dlRows[i].cells[1].textContent.toLowerCase();
@@ -417,9 +429,9 @@
             processedData.forEach((item, idx) => {
                 const rowNum = idx + 2;
                 
-                const freshVal = item.freshQty !== '' ? Number(item.freshQty) : null;
-                const damageVal = item.damageQty !== '' ? Number(item.damageQty) : null;
-                const expiryVal = item.expiryQty !== '' ? Number(item.expiryQty) : null;
+                const freshVal = item.freshQty !== '' ? parseVal(item.freshQty) : null;
+                const damageVal = item.damageQty !== '' ? parseVal(item.damageQty) : null;
+                const expiryVal = item.expiryQty !== '' ? parseVal(item.expiryQty) : null;
 
                 aoa.push([
                     item.plant,
@@ -444,10 +456,9 @@
 
             const ws = XLSX.utils.aoa_to_sheet(aoa);
 
-            // Yellow Header Style & All Borders Style
             const headerStyle = {
                 font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
+                fill: { fgColor: { rgb: "FFFF00" } },
                 alignment: { horizontal: "center", vertical: "center" },
                 border: {
                     top: { style: "thin", color: { rgb: "000000" } },
@@ -480,10 +491,8 @@
                 }
             }
 
-            // Freeze 1st Row Properly
             ws['!freeze'] = { ySplit: 1 };
 
-            // Column Widths
             ws['!cols'] = [
                 {wch: 8}, {wch: 18}, {wch: 35}, {wch: 10}, {wch: 15},
                 {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 12},

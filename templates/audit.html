@@ -270,12 +270,9 @@
 
         function parseVal(val) {
             if (val === '' || val === null || val === undefined) return 0;
-            // If it's a valid number string
             let num = Number(val);
             if (!isNaN(num)) return num;
-            // If it's a math expression like 10+5+2
             try {
-                // sanitize string to allow only numbers and basic math operators (+, -, *, /)
                 let sanitized = String(val).replace(/[^0-9+\-*/().]/g, '');
                 let res = Function('"use strict";return (' + sanitized + ')')();
                 return isNaN(res) ? 0 : Number(res);
@@ -491,7 +488,8 @@
                 }
             }
 
-            ws['!freeze'] = { ySplit: 1 };
+            // Corrected Freeze Pane for Excel (Freezes Row 1 so it stays fixed while scrolling)
+            ws['!freeze'] = { xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft', state: 'frozen' };
 
             ws['!cols'] = [
                 {wch: 8}, {wch: 18}, {wch: 35}, {wch: 10}, {wch: 15},

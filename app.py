@@ -19,6 +19,12 @@ def depot():
 def staff():
     return render_template('staff.html')
 
+# --- यह नया रूट जोड़ना है ---
+@app.route('/audit')
+def audit():
+    return render_template('audit.html')
+# ---------------------------
+
 @app.route('/logout')
 def logout():
     return redirect(url_for('home'))

@@ -320,13 +320,13 @@
                     <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this, 'fresh')" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this, 'damage')" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this, 'expiry')" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
                     <td class="p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
@@ -335,8 +335,7 @@
             });
         }
 
-        // Universal Enter Key Handler (Jumps directly to the next visible input box)
-        function handleEnterKey(event, currentInput, fieldType) {
+        function handleEnterKey(event, currentInput) {
             if (event.key === 'Enter') {
                 event.preventDefault();
                 const allInputs = Array.from(document.querySelectorAll('#liveTableBody tr:not([style*="display: none"]) .audit-input'));
@@ -483,32 +482,32 @@
 
             const ws = XLSX.utils.aoa_to_sheet(aoa);
 
+            // Explicit thin border definition for all cells
+            const thinBorder = {
+                top: { style: "thin", color: { rgb: "000000" } },
+                bottom: { style: "thin", color: { rgb: "000000" } },
+                left: { style: "thin", color: { rgb: "000000" } },
+                right: { style: "thin", color: { rgb: "000000" } }
+            };
+
             const headerStyle = {
                 font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } },
+                fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
                 alignment: { horizontal: "center", vertical: "center" },
-                border: {
-                    top: { style: "thin", color: { rgb: "000000" } },
-                    bottom: { style: "thin", color: { rgb: "000000" } },
-                    left: { style: "thin", color: { rgb: "000000" } },
-                    right: { style: "thin", color: { rgb: "000000" } }
-                }
+                border: thinBorder
             };
 
             const cellStyle = {
-                border: {
-                    top: { style: "thin", color: { rgb: "D3D3D3" } },
-                    bottom: { style: "thin", color: { rgb: "D3D3D3" } },
-                    left: { style: "thin", color: { rgb: "D3D3D3" } },
-                    right: { style: "thin", color: { rgb: "D3D3D3" } }
-                }
+                border: thinBorder
             };
 
             const range = XLSX.utils.decode_range(ws['!ref']);
             for (let R = range.s.r; R <= range.e.r; ++R) {
                 for (let C = range.s.c; C <= range.e.c; ++C) {
                     const cellAddress = XLSX.utils.encode_cell({ r: R, c: C });
-                    if (!ws[cellAddress]) continue;
+                    if (!ws[cellAddress]) {
+                        ws[cellAddress] = { v: '', t: 's' };
+                    }
                     
                     if (R === 0) {
                         ws[cellAddress].s = headerStyle;
@@ -518,6 +517,7 @@
                 }
             }
 
+            // Force Freeze Pane correctly for Microsoft Excel
             ws['!freeze'] = { xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft', state: 'frozen' };
 
             ws['!cols'] = [

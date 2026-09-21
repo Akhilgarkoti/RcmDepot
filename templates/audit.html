@@ -95,8 +95,8 @@
                 </div>
             </div>
 
-            <!-- Mode Selection 2 Tabs -->
-            <div class="bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 flex justify-between items-center">
+            <!-- Mode Selection & Sorting Bar -->
+            <div class="bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="flex space-x-2 w-full sm:w-auto">
                     <button onclick="switchTab('live')" id="tabLiveBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-indigo-600 text-white shadow-sm">
                         <i class="fa-solid fa-pen-to-square mr-1"></i> 1. Live Web Entry
@@ -104,6 +104,20 @@
                     <button onclick="switchTab('download')" id="tabDownloadBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200">
                         <i class="fa-solid fa-file-arrow-down mr-1"></i> 2. Download Report Mode
                     </button>
+                </div>
+
+                <!-- Sorting Dropdown -->
+                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+                    <span class="text-[11px] font-bold text-slate-600 whitespace-nowrap"><i class="fa-solid fa-sort mr-1 text-indigo-600"></i> Sort By:</span>
+                    <select id="sortSelect" onchange="sortTableData()" class="px-2.5 py-1 border border-slate-300 rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <option value="default">Default (Group & Name)</option>
+                        <option value="code_asc">Material Code (Ascending)</option>
+                        <option value="code_desc">Material Code (Descending)</option>
+                        <option value="name_asc">Description (A to Z)</option>
+                        <option value="name_desc">Description (Z to A)</option>
+                        <option value="stock_high">Unrestricted Stock (High to Low)</option>
+                        <option value="stock_low">Unrestricted Stock (Low to High)</option>
+                    </select>
                 </div>
             </div>
 
@@ -275,13 +289,8 @@
                 }
             });
 
-            // Material Group-wise sorting and grouping restored properly
-            processedData = Array.from(groupedMap.values()).sort((a, b) => {
-                if (a.materialGroup !== b.materialGroup) {
-                    return a.materialGroup.localeCompare(b.materialGroup);
-                }
-                return a.materialDescription.localeCompare(b.materialDescription);
-            });
+            processedData = Array.from(groupedMap.values());
+            sortDataArray('default');
 
             if (processedData.length === 0) {
                 alert('No valid material records found in the uploaded file. Please check column headers.');
@@ -299,6 +308,37 @@
 
             updateSummaryCards();
             renderTables();
+        }
+
+        function sortTableData() {
+            const sortBy = document.getElementById('sortSelect').value;
+            sortDataArray(sortBy);
+            renderTables();
+            filterTable();
+        }
+
+        function sortDataArray(criteria) {
+            processedData.sort((a, b) => {
+                if (criteria === 'code_asc') {
+                    return a.materialCode.localeCompare(b.materialCode, undefined, {numeric: true});
+                } else if (criteria === 'code_desc') {
+                    return b.materialCode.localeCompare(a.materialCode, undefined, {numeric: true});
+                } else if (criteria === 'name_asc') {
+                    return a.materialDescription.localeCompare(b.materialDescription);
+                } else if (criteria === 'name_desc') {
+                    return b.materialDescription.localeCompare(a.materialDescription);
+                } else if (criteria === 'stock_high') {
+                    return b.unrestrictedStock - a.unrestrictedStock;
+                } else if (criteria === 'stock_low') {
+                    return a.unrestrictedStock - b.unrestrictedStock;
+                } else {
+                    // Default: Group-wise and Description-wise
+                    if (a.materialGroup !== b.materialGroup) {
+                        return a.materialGroup.localeCompare(b.materialGroup);
+                    }
+                    return a.materialDescription.localeCompare(b.materialDescription);
+                }
+            });
         }
 
         function switchTab(tab) {

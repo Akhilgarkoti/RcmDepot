@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://script.google.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -56,7 +57,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Hidden Admin Trigger Zone */
         .admin-trigger-area {
             cursor: pointer;
             user-select: none;
@@ -338,9 +338,9 @@
 
                     btn.textContent = "Success! Redirecting...";
 
-                    if (role === "depot") window.location.href = "/depot";
-                    else if (role === "staff") window.location.href = "/staff";
-                    else window.location.href = "/admin";
+                    if (role === "depot") window.location.href = "depot.html";
+                    else if (role === "staff") window.location.href = "staff.html";
+                    else window.location.href = "admin.html";
                 } else {
                     msgBox.textContent = "⚠️ " + (res.message || "Invalid username or password.");
                     msgBox.style.display = 'block';

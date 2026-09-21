@@ -17,13 +17,14 @@
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        .min-w-custom { min-width: 1300px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
 
     <!-- Header -->
     <header class="bg-indigo-900 text-white shadow-md">
-        <div class="max-w-full px-6 py-4 flex flex-col sm:flex-row justify-between items-center">
+        <div class="max-w-full px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
                 <div class="bg-indigo-700 p-2.5 rounded-lg">
                     <i class="fa-solid fa-boxes-stacked text-2xl text-amber-400"></i>
@@ -33,10 +34,18 @@
                     <p class="text-xs text-indigo-200">Multi-Depot Inventory & Audit Management</p>
                 </div>
             </div>
-            <div class="mt-3 sm:mt-0 flex items-center space-x-3">
-                <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-xs px-3 py-1 rounded-full border border-indigo-600 font-medium"></span>
-                <button onclick="resetPortal()" class="hidden id-reset-btn px-3 py-1.5 bg-indigo-800 hover:bg-indigo-700 text-white text-xs rounded-lg transition border border-indigo-600">
-                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset / New Upload
+
+            <!-- Global Search & Depot Info -->
+            <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
+                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-72">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search Code or Desc..." class="w-full pl-10 pr-4 py-1.5 border border-indigo-700 rounded-lg text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                </div>
+                <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-xs px-3 py-1.5 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
+                <button onclick="resetPortal()" class="hidden id-reset-btn px-3 py-1.5 bg-indigo-800 hover:bg-indigo-700 text-white text-xs rounded-lg transition border border-indigo-600 whitespace-nowrap">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset
                 </button>
             </div>
         </div>
@@ -77,7 +86,7 @@
                 <div class="flex items-center space-x-2 w-full lg:w-auto">
                     <span class="text-xs font-bold text-slate-600 whitespace-nowrap"><i class="fa-solid fa-filter mr-1 text-indigo-600"></i> Material Group:</span>
                     <select id="materialGroupFilter" onchange="filterTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full lg:w-60">
-                        <option value="ALL">All Groups</option>
+                        <option value="ALL">All Material Groups</option>
                     </select>
                 </div>
             </div>
@@ -96,20 +105,20 @@
                     <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
-                                <th class="p-3 border-r border-slate-200">
+                                <th class="p-3 border-r border-slate-200 w-44">
                                     Material Code
-                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Code..." class="col-filter w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Code..." class="col-filter-code w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
                                 <th class="p-3 border-r border-slate-200">
                                     Material Description
-                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Desc..." class="col-filter w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Desc..." class="col-filter-desc w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50">Unrestricted Stock</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50">Physical (Fresh Qty)</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50">DAMAGE QTY</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50">EXPIRY QTY</th>
-                                <th class="p-3 border-r border-slate-200 text-right font-bold bg-slate-100">TOTAL PHYSICAL</th>
-                                <th class="p-3 text-right font-bold bg-slate-100">DIFF QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50 w-32">Unrestricted Stock</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50 w-32">Physical (Fresh Qty)</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50 w-28">DAMAGE QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50 w-28">EXPIRY QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right font-bold bg-slate-100 w-28">TOTAL PHYSICAL</th>
+                                <th class="p-3 text-right font-bold bg-slate-100 w-24">DIFF QTY</th>
                             </tr>
                         </thead>
                         <tbody id="liveTableBody" class="divide-y divide-slate-200">
@@ -132,26 +141,20 @@
                 </div>
                 
                 <div class="table-container overflow-x-auto max-h-[70vh]">
-                    <table class="w-full text-left border-collapse text-xs">
+                    <table class="w-full min-w-custom text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
-                                <th class="p-3 border-r border-slate-200">Plant</th>
-                                <th class="p-3 border-r border-slate-200">
-                                    Material Code
-                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Code..." class="col-filter-dl w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
-                                </th>
-                                <th class="p-3 border-r border-slate-200">
-                                    Material Description
-                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Desc..." class="col-filter-dl w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
-                                </th>
-                                <th class="p-3 border-r border-slate-200 text-right">Sp</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Unrestricted Stock</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Fresh Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Damage Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Expiry Qty</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Total Physical</th>
-                                <th class="p-3 border-r border-slate-200 text-right">Diff Qty</th>
-                                <th class="p-3 text-right">Total Phy. Amt</th>
+                                <th class="p-3 border-r border-slate-200 w-20">Plant</th>
+                                <th class="p-3 border-r border-slate-200 w-44">Material Code</th>
+                                <th class="p-3 border-r border-slate-200">Material Description</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-24">Sp</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-32">Unrestricted Stock</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-24">Fresh Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-24">Damage Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-24">Expiry Qty</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-28">Total Physical</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-24">Diff Qty</th>
+                                <th class="p-3 text-right w-32">Total Phy. Amt</th>
                             </tr>
                         </thead>
                         <tbody id="downloadTableBody" class="divide-y divide-slate-200">
@@ -254,7 +257,13 @@
                 }
             });
 
-            processedData = Array.from(groupedMap.values());
+            // Sort data group-wise and description-wise
+            processedData = Array.from(groupedMap.values()).sort((a, b) => {
+                if (a.materialGroup !== b.materialGroup) {
+                    return a.materialGroup.localeCompare(b.materialGroup);
+                }
+                return a.materialDescription.localeCompare(b.materialDescription);
+            });
 
             if (processedData.length === 0) {
                 alert('No valid material records found in the uploaded file. Please check column headers.');
@@ -273,6 +282,7 @@
 
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('globalSearchWrapper').classList.remove('hidden');
             document.querySelector('.id-reset-btn').classList.remove('hidden');
             document.getElementById('liveCount').textContent = processedData.length;
             
@@ -436,18 +446,12 @@
             renderDownloadTable();
         }
 
-        // Combined Material Group Filter & Column-wise Filters
         function filterTable() {
             const selectedGroup = document.getElementById('materialGroupFilter').value;
+            const globalQuery = document.getElementById('globalSearchInput').value.toLowerCase();
             
-            // Live table filter
-            const liveRows = document.querySelectorAll('#liveTableBody tr.live-row');
-            const liveCodeFilter = document.querySelector('#liveEntryView thead .col-filter:nth-of-type(1)') ? document.querySelector('#liveEntryView thead tr input.col-filter').value.toLowerCase() : '';
-            
-            // For general column filters inside active tab
-            const activeHeaderInputs = document.querySelectorAll(currentTab === 'live' ? '#liveEntryView thead input.col-filter' : '#downloadReportView thead input.col-filter-dl');
-            const codeQuery = activeHeaderInputs[0] ? activeHeaderInputs[0].value.toLowerCase() : '';
-            const descQuery = activeHeaderInputs[1] ? activeHeaderInputs[1].value.toLowerCase() : '';
+            const colCodeQuery = document.querySelector('.col-filter-code') ? document.querySelector('.col-filter-code').value.toLowerCase() : '';
+            const colDescQuery = document.querySelector('.col-filter-desc') ? document.querySelector('.col-filter-desc').value.toLowerCase() : '';
 
             // Filter Live Table
             document.querySelectorAll('#liveTableBody tr.live-row').forEach(row => {
@@ -456,10 +460,11 @@
                 const desc = row.querySelector('.col-desc').textContent.toLowerCase();
 
                 const matchGroup = (selectedGroup === 'ALL' || group === selectedGroup);
-                const matchCode = code.includes(codeQuery);
-                const matchDesc = desc.includes(descQuery);
+                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
+                const matchCode = (colCodeQuery === '' || code.includes(colCodeQuery));
+                const matchDesc = (colDescQuery === '' || desc.includes(colDescQuery));
 
-                row.style.display = (matchGroup && matchCode && matchDesc) ? '' : 'none';
+                row.style.display = (matchGroup && matchGlobal && matchCode && matchDesc) ? '' : 'none';
             });
 
             // Filter Download Table
@@ -469,10 +474,11 @@
                 const desc = row.querySelector('.dl-desc').textContent.toLowerCase();
 
                 const matchGroup = (selectedGroup === 'ALL' || group === selectedGroup);
-                const matchCode = code.includes(codeQuery);
-                const matchDesc = desc.includes(descQuery);
+                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
+                const matchCode = (colCodeQuery === '' || code.includes(colCodeQuery));
+                const matchDesc = (colDescQuery === '' || desc.includes(colDescQuery));
 
-                row.style.display = (matchGroup && matchCode && matchDesc) ? '' : 'none';
+                row.style.display = (matchGroup && matchGlobal && matchCode && matchDesc) ? '' : 'none';
             });
         }
 
@@ -483,6 +489,7 @@
                 document.getElementById('excelFileInput').value = '';
                 document.getElementById('dashboardSection').classList.add('hidden');
                 document.getElementById('uploadSection').classList.remove('hidden');
+                document.getElementById('globalSearchWrapper').classList.add('hidden');
                 document.querySelector('.id-reset-btn').classList.add('hidden');
                 document.getElementById('depotBadge').classList.add('hidden');
                 switchTab('live');
@@ -543,7 +550,7 @@
 
             const headerStyle = {
                 font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
+                fill: { fgColor: { rgb: "FFFF00" } },
                 alignment: { horizontal: "center", vertical: "center" },
                 border: thinBorder
             };

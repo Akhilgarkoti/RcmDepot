@@ -198,11 +198,19 @@
 
                 let plant = row['Plant'] || row['PLANT'] || 'D121';
                 let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || '';
-                let price = parseFloat(row['Material Price'] || row['Sp'] || row['SP'] || 0);
                 
-                let unrestricted = parseFloat(row['Unrestricted Stock'] || row['UnrestrictedStock'] || 0);
-                let returnQty = parseFloat(row['Return'] || row['RETURN'] || 0);
-                let blocked = parseFloat(row['Blocked Stock'] || row['BlockedStock'] || 0);
+                // Parse Price safely (handle commas if any, e.g. "1,250.00")
+                let rawPrice = row['Material Price'] || row['Sp'] || row['SP'] || 0;
+                let price = 0;
+                if (typeof rawPrice === 'string') {
+                    price = parseFloat(rawPrice.replace(/,/g, '')) || 0;
+                } else {
+                    price = parseFloat(rawPrice) || 0;
+                }
+
+                let unrestricted = parseFloat(String(row['Unrestricted Stock'] || row['UnrestrictedStock'] || 0).replace(/,/g, '')) || 0;
+                let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
+                let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
 
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
@@ -220,8 +228,14 @@
 
                 let item = groupedMap.get(code);
                 item.unrestrictedStock += (unrestricted + returnQty + blocked);
-                if (price > 0) item.sp = price;
-                if (!item.materialDescription && desc) item.materialDescription = desc;
+                
+                // Keep the maximum/valid price found across rows for this material code
+                if (price > item.sp) {
+                    item.sp = price;
+                }
+                if (!item.materialDescription && desc) {
+                    item.materialDescription = desc;
+                }
             });
 
             processedData = Array.from(groupedMap.values());
@@ -274,7 +288,6 @@
             let num = Number(str);
             if (!isNaN(num)) return num;
             try {
-                // Remove trailing operators like +, -, *, / so incomplete typing works smoothly
                 str = str.replace(/[+\-*/]+$/, '');
                 if (str === '') return 0;
                 let sanitized = str.replace(/[^0-9+\-*/().]/g, '');
@@ -345,14 +358,14 @@
                     <td class="p-3 border-r border-slate-200 text-slate-600">${item.plant}</td>
                     <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
                     <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
-                    <td class="p-3 border-r border-slate-200 text-right">₹${item.sp.toFixed(2)}</td>
+                    <td class="p-3 border-r border-slate-200 text-right">₹${item.sp.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right">${item.freshQty !== '' ? item.freshQty : '-'}</td>
                     <td class="p-3 border-r border-slate-200 text-right">${item.damageQty !== '' ? item.damageQty : '-'}</td>
                     <td class="p-3 border-r border-slate-200 text-right">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold">${hasInput ? totalPhy : '-'}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold">${hasInput ? diffQty : '-'}</td>
-                    <td class="p-3 text-right font-semibold">₹${totalPhyAmt.toFixed(2)}</td>
+                    <td class="p-3 text-right font-semibold">₹${totalPhyAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                 `;
                 tbody.appendChild(tr);
             });

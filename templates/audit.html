@@ -6,7 +6,7 @@
     <title>RCM Stock Audit Portal</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS (xlsx) Library with Style support -->
+    <!-- SheetJS with Style Support -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,6 +15,8 @@
         .table-container::-webkit-scrollbar { width: 8px; height: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
@@ -86,7 +88,7 @@
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
                     <h3 class="font-semibold text-slate-700 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Stock Audit Preview & Physical Entry</h3>
-                    <span class="text-xs text-slate-500 font-medium">Note: Type quantities below. Calculations update instantly without losing focus.</span>
+                    <span class="text-xs text-slate-500 font-medium">Note: Type quantities below. Fast & smooth performance guaranteed.</span>
                 </div>
                 
                 <div class="table-container overflow-x-auto max-h-[70vh]">
@@ -151,10 +153,9 @@
 
         function cleanMaterialCode(code) {
             if (!code) return '';
-            // Convert to string and remove leading zeros
             let clean = String(code).trim();
             if (!isNaN(clean)) {
-                return String(Number(clean)); // removes leading zeros for numeric codes
+                return String(Number(clean)); // removes leading zeros
             }
             return clean.replace(/^0+/, '');
         }
@@ -225,15 +226,17 @@
                 let fNum = fresh !== '' ? parseFloat(fresh) : 0;
                 let dNum = damage !== '' ? parseFloat(damage) : 0;
                 let eNum = expiry !== '' ? parseFloat(expiry) : 0;
-                let totalPhy = (fresh !== '' || damage !== '' || expiry !== '') ? (fNum + dNum + eNum) : '';
-                let diffQty = totalPhy !== '' ? (totalPhy - item.unrestrictedStock) : '';
+                let hasInput = fresh !== '' || damage !== '' || expiry !== '';
+                
+                let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
+                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
                 
                 let unrtAmt = item.unrestrictedStock * item.sp;
                 let freshAmt = fresh !== '' ? (fNum * item.sp) : 0;
                 let damageAmt = damage !== '' ? (dNum * item.sp) : 0;
                 let expiryAmt = expiry !== '' ? (eNum * item.sp) : 0;
-                let totalPhyAmt = (fresh !== '' || damage !== '' || expiry !== '') ? (freshAmt + damageAmt + expiryAmt) : 0;
-                let diffAmt = totalPhy !== '' ? (totalPhyAmt - unrtAmt) : '';
+                let totalPhyAmt = hasInput ? (freshAmt + damageAmt + expiryAmt) : 0;
+                let diffAmt = hasInput ? (totalPhyAmt - unrtAmt) : '';
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
@@ -245,13 +248,13 @@
                     <td class="p-3 border-r border-slate-200 text-right font-medium">₹${item.sp.toFixed(2)}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="number" min="0" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-20 text-right p-1 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                        <input type="text" inputmode="numeric" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-20 text-right p-1 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="number" min="0" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-20 text-right p-1 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                        <input type="text" inputmode="numeric" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-20 text-right p-1 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="number" min="0" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-20 text-right p-1 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                        <input type="text" inputmode="numeric" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-20 text-right p-1 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 cell-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold cell-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
@@ -269,7 +272,7 @@
             });
         }
 
-        // Live update without re-rendering the whole table (Prevents slow typing and focus loss)
+        // Ultra-fast live update without lagging
         function updateQty(index, field, value) {
             processedData[index][field] = value;
             const item = processedData[index];
@@ -291,7 +294,6 @@
             let unrtAmt = item.unrestrictedStock * item.sp;
             let diffAmt = hasInput ? (totalPhyAmt - unrtAmt) : '';
 
-            // Update live cells instantly
             row.querySelector('.cell-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
             
             const diffQtyCell = row.querySelector('.cell-diff-qty');
@@ -360,7 +362,7 @@
 
                 aoa.push([
                     item.plant,
-                    item.materialCode,
+                    { v: item.materialCode, t: 's' }, // Clean code string format
                     item.materialDescription,
                     item.sp,
                     item.unrestrictedStock,
@@ -381,7 +383,7 @@
 
             const ws = XLSX.utils.aoa_to_sheet(aoa);
 
-            // Styling configuration using xlsx-js-style
+            // Yellow Header Style & All Borders Style
             const headerStyle = {
                 font: { bold: true, color: { rgb: "000000" } },
                 fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
@@ -403,7 +405,6 @@
                 }
             };
 
-            // Apply styles to all cells
             const range = XLSX.utils.decode_range(ws['!ref']);
             for (let R = range.s.r; R <= range.e.r; ++R) {
                 for (let C = range.s.c; C <= range.e.c; ++C) {
@@ -418,10 +419,10 @@
                 }
             }
 
-            // Freeze first row (Header)
-            ws['!freeze'] = { xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft', state: 'frozen' };
+            // Freeze 1st Row Properly
+            ws['!freeze'] = { ySplit: 1 };
 
-            // Column widths
+            // Column Widths
             ws['!cols'] = [
                 {wch: 8}, {wch: 18}, {wch: 35}, {wch: 10}, {wch: 15},
                 {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 12},

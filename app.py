@@ -16,16 +16,16 @@ def login_required(f):
 def home():
     return render_template('index.html')
 
-# Yeh route login hone par session save karega
+# Ye route frontend se login hone ke baad server session set karega
 @app.route('/login', methods=['POST'])
-def login():
+def login_session():
     try:
-        data = request.get_json(silent=True) or request.form
-        user_code = data.get('username') or data.get('user')
+        data = request.get_json(silent=True) or {}
+        user_code = data.get('username')
         if user_code:
             session['user'] = str(user_code).strip()
             return jsonify({"success": True})
-        return jsonify({"success": False, "message": "Invalid user code"})
+        return jsonify({"success": False})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
 

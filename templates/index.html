@@ -56,7 +56,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Hidden Admin Trigger Zone */
         .admin-trigger-area {
             cursor: pointer;
             user-select: none;
@@ -189,7 +188,6 @@
 
     <div class="auth-card">
         <div class="auth-header">
-            <!-- Secret triple-click trigger area -->
             <div class="admin-trigger-area" onclick="handleSecretAdminClick()" title="RCM Portal">
                 <h2>RCM Depot <span>Portal</span></h2>
                 <p id="portalSubText">Depot & Staff Unified Login</p>
@@ -235,7 +233,6 @@
         let clickCount = 0;
         let clickTimer = null;
 
-        // Secret Admin Trigger Logic
         function handleSecretAdminClick() {
             clickCount++;
             if (clickCount === 1) {
@@ -334,6 +331,19 @@
                     
                     if (res.permissions) {
                         sessionStorage.setItem("permissions", JSON.stringify(res.permissions));
+                    }
+
+                    btn.textContent = "Setting up session...";
+
+                    // Flask server side session set karne ke liye request
+                    try {
+                        await fetch('/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username: res.username || username })
+                        });
+                    } catch (err) {
+                        console.error("Session sync error", err);
                     }
 
                     btn.textContent = "Success! Redirecting...";

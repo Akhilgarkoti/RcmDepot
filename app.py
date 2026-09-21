@@ -16,14 +16,18 @@ def login_required(f):
 def home():
     return render_template('index.html')
 
-# Yahan apna login validate karne ka route banayein (Jaise aapne pehle Google Apps Script ya DB se connect kiya ho)
-@app.route('/api/login', methods=['POST'])
-def api_login():
-    data = request.json
-    user_code = data.get('username')
-    # Yahan password/user check karne ke baad agar details sahi hain toh:
-    session['user'] = user_code  # Yeh session set karna bahut zaroori hai
-    return jsonify({"success": True})
+# Yeh route login hone par session save karega
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        data = request.get_json(silent=True) or request.form
+        user_code = data.get('username') or data.get('user')
+        if user_code:
+            session['user'] = str(user_code).strip()
+            return jsonify({"success": True})
+        return jsonify({"success": False, "message": "Invalid user code"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)})
 
 @app.route('/admin')
 @login_required

@@ -86,7 +86,7 @@
                 <div class="p-4 bg-indigo-50/50 border-b border-slate-200 flex justify-between items-center">
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Enter quantities directly (you can use math expressions like 1+2+1). Difference updates live.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Press <b>Enter</b> after typing quantity to jump directly to the next product below.</p>
                     </div>
                     <span class="text-xs bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-bold">Total Items: <span id="liveCount">0</span></span>
                 </div>
@@ -199,7 +199,6 @@
                 let plant = row['Plant'] || row['PLANT'] || 'D121';
                 let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || '';
                 
-                // Parse Price safely (handle commas if any, e.g. "1,250.00")
                 let rawPrice = row['Material Price'] || row['Sp'] || row['SP'] || 0;
                 let price = 0;
                 if (typeof rawPrice === 'string') {
@@ -229,7 +228,6 @@
                 let item = groupedMap.get(code);
                 item.unrestrictedStock += (unrestricted + returnQty + blocked);
                 
-                // Keep the maximum/valid price found across rows for this material code
                 if (price > item.sp) {
                     item.sp = price;
                 }
@@ -323,19 +321,32 @@
                     <td class="p-3 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold bg-indigo-50/50">${item.unrestrictedStock}</td>
                     <td class="p-3 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
+                        <input type="text" id="fresh-${index}" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleKey(event, ${index}, 'freshQty')" class="w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
+                        <input type="text" id="damage-${index}" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleKey(event, ${index}, 'damageQty')" class="w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-amber-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
+                        <input type="text" id="expiry-${index}" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleKey(event, ${index}, 'expiryQty')" class="w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs">
                     </td>
                     <td class="p-3 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy">${totalPhy !== '' ? totalPhy : '-'}</td>
                     <td class="p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
                 `;
                 tbody.appendChild(tr);
             });
+        }
+
+        // Handle Enter key to jump to the next row automatically
+        function handleKey(event, index, field) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                let nextIndex = index + 1;
+                let nextInput = document.getElementById(`${field}-${nextIndex}`);
+                if (nextInput) {
+                    nextInput.focus();
+                    nextInput.select();
+                }
+            }
         }
 
         function renderDownloadTable() {

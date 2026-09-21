@@ -95,14 +95,17 @@
                 </div>
             </div>
 
-            <!-- Mode Selection & Sorting Bar -->
+            <!-- Mode Selection 3 Tabs & Sorting Bar -->
             <div class="bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
                 <div class="flex space-x-2 w-full sm:w-auto">
                     <button onclick="switchTab('live')" id="tabLiveBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-indigo-600 text-white shadow-sm">
                         <i class="fa-solid fa-pen-to-square mr-1"></i> 1. Live Web Entry
                     </button>
                     <button onclick="switchTab('download')" id="tabDownloadBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200">
-                        <i class="fa-solid fa-file-arrow-down mr-1"></i> 2. Download Report Mode
+                        <i class="fa-solid fa-file-arrow-down mr-1"></i> 2. Download Report
+                    </button>
+                    <button onclick="switchTab('bulk')" id="tabBulkBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-file-excel mr-1"></i> 3. Bulk Upload
                     </button>
                 </div>
 
@@ -198,6 +201,46 @@
                 </div>
             </div>
 
+            <!-- TAB 3: BULK EXCEL UPLOAD & PREVIEW -->
+            <div id="bulkUploadView" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Bulk Upload Physical Quantities</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Upload counted Excel file, review preview below, and click <b>Submit</b> to apply.</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <label class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg cursor-pointer transition shadow-sm whitespace-nowrap">
+                            <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Upload Excel File
+                            <input type="file" accept=".xlsx, .xls" class="hidden" onchange="handleBulkPreview(event)">
+                        </label>
+                        <button id="submitBulkBtn" onclick="submitBulkQuantities()" disabled class="px-4 py-2 bg-indigo-300 text-white font-semibold text-xs rounded-lg cursor-not-allowed transition shadow-sm whitespace-nowrap">
+                            <i class="fa-solid fa-check mr-1.5"></i> Submit & Apply to Portal
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Table Container -->
+                <div class="table-container overflow-x-auto max-h-[55vh] border border-slate-200 rounded-lg">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-2.5 border-r border-slate-200">Material Code</th>
+                                <th class="p-2.5 border-r border-slate-200">Material Description</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right">System Stock</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50">Preview Fresh</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50">Preview Damage</th>
+                                <th class="p-2.5 text-right bg-orange-50">Preview Expiry</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bulkPreviewBody" class="divide-y divide-slate-200">
+                            <tr>
+                                <td colspan="6" class="p-8 text-center text-slate-400 italic">No file uploaded yet. Click 'Upload Excel File' above to preview.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
 
     </main>
@@ -205,6 +248,7 @@
     <!-- JavaScript Logic -->
     <script>
         let processedData = [];
+        let previewBulkData = [];
         let currentTab = 'live';
 
         function handleFileUpload(event) {
@@ -310,6 +354,98 @@
             renderTables();
         }
 
+        // Bulk Preview Handler
+        function handleBulkPreview(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rawJson = XLSX.utils.sheet_to_json(worksheet, { raw: false });
+
+                    previewBulkData = [];
+                    rawJson.forEach(row => {
+                        let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                        let code = cleanMaterialCode(rawCode);
+                        if (!code) return;
+
+                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : '');
+                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : '');
+                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : '');
+
+                        let targetItem = processedData.find(item => item.materialCode === code);
+                        if (targetItem) {
+                            previewBulkData.push({
+                                materialCode: code,
+                                materialDescription: targetItem.materialDescription,
+                                unrestrictedStock: targetItem.unrestrictedStock,
+                                freshQty: fresh !== '' && fresh !== null ? String(fresh) : '',
+                                damageQty: damage !== '' && damage !== null ? String(damage) : '',
+                                expiryQty: expiry !== '' && expiry !== null ? String(expiry) : ''
+                            });
+                        }
+                    });
+
+                    renderBulkPreviewTable();
+                    if (previewBulkData.length > 0) {
+                        const submitBtn = document.getElementById('submitBulkBtn');
+                        submitBtn.disabled = false;
+                        submitBtn.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg cursor-pointer transition shadow-sm whitespace-nowrap";
+                    }
+                } catch (error) {
+                    alert('Error reading bulk file for preview: ' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function renderBulkPreviewTable() {
+            const tbody = document.getElementById('bulkPreviewBody');
+            tbody.innerHTML = '';
+
+            if (previewBulkData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-rose-500 italic">No matching material codes found in uploaded file.</td></tr>`;
+                return;
+            }
+
+            previewBulkData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+                tr.innerHTML = `
+                    <td class="p-2.5 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-slate-800">${item.materialDescription}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 font-semibold">${item.freshQty !== '' ? item.freshQty : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 font-semibold">${item.damageQty !== '' ? item.damageQty : '-'}</td>
+                    <td class="p-2.5 text-right bg-orange-50/30 font-semibold">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function submitBulkQuantities() {
+            if (previewBulkData.length === 0) return;
+
+            previewBulkData.forEach(pItem => {
+                let targetItem = processedData.find(item => item.materialCode === pItem.materialCode);
+                if (targetItem) {
+                    if (pItem.freshQty !== '') targetItem.freshQty = pItem.freshQty;
+                    if (pItem.damageQty !== '') targetItem.damageQty = pItem.damageQty;
+                    if (pItem.expiryQty !== '') targetItem.expiryQty = pItem.expiryQty;
+                }
+            });
+
+            updateSummaryCards();
+            renderTables();
+            alert(`Success! Quantities submitted and applied for ${previewBulkData.length} items. You can check Tab 1 or Tab 2.`);
+            switchTab('live');
+        }
+
         function sortTableData() {
             const sortBy = document.getElementById('sortSelect').value;
             sortDataArray(sortBy);
@@ -332,7 +468,6 @@
                 } else if (criteria === 'stock_low') {
                     return a.unrestrictedStock - b.unrestrictedStock;
                 } else {
-                    // Default: Group-wise and Description-wise
                     if (a.materialGroup !== b.materialGroup) {
                         return a.materialGroup.localeCompare(b.materialGroup);
                     }
@@ -345,15 +480,19 @@
             currentTab = tab;
             const liveBtn = document.getElementById('tabLiveBtn');
             const downloadBtn = document.getElementById('tabDownloadBtn');
+            const bulkBtn = document.getElementById('tabBulkBtn');
             
             const liveView = document.getElementById('liveEntryView');
             const downloadView = document.getElementById('downloadReportView');
+            const bulkView = document.getElementById('bulkUploadView');
 
             liveBtn.className = "px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200";
             downloadBtn.className = "px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+            bulkBtn.className = "px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200";
 
             liveView.classList.add('hidden');
             downloadView.classList.add('hidden');
+            bulkView.classList.add('hidden');
 
             if (tab === 'live') {
                 liveBtn.className = "px-4 py-1.5 rounded-md font-semibold text-xs transition bg-indigo-600 text-white shadow-sm";
@@ -361,6 +500,9 @@
             } else if (tab === 'download') {
                 downloadBtn.className = "px-4 py-1.5 rounded-md font-semibold text-xs transition bg-emerald-600 text-white shadow-sm";
                 downloadView.classList.remove('hidden');
+            } else if (tab === 'bulk') {
+                bulkBtn.className = "px-4 py-1.5 rounded-md font-semibold text-xs transition bg-indigo-600 text-white shadow-sm";
+                bulkView.classList.remove('hidden');
             }
         }
 

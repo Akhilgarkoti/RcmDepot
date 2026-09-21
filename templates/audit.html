@@ -95,8 +95,8 @@
                 </div>
             </div>
 
-            <!-- Mode Selection 3 Tabs & Sorting Bar -->
-            <div class="bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <!-- Mode Selection 3 Tabs -->
+            <div class="bg-white p-2.5 rounded-lg shadow-sm border border-slate-200 flex justify-between items-center">
                 <div class="flex space-x-2 w-full sm:w-auto">
                     <button onclick="switchTab('live')" id="tabLiveBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-indigo-600 text-white shadow-sm">
                         <i class="fa-solid fa-pen-to-square mr-1"></i> 1. Live Web Entry
@@ -107,20 +107,6 @@
                     <button onclick="switchTab('bulk')" id="tabBulkBtn" class="px-4 py-1.5 rounded-md font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200">
                         <i class="fa-solid fa-file-excel mr-1"></i> 3. Bulk Upload
                     </button>
-                </div>
-
-                <!-- Sorting Dropdown -->
-                <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                    <span class="text-[11px] font-bold text-slate-600 whitespace-nowrap"><i class="fa-solid fa-sort mr-1 text-indigo-600"></i> Sort By:</span>
-                    <select id="sortSelect" onchange="sortTableData()" class="px-2.5 py-1 border border-slate-300 rounded-md text-xs bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="default">Default (Group & Name)</option>
-                        <option value="code_asc">Material Code (Ascending)</option>
-                        <option value="code_desc">Material Code (Descending)</option>
-                        <option value="name_asc">Description (A to Z)</option>
-                        <option value="name_desc">Description (Z to A)</option>
-                        <option value="stock_high">Unrestricted Stock (High to Low)</option>
-                        <option value="stock_low">Unrestricted Stock (Low to High)</option>
-                    </select>
                 </div>
             </div>
 
@@ -133,42 +119,48 @@
                     </div>
                 </div>
                 
-                <!-- Desktop Table View with Every Column Filter -->
+                <!-- Desktop Table View with Sort on 2nd Column -->
                 <div class="hidden md:block table-container overflow-x-auto max-h-[68vh]">
                     <table class="w-full text-left border-collapse text-xs min-w-custom">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
                                 <th class="p-2 border-r border-slate-200 w-32">
                                     <div class="flex justify-between items-center"><span>Code</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right bg-indigo-50 w-28">
-                                    <div class="flex justify-between items-center"><span>System</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
+                                    <div class="flex justify-between items-center">
+                                        <span>System</span> 
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer">
+                                            <i class="fa-solid fa-caret-up hover:text-indigo-600" onclick="sortStock('asc')"></i>
+                                            <i class="fa-solid fa-caret-down hover:text-indigo-600" onclick="sortStock('desc')"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200">
                                     <div class="flex justify-between items-center"><span>Description</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right bg-emerald-50 w-28">
                                     <div class="flex justify-between items-center"><span>Fresh</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right bg-amber-50 w-24">
                                     <div class="flex justify-between items-center"><span>Damage</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right bg-orange-50 w-24">
                                     <div class="flex justify-between items-center"><span>Expiry</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">
                                     <div class="flex justify-between items-center"><span>Total Phy</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
                                 </th>
                                 <th class="p-2 text-right font-bold bg-slate-100 w-20">
                                     <div class="flex justify-between items-center"><span>Diff</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterLiveTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -207,47 +199,53 @@
                             <tr>
                                 <th class="p-2 border-r border-slate-200 w-16">
                                     <div class="flex justify-between items-center"><span>Plant</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 w-32">
                                     <div class="flex justify-between items-center"><span>Code</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200">
                                     <div class="flex justify-between items-center"><span>Description</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-24">
                                     <div class="flex justify-between items-center"><span>Sp</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-28">
-                                    <div class="flex justify-between items-center"><span>System</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
+                                    <div class="flex justify-between items-center">
+                                        <span>System</span> 
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer">
+                                            <i class="fa-solid fa-caret-up hover:text-emerald-600" onclick="sortStock('asc')"></i>
+                                            <i class="fa-solid fa-caret-down hover:text-emerald-600" onclick="sortStock('desc')"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-24">
                                     <div class="flex justify-between items-center"><span>Fresh</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-24">
                                     <div class="flex justify-between items-center"><span>Damage</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-24">
                                     <div class="flex justify-between items-center"><span>Expiry</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-28">
                                     <div class="flex justify-between items-center"><span>Total</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="8"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="8"></div>
                                 </th>
                                 <th class="p-2 border-r border-slate-200 text-right w-24">
                                     <div class="flex justify-between items-center"><span>Diff</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="9"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="9"></div>
                                 </th>
                                 <th class="p-2 text-right w-32">
                                     <div class="flex justify-between items-center"><span>Amount</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i></div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterDownloadTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="10"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="10"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -411,6 +409,18 @@
             renderTables();
         }
 
+        function sortStock(order) {
+            processedData.sort((a, b) => {
+                if (order === 'asc') {
+                    return a.unrestrictedStock - b.unrestrictedStock;
+                } else {
+                    return b.unrestrictedStock - a.unrestrictedStock;
+                }
+            });
+            renderTables();
+            filterTable();
+        }
+
         function handleBulkPreview(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -502,34 +512,12 @@
             switchTab('live');
         }
 
-        function sortTableData() {
-            const sortBy = document.getElementById('sortSelect').value;
-            sortDataArray(sortBy);
-            renderTables();
-            filterLiveTable();
-            filterDownloadTable();
-        }
-
         function sortDataArray(criteria) {
             processedData.sort((a, b) => {
-                if (criteria === 'code_asc') {
-                    return a.materialCode.localeCompare(b.materialCode, undefined, {numeric: true});
-                } else if (criteria === 'code_desc') {
-                    return b.materialCode.localeCompare(a.materialCode, undefined, {numeric: true});
-                } else if (criteria === 'name_asc') {
-                    return a.materialDescription.localeCompare(b.materialDescription);
-                } else if (criteria === 'name_desc') {
-                    return b.materialDescription.localeCompare(a.materialDescription);
-                } else if (criteria === 'stock_high') {
-                    return b.unrestrictedStock - a.unrestrictedStock;
-                } else if (criteria === 'stock_low') {
-                    return a.unrestrictedStock - b.unrestrictedStock;
-                } else {
-                    if (a.materialGroup !== b.materialGroup) {
-                        return a.materialGroup.localeCompare(b.materialGroup);
-                    }
-                    return a.materialDescription.localeCompare(b.materialDescription);
+                if (a.materialGroup !== b.materialGroup) {
+                    return a.materialGroup.localeCompare(b.materialGroup);
                 }
+                return a.materialDescription.localeCompare(b.materialDescription);
             });
         }
 
@@ -597,6 +585,7 @@
             renderLiveTable();
             renderMobileCards();
             renderDownloadTable();
+            filterTable();
         }
 
         function parseVal(val) {
@@ -639,13 +628,13 @@
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-indigo-50/50 cell-sys">${item.unrestrictedStock}</td>
                     <td class="p-2.5 border-r border-slate-200 text-slate-800 cell-desc max-w-sm truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-fresh" data-val="${fresh}">
+                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-fresh">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-damage" data-val="${damage}">
+                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-damage">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry" data-val="${expiry}">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy !== '' ? totalPhy : '-'}</td>
                     <td class="p-2.5 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
@@ -679,7 +668,7 @@
                             <span class="font-mono font-bold text-xs text-indigo-600 cell-code">${item.materialCode}</span>
                             <h4 class="text-xs font-semibold text-slate-800 cell-desc mt-0.5">${item.materialDescription}</h4>
                         </div>
-                        <span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold">Sys: ${item.unrestrictedStock}</span>
+                        <span class="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold cell-sys">Sys: ${item.unrestrictedStock}</span>
                     </div>
                     <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100">
                         <div>
@@ -765,9 +754,6 @@
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
 
-                row.querySelector('.cell-fresh').setAttribute('data-val', item.freshQty);
-                row.querySelector('.cell-damage').setAttribute('data-val', item.damageQty);
-                row.querySelector('.cell-expiry').setAttribute('data-val', item.expiryQty);
                 row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
                 const diffCell = row.querySelector('.live-diff-qty');
                 diffCell.textContent = diffQty !== '' ? diffQty : '-';
@@ -778,10 +764,11 @@
             renderDownloadTable();
         }
 
-        function filterLiveTable() {
+        function filterTable() {
             const globalQuery = document.getElementById('globalSearchInput').value.toLowerCase();
-            const filterInputs = document.querySelectorAll('.live-col-filter');
             
+            // Filter Live Table
+            const liveFilters = document.querySelectorAll('.live-col-filter');
             document.querySelectorAll('#liveTableBody tr.live-row').forEach(row => {
                 const code = row.querySelector('.cell-code').textContent.toLowerCase();
                 const sys = row.querySelector('.cell-sys').textContent.toLowerCase();
@@ -795,7 +782,7 @@
                 const rowValues = [code, sys, desc, fresh, damage, expiry, total, diff];
 
                 let matchesAll = true;
-                filterInputs.forEach(input => {
+                liveFilters.forEach(input => {
                     const colIdx = parseInt(input.getAttribute('data-col'));
                     const query = input.value.toLowerCase().trim();
                     if (query !== '' && !rowValues[colIdx].includes(query)) {
@@ -806,12 +793,9 @@
                 const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
                 row.style.display = (matchGlobal && matchesAll) ? '' : 'none';
             });
-        }
 
-        function filterDownloadTable() {
-            const globalQuery = document.getElementById('globalSearchInput').value.toLowerCase();
-            const filterInputs = document.querySelectorAll('.dl-col-filter');
-
+            // Filter Download Table
+            const dlFilters = document.querySelectorAll('.dl-col-filter');
             document.querySelectorAll('#downloadTableBody tr.dl-row').forEach(row => {
                 const plant = row.querySelector('.dl-plant').textContent.toLowerCase();
                 const code = row.querySelector('.dl-code').textContent.toLowerCase();
@@ -828,7 +812,7 @@
                 const rowValues = [plant, code, desc, sp, sys, fresh, damage, expiry, total, diff, amt];
 
                 let matchesAll = true;
-                filterInputs.forEach(input => {
+                dlFilters.forEach(input => {
                     const colIdx = parseInt(input.getAttribute('data-col'));
                     const query = input.value.toLowerCase().trim();
                     if (query !== '' && !rowValues[colIdx].includes(query)) {
@@ -839,11 +823,6 @@
                 const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
                 row.style.display = (matchGlobal && matchesAll) ? '' : 'none';
             });
-        }
-
-        function filterTable() {
-            filterLiveTable();
-            filterDownloadTable();
         }
 
         function resetPortal() {

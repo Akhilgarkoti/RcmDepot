@@ -35,18 +35,29 @@
                 </div>
             </div>
 
-            <!-- Global Search & Depot Info -->
+            <!-- Global Search, Depot Info, Back to Depot & Logout -->
             <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-64">
+                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-56">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400">
                         <i class="fa-solid fa-search text-xs"></i>
                     </span>
                     <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
                 </div>
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-[11px] px-2.5 py-1 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
+                
+                <!-- Back to Depot Portal Link -->
+                <a href="depot.html" class="px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Depot Portal
+                </a>
+
                 <button onclick="resetPortal()" class="hidden id-reset-btn px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap">
                     <i class="fa-solid fa-rotate-left mr-1"></i> Reset
                 </button>
+
+                <!-- Logout Button Added -->
+                <a href="/" onclick="sessionStorage.clear()" class="px-2.5 py-1 bg-rose-900 hover:bg-rose-800 text-white text-[11px] rounded transition border border-rose-700 whitespace-nowrap flex items-center">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+                </a>
             </div>
         </div>
     </header>

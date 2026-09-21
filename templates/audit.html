@@ -24,24 +24,24 @@
 
     <!-- Header -->
     <header class="bg-indigo-900 text-white shadow-md">
-        <div class="max-w-full px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
                 <div class="bg-indigo-700 p-2.5 rounded-lg">
                     <i class="fa-solid fa-boxes-stacked text-2xl text-amber-400"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-wide">RCM Consumer Products - Stock Audit Portal</h1>
+                    <h1 class="text-xl font-bold tracking-wide">RCM Stock Audit Portal</h1>
                     <p class="text-xs text-indigo-200">Multi-Depot Inventory & Audit Management</p>
                 </div>
             </div>
 
             <!-- Global Search & Depot Info -->
             <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
-                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-72">
+                <div id="globalSearchWrapper" class="hidden relative w-full sm:w-64">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                         <i class="fa-solid fa-search"></i>
                     </span>
-                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search Code or Desc..." class="w-full pl-10 pr-4 py-1.5 border border-indigo-700 rounded-lg text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-amber-400">
+                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-9 pr-3 py-1.5 border border-indigo-700 rounded-lg text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-amber-400">
                 </div>
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-xs px-3 py-1.5 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
                 <button onclick="resetPortal()" class="hidden id-reset-btn px-3 py-1.5 bg-indigo-800 hover:bg-indigo-700 text-white text-xs rounded-lg transition border border-indigo-600 whitespace-nowrap">
@@ -52,7 +52,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="max-w-full px-4 sm:px-6 py-6">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
 
         <!-- Initial Upload Section -->
         <div id="uploadSection" class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center max-w-xl mx-auto transition-all hover:border-indigo-300 mt-10">
@@ -71,23 +71,35 @@
         <!-- Dashboard Section (Hidden initially) -->
         <div id="dashboardSection" class="hidden space-y-6">
             
-            <!-- Mode Selection & Filters Bar -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col lg:flex-row justify-between items-center gap-4">
-                <div class="flex space-x-2 w-full lg:w-auto">
-                    <button onclick="switchTab('live')" id="tabLiveBtn" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm">
+            <!-- Summary Dashboard Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium uppercase">Total Items</p>
+                    <p id="sumTotalItems" class="text-xl font-bold text-indigo-600 mt-1">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium uppercase">System Stock</p>
+                    <p id="sumSysStock" class="text-xl font-bold text-slate-700 mt-1">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium uppercase">Physical Stock</p>
+                    <p id="sumPhyStock" class="text-xl font-bold text-emerald-600 mt-1">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                    <p class="text-xs text-slate-500 font-medium uppercase">Discrepancy / Diff</p>
+                    <p id="sumDiffStock" class="text-xl font-bold text-rose-600 mt-1">0</p>
+                </div>
+            </div>
+
+            <!-- Mode Selection Tabs -->
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
+                <div class="flex space-x-2 w-full sm:w-auto">
+                    <button onclick="switchTab('live')" id="tabLiveBtn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm">
                         <i class="fa-solid fa-pen-to-square mr-2"></i> 1. Live Web Entry Mode
                     </button>
-                    <button onclick="switchTab('download')" id="tabDownloadBtn" class="px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    <button onclick="switchTab('download')" id="tabDownloadBtn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
                         <i class="fa-solid fa-file-arrow-down mr-2"></i> 2. Download Report Mode
                     </button>
-                </div>
-
-                <!-- Material Group Filter Dropdown -->
-                <div class="flex items-center space-x-2 w-full lg:w-auto">
-                    <span class="text-xs font-bold text-slate-600 whitespace-nowrap"><i class="fa-solid fa-filter mr-1 text-indigo-600"></i> Material Group:</span>
-                    <select id="materialGroupFilter" onchange="filterTable()" class="px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full lg:w-60">
-                        <option value="ALL">All Material Groups</option>
-                    </select>
                 </div>
             </div>
 
@@ -98,14 +110,13 @@
                         <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-table-cells mr-2 text-indigo-600"></i> Live Stock Entry Portal</h3>
                         <p class="text-xs text-slate-500 mt-0.5">Press <b>Enter</b> after typing quantity to jump directly to the next product below.</p>
                     </div>
-                    <span class="text-xs bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full font-bold">Total Items: <span id="liveCount">0</span></span>
                 </div>
                 
                 <div class="table-container overflow-x-auto max-h-[70vh]">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
-                                <th class="p-3 border-r border-slate-200 w-44">
+                                <th class="p-3 border-r border-slate-200 w-40">
                                     Material Code
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Code..." class="col-filter-code w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
@@ -113,12 +124,12 @@
                                     Material Description
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter Desc..." class="col-filter-desc w-full px-1.5 py-1 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white"></div>
                                 </th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50 w-32">Unrestricted Stock</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50 w-32">Physical (Fresh Qty)</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50 w-28">DAMAGE QTY</th>
-                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50 w-28">EXPIRY QTY</th>
-                                <th class="p-3 border-r border-slate-200 text-right font-bold bg-slate-100 w-28">TOTAL PHYSICAL</th>
-                                <th class="p-3 text-right font-bold bg-slate-100 w-24">DIFF QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-indigo-50 w-28">Unrestricted Stock</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-emerald-50 w-28">Physical (Fresh Qty)</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-amber-50 w-24">DAMAGE QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right bg-orange-50 w-24">EXPIRY QTY</th>
+                                <th class="p-3 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">TOTAL PHYSICAL</th>
+                                <th class="p-3 text-right font-bold bg-slate-100 w-20">DIFF QTY</th>
                             </tr>
                         </thead>
                         <tbody id="liveTableBody" class="divide-y divide-slate-200">
@@ -133,11 +144,16 @@
                 <div class="p-4 bg-emerald-50/50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Full Audit Report Preview & Download</h3>
-                        <p class="text-xs text-slate-500 mt-0.5">Preview generated data. Click download to get the formatted Excel sheet with embedded formulas.</p>
+                        <p class="text-xs text-slate-500 mt-0.5">Choose your required format to download formatted Excel report with embedded formulas.</p>
                     </div>
-                    <button onclick="downloadAuditReport()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg shadow-sm transition flex items-center whitespace-nowrap">
-                        <i class="fa-solid fa-file-arrow-down mr-2 text-sm"></i> Download Full Formatted Excel Report
-                    </button>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="downloadAuditReport('company')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg shadow-sm transition flex items-center whitespace-nowrap">
+                            <i class="fa-solid fa-file-arrow-down mr-1.5"></i> Download Company Format
+                        </button>
+                        <button onclick="downloadAuditReport('depot')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg shadow-sm transition flex items-center whitespace-nowrap">
+                            <i class="fa-solid fa-file-arrow-down mr-1.5"></i> Download Depot Format
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="table-container overflow-x-auto max-h-[70vh]">
@@ -145,10 +161,10 @@
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm">
                             <tr>
                                 <th class="p-3 border-r border-slate-200 w-20">Plant</th>
-                                <th class="p-3 border-r border-slate-200 w-44">Material Code</th>
+                                <th class="p-3 border-r border-slate-200 w-40">Material Code</th>
                                 <th class="p-3 border-r border-slate-200">Material Description</th>
                                 <th class="p-3 border-r border-slate-200 text-right w-24">Sp</th>
-                                <th class="p-3 border-r border-slate-200 text-right w-32">Unrestricted Stock</th>
+                                <th class="p-3 border-r border-slate-200 text-right w-28">Unrestricted Stock</th>
                                 <th class="p-3 border-r border-slate-200 text-right w-24">Fresh Qty</th>
                                 <th class="p-3 border-r border-slate-200 text-right w-24">Damage Qty</th>
                                 <th class="p-3 border-r border-slate-200 text-right w-24">Expiry Qty</th>
@@ -206,7 +222,6 @@
 
         function processRawStockData(rows) {
             const groupedMap = new Map();
-            const groupSet = new Set();
 
             rows.forEach(row => {
                 let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
@@ -217,7 +232,6 @@
                 let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || '';
                 let group = row['Material Group'] || row['MaterialGroup'] || row['MATERIAL GROUP'] || 'GENERAL';
                 group = String(group).trim();
-                groupSet.add(group);
                 
                 let rawPrice = row['Material Price'] || row['Sp'] || row['SP'] || 0;
                 let price = 0;
@@ -270,26 +284,16 @@
                 return;
             }
 
-            // Populate Material Group Dropdown
-            const groupSelect = document.getElementById('materialGroupFilter');
-            groupSelect.innerHTML = '<option value="ALL">All Material Groups</option>';
-            Array.from(groupSet).sort().forEach(grp => {
-                const opt = document.createElement('option');
-                opt.value = grp;
-                opt.textContent = grp;
-                groupSelect.appendChild(opt);
-            });
-
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
             document.getElementById('globalSearchWrapper').classList.remove('hidden');
             document.querySelector('.id-reset-btn').classList.remove('hidden');
-            document.getElementById('liveCount').textContent = processedData.length;
             
             const depotBadge = document.getElementById('depotBadge');
             depotBadge.textContent = `Plant / Depot: ${processedData[0].plant}`;
             depotBadge.classList.remove('hidden');
 
+            updateSummaryCards();
             renderTables();
         }
 
@@ -301,16 +305,41 @@
             const downloadView = document.getElementById('downloadReportView');
 
             if (tab === 'live') {
-                liveBtn.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm";
-                downloadBtn.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+                liveBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm";
+                downloadBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
                 liveView.classList.remove('hidden');
                 downloadView.classList.add('hidden');
             } else {
-                downloadBtn.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-emerald-600 text-white shadow-sm";
-                liveBtn.className = "px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+                downloadBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-emerald-600 text-white shadow-sm";
+                liveBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
                 downloadView.classList.remove('hidden');
                 liveView.classList.add('hidden');
             }
+        }
+
+        function updateSummaryCards() {
+            let totalItems = processedData.length;
+            let sysStock = 0;
+            let phyStock = 0;
+            let diffCount = 0;
+
+            processedData.forEach(item => {
+                sysStock += item.unrestrictedStock;
+                let f = parseVal(item.freshQty);
+                let d = parseVal(item.damageQty);
+                let e = parseVal(item.expiryQty);
+                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
+                if (hasInput) {
+                    let total = f + d + e;
+                    phyStock += total;
+                    if (total !== item.unrestrictedStock) diffCount++;
+                }
+            });
+
+            document.getElementById('sumTotalItems').textContent = totalItems;
+            document.getElementById('sumSysStock').textContent = sysStock;
+            document.getElementById('sumPhyStock').textContent = phyStock;
+            document.getElementById('sumDiffStock').textContent = diffCount;
         }
 
         function renderTables() {
@@ -353,7 +382,6 @@
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 live-row";
-                tr.setAttribute('data-group', item.materialGroup);
                 tr.innerHTML = `
                     <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700 col-code">${item.materialCode}</td>
                     <td class="p-3 border-r border-slate-200 text-slate-800 col-desc">${item.materialDescription}</td>
@@ -390,7 +418,6 @@
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 dl-row";
-                tr.setAttribute('data-group', item.materialGroup);
                 tr.innerHTML = `
                     <td class="p-3 border-r border-slate-200 text-slate-600">${item.plant}</td>
                     <td class="p-3 border-r border-slate-200 font-mono font-semibold text-indigo-700 dl-code">${item.materialCode}</td>
@@ -443,42 +470,37 @@
             diffCell.textContent = diffQty !== '' ? diffQty : '-';
             diffCell.className = `p-3 text-right font-bold bg-slate-50 live-diff-qty ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
 
+            updateSummaryCards();
             renderDownloadTable();
         }
 
         function filterTable() {
-            const selectedGroup = document.getElementById('materialGroupFilter').value;
             const globalQuery = document.getElementById('globalSearchInput').value.toLowerCase();
-            
             const colCodeQuery = document.querySelector('.col-filter-code') ? document.querySelector('.col-filter-code').value.toLowerCase() : '';
             const colDescQuery = document.querySelector('.col-filter-desc') ? document.querySelector('.col-filter-desc').value.toLowerCase() : '';
 
             // Filter Live Table
             document.querySelectorAll('#liveTableBody tr.live-row').forEach(row => {
-                const group = row.getAttribute('data-group');
                 const code = row.querySelector('.col-code').textContent.toLowerCase();
                 const desc = row.querySelector('.col-desc').textContent.toLowerCase();
 
-                const matchGroup = (selectedGroup === 'ALL' || group === selectedGroup);
                 const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
                 const matchCode = (colCodeQuery === '' || code.includes(colCodeQuery));
                 const matchDesc = (colDescQuery === '' || desc.includes(colDescQuery));
 
-                row.style.display = (matchGroup && matchGlobal && matchCode && matchDesc) ? '' : 'none';
+                row.style.display = (matchGlobal && matchCode && matchDesc) ? '' : 'none';
             });
 
             // Filter Download Table
             document.querySelectorAll('#downloadTableBody tr.dl-row').forEach(row => {
-                const group = row.getAttribute('data-group');
                 const code = row.querySelector('.dl-code').textContent.toLowerCase();
                 const desc = row.querySelector('.dl-desc').textContent.toLowerCase();
 
-                const matchGroup = (selectedGroup === 'ALL' || group === selectedGroup);
                 const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
                 const matchCode = (colCodeQuery === '' || code.includes(colCodeQuery));
                 const matchDesc = (colDescQuery === '' || desc.includes(colDescQuery));
 
-                row.style.display = (matchGroup && matchGlobal && matchCode && matchDesc) ? '' : 'none';
+                row.style.display = (matchGlobal && matchCode && matchDesc) ? '' : 'none';
             });
         }
 
@@ -496,48 +518,80 @@
             }
         }
 
-        function downloadAuditReport() {
+        function downloadAuditReport(formatType) {
             if (processedData.length === 0) {
                 alert('No data available to export.');
                 return;
             }
 
-            const headers = [
-                "Plant", "Material Code", "Material Description", "Sp", "Unrestricted Stock",
-                "Physcial (Fresh Qty)", "DAMAGE QTY", "EXPIRY QTY", "TOTAL PHYSCAL", "DIFF QTY",
-                "Unrt. Amt", "Physcial (Fresh Qty) Amt", "Physical (Damage) Amt", "Physical Expiry Amt",
-                "Total Physical Amt", "Diff Amt", "Remark"
-            ];
+            let headers, aoa, wsCols;
 
-            const aoa = [headers];
+            if (formatType === 'depot') {
+                // Depot Format Columns
+                headers = ["Plant", "Material Code", "Material Price", "Unrestricted Stock", "Material Description", "Phy Fresh", "Phy Damage", "Phy Expiry", "Total Phy", "Diff", "Diff Amt", "Remark"];
+                aoa = [headers];
 
-            processedData.forEach((item, idx) => {
-                const rowNum = idx + 2;
-                
-                const freshVal = item.freshQty !== '' ? parseVal(item.freshQty) : null;
-                const damageVal = item.damageQty !== '' ? parseVal(item.damageQty) : null;
-                const expiryVal = item.expiryQty !== '' ? parseVal(item.expiryQty) : null;
+                processedData.forEach((item, idx) => {
+                    const rowNum = idx + 2;
+                    const freshVal = item.freshQty !== '' ? parseVal(item.freshQty) : null;
+                    const damageVal = item.damageQty !== '' ? parseVal(item.damageQty) : null;
+                    const expiryVal = item.expiryQty !== '' ? parseVal(item.expiryQty) : null;
 
-                aoa.push([
-                    item.plant,
-                    { v: item.materialCode, t: 's' },
-                    item.materialDescription,
-                    item.sp,
-                    item.unrestrictedStock,
-                    freshVal,
-                    damageVal,
-                    expiryVal,
-                    { f: `SUM(F${rowNum}:H${rowNum})` },
-                    { f: `I${rowNum}-E${rowNum}` },
-                    { f: `E${rowNum}*D${rowNum}` },
-                    { f: `F${rowNum}*D${rowNum}` },
-                    { f: `G${rowNum}*D${rowNum}` },
-                    { f: `H${rowNum}*D${rowNum}` },
-                    { f: `SUM(L${rowNum}:N${rowNum})` },
-                    { f: `O${rowNum}-K${rowNum}` },
-                    item.remark || ''
-                ]);
-            });
+                    aoa.push([
+                        item.plant,
+                        { v: item.materialCode, t: 's' },
+                        item.sp,
+                        item.unrestrictedStock,
+                        item.materialDescription,
+                        freshVal,
+                        damageVal,
+                        expiryVal,
+                        { f: `SUM(F${rowNum}:H${rowNum})` },
+                        { f: `I${rowNum}-D${rowNum}` },
+                        { f: `J${rowNum}*C${rowNum}` },
+                        item.remark || ''
+                    ]);
+                });
+                wsCols = [{wch: 8}, {wch: 18}, {wch: 12}, {wch: 18}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 10}, {wch: 15}, {wch: 20}];
+
+            } else {
+                // Company Format Columns (Default)
+                headers = [
+                    "Plant", "Material Code", "Material Description", "Sp", "Unrestricted Stock",
+                    "Physcial (Fresh Qty)", "DAMAGE QTY", "EXPIRY QTY", "TOTAL PHYSCAL", "DIFF QTY",
+                    "Unrt. Amt", "Physcial (Fresh Qty) Amt", "Physical (Damage) Amt", "Physical Expiry Amt",
+                    "Total Physical Amt", "Diff Amt", "Remark"
+                ];
+                aoa = [headers];
+
+                processedData.forEach((item, idx) => {
+                    const rowNum = idx + 2;
+                    const freshVal = item.freshQty !== '' ? parseVal(item.freshQty) : null;
+                    const damageVal = item.damageQty !== '' ? parseVal(item.damageQty) : null;
+                    const expiryVal = item.expiryQty !== '' ? parseVal(item.expiryQty) : null;
+
+                    aoa.push([
+                        item.plant,
+                        { v: item.materialCode, t: 's' },
+                        item.materialDescription,
+                        item.sp,
+                        item.unrestrictedStock,
+                        freshVal,
+                        damageVal,
+                        expiryVal,
+                        { f: `SUM(F${rowNum}:H${rowNum})` },
+                        { f: `I${rowNum}-E${rowNum}` },
+                        { f: `E${rowNum}*D${rowNum}` },
+                        { f: `F${rowNum}*D${rowNum}` },
+                        { f: `G${rowNum}*D${rowNum}` },
+                        { f: `H${rowNum}*D${rowNum}` },
+                        { f: `SUM(L${rowNum}:N${rowNum})` },
+                        { f: `O${rowNum}-K${rowNum}` },
+                        item.remark || ''
+                    ]);
+                });
+                wsCols = [{wch: 8}, {wch: 18}, {wch: 35}, {wch: 10}, {wch: 15}, {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 18}, {wch: 12}, {wch: 20}];
+            }
 
             const ws = XLSX.utils.aoa_to_sheet(aoa);
 
@@ -550,7 +604,7 @@
 
             const headerStyle = {
                 font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } },
+                fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
                 alignment: { horizontal: "center", vertical: "center" },
                 border: thinBorder
             };
@@ -566,7 +620,6 @@
                     if (!ws[cellAddress]) {
                         ws[cellAddress] = { v: '', t: 's' };
                     }
-                    
                     if (R === 0) {
                         ws[cellAddress].s = headerStyle;
                     } else {
@@ -576,19 +629,14 @@
             }
 
             ws['!freeze'] = { xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft', state: 'frozen' };
-
-            ws['!cols'] = [
-                {wch: 8}, {wch: 18}, {wch: 35}, {wch: 10}, {wch: 15},
-                {wch: 15}, {wch: 12}, {wch: 12}, {wch: 15}, {wch: 12},
-                {wch: 12}, {wch: 15}, {wch: 15}, {wch: 15}, {wch: 18}, {wch: 12}, {wch: 20}
-            ];
+            ws['!cols'] = wsCols;
 
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "MASTER");
 
             const dateStr = new Date().toISOString().slice(0, 10);
             const plantName = processedData[0].plant || 'AUDIT';
-            const filename = `SELF AUDIT REPORT ${dateStr} (${plantName}).xlsx`;
+            const filename = `SELF AUDIT REPORT ${dateStr} (${plantName}) - ${formatType.toUpperCase()}.xlsx`;
 
             XLSX.writeFile(wb, filename);
         }

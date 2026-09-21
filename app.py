@@ -1,14 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, session
+from flask import Flask, render_template, redirect, url_for, session, request, jsonify
 from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = "rcm_depot_secure_app_key"
 
-# सुरक्षा के लिए डेकोरेटर (Login Protection Decorator)
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # चेक करता है कि सेशन में यूजर लॉग्ड-इन है या नहीं
         if 'user' not in session:
             return redirect(url_for('home'))
         return f(*args, **kwargs)
@@ -17,6 +15,15 @@ def login_required(f):
 @app.route('/')
 def home():
     return render_template('index.html')
+
+# Yahan apna login validate karne ka route banayein (Jaise aapne pehle Google Apps Script ya DB se connect kiya ho)
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.json
+    user_code = data.get('username')
+    # Yahan password/user check karne ke baad agar details sahi hain toh:
+    session['user'] = user_code  # Yeh session set karna bahut zaroori hai
+    return jsonify({"success": True})
 
 @app.route('/admin')
 @login_required
@@ -40,7 +47,7 @@ def audit():
 
 @app.route('/logout')
 def logout():
-    session.clear()  # लॉगआउट होने पर सर्वर से पूरा सेशन साफ़ हो जाएगा
+    session.clear()
     return redirect(url_for('home'))
 
 if __name__ == '__main__':

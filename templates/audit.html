@@ -41,7 +41,7 @@
                     <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 text-slate-400">
                         <i class="fa-solid fa-search text-xs"></i>
                     </span>
-                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
+                    <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search (Code or Desc)..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
                 </div>
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-[11px] px-2.5 py-1 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
                 <button onclick="resetPortal()" class="hidden id-reset-btn px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap">
@@ -258,6 +258,19 @@
 
             <!-- TAB 3: BULK EXCEL UPLOAD & PREVIEW -->
             <div id="bulkUploadView" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+                
+                <!-- Instruction Box for Required Columns -->
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 space-y-1 shadow-sm">
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1 text-amber-600"></i> Bulk Upload Instructions & Column Matching Guide:</p>
+                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system automatically match kar sake:</p>
+                    <ul class="list-disc list-inside text-amber-900 font-semibold pl-1">
+                        <li><b>Material Code</b> (Mandatory for matching items)</li>
+                        <li><b>Physcial (Fresh Qty)</b> / <b>Phy Fresh</b></li>
+                        <li><b>DAMAGE QTY</b> / <b>Phy Damage</b></li>
+                        <li><b>EXPIRY QTY</b> / <b>Phy Expiry</b></li>
+                    </ul>
+                </div>
+
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
                     <div>
                         <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i> Bulk Upload Physical Quantities</h3>
@@ -275,7 +288,7 @@
                 </div>
 
                 <!-- Preview Table Container -->
-                <div class="table-container overflow-x-auto max-h-[55vh] border border-slate-200 rounded-lg">
+                <div class="table-container overflow-x-auto max-h-[50vh] border border-slate-200 rounded-lg">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200">
                             <tr>
@@ -418,7 +431,6 @@
                 }
             });
             renderTables();
-            filterTable();
         }
 
         function handleBulkPreview(event) {
@@ -754,6 +766,9 @@
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
 
+                row.querySelector('.cell-fresh').value = item.freshQty;
+                row.querySelector('.cell-damage').value = item.damageQty;
+                row.querySelector('.cell-expiry').value = item.expiryQty;
                 row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
                 const diffCell = row.querySelector('.live-diff-qty');
                 diffCell.textContent = diffQty !== '' ? diffQty : '-';
@@ -762,6 +777,7 @@
 
             updateSummaryCards();
             renderDownloadTable();
+            filterTable();
         }
 
         function filterTable() {

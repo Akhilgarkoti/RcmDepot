@@ -57,7 +57,6 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Hidden Admin Trigger Zone */
         .admin-trigger-area {
             cursor: pointer;
             user-select: none;
@@ -121,19 +120,7 @@
             transition: all 0.2s ease;
         }
 
-        .form-control-custom {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            background: #f8fafc;
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-dark);
-            font-size: 0.95rem;
-            font-weight: 600;
-            outline: none;
-        }
-
-        .input-box input:focus, .form-control-custom:focus {
+        .input-box input:focus {
             background: #ffffff;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
@@ -175,7 +162,7 @@
         .btn-submit:active { transform: scale(0.98); }
         .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
 
-        /* Self Audit Option Button */
+        /* Direct Redirect Button */
         .btn-audit-trigger {
             width: 100%;
             padding: 0.8rem;
@@ -195,41 +182,6 @@
         }
         .btn-audit-trigger:hover {
             background: #eef2ff;
-        }
-
-        /* Modal Overlay & Card */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-        }
-
-        .modal-card {
-            background: #fff;
-            width: 100%;
-            max-width: 420px;
-            border-radius: var(--radius-box);
-            padding: 2rem;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.2rem; right: 1.2rem;
-            background: #f1f5f9;
-            border: none;
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-muted);
         }
 
         .status-msg {
@@ -294,42 +246,10 @@
             <div id="loginMsg" class="status-msg"></div>
         </form>
 
-        <!-- New Option Added -->
-        <button type="button" class="btn-audit-trigger" onclick="openAuditModal()">
+        <!-- Redirects to audit.html -->
+        <button type="button" class="btn-audit-trigger" onclick="window.location.href='audit.html'">
             <i class="fas fa-clipboard-check"></i> Create Your Self Audit Report
         </button>
-    </div>
-
-    <!-- Self Audit Modal Form -->
-    <div id="auditModal" class="modal-overlay">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeAuditModal()">&times;</button>
-            <h3 style="margin-bottom: 0.3rem; font-size: 1.25rem; font-weight: 800; color: #0f172a;">Self Audit Report</h3>
-            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1.2rem;">बिना लॉगिन किए अपनी रिपोर्ट सीधे सबमिट करें।</p>
-
-            <form id="auditForm" onsubmit="submitAuditDirect(event)">
-                <div class="form-group">
-                    <label for="auditDepot">Depot Code / Name</label>
-                    <input type="text" id="auditDepot" required class="form-control-custom" placeholder="डिपो कोड दर्ज करें">
-                </div>
-
-                <div class="form-group">
-                    <label for="auditType">Audit Type</label>
-                    <select id="auditType" class="form-control-custom">
-                        <option value="Stock Verification">Stock Verification</option>
-                        <option value="Daily Operations">Daily Operations</option>
-                        <option value="Compliance & Accounts">Compliance & Accounts</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="auditRemarks">Remarks / Notes</label>
-                    <textarea id="auditRemarks" class="form-control-custom" rows="3" placeholder="विवरण यहाँ लिखें..."></textarea>
-                </div>
-
-                <button type="submit" id="auditSubmitBtn" class="btn-submit">Submit Report</button>
-            </form>
-        </div>
     </div>
 
     <div class="dev-footer">
@@ -342,7 +262,6 @@
         let clickCount = 0;
         let clickTimer = null;
 
-        // Secret Admin Trigger Logic
         function handleSecretAdminClick() {
             clickCount++;
             if (clickCount === 1) {
@@ -445,7 +364,6 @@
 
                     btn.textContent = "Success! Redirecting...";
 
-                    // Fixed redirection paths with .html to prevent 404 errors on Vercel
                     if (role === "depot") window.location.href = "depot.html";
                     else if (role === "staff") window.location.href = "staff.html";
                     else window.location.href = "admin.html";
@@ -462,50 +380,6 @@
                 btn.textContent = currentRole === "admin" ? "Login to Master Admin" : "Login to Portal";
             }
         });
-
-        // Self Audit Functions
-        function openAuditModal() {
-            document.getElementById('auditModal').style.display = 'flex';
-        }
-
-        function closeAuditModal() {
-            document.getElementById('auditModal').style.display = 'none';
-        }
-
-        async function submitAuditDirect(e) {
-            e.preventDefault();
-            const depot = document.getElementById('auditDepot').value.trim();
-            const type = document.getElementById('auditType').value;
-            const notes = document.getElementById('auditRemarks').value.trim();
-
-            if (!depot || !notes) {
-                alert("कृपया डिपो कोड और विवरण भरें।");
-                return;
-            }
-
-            const btn = document.getElementById('auditSubmitBtn');
-            btn.disabled = true;
-            btn.textContent = "Submitting...";
-
-            try {
-                const url = `${SCRIPT_URL}?action=saveAudit&username=DirectUser&depot=${encodeURIComponent(depot)}&type=${encodeURIComponent(type)}&notes=${encodeURIComponent(notes)}`;
-                const res = await jsonpRequest(url);
-
-                if (res && res.success) {
-                    alert("✅ Self Audit Report सफलतापूर्वक सबमिट हो गई है!");
-                    document.getElementById('auditForm').reset();
-                    closeAuditModal();
-                } else {
-                    alert("⚠️ " + (res.message || "डेटा सेव करने में विफल।"));
-                }
-            } catch (err) {
-                console.error(err);
-                alert("⚠️ सर्वर से कनेक्ट करने में त्रुटि हुई।");
-            } finally {
-                btn.disabled = false;
-                btn.textContent = "Submit Report";
-            }
-        }
     </script>
 </body>
 </html>

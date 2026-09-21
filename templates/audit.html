@@ -884,7 +884,7 @@
                         item.expiryQty !== '' ? expiryCell : '',
                         { f: `SUM(F${rowNum}:H${rowNum})` },
                         { f: `I${rowNum}-D${rowNum}` },
-                        { f: `J${rowNum}*C${rowNum}` },
+                        { f: `IFERROR(J${rowNum}*C${rowNum}, 0)` },
                         item.remark || ''
                     ]);
                 });
@@ -916,10 +916,10 @@
                         item.expiryQty !== '' ? expiryCell : '',
                         { f: `SUM(F${rowNum}:H${rowNum})` },
                         { f: `I${rowNum}-E${rowNum}` },
-                        { f: `E${rowNum}*D${rowNum}` },
-                        { f: `IF(ISBLANK(F${rowNum}), 0, F${rowNum}*D${rowNum})` },
-                        { f: `IF(ISBLANK(G${rowNum}), 0, G${rowNum}*D${rowNum})` },
-                        { f: `IF(ISBLANK(H${rowNum}), 0, H${rowNum}*D${rowNum})` },
+                        { f: `IFERROR(E${rowNum}*D${rowNum}, 0)` },
+                        { f: `IFERROR(F${rowNum}*D${rowNum}, 0)` },
+                        { f: `IFERROR(G${rowNum}*D${rowNum}, 0)` },
+                        { f: `IFERROR(H${rowNum}*D${rowNum}, 0)` },
                         { f: `SUM(L${rowNum}:N${rowNum})` },
                         { f: `O${rowNum}-K${rowNum}` },
                         item.remark || ''

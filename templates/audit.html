@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RCM Portal - Self Audit</title>
+    <title>RCM Depot Management Portal - Self Audit</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,6 @@
     <style>
         :root {
             --primary: #4f46e5;
-            --primary-dark: #4338ca;
             --card-bg: rgba(255, 255, 255, 0.96);
             --text-dark: #1e293b;
             --text-muted: #64748b;
@@ -36,14 +35,15 @@
             color: var(--text-dark);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 1.2rem;
         }
 
-        .portal-container {
+        .auth-card {
             width: 100%;
-            max-width: 600px;
+            max-width: 420px;
             background: var(--card-bg);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -52,20 +52,20 @@
             box-shadow: var(--shadow-card);
         }
 
-        .portal-header {
+        .auth-header {
             text-align: center;
             margin-bottom: 1.5rem;
         }
 
-        .portal-header h2 {
+        .auth-header h2 {
             font-size: 1.6rem;
             font-weight: 800;
             color: #0f172a;
         }
 
-        .portal-header h2 span { color: var(--primary); }
+        .auth-header h2 span { color: var(--primary); }
 
-        .portal-header p {
+        .auth-header p {
             font-size: 0.85rem;
             color: var(--text-muted);
             margin-top: 0.35rem;
@@ -117,29 +117,45 @@
         }
 
         .btn-submit:active { transform: scale(0.98); }
-        .btn-back {
-            display: inline-block;
-            margin-top: 1rem;
+        .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+        .back-link {
+            display: block;
             text-align: center;
-            width: 100%;
-            color: var(--primary);
+            margin-top: 1rem;
+            color: var(--text-muted);
             text-decoration: none;
+            font-size: 0.85rem;
             font-weight: 700;
-            font-size: 0.9rem;
         }
+        .back-link:hover { color: var(--primary); }
+
+        .dev-footer {
+            margin-top: 1.6rem;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+        .dev-footer strong { color: #ffffff; }
     </style>
 </head>
 <body>
 
-    <div class="portal-container">
-        <div class="portal-header">
-            <h2>Depot <span>Self Audit</span></h2>
-            <p>स्टॉक और ऑपरेशन्स की नियमित जांच रिपोर्ट</p>
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2>Self Audit <span>Report</span></h2>
+            <p>बिना लॉगिन किए अपनी रिपोर्ट सीधे सबमिट करें</p>
         </div>
 
-        <form id="selfAuditForm" onsubmit="submitSelfAuditData(event)">
+        <form id="auditForm" onsubmit="submitAuditDirect(event)">
             <div class="form-group">
-                <label for="auditType">ऑडिट प्रकार (Audit Type)</label>
+                <label for="auditDepot">Depot Code / Name</label>
+                <input type="text" id="auditDepot" required class="form-control" placeholder="डिपो कोड दर्ज करें">
+            </div>
+
+            <div class="form-group">
+                <label for="auditType">Audit Type</label>
                 <select id="auditType" class="form-control">
                     <option value="Stock Verification">Stock Verification</option>
                     <option value="Daily Operations">Daily Operations</option>
@@ -148,14 +164,18 @@
             </div>
 
             <div class="form-group">
-                <label for="auditNotes">ऑडिट विवरण / टिप्पणियाँ (Remarks)</label>
-                <textarea id="auditNotes" class="form-control" rows="4" placeholder="यहाँ ऑडिट से संबंधित विवरण लिखें..."></textarea>
+                <label for="auditRemarks">Remarks / Notes</label>
+                <textarea id="auditRemarks" class="form-control" rows="3" placeholder="विवरण यहाँ लिखें..."></textarea>
             </div>
 
-            <button type="submit" class="btn-submit">Submit Audit Record</button>
+            <button type="submit" id="auditSubmitBtn" class="btn-submit">Submit Report</button>
         </form>
 
-        <a href="depot.html" class="btn-back"><i class="fas fa-arrow-left"></i> Back to Depot Portal</a>
+        <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Login</a>
+    </div>
+
+    <div class="dev-footer">
+        Developed for <strong>Depot</strong>
     </div>
 
     <script>
@@ -170,31 +190,37 @@
             return JSON.parse(text);
         }
 
-        async function submitSelfAuditData(e) {
+        async function submitAuditDirect(e) {
             e.preventDefault();
-            const auditType = document.getElementById('auditType').value;
-            const auditNotes = document.getElementById('auditNotes').value.trim();
-            const username = sessionStorage.getItem("user") || "Unknown";
-            const depot = sessionStorage.getItem("depot") || "";
+            const depot = document.getElementById('auditDepot').value.trim();
+            const type = document.getElementById('auditType').value;
+            const notes = document.getElementById('auditRemarks').value.trim();
 
-            if (!auditNotes) {
-                alert("कृपया ऑडिट विवरण भरें।");
+            if (!depot || !notes) {
+                alert("कृपया डिपो कोड और विवरण भरें।");
                 return;
             }
 
+            const btn = document.getElementById('auditSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = "Submitting...";
+
             try {
-                const url = `${SCRIPT_URL}?action=saveAudit&username=${encodeURIComponent(username)}&depot=${encodeURIComponent(depot)}&type=${encodeURIComponent(auditType)}&notes=${encodeURIComponent(auditNotes)}`;
-                
+                const url = `${SCRIPT_URL}?action=saveAudit&username=DirectUser&depot=${encodeURIComponent(depot)}&type=${encodeURIComponent(type)}&notes=${encodeURIComponent(notes)}`;
                 const res = await jsonpRequest(url);
+
                 if (res && res.success) {
-                    alert("✅ Self Audit सफलतापूर्वक सबमिट हो गया है!");
-                    document.getElementById('selfAuditForm').reset();
+                    alert("✅ Self Audit Report सफलतापूर्वक सबमिट हो गई है!");
+                    document.getElementById('auditForm').reset();
                 } else {
                     alert("⚠️ " + (res.message || "डेटा सेव करने में विफल।"));
                 }
             } catch (err) {
                 console.error(err);
                 alert("⚠️ सर्वर से कनेक्ट करने में त्रुटि हुई।");
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Submit Report";
             }
         }
     </script>

@@ -60,7 +60,7 @@
                 <i class="fa-solid fa-cloud-arrow-up"></i>
             </div>
             <h2 class="text-lg font-bold text-slate-800 mb-1">Upload Stock Report (Excel)</h2>
-            <p class="text-sm text-slate-500 mb-6">Upload your raw stock report to proceed with Live Entry or Full Report Download.</p>
+            <p class="text-sm text-slate-500 mb-6">Upload your raw stock report to begin audit and live entry.</p>
             
             <label class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg cursor-pointer transition shadow-sm">
                 <i class="fa-solid fa-file-excel mr-2"></i> Browse Excel File
@@ -91,14 +91,17 @@
                 </div>
             </div>
 
-            <!-- Mode Selection Tabs -->
-            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center">
-                <div class="flex space-x-2 w-full sm:w-auto">
-                    <button onclick="switchTab('live')" id="tabLiveBtn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm">
-                        <i class="fa-solid fa-pen-to-square mr-2"></i> 1. Live Web Entry Mode
+            <!-- Mode Selection 3 Tabs -->
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-2 justify-between items-center">
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <button onclick="switchTab('live')" id="tabLiveBtn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-indigo-600 text-white shadow-sm">
+                        <i class="fa-solid fa-pen-to-square mr-1.5"></i> 1. Live Web Entry
                     </button>
-                    <button onclick="switchTab('download')" id="tabDownloadBtn" class="flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200">
-                        <i class="fa-solid fa-file-arrow-down mr-2"></i> 2. Download Report Mode
+                    <button onclick="switchTab('download')" id="tabDownloadBtn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-file-arrow-down mr-1.5"></i> 2. Download Report
+                    </button>
+                    <button onclick="switchTab('bulk')" id="tabBulkBtn" class="flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200">
+                        <i class="fa-solid fa-file-excel mr-1.5"></i> 3. Bulk Excel Upload
                     </button>
                 </div>
             </div>
@@ -178,6 +181,34 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <!-- TAB 3: BULK EXCEL UPLOAD VIEW -->
+            <div id="bulkUploadView" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-8 max-w-2xl mx-auto text-center space-y-6">
+                <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-1">Bulk Upload Physical Quantities (Excel)</h3>
+                    <p class="text-xs text-slate-500">Upload an Excel file containing physical stock audit counts to auto-fill quantities instantly.</p>
+                </div>
+
+                <!-- Instructions Box -->
+                <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-left text-xs text-amber-900 space-y-2">
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> Required Columns in Uploaded Excel File:</p>
+                    <ul class="list-disc list-inside space-y-1 text-amber-800">
+                        <li><b>Material Code</b> (Mandatory to match products)</li>
+                        <li><b>Physcial (Fresh Qty)</b> or <b>Phy Fresh</b></li>
+                        <li><b>DAMAGE QTY</b> or <b>Phy Damage</b></li>
+                        <li><b>EXPIRY QTY</b> or <b>Phy Expiry</b></li>
+                    </ul>
+                </div>
+
+                <label class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-2.5 rounded-lg cursor-pointer transition shadow-sm">
+                    <i class="fa-solid fa-file-excel mr-2"></i> Upload Counted Excel File
+                    <input type="file" accept=".xlsx, .xls" class="hidden" onchange="handleBulkUpload(event)">
+                </label>
+                <div id="bulkStatusMsg" class="text-xs font-bold text-indigo-600"></div>
             </div>
 
         </div>
@@ -271,7 +302,6 @@
                 }
             });
 
-            // Sort data group-wise and description-wise
             processedData = Array.from(groupedMap.values()).sort((a, b) => {
                 if (a.materialGroup !== b.materialGroup) {
                     return a.materialGroup.localeCompare(b.materialGroup);
@@ -297,23 +327,76 @@
             renderTables();
         }
 
+        // Bulk Upload Handler for Tab 3
+        function handleBulkUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const rawJson = XLSX.utils.sheet_to_json(worksheet, { raw: false });
+
+                    let matchedCount = 0;
+                    rawJson.forEach(row => {
+                        let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                        let code = cleanMaterialCode(rawCode);
+                        if (!code) return;
+
+                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : '');
+                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : '');
+                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : '');
+
+                        let targetItem = processedData.find(item => item.materialCode === code);
+                        if (targetItem) {
+                            if (fresh !== '' && fresh !== null) targetItem.freshQty = String(fresh);
+                            if (damage !== '' && damage !== null) targetItem.damageQty = String(damage);
+                            if (expiry !== '' && expiry !== null) targetItem.expiryQty = String(expiry);
+                            matchedCount++;
+                        }
+                    });
+
+                    updateSummaryCards();
+                    renderTables();
+                    document.getElementById('bulkStatusMsg').textContent = `Success! Quantities updated for ${matchedCount} items. Switch to Tab 1 or 2 to view.`;
+                } catch (error) {
+                    alert('Error reading bulk file: ' + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
         function switchTab(tab) {
             currentTab = tab;
             const liveBtn = document.getElementById('tabLiveBtn');
             const downloadBtn = document.getElementById('tabDownloadBtn');
+            const bulkBtn = document.getElementById('tabBulkBtn');
+            
             const liveView = document.getElementById('liveEntryView');
             const downloadView = document.getElementById('downloadReportView');
+            const bulkView = document.getElementById('bulkUploadView');
+
+            liveBtn.className = "flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+            downloadBtn.className = "flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+            bulkBtn.className = "flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+
+            liveView.classList.add('hidden');
+            downloadView.classList.add('hidden');
+            bulkView.classList.add('hidden');
 
             if (tab === 'live') {
-                liveBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-indigo-600 text-white shadow-sm";
-                downloadBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+                liveBtn.className = "flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-indigo-600 text-white shadow-sm";
                 liveView.classList.remove('hidden');
-                downloadView.classList.add('hidden');
-            } else {
-                downloadBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-emerald-600 text-white shadow-sm";
-                liveBtn.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-lg font-semibold text-sm transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+            } else if (tab === 'download') {
+                downloadBtn.className = "flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-emerald-600 text-white shadow-sm";
                 downloadView.classList.remove('hidden');
-                liveView.classList.add('hidden');
+            } else if (tab === 'bulk') {
+                bulkBtn.className = "flex-1 sm:flex-none px-4 py-2 rounded-lg font-semibold text-xs transition bg-indigo-600 text-white shadow-sm";
+                bulkView.classList.remove('hidden');
             }
         }
 
@@ -479,7 +562,6 @@
             const colCodeQuery = document.querySelector('.col-filter-code') ? document.querySelector('.col-filter-code').value.toLowerCase() : '';
             const colDescQuery = document.querySelector('.col-filter-desc') ? document.querySelector('.col-filter-desc').value.toLowerCase() : '';
 
-            // Filter Live Table
             document.querySelectorAll('#liveTableBody tr.live-row').forEach(row => {
                 const code = row.querySelector('.col-code').textContent.toLowerCase();
                 const desc = row.querySelector('.col-desc').textContent.toLowerCase();
@@ -491,7 +573,6 @@
                 row.style.display = (matchGlobal && matchCode && matchDesc) ? '' : 'none';
             });
 
-            // Filter Download Table
             document.querySelectorAll('#downloadTableBody tr.dl-row').forEach(row => {
                 const code = row.querySelector('.dl-code').textContent.toLowerCase();
                 const desc = row.querySelector('.dl-desc').textContent.toLowerCase();
@@ -527,7 +608,6 @@
             let headers, aoa, wsCols;
 
             if (formatType === 'depot') {
-                // Depot Format Columns
                 headers = ["Plant", "Material Code", "Material Price", "Unrestricted Stock", "Material Description", "Phy Fresh", "Phy Damage", "Phy Expiry", "Total Phy", "Diff", "Diff Amt", "Remark"];
                 aoa = [headers];
 
@@ -555,7 +635,6 @@
                 wsCols = [{wch: 8}, {wch: 18}, {wch: 12}, {wch: 18}, {wch: 35}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 12}, {wch: 10}, {wch: 15}, {wch: 20}];
 
             } else {
-                // Company Format Columns (Default)
                 headers = [
                     "Plant", "Material Code", "Material Description", "Sp", "Unrestricted Stock",
                     "Physcial (Fresh Qty)", "DAMAGE QTY", "EXPIRY QTY", "TOTAL PHYSCAL", "DIFF QTY",
@@ -604,7 +683,7 @@
 
             const headerStyle = {
                 font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } }, // Yellow Background
+                fill: { fgColor: { rgb: "FFFF00" } },
                 alignment: { horizontal: "center", vertical: "center" },
                 border: thinBorder
             };

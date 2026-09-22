@@ -391,12 +391,12 @@
             <!-- TAB 3: BULK EXCEL UPLOAD & PREVIEW -->
             <div id="bulkUploadView" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
                 
-                <!-- Instruction Box for Required Columns -->
+                <!-- Instruction Box for Required Columns (Updated to Material Description matching) -->
                 <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 space-y-1 shadow-sm">
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1 text-amber-600"></i> Bulk Upload Instructions & Column Matching Guide:</p>
-                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system automatically match kar sake:</p>
+                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system <b>Material Description</b> ke zariye automatically match kar sake:</p>
                     <ul class="list-disc list-inside text-amber-900 font-semibold pl-1">
-                        <li><b>Material Code</b> (Mandatory for matching items)</li>
+                        <li><b>Material Description</b> (Mandatory for matching items)</li>
                         <li><b>Physcial (Fresh Qty)</b> / <b>Phy Fresh</b> / <b>Fresh</b></li>
                         <li><b>DAMAGE QTY</b> / <b>Phy Damage</b> / <b>Damage</b></li>
                         <li><b>EXPIRY QTY</b> / <b>Phy Expiry</b> / <b>Expiry</b></li>
@@ -552,15 +552,19 @@
         }
 
         function cleanMaterialCode(code) {
-            if (!code) return '';
-            let str = String(code).replace(/['"\t]/g, '').trim();
-            // Remove leading single quotes or Excel formatting if any
-            str = str.replace(/^'+/, '');
-            let num = Number(str);
-            if (!isNaN(num)) {
+            if (code === undefined || code === null) return '';
+            let clean = String(code).replace(/['"\t]/g, '').trim();
+            clean = clean.replace(/^'+/, '');
+            let num = Number(clean);
+            if (!isNaN(num) && clean !== '') {
                 return String(num);
             }
-            return str.replace(/^0+/, '');
+            return clean.replace(/^0+/, '');
+        }
+
+        function cleanDescription(desc) {
+            if (!desc) return '';
+            return String(desc).trim().toLowerCase().replace(/\s+/g, ' ');
         }
 
         function cleanNum(val) {
@@ -576,12 +580,23 @@
             const groupedMap = new Map();
 
             rows.forEach(row => {
-                let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
+                let rawCode = '';
+                for (let key in row) {
+                    let lKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (lKey.includes('materialcode') || lKey === 'code') {
+                        rawCode = row[key];
+                        break;
+                    }
+                }
+                if (!rawCode) {
+                    rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
+                }
+
                 let code = cleanMaterialCode(rawCode);
                 if (!code) return;
 
                 let plant = row['Plant'] || row['PLANT'] || 'D121';
-                let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || '';
+                let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || row['Material description'] || '';
                 let group = row['Material Group'] || row['MaterialGroup'] || row['MATERIAL GROUP'] || 'GENERAL';
                 group = String(group).trim();
                 
@@ -602,6 +617,7 @@
                         plant: plant,
                         materialCode: code,
                         materialDescription: desc,
+                        cleanDesc: cleanDescription(desc),
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
@@ -620,6 +636,7 @@
                 }
                 if (!item.materialDescription && desc) {
                     item.materialDescription = desc;
+                    item.cleanDesc = cleanDescription(desc);
                 }
             });
 
@@ -746,25 +763,23 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
-                        // Dynamically look for any key containing 'material' and 'code'
-                        let rawCode = '';
+                        // Match Material Description from uploaded file
+                        let rawDesc = '';
                         for (let key in row) {
-                            let lowerKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
-                            if (lowerKey.includes('materialcode') || lowerKey === 'code') {
-                                rawCode = row[key];
+                            let lKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            if (lKey.includes('materialdescription') || lKey.includes('description')) {
+                                rawDesc = row[key];
                                 break;
                             }
                         }
-                        if (!rawCode) {
-                            rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
+                        if (!rawDesc) {
+                            rawDesc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || row['Material description'];
                         }
 
-                        let code = cleanMaterialCode(rawCode);
-                        if (!code) return;
+                        let cDesc = cleanDescription(rawDesc);
+                        if (!cDesc) return;
 
                         let fresh = '', damage = '', expiry = '';
-
-                        // Dynamically scan row keys for Fresh, Damage, Expiry to handle exact column titles from user screenshot
                         for (let key in row) {
                             let lKey = key.toLowerCase();
                             if (lKey.includes('fresh') || lKey.includes('physcial')) fresh = row[key];
@@ -772,10 +787,11 @@
                             if (lKey.includes('expiry')) expiry = row[key];
                         }
 
-                        let targetItem = processedData.find(item => item.materialCode === code);
+                        // Match against processedData using clean description
+                        let targetItem = processedData.find(item => item.cleanDesc === cDesc);
                         if (targetItem) {
                             previewBulkData.push({
-                                materialCode: code,
+                                materialCode: targetItem.materialCode,
                                 materialDescription: targetItem.materialDescription,
                                 unrestrictedStock: targetItem.unrestrictedStock,
                                 sp: targetItem.sp,
@@ -792,7 +808,7 @@
                         submitBtn.disabled = false;
                         submitBtn.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg cursor-pointer transition shadow-sm whitespace-nowrap";
                     } else {
-                        alert('No matching material codes found. Please ensure the uploaded file has a valid "Material Code" column.');
+                        alert('No matching material descriptions found between portal and uploaded bulk file. Please verify Material Description column.');
                     }
                 } catch (error) {
                     alert('Error reading bulk file for preview: ' + error.message);
@@ -806,7 +822,7 @@
             tbody.innerHTML = '';
 
             if (previewBulkData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-rose-500 italic">No matching material codes found in uploaded file.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-rose-500 italic">No matching material descriptions found in uploaded file.</td></tr>`;
                 return;
             }
 

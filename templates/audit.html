@@ -581,10 +581,10 @@
                 } else if (field === 'diffAmt') {
                     let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
                     let totA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? (fA + dA + eA) : 0;
-                    valA = (totA - a.unrestrictedStock) * a.sp;
+                    valA = Math.round(((totA - a.unrestrictedStock) * a.sp) * 100) / 100;
                     let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
                     let totB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? (fB + dB + eB) : 0;
-                    valB = (totB - b.unrestrictedStock) * b.sp;
+                    valB = Math.round(((totB - b.unrestrictedStock) * b.sp) * 100) / 100;
                 } else {
                     valA = a[field];
                     valB = b[field];
@@ -747,9 +747,9 @@
                     let total = f + d + e;
                     phyStock += total;
                     if (total !== item.unrestrictedStock) diffCount++;
-                    let sysAmt = item.unrestrictedStock * item.sp;
-                    let phyAmt = total * item.sp;
-                    totalDiffAmt += (phyAmt - sysAmt);
+                    let diffQty = total - item.unrestrictedStock;
+                    let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+                    totalDiffAmt += diffAmt;
                 }
             });
 
@@ -799,7 +799,7 @@
                 
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
-                let diffAmt = hasInput ? (diffQty * item.sp) : '';
+                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : '';
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 live-row";
@@ -840,7 +840,7 @@
                 
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '-';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '-';
-                let diffAmt = hasInput ? (diffQty * item.sp) : '-';
+                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : '-';
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 live-row";
@@ -888,7 +888,7 @@
                 
                 let totalPhy = hasInput ? (fresh + damage + expiry) : 0;
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
-                let diffAmt = hasInput ? (diffQty * item.sp) : 0;
+                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : 0;
                 let totalPhyAmt = hasInput ? (totalPhy * item.sp) : 0;
 
                 const tr = document.createElement('tr');

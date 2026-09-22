@@ -402,7 +402,7 @@
                 <!-- Instruction Box for Required Columns -->
                 <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 space-y-1 shadow-sm">
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1 text-amber-600"></i> Bulk Upload Instructions & Column Matching Guide:</p>
-                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system automatically match kar sake:</p>
+                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system <b>Material Description</b> ke zariye automatically match kar sake:</p>
                     <ul class="list-disc list-inside text-amber-900 font-semibold pl-1">
                         <li><b>Material Description</b> (Mandatory for matching items)</li>
                         <li><b>Physcial (Fresh Qty)</b> / <b>Phy Fresh</b> / <b>Fresh</b></li>
@@ -584,31 +584,56 @@
             return String(Math.round(num));
         }
 
+        function normalizeRowKeys(row) {
+            let newRow = {};
+            for (let key in row) {
+                let cleanKey = key.trim().toLowerCase();
+                newRow[cleanKey] = row[key];
+            }
+            return newRow;
+        }
+
         function processRawStockData(rows) {
             const groupedMap = new Map();
 
-            rows.forEach(row => {
+            rows.forEach(r => {
+                let row = normalizeRowKeys(r);
+                
                 let rawCode = '';
-                for (let key in row) {
-                    let lKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
-                    if (lKey.includes('materialcode') || lKey === 'code') {
-                        rawCode = row[key];
+                for (let k in row) {
+                    if (k.includes('material') && (k.includes('code') || k.includes('cod'))) {
+                        rawCode = row[k];
                         break;
                     }
                 }
-                if (!rawCode) {
-                    rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
-                }
-
+                if (!rawCode) rawCode = row['material code'] || row['materialcode'] || row['code'];
                 let code = cleanMaterialCode(rawCode);
                 if (!code) return;
 
-                let plant = row['Plant'] || row['PLANT'] || 'D121';
-                let desc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || row['Material description'] || '';
-                let group = row['Material Group'] || row['MaterialGroup'] || row['MATERIAL GROUP'] || 'GENERAL';
+                let plant = row['plant'] || 'D121';
+                
+                // Strictly look for full product name columns, avoiding short category headers like 'description'
+                let desc = '';
+                for (let k in row) {
+                    if (k === 'material description' || k === 'materialdescription' || k.includes('material description')) {
+                        desc = row[k];
+                        break;
+                    }
+                }
+                if (!desc) {
+                    for (let k in row) {
+                        if (k.includes('description') && k.length > 11) { // ensures it's not just 'description'
+                            desc = row[k];
+                            break;
+                        }
+                    }
+                }
+                if (!desc) desc = row['material description'] || row['materialdescription'] || '';
+
+                let group = row['material group'] || row['materialgroup'] || row['group'] || 'GENERAL';
                 group = String(group).trim();
                 
-                let rawPrice = row['Material Price'] || row['Sp'] || row['SP'] || 0;
+                let rawPrice = row['material price'] || row['sp'] || row['price'] || 0;
                 let price = 0;
                 if (typeof rawPrice === 'string') {
                     price = parseFloat(rawPrice.replace(/,/g, '')) || 0;
@@ -616,9 +641,16 @@
                     price = parseFloat(rawPrice) || 0;
                 }
 
-                let unrestricted = parseFloat(String(row['Unrestricted Stock'] || row['UnrestrictedStock'] || 0).replace(/,/g, '')) || 0;
-                let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
-                let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
+                let unrestricted = parseFloat(String(row['unrestricted stock'] || row['unrestrictedstock'] || row['stock'] || 0).replace(/,/g, '')) || 0;
+                let returnQty = parseFloat(String(row['return'] || 0).replace(/,/g, '')) || 0;
+                let blocked = parseFloat(String(row['blocked stock'] || row['blockedstock'] || 0).replace(/,/g, '')) || 0;
+
+                let fresh = '', damage = '', expiry = '';
+                for (let k in row) {
+                    if ((k.includes('fresh') || k.includes('physcial')) && !k.includes('amt') && !k.includes('value')) fresh = row[k];
+                    if (k.includes('damage') && !k.includes('amt') && !k.includes('value')) damage = row[k];
+                    if (k.includes('expiry') && !k.includes('amt') && !k.includes('value')) expiry = row[k];
+                }
 
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
@@ -629,9 +661,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: '',
-                        damageQty: '',
-                        expiryQty: '',
+                        freshQty: cleanNum(fresh),
+                        damageQty: cleanNum(damage),
+                        expiryQty: cleanNum(expiry),
                         remark: ''
                     });
                 }
@@ -646,6 +678,9 @@
                     item.materialDescription = desc;
                     item.cleanDesc = cleanDescription(desc);
                 }
+                if (!item.freshQty && cleanNum(fresh)) item.freshQty = cleanNum(fresh);
+                if (!item.damageQty && cleanNum(damage)) item.damageQty = cleanNum(damage);
+                if (!item.expiryQty && cleanNum(expiry)) item.expiryQty = cleanNum(expiry);
             });
 
             processedData = Array.from(groupedMap.values());
@@ -770,28 +805,34 @@
                     const rawJson = XLSX.utils.sheet_to_json(worksheet, { raw: false });
 
                     previewBulkData = [];
-                    rawJson.forEach(row => {
+                    rawJson.forEach(r => {
+                        let row = normalizeRowKeys(r);
+                        
                         let rawDesc = '';
-                        for (let key in row) {
-                            let lKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
-                            if (lKey.includes('materialdescription') || lKey.includes('description')) {
-                                rawDesc = row[key];
+                        for (let k in row) {
+                            if (k === 'material description' || k === 'materialdescription' || (k.includes('material description'))) {
+                                rawDesc = row[k];
                                 break;
                             }
                         }
                         if (!rawDesc) {
-                            rawDesc = row['Material Description'] || row['MaterialDescription'] || row['DESCRIPTION'] || row['Material description'];
+                            for (let k in row) {
+                                if (k.includes('description') && k.length > 11) {
+                                    rawDesc = row[k];
+                                    break;
+                                }
+                            }
                         }
+                        if (!rawDesc) rawDesc = row['material description'] || row['materialdescription'] || '';
 
                         let cDesc = cleanDescription(rawDesc);
                         if (!cDesc) return;
 
                         let fresh = '', damage = '', expiry = '';
-                        for (let key in row) {
-                            let lKey = key.toLowerCase();
-                            if (lKey.includes('fresh') || lKey.includes('physcial')) fresh = row[key];
-                            if (lKey.includes('damage')) damage = row[key];
-                            if (lKey.includes('expiry')) expiry = row[key];
+                        for (let k in row) {
+                            if ((k.includes('fresh') || k.includes('physcial')) && !k.includes('amt') && !k.includes('value')) fresh = row[k];
+                            if (k.includes('damage') && !k.includes('amt') && !k.includes('value')) damage = row[k];
+                            if (k.includes('expiry') && !k.includes('amt') && !k.includes('value')) expiry = row[k];
                         }
 
                         let targetItem = processedData.find(item => item.cleanDesc === cDesc);
@@ -1309,13 +1350,14 @@
             };
 
             const headerStyle = {
-                font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } },
-                alignment: { horizontal: "center", vertical: "center" },
+                font: { bold: true, color: { rgb: "FFFFFF" } },
+                fill: { fgColor: { rgb: "5A2A27" } },
+                alignment: { horizontal: "center", vertical: "center", wrapText: true },
                 border: thinBorder
             };
 
             const cellStyle = {
+                alignment: { vertical: "center", wrapText: true },
                 border: thinBorder
             };
 

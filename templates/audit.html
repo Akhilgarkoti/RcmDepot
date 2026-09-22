@@ -44,6 +44,7 @@
                     <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
                 </div>
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-[11px] px-2.5 py-1 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
+                <!-- Depot Portal Link Restored -->
                 <a href="depot.html" class="px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap flex items-center">
                     <i class="fa-solid fa-arrow-left mr-1"></i> Depot Portal
                 </a>
@@ -1372,13 +1373,11 @@
                 headers = ["Plant", "Material Code", "Material Price", "Unrestricted Stock", "Material Description", "Phy Fresh", "Phy Damage", "Phy Expiry", "Total Phy", "Diff", "Diff Amt", "Remark"];
                 aoa = [headers];
 
-                processedData.forEach((item) => {
-                    const fresh = parseVal(item.freshQty);
-                    const damage = parseVal(item.damageQty);
-                    const expiry = parseVal(item.expiryQty);
-                    const totalPhy = fresh + damage + expiry;
-                    const diffQty = totalPhy - item.unrestrictedStock;
-                    const diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+                processedData.forEach((item, idx) => {
+                    const rowNum = idx + 2;
+                    const freshCell = item.freshQty !== '' && item.freshQty !== '-' ? parseVal(item.freshQty) : 0;
+                    const damageCell = item.damageQty !== '' && item.damageQty !== '-' ? parseVal(item.damageQty) : 0;
+                    const expiryCell = item.expiryQty !== '' && item.expiryQty !== '-' ? parseVal(item.expiryQty) : 0;
 
                     aoa.push([
                         item.plant,
@@ -1386,12 +1385,12 @@
                         item.sp,
                         item.unrestrictedStock,
                         item.materialDescription,
-                        fresh,
-                        damage,
-                        expiry,
-                        totalPhy,
-                        diffQty,
-                        diffAmt,
+                        freshCell,
+                        damageCell,
+                        expiryCell,
+                        { f: `SUM(F${rowNum}:H${rowNum})` },
+                        { f: `I${rowNum}-D${rowNum}` },
+                        { f: `IFERROR(J${rowNum}*C${rowNum}, 0)` },
                         item.remark || ''
                     ]);
                 });
@@ -1406,19 +1405,11 @@
                 ];
                 aoa = [headers];
 
-                processedData.forEach((item) => {
-                    const fresh = parseVal(item.freshQty);
-                    const damage = parseVal(item.damageQty);
-                    const expiry = parseVal(item.expiryQty);
-                    const totalPhy = fresh + damage + expiry;
-                    const diffQty = totalPhy - item.unrestrictedStock;
-                    const diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-
-                    const unrtAmt = item.unrestrictedStock * item.sp;
-                    const freshAmt = fresh * item.sp;
-                    const damageAmt = damage * item.sp;
-                    const expiryAmt = expiry * item.sp;
-                    const totalPhyAmt = totalPhy * item.sp;
+                processedData.forEach((item, idx) => {
+                    const rowNum = idx + 2;
+                    const freshCell = item.freshQty !== '' && item.freshQty !== '-' ? parseVal(item.freshQty) : 0;
+                    const damageCell = item.damageQty !== '' && item.damageQty !== '-' ? parseVal(item.damageQty) : 0;
+                    const expiryCell = item.expiryQty !== '' && item.expiryQty !== '-' ? parseVal(item.expiryQty) : 0;
 
                     aoa.push([
                         item.plant,
@@ -1426,17 +1417,17 @@
                         item.materialDescription,
                         item.sp,
                         item.unrestrictedStock,
-                        fresh,
-                        damage,
-                        expiry,
-                        totalPhy,
-                        diffQty,
-                        unrtAmt,
-                        freshAmt,
-                        damageAmt,
-                        expiryAmt,
-                        totalPhyAmt,
-                        diffAmt,
+                        freshCell,
+                        damageCell,
+                        expiryCell,
+                        { f: `SUM(F${rowNum}:H${rowNum})` },
+                        { f: `I${rowNum}-E${rowNum}` },
+                        { f: `IFERROR(E${rowNum}*D${rowNum}, 0)` },
+                        { f: `IFERROR(F${rowNum}*D${rowNum}, 0)` },
+                        { f: `IFERROR(G${rowNum}*D${rowNum}, 0)` },
+                        { f: `IFERROR(H${rowNum}*D${rowNum}, 0)` },
+                        { f: `SUM(L${rowNum}:N${rowNum})` },
+                        { f: `O${rowNum}-K${rowNum}` },
                         item.remark || ''
                     ]);
                 });
@@ -1477,18 +1468,26 @@
                             border: thinBorder
                         };
 
-                        let numVal = Number(ws[cellAddress].v);
-                        if (isNaN(numVal)) numVal = 0;
+                        let rowItem = processedData[R - 1];
+                        if (rowItem) {
+                            let fresh = parseVal(rowItem.freshQty);
+                            let damage = parseVal(rowItem.damageQty);
+                            let expiry = parseVal(rowItem.expiryQty);
+                            let totalPhy = fresh + damage + expiry;
+                            let diffQty = totalPhy - rowItem.unrestrictedStock;
+                            let diffAmt = Math.round((diffQty * rowItem.sp) * 100) / 100;
 
-                        let isDiffCol = (formatType === 'company' && (C === 9 || C === 15)) || (formatType === 'depot' && (C === 9 || C === 10));
+                            let isDiffCol = (formatType === 'company' && (C === 9 || C === 15)) || (formatType === 'depot' && (C === 9 || C === 10));
+                            let checkVal = (C === 9 || (formatType === 'depot' && C === 9)) ? diffQty : diffAmt;
 
-                        if (isDiffCol) {
-                            if (numVal < 0) {
-                                cellSt.fill = { fgColor: { rgb: "FADBD8" } }; // Light Red 🔴
-                            } else if (numVal > 0) {
-                                cellSt.fill = { fgColor: { rgb: "D4EFDF" } }; // Light Green 🟢
-                            } else {
-                                cellSt.fill = { fgColor: { rgb: "FCF3CF" } }; // Light Yellow 🟡
+                            if (isDiffCol) {
+                                if (checkVal < 0) {
+                                    cellSt.fill = { fgColor: { rgb: "FADBD8" } }; // Light Red 🔴
+                                } else if (checkVal > 0) {
+                                    cellSt.fill = { fgColor: { rgb: "D4EFDF" } }; // Light Green 🟢
+                                } else {
+                                    cellSt.fill = { fgColor: { rgb: "FCF3CF" } }; // Light Yellow 🟡
+                                }
                             }
                         }
                         ws[cellAddress].s = cellSt;

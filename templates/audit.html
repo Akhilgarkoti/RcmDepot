@@ -482,13 +482,6 @@
             return clean.replace(/^0+/, '');
         }
 
-        function cleanNum(val) {
-            if (val === '' || val === null || val === undefined || val === '-' || val === '0.00' || val === '0' || isNaN(Number(val))) return '';
-            let num = Number(val);
-            if (num === 0) return '';
-            return String(Math.round(num));
-        }
-
         function processRawStockData(rows) {
             const groupedMap = new Map();
 
@@ -514,10 +507,6 @@
                 let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
                 let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
 
-                let rawFresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : ''));
-                let rawDamage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : ''));
-                let rawExpiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : ''));
-
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
                         plant: plant,
@@ -526,9 +515,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: cleanNum(rawFresh),
-                        damageQty: cleanNum(rawDamage),
-                        expiryQty: cleanNum(rawExpiry),
+                        freshQty: '',
+                        damageQty: '',
+                        expiryQty: '',
                         remark: ''
                     });
                 }
@@ -542,12 +531,11 @@
                 if (!item.materialDescription && desc) {
                     item.materialDescription = desc;
                 }
-                if (!item.freshQty && cleanNum(rawFresh)) item.freshQty = cleanNum(rawFresh);
-                if (!item.damageQty && cleanNum(rawDamage)) item.damageQty = cleanNum(rawDamage);
-                if (!item.expiryQty && cleanNum(rawExpiry)) item.expiryQty = cleanNum(rawExpiry);
             });
 
             processedData = Array.from(groupedMap.values());
+            
+            // Primary: Material Group (Ascending), Secondary: Unrestricted Stock (High to Low)
             sortDataArray();
 
             if (processedData.length === 0) {
@@ -640,9 +628,9 @@
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
 
-                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : ''));
-                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : ''));
-                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : ''));
+                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : '');
+                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : '');
+                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : '');
 
                         let targetItem = processedData.find(item => item.materialCode === code);
                         if (targetItem) {
@@ -650,9 +638,9 @@
                                 materialCode: code,
                                 materialDescription: targetItem.materialDescription,
                                 unrestrictedStock: targetItem.unrestrictedStock,
-                                freshQty: cleanNum(fresh),
-                                damageQty: cleanNum(damage),
-                                expiryQty: cleanNum(expiry)
+                                freshQty: fresh !== '' && fresh !== null ? String(fresh) : '',
+                                damageQty: damage !== '' && damage !== null ? String(damage) : '',
+                                expiryQty: expiry !== '' && expiry !== null ? String(expiry) : ''
                             });
                         }
                     });
@@ -686,9 +674,9 @@
                     <td class="p-2.5 border-r border-slate-200 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
                     <td class="p-2.5 border-r border-slate-200 text-slate-800 w-72 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 font-semibold">${item.freshQty !== '' ? item.freshQty : ''}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 font-semibold">${item.damageQty !== '' ? item.damageQty : ''}</td>
-                    <td class="p-2.5 text-right bg-orange-50/30 font-semibold">${item.expiryQty !== '' ? item.expiryQty : ''}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 font-semibold">${item.freshQty !== '' ? item.freshQty : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 font-semibold">${item.damageQty !== '' ? item.damageQty : '-'}</td>
+                    <td class="p-2.5 text-right bg-orange-50/30 font-semibold">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -700,9 +688,9 @@
             previewBulkData.forEach(pItem => {
                 let targetItem = processedData.find(item => item.materialCode === pItem.materialCode);
                 if (targetItem) {
-                    targetItem.freshQty = pItem.freshQty;
-                    targetItem.damageQty = pItem.damageQty;
-                    targetItem.expiryQty = pItem.expiryQty;
+                    if (pItem.freshQty !== '') targetItem.freshQty = pItem.freshQty;
+                    if (pItem.damageQty !== '') targetItem.damageQty = pItem.damageQty;
+                    if (pItem.expiryQty !== '') targetItem.expiryQty = pItem.expiryQty;
                 }
             });
 
@@ -778,16 +766,16 @@
         }
 
         function parseVal(val) {
-            if (val === '' || val === null || val === undefined || val === '-' || val === '0.00' || isNaN(Number(val))) return 0;
+            if (val === '' || val === null || val === undefined || val === '-' || isNaN(Number(val))) return 0;
             let str = String(val).trim();
             let num = Number(str);
-            if (!isNaN(num)) return Math.round(num);
+            if (!isNaN(num)) return num;
             try {
                 str = str.replace(/[+\-*/]+$/, '');
                 if (str === '') return 0;
                 let sanitized = str.replace(/[^0-9+\-*/().]/g, '');
                 let res = Function('"use strict";return (' + sanitized + ')')();
-                return isNaN(res) ? 0 : Math.round(res);
+                return isNaN(res) ? 0 : Number(res);
             } catch (e) {
                 return 0;
             }
@@ -906,9 +894,9 @@
                     <td class="p-2.5 border-r border-slate-200 text-slate-800 dl-desc w-72 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right dl-sp">₹${item.sp.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-sys">${item.unrestrictedStock}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-fresh">${item.freshQty !== '' && item.freshQty !== '-' ? item.freshQty : ''}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-damage">${item.damageQty !== '' && item.damageQty !== '-' ? item.damageQty : ''}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' && item.expiryQty !== '-' ? item.expiryQty : ''}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-fresh">${item.freshQty !== '' && item.freshQty !== '-' ? item.freshQty : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-damage">${item.damageQty !== '' && item.damageQty !== '-' ? item.damageQty : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' && item.expiryQty !== '-' ? item.expiryQty : '0'}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-total">${totalPhy}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diff">${diffQty}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
@@ -934,51 +922,8 @@
 
         function updateQty(index, field, value) {
             processedData[index][field] = value;
-            
-            const desktopRows = document.querySelectorAll('#liveTableBody tr');
-            if (desktopRows[index]) {
-                let row = desktopRows[index];
-                let item = processedData[index];
-                let fNum = parseVal(item.freshQty);
-                let dNum = parseVal(item.damageQty);
-                let eNum = parseVal(item.expiryQty);
-                let totalPhy = fNum + dNum + eNum;
-                let diffQty = totalPhy - item.unrestrictedStock;
-                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-
-                row.querySelector('.cell-total').textContent = totalPhy;
-                let diffCell = row.querySelector('.cell-diff');
-                diffCell.textContent = diffQty;
-                diffCell.className = `p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-
-                let amtCell = row.querySelector('.cell-diffamt');
-                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-                amtCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-            }
-
-            const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
-            if (mobileCards[index]) {
-                let card = mobileCards[index];
-                let item = processedData[index];
-                let fNum = parseVal(item.freshQty);
-                let dNum = parseVal(item.damageQty);
-                let eNum = parseVal(item.expiryQty);
-                let totalPhy = fNum + dNum + eNum;
-                let diffQty = totalPhy - item.unrestrictedStock;
-                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-
-                card.querySelector('.cell-total').textContent = totalPhy;
-                let diffCell = card.querySelector('.cell-diff');
-                diffCell.textContent = diffQty;
-                diffCell.className = `live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-
-                let amtCell = card.querySelector('.cell-diffamt');
-                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-                amtCell.className = `live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-            }
-
             updateSummaryCards();
-            renderDownloadTable();
+            renderTables();
         }
 
         function filterTable() {

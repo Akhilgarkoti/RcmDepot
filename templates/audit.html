@@ -768,7 +768,7 @@
         }
 
         function parseVal(val) {
-            if (val === '' || val === null || val === undefined) return 0;
+            if (val === '' || val === null || val === undefined || val === '-' || isNaN(Number(val))) return 0;
             let str = String(val).trim();
             let num = Number(str);
             if (!isNaN(num)) return num;
@@ -795,11 +795,11 @@
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
                 let eNum = parseVal(expiry);
-                let hasInput = fresh !== '' || damage !== '' || expiry !== '';
+                let hasInput = fresh !== '' && fresh !== '-' && fresh !== null || damage !== '' && damage !== '-' && damage !== null || expiry !== '' && expiry !== '-' && expiry !== null;
                 
-                let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
-                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : '';
+                let totalPhy = hasInput ? (fNum + dNum + eNum) : 0;
+                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
+                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : 0;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 live-row";
@@ -816,9 +816,9 @@
                     <td class="p-2.5 border-r border-slate-200 text-right bg-orange-50/30 p-1">
                         <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
                     </td>
-                    <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy !== '' ? totalPhy : '-'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
-                    <td class="p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt !== '' ? diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2}) : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</td>
+                    <td class="p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -836,11 +836,11 @@
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
                 let eNum = parseVal(expiry);
-                let hasInput = fresh !== '' || damage !== '' || expiry !== '';
+                let hasInput = fresh !== '' && fresh !== '-' && fresh !== null || damage !== '' && damage !== '-' && damage !== null || expiry !== '' && expiry !== '-' && expiry !== null;
                 
-                let totalPhy = hasInput ? (fNum + dNum + eNum) : '-';
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '-';
-                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : '-';
+                let totalPhy = hasInput ? (fNum + dNum + eNum) : 0;
+                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
+                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : 0;
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 live-row";
@@ -869,7 +869,7 @@
                     <div class="flex justify-between items-center text-[11px] pt-1 text-slate-500 font-bold border-t border-slate-100 mt-1">
                         <span>Total: <span class="text-slate-800 live-total-phy cell-total">${totalPhy}</span></span>
                         <span>Diff: <span class="live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</span></span>
-                        <span>Diff Amt: <span class="live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt !== '-' ? diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2}) : '-'}</span></span>
+                        <span>Diff Amt: <span class="live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</span></span>
                     </div>
                 `;
                 container.appendChild(card);
@@ -884,7 +884,7 @@
                 let fresh = parseVal(item.freshQty);
                 let damage = parseVal(item.damageQty);
                 let expiry = parseVal(item.expiryQty);
-                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
+                let hasInput = item.freshQty !== '' && item.freshQty !== '-' && item.freshQty !== null || item.damageQty !== '' && item.damageQty !== '-' && item.damageQty !== null || item.expiryQty !== '' && item.expiryQty !== '-' && item.expiryQty !== null;
                 
                 let totalPhy = hasInput ? (fresh + damage + expiry) : 0;
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
@@ -899,12 +899,12 @@
                     <td class="p-2.5 border-r border-slate-200 text-slate-800 dl-desc w-72 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right dl-sp">₹${item.sp.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-sys">${item.unrestrictedStock}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-fresh">${item.freshQty !== '' ? item.freshQty : '-'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-damage">${item.damageQty !== '' ? item.damageQty : '-'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-total">${hasInput ? totalPhy : '-'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diff">${hasInput ? diffQty : '-'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${hasInput ? diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2}) : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-fresh">${item.freshQty !== '' && item.freshQty !== '-' ? item.freshQty : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-damage">${item.damageQty !== '' && item.damageQty !== '-' ? item.damageQty : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' && item.expiryQty !== '-' ? item.expiryQty : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-total">${totalPhy}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diff">${diffQty}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="p-2.5 text-right font-semibold dl-amt">₹${totalPhyAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                 `;
                 tbody.appendChild(tr);
@@ -1022,9 +1022,9 @@
 
                 processedData.forEach((item, idx) => {
                     const rowNum = idx + 2;
-                    const freshCell = item.freshQty !== '' ? parseVal(item.freshQty) : 0;
-                    const damageCell = item.damageQty !== '' ? parseVal(item.damageQty) : 0;
-                    const expiryCell = item.expiryQty !== '' ? parseVal(item.expiryQty) : 0;
+                    const freshCell = item.freshQty !== '' && item.freshQty !== '-' ? parseVal(item.freshQty) : 0;
+                    const damageCell = item.damageQty !== '' && item.damageQty !== '-' ? parseVal(item.damageQty) : 0;
+                    const expiryCell = item.expiryQty !== '' && item.expiryQty !== '-' ? parseVal(item.expiryQty) : 0;
 
                     aoa.push([
                         item.plant,
@@ -1032,9 +1032,9 @@
                         item.sp,
                         item.unrestrictedStock,
                         item.materialDescription,
-                        item.freshQty !== '' ? freshCell : '',
-                        item.damageQty !== '' ? damageCell : '',
-                        item.expiryQty !== '' ? expiryCell : '',
+                        freshCell,
+                        damageCell,
+                        expiryCell,
                         { f: `SUM(F${rowNum}:H${rowNum})` },
                         { f: `I${rowNum}-D${rowNum}` },
                         { f: `IFERROR(J${rowNum}*C${rowNum}, 0)` },
@@ -1054,9 +1054,9 @@
 
                 processedData.forEach((item, idx) => {
                     const rowNum = idx + 2;
-                    const freshCell = item.freshQty !== '' ? parseVal(item.freshQty) : 0;
-                    const damageCell = item.damageQty !== '' ? parseVal(item.damageQty) : 0;
-                    const expiryCell = item.expiryQty !== '' ? parseVal(item.expiryQty) : 0;
+                    const freshCell = item.freshQty !== '' && item.freshQty !== '-' ? parseVal(item.freshQty) : 0;
+                    const damageCell = item.damageQty !== '' && item.damageQty !== '-' ? parseVal(item.damageQty) : 0;
+                    const expiryCell = item.expiryQty !== '' && item.expiryQty !== '-' ? parseVal(item.expiryQty) : 0;
 
                     aoa.push([
                         item.plant,
@@ -1064,9 +1064,9 @@
                         item.materialDescription,
                         item.sp,
                         item.unrestrictedStock,
-                        item.freshQty !== '' ? freshCell : '',
-                        item.damageQty !== '' ? damageCell : '',
-                        item.expiryQty !== '' ? expiryCell : '',
+                        freshCell,
+                        damageCell,
+                        expiryCell,
                         { f: `SUM(F${rowNum}:H${rowNum})` },
                         { f: `I${rowNum}-E${rowNum}` },
                         { f: `IFERROR(E${rowNum}*D${rowNum}, 0)` },

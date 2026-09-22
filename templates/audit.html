@@ -411,7 +411,7 @@
                     <div class="flex items-center space-x-3">
                         <label class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-lg cursor-pointer transition shadow-sm whitespace-nowrap">
                             <i class="fa-solid fa-file-arrow-up mr-1.5"></i> Upload Excel File
-                            <input type="file" accept=".xlsx, .xls" class="hidden" onchange="handleBulkPreview(event)">
+                            <input type="file" id="bulkFileInput" accept=".xlsx, .xls" class="hidden" onchange="handleBulkPreview(event)">
                         </label>
                         <button id="submitBulkBtn" onclick="submitBulkQuantities()" disabled class="px-4 py-2 bg-indigo-300 text-white font-semibold text-xs rounded-lg cursor-not-allowed transition shadow-sm whitespace-nowrap">
                             <i class="fa-solid fa-check mr-1.5"></i> Submit & Apply to Portal
@@ -515,9 +515,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: '',     // Always blank on initial load
-                        damageQty: '',    // Always blank on initial load
-                        expiryQty: '',    // Always blank on initial load
+                        freshQty: '',     // Always blank initially
+                        damageQty: '',    // Always blank initially
+                        expiryQty: '',    // Always blank initially
                         remark: ''
                     });
                 }
@@ -626,9 +626,9 @@
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
 
-                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : '');
-                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : '');
-                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : '');
+                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : ''));
+                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : ''));
+                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : ''));
 
                         let targetItem = processedData.find(item => item.materialCode === code);
                         if (targetItem) {
@@ -636,9 +636,9 @@
                                 materialCode: code,
                                 materialDescription: targetItem.materialDescription,
                                 unrestrictedStock: targetItem.unrestrictedStock,
-                                freshQty: fresh !== '' && fresh !== null ? String(fresh) : '',
-                                damageQty: damage !== '' && damage !== null ? String(damage) : '',
-                                expiryQty: expiry !== '' && expiry !== null ? String(expiry) : ''
+                                freshQty: fresh !== '' && fresh !== null ? String(parseVal(fresh)) : '',
+                                damageQty: damage !== '' && damage !== null ? String(parseVal(damage)) : '',
+                                expiryQty: expiry !== '' && expiry !== null ? String(parseVal(expiry)) : ''
                             });
                         }
                     });
@@ -695,6 +695,8 @@
             updateSummaryCards();
             renderTables();
             alert(`Success! Quantities submitted and applied for ${previewBulkData.length} items.`);
+            document.getElementById('bulkFileInput').value = '';
+            previewBulkData = [];
             switchTab('live');
         }
 
@@ -767,13 +769,13 @@
             if (val === '' || val === null || val === undefined || val === '-') return 0;
             let str = String(val).replace(/,/g, '').trim();
             let num = Number(str);
-            if (!isNaN(num)) return num;
+            if (!isNaN(num)) return Math.round(num);
             try {
                 str = str.replace(/[+\-*/]+$/, '');
                 if (str === '') return 0;
                 let sanitized = str.replace(/[^0-9+\-*/().]/g, '');
                 let res = Function('"use strict";return (' + sanitized + ')')();
-                return isNaN(res) ? 0 : Number(res);
+                return isNaN(res) ? 0 : Math.round(res);
             } catch (e) {
                 return 0;
             }
@@ -803,13 +805,13 @@
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-indigo-50/50 cell-sys">${item.unrestrictedStock}</td>
                     <td class="p-2.5 border-r border-slate-200 text-slate-800 cell-desc w-72 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
-                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-fresh">
+                        <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-fresh">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 p-1">
-                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-damage">
+                        <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-damage">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</td>
@@ -902,20 +904,6 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        function handleEnterKey(event, currentInput) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const allInputs = Array.from(document.querySelectorAll('#liveTableBody tr:not([style*="display: none"]) .audit-input'));
-                const currentIndex = allInputs.indexOf(currentInput);
-                
-                if (currentIndex !== -1 && currentIndex + 1 < allInputs.length) {
-                    const nextInput = allInputs[currentIndex + 1];
-                    nextInput.focus();
-                    nextInput.select();
-                }
-            }
         }
 
         function updateQty(index, field, value) {

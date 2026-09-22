@@ -44,13 +44,13 @@
                     <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
                 </div>
                 <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-[11px] px-2.5 py-1 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
-                <a href="depot" class="px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap flex items-center">
+                <a href="depot.html" class="px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap flex items-center">
                     <i class="fa-solid fa-arrow-left mr-1"></i> Depot Portal
                 </a>
                 <button onclick="resetPortal()" class="hidden id-reset-btn px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap">
                     <i class="fa-solid fa-rotate-left mr-1"></i> Reset
                 </button>
-                <a href="/" onclick="sessionStorage.clear()" class="px-2.5 py-1 bg-rose-900 hover:bg-rose-800 text-white text-[11px] rounded transition border border-rose-700 whitespace-nowrap flex items-center">
+                <a href="/" onclick="localStorage.clear(); sessionStorage.clear();" class="px-2.5 py-1 bg-rose-900 hover:bg-rose-800 text-white text-[11px] rounded transition border border-rose-700 whitespace-nowrap flex items-center">
                     <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
                 </a>
             </div>
@@ -122,7 +122,7 @@
                     <div class="flex items-center space-x-3">
                         <div>
                             <h3 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                            <p class="text-[11px] text-slate-500">Easily enter physical stock quantities below.</p>
+                            <p class="text-[11px] text-slate-500">Easily enter physical stock quantities below. (Auto-saved)</p>
                         </div>
                     </div>
                     <!-- Clear All & Search -->
@@ -240,7 +240,7 @@
                     </table>
                 </div>
 
-                <!-- Mobile Optimized Card View (Touch Friendly with smaller inputs) -->
+                <!-- Mobile Optimized Card View (Touch Friendly) -->
                 <div id="mobileCardContainer" class="md:hidden divide-y divide-slate-200 max-h-[72vh] overflow-y-auto p-2.5 space-y-2.5">
                     <!-- Mobile cards populated via JS -->
                 </div>
@@ -588,6 +588,30 @@
         let previewBulkData = [];
         let currentTab = 'live';
 
+        // Auto-load saved data from localStorage on page load
+        window.onload = function() {
+            const savedData = localStorage.getItem('rcm_audit_data');
+            if (savedData) {
+                try {
+                    processedData = JSON.parse(savedData);
+                    if (processedData.length > 0) {
+                        document.getElementById('uploadSection').classList.add('hidden');
+                        document.getElementById('dashboardSection').classList.remove('hidden');
+                        document.getElementById('globalSearchWrapper').classList.remove('hidden');
+                        document.querySelector('.id-reset-btn').classList.remove('hidden');
+                        updateSummaryCards();
+                        renderTables();
+                    }
+                } catch (e) {
+                    console.error('Error loading saved session', e);
+                }
+            }
+        };
+
+        function saveToStorage() {
+            localStorage.setItem('rcm_audit_data', JSON.stringify(processedData));
+        }
+
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -741,6 +765,8 @@
                 alert('No valid material records found in the uploaded file. Please check column headers.');
                 return;
             }
+
+            saveToStorage();
 
             document.getElementById('uploadSection').classList.add('hidden');
             document.getElementById('dashboardSection').classList.remove('hidden');
@@ -961,6 +987,7 @@
                 }
             });
 
+            saveToStorage();
             updateSummaryCards();
             renderTables();
             alert(`Success! Quantities submitted and applied for ${previewBulkData.length} items.`);
@@ -985,6 +1012,7 @@
                     item.damageQty = '';
                     item.expiryQty = '';
                 });
+                saveToStorage();
                 updateSummaryCards();
                 renderTables();
                 alert('All physical quantities have been cleared successfully.');
@@ -1142,15 +1170,15 @@
                     <div class="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-slate-100">
                         <div>
                             <label class="block text-[9px] font-bold text-emerald-700 mb-0.5">Fresh Qty</label>
-                            <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="audit-input w-full text-center p-1 border border-emerald-300 rounded bg-emerald-50/20 text-xs cell-fresh">
+                            <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="audit-input w-full text-center p-1.5 border border-emerald-300 rounded bg-emerald-50/20 text-xs cell-fresh">
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-amber-700 mb-0.5">Damage Qty</label>
-                            <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="audit-input w-full text-center p-1 border border-amber-300 rounded bg-amber-50/20 text-xs cell-damage">
+                            <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" class="audit-input w-full text-center p-1.5 border border-amber-300 rounded bg-amber-50/20 text-xs cell-damage">
                         </div>
                         <div>
                             <label class="block text-[9px] font-bold text-orange-700 mb-0.5">Expiry Qty</label>
-                            <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="audit-input w-full text-center p-1 border border-orange-300 rounded bg-orange-50/20 text-xs cell-expiry">
+                            <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="audit-input w-full text-center p-1.5 border border-orange-300 rounded bg-orange-50/20 text-xs cell-expiry">
                         </div>
                     </div>
                     <div class="flex justify-between items-center text-[10px] pt-1 text-slate-500 font-bold border-t border-slate-100 mt-1">
@@ -1209,6 +1237,7 @@
 
         function updateQty(index, field, value) {
             processedData[index][field] = value;
+            saveToStorage();
             let item = processedData[index];
             
             let fNum = parseVal(item.freshQty);
@@ -1318,6 +1347,7 @@
 
         function resetPortal() {
             if (confirm('Are you sure you want to start a new audit? Unsaved entries will be cleared.')) {
+                localStorage.removeItem('rcm_audit_data');
                 processedData = [];
                 currentTab = 'live';
                 document.getElementById('excelFileInput').value = '';

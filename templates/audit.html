@@ -534,8 +534,6 @@
             });
 
             processedData = Array.from(groupedMap.values());
-            
-            // Primary: Material Group (Ascending), Secondary: Unrestricted Stock (High to Low)
             sortDataArray();
 
             if (processedData.length === 0) {
@@ -922,8 +920,52 @@
 
         function updateQty(index, field, value) {
             processedData[index][field] = value;
+            
+            // Direct DOM update for high performance typing without losing focus
+            const desktopRows = document.querySelectorAll('#liveTableBody tr');
+            if (desktopRows[index]) {
+                let row = desktopRows[index];
+                let item = processedData[index];
+                let fNum = parseVal(item.freshQty);
+                let dNum = parseVal(item.damageQty);
+                let eNum = parseVal(item.expiryQty);
+                let totalPhy = fNum + dNum + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
+                row.querySelector('.cell-total').textContent = totalPhy;
+                let diffCell = row.querySelector('.cell-diff');
+                diffCell.textContent = diffQty;
+                diffCell.className = `p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+                let amtCell = row.querySelector('.cell-diffamt');
+                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                amtCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
+
+            const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
+            if (mobileCards[index]) {
+                let card = mobileCards[index];
+                let item = processedData[index];
+                let fNum = parseVal(item.freshQty);
+                let dNum = parseVal(item.damageQty);
+                let eNum = parseVal(item.expiryQty);
+                let totalPhy = fNum + dNum + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
+                card.querySelector('.cell-total').textContent = totalPhy;
+                let diffCell = card.querySelector('.cell-diff');
+                diffCell.textContent = diffQty;
+                diffCell.className = `live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+                let amtCell = card.querySelector('.cell-diffamt');
+                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                amtCell.className = `live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
+
             updateSummaryCards();
-            renderTables();
+            renderDownloadTable();
         }
 
         function filterTable() {

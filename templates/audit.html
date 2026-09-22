@@ -553,12 +553,14 @@
 
         function cleanMaterialCode(code) {
             if (!code) return '';
-            let clean = String(code).trim();
-            // Completely strip leading zeros and formatting to match codes accurately
-            if (!isNaN(clean)) {
-                return String(Number(clean));
+            let str = String(code).replace(/['"\t]/g, '').trim();
+            // Remove leading single quotes or Excel formatting if any
+            str = str.replace(/^'+/, '');
+            let num = Number(str);
+            if (!isNaN(num)) {
+                return String(num);
             }
-            return clean.replace(/^0+/, '');
+            return str.replace(/^0+/, '');
         }
 
         function cleanNum(val) {
@@ -744,15 +746,31 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
-                        // Strict and robust material code matching
-                        let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
+                        // Dynamically look for any key containing 'material' and 'code'
+                        let rawCode = '';
+                        for (let key in row) {
+                            let lowerKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            if (lowerKey.includes('materialcode') || lowerKey === 'code') {
+                                rawCode = row[key];
+                                break;
+                            }
+                        }
+                        if (!rawCode) {
+                            rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
+                        }
+
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
 
-                        // Match columns accurately based on user instructions
-                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : (row['Fresh'] !== undefined ? row['Fresh'] : '')));
-                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : (row['Damage'] !== undefined ? row['Damage'] : '')));
-                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : (row['Expiry'] !== undefined ? row['Expiry'] : '')));
+                        let fresh = '', damage = '', expiry = '';
+
+                        // Dynamically scan row keys for Fresh, Damage, Expiry to handle exact column titles from user screenshot
+                        for (let key in row) {
+                            let lKey = key.toLowerCase();
+                            if (lKey.includes('fresh') || lKey.includes('physcial')) fresh = row[key];
+                            if (lKey.includes('damage')) damage = row[key];
+                            if (lKey.includes('expiry')) expiry = row[key];
+                        }
 
                         let targetItem = processedData.find(item => item.materialCode === code);
                         if (targetItem) {
@@ -774,7 +792,7 @@
                         submitBtn.disabled = false;
                         submitBtn.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg cursor-pointer transition shadow-sm whitespace-nowrap";
                     } else {
-                        alert('No matching material codes found between portal and uploaded bulk file. Please verify Material Code column format.');
+                        alert('No matching material codes found. Please ensure the uploaded file has a valid "Material Code" column.');
                     }
                 } catch (error) {
                     alert('Error reading bulk file for preview: ' + error.message);

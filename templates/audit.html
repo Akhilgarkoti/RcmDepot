@@ -482,13 +482,6 @@
             return clean.replace(/^0+/, '');
         }
 
-        function cleanNum(val) {
-            if (val === '' || val === null || val === undefined || val === '-' || val === '0.00' || val === '0' || isNaN(Number(String(val).replace(/,/g, '')))) return '';
-            let num = Number(String(val).replace(/,/g, ''));
-            if (num === 0) return '';
-            return String(Math.round(num));
-        }
-
         function processRawStockData(rows) {
             const groupedMap = new Map();
 
@@ -514,10 +507,6 @@
                 let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
                 let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
 
-                let rawFresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : ''));
-                let rawDamage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : ''));
-                let rawExpiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : ''));
-
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
                         plant: plant,
@@ -526,9 +515,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: cleanNum(rawFresh),
-                        damageQty: cleanNum(rawDamage),
-                        expiryQty: cleanNum(rawExpiry),
+                        freshQty: '',     // Always blank on initial load
+                        damageQty: '',    // Always blank on initial load
+                        expiryQty: '',    // Always blank on initial load
                         remark: ''
                     });
                 }
@@ -542,9 +531,6 @@
                 if (!item.materialDescription && desc) {
                     item.materialDescription = desc;
                 }
-                if (!item.freshQty && cleanNum(rawFresh)) item.freshQty = cleanNum(rawFresh);
-                if (!item.damageQty && cleanNum(rawDamage)) item.damageQty = cleanNum(rawDamage);
-                if (!item.expiryQty && cleanNum(rawExpiry)) item.expiryQty = cleanNum(rawExpiry);
             });
 
             processedData = Array.from(groupedMap.values());
@@ -779,7 +765,7 @@
 
         function parseVal(val) {
             if (val === '' || val === null || val === undefined || val === '-') return 0;
-            let str = String(val).replace(/,/g, '').trim(); // Commas removed here
+            let str = String(val).replace(/,/g, '').trim();
             let num = Number(str);
             if (!isNaN(num)) return num;
             try {
@@ -934,18 +920,18 @@
 
         function updateQty(index, field, value) {
             processedData[index][field] = value;
+            let item = processedData[index];
             
+            let fNum = parseVal(item.freshQty);
+            let dNum = parseVal(item.damageQty);
+            let eNum = parseVal(item.expiryQty);
+            let totalPhy = fNum + dNum + eNum;
+            let diffQty = totalPhy - item.unrestrictedStock;
+            let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
             const desktopRows = document.querySelectorAll('#liveTableBody tr');
             if (desktopRows[index]) {
                 let row = desktopRows[index];
-                let item = processedData[index];
-                let fNum = parseVal(item.freshQty);
-                let dNum = parseVal(item.damageQty);
-                let eNum = parseVal(item.expiryQty);
-                let totalPhy = fNum + dNum + eNum;
-                let diffQty = totalPhy - item.unrestrictedStock;
-                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-
                 row.querySelector('.cell-total').textContent = totalPhy;
                 let diffCell = row.querySelector('.cell-diff');
                 diffCell.textContent = diffQty;
@@ -959,14 +945,6 @@
             const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
             if (mobileCards[index]) {
                 let card = mobileCards[index];
-                let item = processedData[index];
-                let fNum = parseVal(item.freshQty);
-                let dNum = parseVal(item.damageQty);
-                let eNum = parseVal(item.expiryQty);
-                let totalPhy = fNum + dNum + eNum;
-                let diffQty = totalPhy - item.unrestrictedStock;
-                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-
                 card.querySelector('.cell-total').textContent = totalPhy;
                 let diffCell = card.querySelector('.cell-diff');
                 diffCell.textContent = diffQty;

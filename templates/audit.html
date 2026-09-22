@@ -416,6 +416,9 @@
                         <button id="submitBulkBtn" onclick="submitBulkQuantities()" disabled class="px-4 py-2 bg-indigo-300 text-white font-semibold text-xs rounded-lg cursor-not-allowed transition shadow-sm whitespace-nowrap">
                             <i class="fa-solid fa-check mr-1.5"></i> Submit & Apply to Portal
                         </button>
+                        <button onclick="clearBulkUploadData()" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-lg transition shadow-sm whitespace-nowrap">
+                            <i class="fa-solid fa-trash mr-1.5"></i> Delete Uploaded Data
+                        </button>
                     </div>
                 </div>
 
@@ -482,6 +485,15 @@
             return clean.replace(/^0+/, '');
         }
 
+        function cleanNum(val) {
+            if (val === '' || val === null || val === undefined || val === '-') return '';
+            let str = String(val).replace(/,/g, '').trim();
+            let num = Number(str);
+            if (isNaN(num)) return '';
+            if (num === 0) return '';
+            return String(Math.round(num));
+        }
+
         function processRawStockData(rows) {
             const groupedMap = new Map();
 
@@ -515,9 +527,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: '',     // Always blank initially
-                        damageQty: '',    // Always blank initially
-                        expiryQty: '',    // Always blank initially
+                        freshQty: '',
+                        damageQty: '',
+                        expiryQty: '',
                         remark: ''
                     });
                 }
@@ -622,13 +634,14 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
-                        let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                        // Flexible key matching for Material Code
+                        let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
 
-                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : ''));
-                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : ''));
-                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : ''));
+                        let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : (row['Fresh'] !== undefined ? row['Fresh'] : '')));
+                        let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : (row['Damage'] !== undefined ? row['Damage'] : '')));
+                        let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : (row['Expiry'] !== undefined ? row['Expiry'] : '')));
 
                         let targetItem = processedData.find(item => item.materialCode === code);
                         if (targetItem) {
@@ -636,9 +649,9 @@
                                 materialCode: code,
                                 materialDescription: targetItem.materialDescription,
                                 unrestrictedStock: targetItem.unrestrictedStock,
-                                freshQty: fresh !== '' && fresh !== null ? String(parseVal(fresh)) : '',
-                                damageQty: damage !== '' && damage !== null ? String(parseVal(damage)) : '',
-                                expiryQty: expiry !== '' && expiry !== null ? String(parseVal(expiry)) : ''
+                                freshQty: cleanNum(fresh),
+                                damageQty: cleanNum(damage),
+                                expiryQty: cleanNum(expiry)
                             });
                         }
                     });
@@ -648,6 +661,8 @@
                         const submitBtn = document.getElementById('submitBulkBtn');
                         submitBtn.disabled = false;
                         submitBtn.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs rounded-lg cursor-pointer transition shadow-sm whitespace-nowrap";
+                    } else {
+                        alert('No matching material codes found between portal and uploaded bulk file. Please verify Material Code column.');
                     }
                 } catch (error) {
                     alert('Error reading bulk file for preview: ' + error.message);
@@ -695,9 +710,18 @@
             updateSummaryCards();
             renderTables();
             alert(`Success! Quantities submitted and applied for ${previewBulkData.length} items.`);
+            clearBulkUploadData();
+            switchTab('live');
+        }
+
+        function clearBulkUploadData() {
             document.getElementById('bulkFileInput').value = '';
             previewBulkData = [];
-            switchTab('live');
+            const tbody = document.getElementById('bulkPreviewBody');
+            tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 italic">No file uploaded yet. Click 'Upload Excel File' above to preview.</td></tr>`;
+            const submitBtn = document.getElementById('submitBulkBtn');
+            submitBtn.disabled = true;
+            submitBtn.className = "px-4 py-2 bg-indigo-300 text-white font-semibold text-xs rounded-lg cursor-not-allowed transition shadow-sm whitespace-nowrap";
         }
 
         function switchTab(tab) {
@@ -769,13 +793,13 @@
             if (val === '' || val === null || val === undefined || val === '-') return 0;
             let str = String(val).replace(/,/g, '').trim();
             let num = Number(str);
-            if (!isNaN(num)) return Math.round(num);
+            if (!isNaN(num)) return num;
             try {
                 str = str.replace(/[+\-*/]+$/, '');
                 if (str === '') return 0;
                 let sanitized = str.replace(/[^0-9+\-*/().]/g, '');
                 let res = Function('"use strict";return (' + sanitized + ')')();
-                return isNaN(res) ? 0 : Math.round(res);
+                return isNaN(res) ? 0 : Number(res);
             } catch (e) {
                 return 0;
             }
@@ -894,9 +918,9 @@
                     <td class="p-2.5 border-r border-slate-200 text-slate-800 dl-desc w-72 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right dl-sp">₹${item.sp.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-sys">${item.unrestrictedStock}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-fresh">${item.freshQty !== '' && item.freshQty !== '-' ? item.freshQty : '0'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-damage">${item.damageQty !== '' && item.damageQty !== '-' ? item.damageQty : '0'}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' && item.expiryQty !== '-' ? item.expiryQty : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-fresh">${item.freshQty !== '' && item.freshQty !== '-' ? parseVal(item.freshQty) : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-damage">${item.damageQty !== '' && item.damageQty !== '-' ? parseVal(item.damageQty) : '0'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' && item.expiryQty !== '-' ? parseVal(item.expiryQty) : '0'}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-total">${totalPhy}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diff">${diffQty}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>

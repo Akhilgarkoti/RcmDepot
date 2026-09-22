@@ -554,6 +554,7 @@
         function cleanMaterialCode(code) {
             if (!code) return '';
             let clean = String(code).trim();
+            // Completely strip leading zeros and formatting to match codes accurately
             if (!isNaN(clean)) {
                 return String(Number(clean));
             }
@@ -743,10 +744,12 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
+                        // Strict and robust material code matching
                         let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
 
+                        // Match columns accurately based on user instructions
                         let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : (row['Fresh'] !== undefined ? row['Fresh'] : '')));
                         let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : (row['Damage'] !== undefined ? row['Damage'] : '')));
                         let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : (row['Expiry'] !== undefined ? row['Expiry'] : '')));

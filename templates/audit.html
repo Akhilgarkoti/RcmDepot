@@ -570,20 +570,20 @@
                 let valA, valB;
                 if (field === 'totalPhy') {
                     let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
-                    valA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? (fA + dA + eA) : -1;
+                    valA = fA + dA + eA;
                     let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
-                    valB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? (fB + dB + eB) : -1;
+                    valB = fB + dB + eB;
                 } else if (field === 'diffQty') {
                     let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
-                    valA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? ((fA + dA + eA) - a.unrestrictedStock) : 999999;
+                    valA = (fA + dA + eA) - a.unrestrictedStock;
                     let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
-                    valB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? ((fB + dB + eB) - b.unrestrictedStock) : 999999;
+                    valB = (fB + dB + eB) - b.unrestrictedStock;
                 } else if (field === 'diffAmt') {
                     let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
-                    let totA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? (fA + dA + eA) : 0;
+                    let totA = fA + dA + eA;
                     valA = Math.round(((totA - a.unrestrictedStock) * a.sp) * 100) / 100;
                     let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
-                    let totB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? (fB + dB + eB) : 0;
+                    let totB = fB + dB + eB;
                     valB = Math.round(((totB - b.unrestrictedStock) * b.sp) * 100) / 100;
                 } else {
                     valA = a[field];
@@ -742,15 +742,13 @@
                 let f = parseVal(item.freshQty);
                 let d = parseVal(item.damageQty);
                 let e = parseVal(item.expiryQty);
-                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
-                if (hasInput) {
-                    let total = f + d + e;
-                    phyStock += total;
-                    if (total !== item.unrestrictedStock) diffCount++;
-                    let diffQty = total - item.unrestrictedStock;
-                    let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-                    totalDiffAmt += diffAmt;
-                }
+                
+                let total = f + d + e;
+                phyStock += total;
+                if (total !== item.unrestrictedStock) diffCount++;
+                let diffQty = total - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+                totalDiffAmt += diffAmt;
             });
 
             document.getElementById('sumTotalItems').textContent = totalItems;
@@ -795,11 +793,10 @@
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
                 let eNum = parseVal(expiry);
-                let hasInput = fresh !== '' && fresh !== '-' && fresh !== null || damage !== '' && damage !== '-' && damage !== null || expiry !== '' && expiry !== '-' && expiry !== null;
                 
-                let totalPhy = hasInput ? (fNum + dNum + eNum) : 0;
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
-                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : 0;
+                let totalPhy = fNum + dNum + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 live-row";
@@ -836,11 +833,10 @@
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
                 let eNum = parseVal(expiry);
-                let hasInput = fresh !== '' && fresh !== '-' && fresh !== null || damage !== '' && damage !== '-' && damage !== null || expiry !== '' && expiry !== '-' && expiry !== null;
                 
-                let totalPhy = hasInput ? (fNum + dNum + eNum) : 0;
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
-                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : 0;
+                let totalPhy = fNum + dNum + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 live-row";
@@ -884,12 +880,11 @@
                 let fresh = parseVal(item.freshQty);
                 let damage = parseVal(item.damageQty);
                 let expiry = parseVal(item.expiryQty);
-                let hasInput = item.freshQty !== '' && item.freshQty !== '-' && item.freshQty !== null || item.damageQty !== '' && item.damageQty !== '-' && item.damageQty !== null || item.expiryQty !== '' && item.expiryQty !== '-' && item.expiryQty !== null;
                 
-                let totalPhy = hasInput ? (fresh + damage + expiry) : 0;
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
-                let diffAmt = hasInput ? Math.round((diffQty * item.sp) * 100) / 100 : 0;
-                let totalPhyAmt = hasInput ? (totalPhy * item.sp) : 0;
+                let totalPhy = fresh + damage + expiry;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+                let totalPhyAmt = totalPhy * item.sp;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 dl-row";

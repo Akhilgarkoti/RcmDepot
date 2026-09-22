@@ -119,13 +119,21 @@
             <!-- TAB 1: LIVE WEB ENTRY VIEW -->
             <div id="liveEntryView" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-3 bg-indigo-50/50 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-2">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                        <p class="text-[11px] text-slate-500">Press <b>Enter</b> after typing quantity to jump directly to the next product below.</p>
+                    <div class="flex items-center space-x-3">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-600"></i> Live Stock Entry Portal</h3>
+                            <p class="text-[11px] text-slate-500">Press <b>Enter</b> after typing quantity to jump directly to the next product below.</p>
+                        </div>
                     </div>
-                    <!-- Dedicated Mobile Search Bar -->
-                    <div class="w-full sm:hidden">
-                        <input type="text" id="mobileSearchInput" onkeyup="filterTable()" placeholder="🔍 Search Code or Desc..." class="w-full px-3 py-1.5 border border-indigo-300 rounded-md text-xs bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <!-- Clear All Physical Qty Button -->
+                    <div class="flex items-center space-x-2">
+                        <button onclick="clearAllPhysicalQuantities()" class="px-3 py-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded transition shadow-sm whitespace-nowrap flex items-center">
+                            <i class="fa-solid fa-eraser mr-1"></i> Clear All Filled Qty
+                        </button>
+                        <!-- Dedicated Mobile Search Bar -->
+                        <div class="w-full sm:hidden">
+                            <input type="text" id="mobileSearchInput" onkeyup="filterTable()" placeholder="🔍 Search Code or Desc..." class="w-full px-3 py-1.5 border border-indigo-300 rounded-md text-xs bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
                     </div>
                 </div>
                 
@@ -391,7 +399,7 @@
             <!-- TAB 3: BULK EXCEL UPLOAD & PREVIEW -->
             <div id="bulkUploadView" class="hidden bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
                 
-                <!-- Instruction Box for Required Columns (Updated to Material Description matching) -->
+                <!-- Instruction Box for Required Columns -->
                 <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 space-y-1 shadow-sm">
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1 text-amber-600"></i> Bulk Upload Instructions & Column Matching Guide:</p>
                     <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system <b>Material Description</b> ke zariye automatically match kar sake:</p>
@@ -612,6 +620,15 @@
                 let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
                 let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
 
+                // Extract initial quantities if already present in the uploaded file (Fresh, Damage, Expiry)
+                let fresh = '', damage = '', expiry = '';
+                for (let key in row) {
+                    let lKey = key.toLowerCase();
+                    if (lKey.includes('fresh') || lKey.includes('physcial')) fresh = row[key];
+                    if (lKey.includes('damage')) damage = row[key];
+                    if (lKey.includes('expiry')) expiry = row[key];
+                }
+
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
                         plant: plant,
@@ -621,9 +638,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: '',
-                        damageQty: '',
-                        expiryQty: '',
+                        freshQty: cleanNum(fresh),
+                        damageQty: cleanNum(damage),
+                        expiryQty: cleanNum(expiry),
                         remark: ''
                     });
                 }
@@ -638,6 +655,9 @@
                     item.materialDescription = desc;
                     item.cleanDesc = cleanDescription(desc);
                 }
+                if (!item.freshQty && cleanNum(fresh)) item.freshQty = cleanNum(fresh);
+                if (!item.damageQty && cleanNum(damage)) item.damageQty = cleanNum(damage);
+                if (!item.expiryQty && cleanNum(expiry)) item.expiryQty = cleanNum(expiry);
             });
 
             processedData = Array.from(groupedMap.values());
@@ -763,7 +783,6 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
-                        // Match Material Description from uploaded file
                         let rawDesc = '';
                         for (let key in row) {
                             let lKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -787,7 +806,6 @@
                             if (lKey.includes('expiry')) expiry = row[key];
                         }
 
-                        // Match against processedData using clean description
                         let targetItem = processedData.find(item => item.cleanDesc === cDesc);
                         if (targetItem) {
                             previewBulkData.push({
@@ -878,6 +896,19 @@
             const submitBtn = document.getElementById('submitBulkBtn');
             submitBtn.disabled = true;
             submitBtn.className = "px-4 py-2 bg-indigo-300 text-white font-semibold text-xs rounded-lg cursor-not-allowed transition shadow-sm whitespace-nowrap";
+        }
+
+        function clearAllPhysicalQuantities() {
+            if (confirm('Are you sure you want to clear all filled Physical Quantities (Fresh, Damage, Expiry)?')) {
+                processedData.forEach(item => {
+                    item.freshQty = '';
+                    item.damageQty = '';
+                    item.expiryQty = '';
+                });
+                updateSummaryCards();
+                renderTables();
+                alert('All physical quantities have been cleared successfully.');
+            }
         }
 
         function switchTab(tab) {
@@ -1290,13 +1321,14 @@
             };
 
             const headerStyle = {
-                font: { bold: true, color: { rgb: "000000" } },
-                fill: { fgColor: { rgb: "FFFF00" } },
-                alignment: { horizontal: "center", vertical: "center" },
+                font: { bold: true, color: { rgb: "FFFFFF" } }, // White text for professional dark header
+                fill: { fgColor: { rgb: "5A2A27" } }, // Deep dark brown/maroon fill matching your screenshot header
+                alignment: { horizontal: "center", vertical: "center", wrapText: true }, // Wrap text enabled!
                 border: thinBorder
             };
 
             const cellStyle = {
+                alignment: { vertical: "center", wrapText: true }, // Wrap text enabled for all cells!
                 border: thinBorder
             };
 

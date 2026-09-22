@@ -129,37 +129,67 @@
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm leading-tight">
                             <tr>
                                 <th class="p-2.5 border-r border-slate-200 w-32">
-                                    <span>Material Code</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i>
+                                    <div class="flex justify-between items-center">
+                                        <span>Material Code</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortTable('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-indigo-50 w-32">
                                     <div class="flex justify-between items-center">
                                         <span class="whitespace-normal">Unrestricted Stock</span>
-                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer">
-                                            <i class="fa-solid fa-caret-up hover:text-indigo-600" onclick="sortStock('asc')"></i>
-                                            <i class="fa-solid fa-caret-down hover:text-indigo-600" onclick="sortStock('desc')"></i>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-indigo-100 rounded">
+                                            <span onclick="sortTable('unrestrictedStock', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('unrestrictedStock', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 w-72">
-                                    <span>Material Description</span> <i class="fa-solid fa-filter text-[9px] text-slate-400"></i>
+                                    <div class="flex justify-between items-center">
+                                        <span>Material Description</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortTable('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50 w-28">
-                                    <span>Physical (Fresh)</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Fresh Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-emerald-100 rounded">
+                                            <span onclick="sortTable('freshQty', 'asc')" class="hover:text-emerald-600">▲</span>
+                                            <span onclick="sortTable('freshQty', 'desc')" class="hover:text-emerald-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50 w-24">
-                                    <span>Damage Qty</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Damage</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-amber-100 rounded">
+                                            <span onclick="sortTable('damageQty', 'asc')" class="hover:text-amber-600">▲</span>
+                                            <span onclick="sortTable('damageQty', 'desc')" class="hover:text-amber-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50 w-24">
-                                    <span>Expiry Qty</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Expiry</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-orange-100 rounded">
+                                            <span onclick="sortTable('expiryQty', 'asc')" class="hover:text-orange-600">▲</span>
+                                            <span onclick="sortTable('expiryQty', 'desc')" class="hover:text-orange-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">
-                                    <span>Total Physical</span>
+                                    <span>Total Phy</span>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
                                 </th>
                                 <th class="p-2.5 text-right font-bold bg-slate-100 w-20">
@@ -206,23 +236,41 @@
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 w-32">
-                                    <span>Material Code</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Material Code</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortTable('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 w-72">
-                                    <span>Material Description</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Material Description</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortTable('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">
-                                    <span>Sp</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Sp</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortTable('sp', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('sp', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-32">
                                     <div class="flex justify-between items-center">
                                         <span class="whitespace-normal">Unrestricted Stock</span>
-                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer">
-                                            <i class="fa-solid fa-caret-up hover:text-emerald-600" onclick="sortStock('asc')"></i>
-                                            <i class="fa-solid fa-caret-down hover:text-emerald-600" onclick="sortStock('desc')"></i>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-emerald-100 rounded">
+                                            <span onclick="sortTable('unrestrictedStock', 'asc')" class="hover:text-emerald-600">▲</span>
+                                            <span onclick="sortTable('unrestrictedStock', 'desc')" class="hover:text-emerald-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
@@ -248,7 +296,13 @@
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="9"></div>
                                 </th>
                                 <th class="p-2.5 text-right w-32">
-                                    <span>Total Phy. Amt</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Total Phy. Amt</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortTable('amount', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortTable('amount', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="10"></div>
                                 </th>
                             </tr>
@@ -427,11 +481,24 @@
         }
 
         function sortStock(order) {
+            sortTable('unrestrictedStock', order);
+        }
+
+        function sortTable(field, order) {
             processedData.sort((a, b) => {
-                if (order === 'asc') {
-                    return a.unrestrictedStock - b.unrestrictedStock;
+                let valA = a[field];
+                let valB = b[field];
+
+                if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                    if (order === 'asc') return valA.localeCompare(valB, undefined, {numeric: true});
+                    return valB.localeCompare(valA, undefined, {numeric: true});
                 } else {
-                    return b.unrestrictedStock - a.unrestrictedStock;
+                    valA = parseVal(valA);
+                    valB = parseVal(valB);
+                    if (order === 'asc') return valA - valB;
+                    return valB - valA;
                 }
             });
             renderTables();
@@ -760,7 +827,6 @@
             processedData[index][field] = value;
             const item = processedData[index];
             
-            // Update desktop table row
             const desktopRows = document.querySelectorAll('#liveTableBody tr');
             if (desktopRows[index]) {
                 let row = desktopRows[index];
@@ -778,26 +844,6 @@
                 const diffCell = row.querySelector('.live-diff-qty');
                 diffCell.textContent = diffQty !== '' ? diffQty : '-';
                 diffCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-            }
-
-            // Update mobile card view
-            const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
-            if (mobileCards[index]) {
-                let card = mobileCards[index];
-                let fNum = parseVal(item.freshQty);
-                let dNum = parseVal(item.damageQty);
-                let eNum = parseVal(item.expiryQty);
-                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
-                let totalPhy = hasInput ? (fNum + dNum + eNum) : '-';
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '-';
-
-                card.querySelector('.cell-fresh').value = item.freshQty;
-                card.querySelector('.cell-damage').value = item.damageQty;
-                card.querySelector('.cell-expiry').value = item.expiryQty;
-                card.querySelector('.live-total-phy').textContent = totalPhy;
-                const diffCell = card.querySelector('.live-diff-qty');
-                diffCell.textContent = diffQty;
-                diffCell.className = `live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
             }
 
             updateSummaryCards();

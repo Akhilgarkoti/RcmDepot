@@ -17,7 +17,7 @@
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        .min-w-custom { min-width: 1300px; }
+        .min-w-custom { min-width: 1700px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
@@ -125,15 +125,15 @@
                 
                 <!-- Desktop Table View -->
                 <div class="hidden md:block table-container overflow-x-auto max-h-[68vh]">
-                    <table class="w-full text-left border-collapse text-xs">
+                    <table class="w-full min-w-custom text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm leading-tight">
                             <tr>
                                 <th class="p-2.5 border-r border-slate-200 w-32">
                                     <div class="flex justify-between items-center">
                                         <span>Material Code</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
-                                            <span onclick="sortTable('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
+                                            <span onclick="sortLiveTableData('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortLiveTableData('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
@@ -142,8 +142,8 @@
                                     <div class="flex justify-between items-center">
                                         <span class="whitespace-normal">Unrestricted Stock</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-indigo-100 rounded">
-                                            <span onclick="sortTable('unrestrictedStock', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('unrestrictedStock', 'desc')" class="hover:text-indigo-600">▼</span>
+                                            <span onclick="sortLiveTableData('unrestrictedStock', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortLiveTableData('unrestrictedStock', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
@@ -152,49 +152,71 @@
                                     <div class="flex justify-between items-center">
                                         <span>Material Description</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
-                                            <span onclick="sortTable('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
+                                            <span onclick="sortLiveTableData('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortLiveTableData('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50 w-28">
                                     <div class="flex justify-between items-center">
-                                        <span>Fresh Qty</span>
+                                        <span>Physical (Fresh)</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-emerald-100 rounded">
-                                            <span onclick="sortTable('freshQty', 'asc')" class="hover:text-emerald-600">▲</span>
-                                            <span onclick="sortTable('freshQty', 'desc')" class="hover:text-emerald-600">▼</span>
+                                            <span onclick="sortLiveTableData('freshQty', 'asc')" class="hover:text-emerald-600">▲</span>
+                                            <span onclick="sortLiveTableData('freshQty', 'desc')" class="hover:text-emerald-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50 w-24">
                                     <div class="flex justify-between items-center">
-                                        <span>Damage</span>
+                                        <span>Damage Qty</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-amber-100 rounded">
-                                            <span onclick="sortTable('damageQty', 'asc')" class="hover:text-amber-600">▲</span>
-                                            <span onclick="sortTable('damageQty', 'desc')" class="hover:text-amber-600">▼</span>
+                                            <span onclick="sortLiveTableData('damageQty', 'asc')" class="hover:text-amber-600">▲</span>
+                                            <span onclick="sortLiveTableData('damageQty', 'desc')" class="hover:text-amber-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50 w-24">
                                     <div class="flex justify-between items-center">
-                                        <span>Expiry</span>
+                                        <span>Expiry Qty</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-orange-100 rounded">
-                                            <span onclick="sortTable('expiryQty', 'asc')" class="hover:text-orange-600">▲</span>
-                                            <span onclick="sortTable('expiryQty', 'desc')" class="hover:text-orange-600">▼</span>
+                                            <span onclick="sortLiveTableData('expiryQty', 'asc')" class="hover:text-orange-600">▲</span>
+                                            <span onclick="sortLiveTableData('expiryQty', 'desc')" class="hover:text-orange-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">
-                                    <span>Total Phy</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Total Physical</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortLiveTableData('totalPhy', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortLiveTableData('totalPhy', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
                                 </th>
-                                <th class="p-2.5 text-right font-bold bg-slate-100 w-20">
-                                    <span>Diff Qty</span>
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">
+                                    <div class="flex justify-between items-center">
+                                        <span>Diff Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortLiveTableData('diffQty', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortLiveTableData('diffQty', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
+                                </th>
+                                <th class="p-2.5 text-right font-bold bg-slate-100 w-32">
+                                    <div class="flex justify-between items-center">
+                                        <span>Diff Amt</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortLiveTableData('diffAmt', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortLiveTableData('diffAmt', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="8"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -232,15 +254,21 @@
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm leading-tight">
                             <tr>
                                 <th class="p-2.5 border-r border-slate-200 w-16">
-                                    <span>Plant</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Plant</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('plant', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('plant', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="0"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 w-32">
                                     <div class="flex justify-between items-center">
                                         <span>Material Code</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
-                                            <span onclick="sortTable('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
+                                            <span onclick="sortDownloadTableData('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
@@ -249,8 +277,8 @@
                                     <div class="flex justify-between items-center">
                                         <span>Material Description</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
-                                            <span onclick="sortTable('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
+                                            <span onclick="sortDownloadTableData('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="2"></div>
@@ -259,8 +287,8 @@
                                     <div class="flex justify-between items-center">
                                         <span>Sp</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
-                                            <span onclick="sortTable('sp', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('sp', 'desc')" class="hover:text-indigo-600">▼</span>
+                                            <span onclick="sortDownloadTableData('sp', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('sp', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="3"></div>
@@ -269,41 +297,81 @@
                                     <div class="flex justify-between items-center">
                                         <span class="whitespace-normal">Unrestricted Stock</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-emerald-100 rounded">
-                                            <span onclick="sortTable('unrestrictedStock', 'asc')" class="hover:text-emerald-600">▲</span>
-                                            <span onclick="sortTable('unrestrictedStock', 'desc')" class="hover:text-emerald-600">▼</span>
+                                            <span onclick="sortDownloadTableData('unrestrictedStock', 'asc')" class="hover:text-emerald-600">▲</span>
+                                            <span onclick="sortDownloadTableData('unrestrictedStock', 'desc')" class="hover:text-emerald-600">▼</span>
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="4"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">
-                                    <span>Fresh Qty</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Fresh Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('freshQty', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('freshQty', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="5"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">
-                                    <span>Damage Qty</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Damage Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('damageQty', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('damageQty', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="6"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">
-                                    <span>Expiry Qty</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Expiry Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('expiryQty', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('expiryQty', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-28">
-                                    <span>Total Physical</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Total Physical</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('totalPhy', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('totalPhy', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="8"></div>
                                 </th>
                                 <th class="p-2.5 border-r border-slate-200 text-right w-24">
-                                    <span>Diff Qty</span>
+                                    <div class="flex justify-between items-center">
+                                        <span>Diff Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('diffQty', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('diffQty', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="9"></div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right w-28">
+                                    <div class="flex justify-between items-center">
+                                        <span>Diff Amt</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortDownloadTableData('diffAmt', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('diffAmt', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="10"></div>
                                 </th>
                                 <th class="p-2.5 text-right w-32">
                                     <div class="flex justify-between items-center">
                                         <span>Total Phy. Amt</span>
-                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
-                                            <span onclick="sortTable('amount', 'asc')" class="hover:text-indigo-600">▲</span>
-                                            <span onclick="sortTable('amount', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-indigo-100 rounded">
+                                            <span onclick="sortDownloadTableData('amount', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortDownloadTableData('amount', 'desc')" class="hover:text-indigo-600">▼</span>
                                         </div>
                                     </div>
-                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="10"></div>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="dl-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="11"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -480,14 +548,30 @@
             renderTables();
         }
 
-        function sortStock(order) {
-            sortTable('unrestrictedStock', order);
-        }
-
-        function sortTable(field, order) {
+        function sortLiveTableData(field, order) {
             processedData.sort((a, b) => {
-                let valA = a[field];
-                let valB = b[field];
+                let valA, valB;
+                if (field === 'totalPhy') {
+                    let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
+                    valA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? (fA + dA + eA) : -1;
+                    let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
+                    valB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? (fB + dB + eB) : -1;
+                } else if (field === 'diffQty') {
+                    let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
+                    valA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? ((fA + dA + eA) - a.unrestrictedStock) : 999999;
+                    let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
+                    valB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? ((fB + dB + eB) - b.unrestrictedStock) : 999999;
+                } else if (field === 'diffAmt') {
+                    let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
+                    let totA = (a.freshQty !== '' || a.damageQty !== '' || a.expiryQty !== '') ? (fA + dA + eA) : 0;
+                    valA = (totA - a.unrestrictedStock) * a.sp;
+                    let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
+                    let totB = (b.freshQty !== '' || b.damageQty !== '' || b.expiryQty !== '') ? (fB + dB + eB) : 0;
+                    valB = (totB - b.unrestrictedStock) * b.sp;
+                } else {
+                    valA = a[field];
+                    valB = b[field];
+                }
 
                 if (typeof valA === 'string') {
                     valA = valA.toLowerCase();
@@ -502,6 +586,10 @@
                 }
             });
             renderTables();
+        }
+
+        function sortDownloadTableData(field, order) {
+            sortLiveTableData(field, order);
         }
 
         function handleBulkPreview(event) {
@@ -703,6 +791,7 @@
                 
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
+                let diffAmt = hasInput ? (diffQty * item.sp) : '';
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200 live-row";
@@ -720,7 +809,8 @@
                         <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy !== '' ? totalPhy : '-'}</td>
-                    <td class="p-2.5 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty !== '' ? diffQty : '-'}</td>
+                    <td class="p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt !== '' ? diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2}) : '-'}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -742,6 +832,7 @@
                 
                 let totalPhy = hasInput ? (fNum + dNum + eNum) : '-';
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '-';
+                let diffAmt = hasInput ? (diffQty * item.sp) : '-';
 
                 const card = document.createElement('div');
                 card.className = "bg-white p-3.5 rounded-lg border border-slate-200 shadow-sm space-y-2 live-row";
@@ -767,9 +858,10 @@
                             <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="w-full text-center p-1 border border-orange-300 rounded bg-orange-50/20 text-xs cell-expiry">
                         </div>
                     </div>
-                    <div class="flex justify-between items-center text-[11px] pt-1 text-slate-500 font-bold">
-                        <span>Total Phy: <span class="text-slate-800 live-total-phy cell-total">${totalPhy}</span></span>
+                    <div class="flex justify-between items-center text-[11px] pt-1 text-slate-500 font-bold border-t border-slate-100 mt-1">
+                        <span>Total: <span class="text-slate-800 live-total-phy cell-total">${totalPhy}</span></span>
                         <span>Diff: <span class="live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</span></span>
+                        <span>Diff Amt: <span class="live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt !== '-' ? diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2}) : '-'}</span></span>
                     </div>
                 `;
                 container.appendChild(card);
@@ -788,6 +880,7 @@
                 
                 let totalPhy = hasInput ? (fresh + damage + expiry) : 0;
                 let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : 0;
+                let diffAmt = hasInput ? (diffQty * item.sp) : 0;
                 let totalPhyAmt = hasInput ? (totalPhy * item.sp) : 0;
 
                 const tr = document.createElement('tr');
@@ -803,6 +896,7 @@
                     <td class="p-2.5 border-r border-slate-200 text-right dl-expiry">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-total">${hasInput ? totalPhy : '-'}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diff">${hasInput ? diffQty : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold dl-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${hasInput ? diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2}) : '-'}</td>
                     <td class="p-2.5 text-right font-semibold dl-amt">₹${totalPhyAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                 `;
                 tbody.appendChild(tr);
@@ -825,30 +919,8 @@
 
         function updateQty(index, field, value) {
             processedData[index][field] = value;
-            const item = processedData[index];
-            
-            const desktopRows = document.querySelectorAll('#liveTableBody tr');
-            if (desktopRows[index]) {
-                let row = desktopRows[index];
-                let fNum = parseVal(item.freshQty);
-                let dNum = parseVal(item.damageQty);
-                let eNum = parseVal(item.expiryQty);
-                let hasInput = item.freshQty !== '' || item.damageQty !== '' || item.expiryQty !== '';
-                let totalPhy = hasInput ? (fNum + dNum + eNum) : '';
-                let diffQty = hasInput ? (totalPhy - item.unrestrictedStock) : '';
-
-                row.querySelector('.cell-fresh').value = item.freshQty;
-                row.querySelector('.cell-damage').value = item.damageQty;
-                row.querySelector('.cell-expiry').value = item.expiryQty;
-                row.querySelector('.live-total-phy').textContent = totalPhy !== '' ? totalPhy : '-';
-                const diffCell = row.querySelector('.live-diff-qty');
-                diffCell.textContent = diffQty !== '' ? diffQty : '-';
-                diffCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-            }
-
             updateSummaryCards();
-            renderDownloadTable();
-            filterTable();
+            renderTables();
         }
 
         function filterTable() {
@@ -865,8 +937,9 @@
                 const expiry = row.querySelector('.cell-expiry').value.toLowerCase();
                 const total = row.querySelector('.cell-total').textContent.toLowerCase();
                 const diff = row.querySelector('.cell-diff').textContent.toLowerCase();
+                const diffAmt = row.querySelector('.live-diff-amt') ? row.querySelector('.live-diff-amt').textContent.toLowerCase() : '';
 
-                const rowValues = [code, sys, desc, fresh, damage, expiry, total, diff];
+                const rowValues = [code, sys, desc, fresh, damage, expiry, total, diff, diffAmt];
 
                 let matchesAll = true;
                 liveFilters.forEach(input => {
@@ -894,9 +967,10 @@
                 const expiry = row.querySelector('.dl-expiry').textContent.toLowerCase();
                 const total = row.querySelector('.dl-total').textContent.toLowerCase();
                 const diff = row.querySelector('.dl-diff').textContent.toLowerCase();
+                const diffAmt = row.querySelector('.dl-diffamt').textContent.toLowerCase();
                 const amt = row.querySelector('.dl-amt').textContent.toLowerCase();
 
-                const rowValues = [plant, code, desc, sp, sys, fresh, damage, expiry, total, diff, amt];
+                const rowValues = [plant, code, desc, sp, sys, fresh, damage, expiry, total, diff, diffAmt, amt];
 
                 let matchesAll = true;
                 dlFilters.forEach(input => {

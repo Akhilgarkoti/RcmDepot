@@ -397,9 +397,9 @@
                     <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system automatically match kar sake:</p>
                     <ul class="list-disc list-inside text-amber-900 font-semibold pl-1">
                         <li><b>Material Code</b> (Mandatory for matching items)</li>
-                        <li><b>Physcial (Fresh Qty)</b> / <b>Phy Fresh</b></li>
-                        <li><b>DAMAGE QTY</b> / <b>Phy Damage</b></li>
-                        <li><b>EXPIRY QTY</b> / <b>Phy Expiry</b></li>
+                        <li><b>Physcial (Fresh Qty)</b> / <b>Phy Fresh</b> / <b>Fresh</b></li>
+                        <li><b>DAMAGE QTY</b> / <b>Phy Damage</b> / <b>Damage</b></li>
+                        <li><b>EXPIRY QTY</b> / <b>Phy Expiry</b> / <b>Expiry</b></li>
                     </ul>
                 </div>
 
@@ -432,12 +432,15 @@
                                 <th class="p-2.5 border-r border-slate-200 text-right">Unrestricted Stock</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50">Preview Fresh</th>
                                 <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50">Preview Damage</th>
-                                <th class="p-2.5 text-right bg-orange-50">Preview Expiry</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50">Preview Expiry</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100">Total Physical</th>
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100">Diff Qty</th>
+                                <th class="p-2.5 text-right font-bold bg-slate-100">Diff Amt</th>
                             </tr>
                         </thead>
                         <tbody id="bulkPreviewBody" class="divide-y divide-slate-200">
                             <tr>
-                                <td colspan="6" class="p-8 text-center text-slate-400 italic">No file uploaded yet. Click 'Upload Excel File' above to preview.</td>
+                                <td colspan="9" class="p-8 text-center text-slate-400 italic">No file uploaded yet. Click 'Upload Excel File' above to preview.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -498,7 +501,7 @@
             const groupedMap = new Map();
 
             rows.forEach(row => {
-                let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'];
+                let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
                 let code = cleanMaterialCode(rawCode);
                 if (!code) return;
 
@@ -634,7 +637,6 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
-                        // Flexible key matching for Material Code
                         let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
@@ -649,6 +651,7 @@
                                 materialCode: code,
                                 materialDescription: targetItem.materialDescription,
                                 unrestrictedStock: targetItem.unrestrictedStock,
+                                sp: targetItem.sp,
                                 freshQty: cleanNum(fresh),
                                 damageQty: cleanNum(damage),
                                 expiryQty: cleanNum(expiry)
@@ -676,11 +679,18 @@
             tbody.innerHTML = '';
 
             if (previewBulkData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-rose-500 italic">No matching material codes found in uploaded file.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-rose-500 italic">No matching material codes found in uploaded file.</td></tr>`;
                 return;
             }
 
             previewBulkData.forEach(item => {
+                let fNum = parseVal(item.freshQty);
+                let dNum = parseVal(damage = item.damageQty);
+                let eNum = parseVal(item.expiryQty);
+                let totalPhy = fNum + parseVal(item.damageQty) + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
                 tr.innerHTML = `
@@ -689,7 +699,10 @@
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold">${item.unrestrictedStock}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 font-semibold">${item.freshQty !== '' ? item.freshQty : '-'}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-amber-50/30 font-semibold">${item.damageQty !== '' ? item.damageQty : '-'}</td>
-                    <td class="p-2.5 text-right bg-orange-50/30 font-semibold">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right bg-orange-50/30 font-semibold">${item.expiryQty !== '' ? item.expiryQty : '-'}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50">${totalPhy}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</td>
+                    <td class="p-2.5 text-right font-bold bg-slate-50 ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -718,7 +731,7 @@
             document.getElementById('bulkFileInput').value = '';
             previewBulkData = [];
             const tbody = document.getElementById('bulkPreviewBody');
-            tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400 italic">No file uploaded yet. Click 'Upload Excel File' above to preview.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400 italic">No file uploaded yet. Click 'Upload Excel File' above to preview.</td></tr>`;
             const submitBtn = document.getElementById('submitBulkBtn');
             submitBtn.disabled = true;
             submitBtn.className = "px-4 py-2 bg-indigo-300 text-white font-semibold text-xs rounded-lg cursor-not-allowed transition shadow-sm whitespace-nowrap";

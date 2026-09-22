@@ -427,15 +427,87 @@
                     <table class="w-full text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 leading-tight">
                             <tr>
-                                <th class="p-2.5 border-r border-slate-200">Material Code</th>
-                                <th class="p-2.5 border-r border-slate-200 w-72">Material Description</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right">Unrestricted Stock</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50">Preview Fresh</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50">Preview Damage</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50">Preview Expiry</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100">Total Physical</th>
-                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100">Diff Qty</th>
-                                <th class="p-2.5 text-right font-bold bg-slate-100">Diff Amt</th>
+                                <th class="p-2.5 border-r border-slate-200 w-32">
+                                    <div class="flex justify-between items-center">
+                                        <span>Material Code</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortBulkTableData('materialCode', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortBulkTableData('materialCode', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 w-72">
+                                    <div class="flex justify-between items-center">
+                                        <span>Material Description</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortBulkTableData('materialDescription', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortBulkTableData('materialDescription', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right w-32">
+                                    <div class="flex justify-between items-center">
+                                        <span>Unrestricted Stock</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-indigo-100 rounded">
+                                            <span onclick="sortBulkTableData('unrestrictedStock', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortBulkTableData('unrestrictedStock', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-emerald-50 w-28">
+                                    <div class="flex justify-between items-center">
+                                        <span>Preview Fresh</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-emerald-100 rounded">
+                                            <span onclick="sortBulkTableData('freshQty', 'asc')" class="hover:text-emerald-600">▲</span>
+                                            <span onclick="sortBulkTableData('freshQty', 'desc')" class="hover:text-emerald-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-amber-50 w-24">
+                                    <div class="flex justify-between items-center">
+                                        <span>Preview Damage</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-amber-100 rounded">
+                                            <span onclick="sortBulkTableData('damageQty', 'asc')" class="hover:text-amber-600">▲</span>
+                                            <span onclick="sortBulkTableData('damageQty', 'desc')" class="hover:text-amber-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right bg-orange-50 w-24">
+                                    <div class="flex justify-between items-center">
+                                        <span>Preview Expiry</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-orange-100 rounded">
+                                            <span onclick="sortBulkTableData('expiryQty', 'asc')" class="hover:text-orange-600">▲</span>
+                                            <span onclick="sortBulkTableData('expiryQty', 'desc')" class="hover:text-orange-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">
+                                    <div class="flex justify-between items-center">
+                                        <span>Total Physical</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortBulkTableData('totalPhy', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortBulkTableData('totalPhy', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-24">
+                                    <div class="flex justify-between items-center">
+                                        <span>Diff Qty</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortBulkTableData('diffQty', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortBulkTableData('diffQty', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th class="p-2.5 text-right font-bold bg-slate-100 w-32">
+                                    <div class="flex justify-between items-center">
+                                        <span>Diff Amt</span>
+                                        <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
+                                            <span onclick="sortBulkTableData('diffAmt', 'asc')" class="hover:text-indigo-600">▲</span>
+                                            <span onclick="sortBulkTableData('diffAmt', 'desc')" class="hover:text-indigo-600">▼</span>
+                                        </div>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="bulkPreviewBody" class="divide-y divide-slate-200">
@@ -482,7 +554,6 @@
         function cleanMaterialCode(code) {
             if (!code) return '';
             let clean = String(code).trim();
-            // Handle leading zeros for material codes safely
             if (!isNaN(clean)) {
                 return String(Number(clean));
             }
@@ -623,6 +694,40 @@
             sortLiveTableData(field, order);
         }
 
+        function sortBulkTableData(field, order) {
+            previewBulkData.sort((a, b) => {
+                let valA, valB;
+                if (field === 'totalPhy') {
+                    valA = parseVal(a.freshQty) + parseVal(a.damageQty) + parseVal(a.expiryQty);
+                    valB = parseVal(b.freshQty) + parseVal(b.damageQty) + parseVal(b.expiryQty);
+                } else if (field === 'diffQty') {
+                    valA = (parseVal(a.freshQty) + parseVal(a.damageQty) + parseVal(a.expiryQty)) - a.unrestrictedStock;
+                    valB = (parseVal(b.freshQty) + parseVal(b.damageQty) + parseVal(b.expiryQty)) - b.unrestrictedStock;
+                } else if (field === 'diffAmt') {
+                    let totA = parseVal(a.freshQty) + parseVal(a.damageQty) + parseVal(a.expiryQty);
+                    valA = Math.round(((totA - a.unrestrictedStock) * a.sp) * 100) / 100;
+                    let totB = parseVal(b.freshQty) + parseVal(b.damageQty) + parseVal(b.expiryQty);
+                    valB = Math.round(((totB - b.unrestrictedStock) * b.sp) * 100) / 100;
+                } else {
+                    valA = a[field];
+                    valB = b[field];
+                }
+
+                if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                    if (order === 'asc') return valA.localeCompare(valB, undefined, {numeric: true});
+                    return valB.localeCompare(valA, undefined, {numeric: true});
+                } else {
+                    valA = parseVal(valA);
+                    valB = parseVal(valB);
+                    if (order === 'asc') return valA - valB;
+                    return valB - valA;
+                }
+            });
+            renderBulkPreviewTable();
+        }
+
         function handleBulkPreview(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -638,12 +743,10 @@
 
                     previewBulkData = [];
                     rawJson.forEach(row => {
-                        // Flexible matching for Material Code
                         let rawCode = row['Material Code'] || row['MaterialCode'] || row['MATERIAL CODE'] || row['Material code'] || row['material code'];
                         let code = cleanMaterialCode(rawCode);
                         if (!code) return;
 
-                        // Flexible matching for Fresh, Damage, and Expiry
                         let fresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : (row['Fresh'] !== undefined ? row['Fresh'] : '')));
                         let damage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : (row['Damage'] !== undefined ? row['Damage'] : '')));
                         let expiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : (row['Expiry'] !== undefined ? row['Expiry'] : '')));

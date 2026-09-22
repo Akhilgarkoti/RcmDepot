@@ -402,7 +402,7 @@
                 <!-- Instruction Box for Required Columns -->
                 <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900 space-y-1 shadow-sm">
                     <p class="font-bold"><i class="fa-solid fa-circle-info mr-1 text-amber-600"></i> Bulk Upload Instructions & Column Matching Guide:</p>
-                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system <b>Material Description</b> ke zariye automatically match kar sake:</p>
+                    <p class="text-amber-800">Aapki uploaded Excel file me niche diye gaye column headers bilkul hone chahiye taaki system automatically match kar sake:</p>
                     <ul class="list-disc list-inside text-amber-900 font-semibold pl-1">
                         <li><b>Material Description</b> (Mandatory for matching items)</li>
                         <li><b>Physcial (Fresh Qty)</b> / <b>Phy Fresh</b> / <b>Fresh</b></li>
@@ -620,15 +620,6 @@
                 let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
                 let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
 
-                // Extract initial quantities if already present in the uploaded file (Fresh, Damage, Expiry)
-                let fresh = '', damage = '', expiry = '';
-                for (let key in row) {
-                    let lKey = key.toLowerCase();
-                    if (lKey.includes('fresh') || lKey.includes('physcial')) fresh = row[key];
-                    if (lKey.includes('damage')) damage = row[key];
-                    if (lKey.includes('expiry')) expiry = row[key];
-                }
-
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
                         plant: plant,
@@ -638,9 +629,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: cleanNum(fresh),
-                        damageQty: cleanNum(damage),
-                        expiryQty: cleanNum(expiry),
+                        freshQty: '',
+                        damageQty: '',
+                        expiryQty: '',
                         remark: ''
                     });
                 }
@@ -655,9 +646,6 @@
                     item.materialDescription = desc;
                     item.cleanDesc = cleanDescription(desc);
                 }
-                if (!item.freshQty && cleanNum(fresh)) item.freshQty = cleanNum(fresh);
-                if (!item.damageQty && cleanNum(damage)) item.damageQty = cleanNum(damage);
-                if (!item.expiryQty && cleanNum(expiry)) item.expiryQty = cleanNum(expiry);
             });
 
             processedData = Array.from(groupedMap.values());
@@ -1321,14 +1309,13 @@
             };
 
             const headerStyle = {
-                font: { bold: true, color: { rgb: "FFFFFF" } }, // White text for professional dark header
-                fill: { fgColor: { rgb: "5A2A27" } }, // Deep dark brown/maroon fill matching your screenshot header
-                alignment: { horizontal: "center", vertical: "center", wrapText: true }, // Wrap text enabled!
+                font: { bold: true, color: { rgb: "000000" } },
+                fill: { fgColor: { rgb: "FFFF00" } },
+                alignment: { horizontal: "center", vertical: "center" },
                 border: thinBorder
             };
 
             const cellStyle = {
-                alignment: { vertical: "center", wrapText: true }, // Wrap text enabled for all cells!
                 border: thinBorder
             };
 

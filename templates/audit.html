@@ -786,9 +786,9 @@
             tbody.innerHTML = '';
 
             processedData.forEach((item, index) => {
-                let fresh = item.freshQty !== '' ? item.freshQty : '';
-                let damage = item.damageQty !== '' ? item.damageQty : '';
-                let expiry = item.expiryQty !== '' ? item.expiryQty : '';
+                let fresh = item.freshQty;
+                let damage = item.damageQty;
+                let expiry = item.expiryQty;
 
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
@@ -811,7 +811,7 @@
                         <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-damage">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-expiry">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</td>
@@ -826,9 +826,9 @@
             container.innerHTML = '';
 
             processedData.forEach((item, index) => {
-                let fresh = item.freshQty !== '' ? item.freshQty : '';
-                let damage = item.damageQty !== '' ? item.damageQty : '';
-                let expiry = item.expiryQty !== '' ? item.expiryQty : '';
+                let fresh = item.freshQty;
+                let damage = item.damageQty;
+                let expiry = item.expiryQty;
 
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);

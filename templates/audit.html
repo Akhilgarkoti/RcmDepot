@@ -482,6 +482,13 @@
             return clean.replace(/^0+/, '');
         }
 
+        function cleanNum(val) {
+            if (val === '' || val === null || val === undefined || val === '-' || val === '0.00' || val === '0' || isNaN(Number(String(val).replace(/,/g, '')))) return '';
+            let num = Number(String(val).replace(/,/g, ''));
+            if (num === 0) return '';
+            return String(Math.round(num));
+        }
+
         function processRawStockData(rows) {
             const groupedMap = new Map();
 
@@ -507,6 +514,10 @@
                 let returnQty = parseFloat(String(row['Return'] || row['RETURN'] || 0).replace(/,/g, '')) || 0;
                 let blocked = parseFloat(String(row['Blocked Stock'] || row['BlockedStock'] || 0).replace(/,/g, '')) || 0;
 
+                let rawFresh = row['Physcial (Fresh Qty)'] !== undefined ? row['Physcial (Fresh Qty)'] : (row['Phy Fresh'] !== undefined ? row['Phy Fresh'] : (row['Fresh Qty'] !== undefined ? row['Fresh Qty'] : ''));
+                let rawDamage = row['DAMAGE QTY'] !== undefined ? row['DAMAGE QTY'] : (row['Phy Damage'] !== undefined ? row['Phy Damage'] : (row['Damage Qty'] !== undefined ? row['Damage Qty'] : ''));
+                let rawExpiry = row['EXPIRY QTY'] !== undefined ? row['EXPIRY QTY'] : (row['Phy Expiry'] !== undefined ? row['Phy Expiry'] : (row['Expiry Qty'] !== undefined ? row['Expiry Qty'] : ''));
+
                 if (!groupedMap.has(code)) {
                     groupedMap.set(code, {
                         plant: plant,
@@ -515,9 +526,9 @@
                         materialGroup: group,
                         sp: price,
                         unrestrictedStock: 0,
-                        freshQty: '',
-                        damageQty: '',
-                        expiryQty: '',
+                        freshQty: cleanNum(rawFresh),
+                        damageQty: cleanNum(rawDamage),
+                        expiryQty: cleanNum(rawExpiry),
                         remark: ''
                     });
                 }
@@ -531,11 +542,12 @@
                 if (!item.materialDescription && desc) {
                     item.materialDescription = desc;
                 }
+                if (!item.freshQty && cleanNum(rawFresh)) item.freshQty = cleanNum(rawFresh);
+                if (!item.damageQty && cleanNum(rawDamage)) item.damageQty = cleanNum(rawDamage);
+                if (!item.expiryQty && cleanNum(rawExpiry)) item.expiryQty = cleanNum(rawExpiry);
             });
 
             processedData = Array.from(groupedMap.values());
-            
-            // Primary: Material Group (Ascending), Secondary: Unrestricted Stock (High to Low)
             sortDataArray();
 
             if (processedData.length === 0) {
@@ -766,8 +778,8 @@
         }
 
         function parseVal(val) {
-            if (val === '' || val === null || val === undefined || val === '-' || isNaN(Number(val))) return 0;
-            let str = String(val).trim();
+            if (val === '' || val === null || val === undefined || val === '-') return 0;
+            let str = String(val).replace(/,/g, '').trim(); // Commas removed here
             let num = Number(str);
             if (!isNaN(num)) return num;
             try {
@@ -811,7 +823,7 @@
                         <input type="text" value="${damage}" oninput="updateQty(${index}, 'damageQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-amber-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-damage">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-orange-50/30 p-1">
-                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-expiry">
+                        <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" onkeydown="handleEnterKey(event, this)" class="audit-input w-24 text-right p-1.5 border border-orange-300 rounded bg-white focus:ring-1 focus:ring-orange-500 text-xs cell-expiry">
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</td>
@@ -922,8 +934,51 @@
 
         function updateQty(index, field, value) {
             processedData[index][field] = value;
+            
+            const desktopRows = document.querySelectorAll('#liveTableBody tr');
+            if (desktopRows[index]) {
+                let row = desktopRows[index];
+                let item = processedData[index];
+                let fNum = parseVal(item.freshQty);
+                let dNum = parseVal(item.damageQty);
+                let eNum = parseVal(item.expiryQty);
+                let totalPhy = fNum + dNum + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
+                row.querySelector('.cell-total').textContent = totalPhy;
+                let diffCell = row.querySelector('.cell-diff');
+                diffCell.textContent = diffQty;
+                diffCell.className = `p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+                let amtCell = row.querySelector('.cell-diffamt');
+                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                amtCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
+
+            const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
+            if (mobileCards[index]) {
+                let card = mobileCards[index];
+                let item = processedData[index];
+                let fNum = parseVal(item.freshQty);
+                let dNum = parseVal(item.damageQty);
+                let eNum = parseVal(item.expiryQty);
+                let totalPhy = fNum + dNum + eNum;
+                let diffQty = totalPhy - item.unrestrictedStock;
+                let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
+                card.querySelector('.cell-total').textContent = totalPhy;
+                let diffCell = card.querySelector('.cell-diff');
+                diffCell.textContent = diffQty;
+                diffCell.className = `live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+                let amtCell = card.querySelector('.cell-diffamt');
+                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                amtCell.className = `live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
+
             updateSummaryCards();
-            renderTables();
+            renderDownloadTable();
         }
 
         function filterTable() {

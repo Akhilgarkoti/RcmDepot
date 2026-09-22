@@ -11,13 +11,16 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
         .table-container::-webkit-scrollbar { width: 6px; height: 6px; }
         .table-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         .min-w-custom { min-width: 1300px; }
+        @media (max-width: 768px) {
+            input.audit-input { font-size: 16px !important; padding: 10px !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
@@ -122,23 +125,23 @@
                     <div class="flex items-center space-x-3">
                         <div>
                             <h3 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                            <p class="text-[11px] text-slate-500">Press <b>Enter / Next</b> on mobile to jump directly to the next input field.</p>
+                            <p class="text-[11px] text-slate-500">Easily enter physical stock quantities below.</p>
                         </div>
                     </div>
-                    <!-- Clear All Physical Qty Button -->
+                    <!-- Clear All & Search -->
                     <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
                         <button onclick="clearAllPhysicalQuantities()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded transition shadow-sm whitespace-nowrap flex items-center">
                             <i class="fa-solid fa-eraser mr-1"></i> Clear All Filled Qty
                         </button>
-                        <!-- Dedicated Mobile Search Bar -->
-                        <div class="w-48 sm:hidden">
+                        <!-- Mobile Search Bar -->
+                        <div class="w-48">
                             <input type="text" id="mobileSearchInput" onkeyup="filterTable()" placeholder="🔍 Search..." class="w-full px-2.5 py-1.5 border border-indigo-300 rounded-md text-xs bg-white text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                         </div>
                     </div>
                 </div>
                 
-                <!-- Desktop Table View -->
-                <div class="table-container overflow-x-auto max-h-[68vh]">
+                <!-- Desktop Table View (Hidden on Mobile) -->
+                <div class="hidden md:block table-container overflow-x-auto max-h-[68vh]">
                     <table class="w-full min-w-custom text-left border-collapse text-xs">
                         <thead class="bg-slate-100 text-slate-700 uppercase tracking-wider sticky top-0 z-10 font-bold border-b border-slate-200 shadow-sm leading-tight">
                             <tr>
@@ -240,7 +243,7 @@
                     </table>
                 </div>
 
-                <!-- Mobile Optimized Card View (Touch Friendly) -->
+                <!-- Mobile Optimized Card View (Always Visible on Mobile) -->
                 <div id="mobileCardContainer" class="md:hidden divide-y divide-slate-200 max-h-[72vh] overflow-y-auto p-3 space-y-3">
                     <!-- Mobile cards populated via JS -->
                 </div>
@@ -1465,7 +1468,8 @@
                 }
             }
 
-            // 1st row (1r) Freeze fix enabled properly
+            // Corrected Freeze structure so that row 1 stays fixed when scrolling down
+            ws['!views'] = [{ state: 'frozen', xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft' }];
             ws['!freeze'] = { xSplit: 0, ySplit: 1, topLeftCell: 'A2', activePane: 'bottomLeft', state: 'frozen' };
             ws['!cols'] = wsCols;
 

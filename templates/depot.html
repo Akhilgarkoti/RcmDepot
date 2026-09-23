@@ -2522,8 +2522,8 @@
                     const creditCol = XLSX.utils.encode_cell({ r: rIdx, c: 2 });
                     const debitCol = XLSX.utils.encode_cell({ r: rIdx, c: 3 });
                     
-                    // Fixed Excel Formula with proper cell addressing
-                    const formula = `=(${prevBalCellRef}+IF(ISBLANK(${creditCol}),0,${creditCol})-IF(ISBLANK(${debitCol}),0,${debitCol}))`;
+                    // Simple and clean safe formula
+                    const formula = `=${prevBalCellRef}+N(${creditCol})-N(${debitCol})`;
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=0.65">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RCM Depot Manager Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +37,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
-        /* Modern Sleek Header */
         .navbar {
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(10px);
@@ -122,7 +121,6 @@
             line-height: 1.35;
         }
 
-        /* Buttons & Actions Styling */
         .btn-action-nav { 
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
             color: var(--text-dark); 
@@ -163,7 +161,6 @@
 
         .main-container { width: 100%; max-width: 1540px; margin: 1.5rem auto; padding: 0 1.25rem; }
 
-        /* Modern Segmented Navigation Tabs */
         .depot-nav-tabs { 
             display: flex; 
             gap: 0.75rem; 
@@ -198,7 +195,6 @@
             font-weight: 700; 
         }
 
-        /* Modern Surface Panels */
         .comfort-panel { 
             background: var(--theme-panel-bg); 
             border: 1px solid var(--theme-border); 
@@ -222,7 +218,6 @@
             letter-spacing: -0.01em; 
         }
 
-        /* Particular Column Typography */
         table.custom-table td:nth-child(3) {
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 0.88rem;
@@ -481,7 +476,6 @@
             to { transform: scale(1) translateY(0); opacity: 1; }
         }
 
-        /* Professional Toast Notifications */
         .toast-container { 
             position: fixed; 
             top: 24px; 
@@ -530,7 +524,6 @@
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        /* Stunning Premium Loading Screen */
         .global-loading-overlay {
             display: flex;
             position: fixed;
@@ -599,7 +592,6 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* --- Professional Mobile Bottom Navigation Styles (Added Safely) --- */
         .mobile-bottom-nav {
             display: none;
         }
@@ -618,22 +610,11 @@
             .search-box-wrap { min-width: 100%; }
             .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
             
-    /* Tables ko aur zyada compact aur zoom-out karne ke liye */
-    table.custom-table th {
-        padding: 0.4rem 0.5rem !important;
-        font-size: 0.62rem !important;
-    }
-    table.custom-table td {
-        padding: 0.35rem 0.5rem !important;
-        font-size: 0.72rem !important;
-    }
+            table.custom-table th { padding: 0.4rem 0.5rem !important; font-size: 0.62rem !important; }
+            table.custom-table td { padding: 0.35rem 0.5rem !important; font-size: 0.72rem !important; }
 
-    /* Agar form ke inputs aur buttons ko bhi chhota karna ho */
-    .form-control {
-        padding: 0.45rem 0.6rem !important;
-        font-size: 0.8rem !important;
-    }
-            /* Professional Bottom Bar */
+            .form-control { padding: 0.45rem 0.6rem !important; font-size: 0.8rem !important; }
+
             .mobile-bottom-nav {
                 display: flex;
                 position: fixed;
@@ -683,11 +664,8 @@
             
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
-                <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <!-- Stock Audit Portal Link Button -->
-<a href="audit" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
-    📦 Stock Audit Portal
-</a>
+                <a href="/" onclick="sessionStorage.clear(); localStorage.clear();" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
+                <a href="audit" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">📦 Stock Audit Portal</a>
             </div>
         </div>
 
@@ -1121,7 +1099,6 @@
                                 <option value="Car">Car</option>
                                 <option value="PickUp">PickUp</option>
                                 <option value="Bike">Bike</option>
-                                
                             </select>
                         </div>
                         <div class="form-group">
@@ -1195,7 +1172,7 @@
         </div>
     </div>
 
-    <!-- Professional Mobile Bottom Navigation Bar (With Permission IDs) -->
+    <!-- Professional Mobile Bottom Navigation Bar -->
     <div class="mobile-bottom-nav">
         <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
             <span>📦</span>
@@ -1469,7 +1446,6 @@
             if (tabStaff) tabStaff.style.display = canStaff ? 'inline-block' : 'none';
             if (tabExpenses) tabExpenses.style.display = canExpenses ? 'inline-block' : 'none';
 
-            // Mobile Bottom Navigation Bar Permission Check
             const botNavDispatch = document.getElementById('botNavDispatch');
             const botNavHistory = document.getElementById('botNavHistory');
             const botNavStaff = document.getElementById('botNavStaff');
@@ -1482,73 +1458,101 @@
         }
 
         async function loadDepotData() {
+            // Check LocalStorage Cache for instant loading (< 0.2s)
+            const cacheKey = `rcm_depot_cache_${depotCode}`;
+            const cachedData = localStorage.getItem(cacheKey);
+            
+            if (cachedData) {
+                try {
+                    const parsed = JSON.parse(cachedData);
+                    processDepotPayload(parsed);
+                    fetchFreshDataInBackground(cacheKey);
+                    return;
+                } catch (e) {
+                    localStorage.removeItem(cacheKey);
+                }
+            }
+
             showScreenBlocker('Loading Depot Data... Please wait!');
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load initial data");
 
-                const depot = res.depot || {};
-                depotGlobalInfo = depot;
-                loadedDispatches = res.dispatches || [];
-                loadedStaffList = res.staffMembers || [];
-                globalNextEmpCode = res.nextEmpCode || "EMP012";
-
-                globalInvoiceFrequencyMap = {};
-                loadedDispatches.forEach(r => {
-                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
-                    if (inv) {
-                        globalInvoiceFrequencyMap[inv] = (globalInvoiceFrequencyMap[inv] || 0) + 1;
-                    }
-                });
-
-                setSafeImage('companyLogoBox', res.companyLogo);
-                setSafeImage('depotLogoBox', res.depotLogo);
-
-                const dName = getField(depot, 'Depot Name') || depotNameStored;
-                const addr = getField(depot, 'Depot Address');
-                const dist = getField(depot, 'Dristric', 'District');
-                const state = getField(depot, 'State Name');
-                const pin = getField(depot, 'Pin Code', 'Pincode');
-                const mob = getField(depot, 'Mob. No.', 'Mobile', 'Mob');
-                const gstin = getField(depot, 'GSTIN', 'GST', 'Gst No');
-                const fssai = getField(depot, 'FSSAI', 'FSSAI No', 'Fssai');
-                depotPrefix = res.invSeries || getField(depot, 'Invoice No Series') || '76287';
-
-                const fullAddrText = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
-                
-                let contactParts = [];
-                if (mob && mob !== '-') contactParts.push(`Mob: ${mob}`);
-                if (gstin && gstin !== '-') contactParts.push(`GST: ${gstin}`);
-                if (fssai && fssai !== '-') contactParts.push(`FSSAI: ${fssai}`);
-
-                document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
-                document.getElementById('topDepotAddress').innerHTML = `
-                    <span>${fullAddrText}</span>
-                    ${contactParts.length > 0 ? `<br><span style="font-weight:600; color:#334155;">${contactParts.join(' | ')}</span>` : ''}
-                `;
-
-                document.getElementById('hiddenDepotCode').value = getField(depot, 'Depot Code') || depotCode;
-                document.getElementById('hiddenDepotName').value = dName;
-                document.getElementById('dispPrefixSeries').value = depotPrefix;
-
-                buildHistoricalDataLists(loadedDispatches);
-                populateHistoryMonthDropdown(loadedDispatches);
-                handleDispatchFilterChange();
-                renderStaffTable(loadedStaffList);
-
-                renderDepotPendingApprovalsUI(res.pendingList || []);
-                loadedDepotExpenses = res.expenses || [];
-                populateExpenseYearDropdown(loadedDepotExpenses);
-                renderAnnualSummaryExpenses();
-
-                applyTabPermissions(depot);
-
+                localStorage.setItem(cacheKey, JSON.stringify(res));
+                processDepotPayload(res);
             } catch (err) { 
                 console.error(err); 
                 showToast('Error loading data!');
             } finally {
                 hideScreenBlocker();
             }
+        }
+
+        async function fetchFreshDataInBackground(cacheKey) {
+            try {
+                const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
+                if (res && res.success) {
+                    localStorage.setItem(cacheKey, JSON.stringify(res));
+                }
+            } catch (e) {}
+        }
+
+        function processDepotPayload(res) {
+            const depot = res.depot || {};
+            depotGlobalInfo = depot;
+            loadedDispatches = res.dispatches || [];
+            loadedStaffList = res.staffMembers || [];
+            globalNextEmpCode = res.nextEmpCode || "EMP012";
+
+            globalInvoiceFrequencyMap = {};
+            loadedDispatches.forEach(r => {
+                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                if (inv) {
+                    globalInvoiceFrequencyMap[inv] = (globalInvoiceFrequencyMap[inv] || 0) + 1;
+                }
+            });
+
+            setSafeImage('companyLogoBox', res.companyLogo);
+            setSafeImage('depotLogoBox', res.depotLogo);
+
+            const dName = getField(depot, 'Depot Name') || depotNameStored;
+            const addr = getField(depot, 'Depot Address');
+            const dist = getField(depot, 'Dristric', 'District');
+            const state = getField(depot, 'State Name');
+            const pin = getField(depot, 'Pin Code', 'Pincode');
+            const mob = getField(depot, 'Mob. No.', 'Mobile', 'Mob');
+            const gstin = getField(depot, 'GSTIN', 'GST', 'Gst No');
+            const fssai = getField(depot, 'FSSAI', 'FSSAI No', 'Fssai');
+            depotPrefix = res.invSeries || getField(depot, 'Invoice No Series') || '76287';
+
+            const fullAddrText = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+            
+            let contactParts = [];
+            if (mob && mob !== '-') contactParts.push(`Mob: ${mob}`);
+            if (gstin && gstin !== '-') contactParts.push(`GST: ${gstin}`);
+            if (fssai && fssai !== '-') contactParts.push(`FSSAI: ${fssai}`);
+
+            document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
+            document.getElementById('topDepotAddress').innerHTML = `
+                <span>${fullAddrText}</span>
+                ${contactParts.length > 0 ? `<br><span style="font-weight:600; color:#334155;">${contactParts.join(' | ')}</span>` : ''}
+            `;
+
+            document.getElementById('hiddenDepotCode').value = getField(depot, 'Depot Code') || depotCode;
+            document.getElementById('hiddenDepotName').value = dName;
+            document.getElementById('dispPrefixSeries').value = depotPrefix;
+
+            buildHistoricalDataLists(loadedDispatches);
+            populateHistoryMonthDropdown(loadedDispatches);
+            handleDispatchFilterChange();
+            renderStaffTable(loadedStaffList);
+
+            renderDepotPendingApprovalsUI(res.pendingList || []);
+            loadedDepotExpenses = res.expenses || [];
+            populateExpenseYearDropdown(loadedDepotExpenses);
+            renderAnnualSummaryExpenses();
+
+            applyTabPermissions(depot);
         }
 
         function renderDepotPendingApprovalsUI(pendingList) {
@@ -1596,6 +1600,7 @@
             if (!confirm(`Are you sure you want to set status as "${statusDecision}"?`)) return;
             showScreenBlocker(`Processing ${statusDecision}...`);
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=updateApprovalStatus&id=${encodeURIComponent(rowId)}&type=${encodeURIComponent(type)}&status=${encodeURIComponent(statusDecision)}&depotCode=${encodeURIComponent(depotCode)}`);
                 showToast(res.message || `Request ${statusDecision}!`);
                 await loadDepotData();
@@ -1831,6 +1836,7 @@
             };
 
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -1871,6 +1877,7 @@
             const ids = Array.from(checked).map(cb => cb.value);
 
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(ids.join(','))}`);
                 showToast(res.message || "Selected records deleted successfully!");
                 await loadDepotData();
@@ -2021,6 +2028,7 @@
             };
 
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -2071,6 +2079,7 @@
             if (!confirm("Are you sure you want to delete this Staff Transaction entry?")) return;
             showScreenBlocker('Deleting transaction...');
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteStaffTransaction&id=${encodeURIComponent(rowId)}&staffCode=${encodeURIComponent(currentActiveStaffCode)}&depotCode=${encodeURIComponent(depotCode)}`);
                 showToast(res.message || "Transaction deleted!");
                 await openStaffLedger(currentActiveStaffCode, currentActiveStaffName);
@@ -2109,6 +2118,7 @@
             };
 
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -2159,6 +2169,7 @@
             };
 
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -2184,6 +2195,7 @@
             if (!confirm(`Delete dispatch record ${rowId}?`)) return;
             showScreenBlocker('Deleting dispatch record...');
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
                 showToast(res.message || "Deleted");
                 await loadDepotData();
@@ -2580,6 +2592,7 @@
             try {
                 const cleanId = String(rowId || '').trim();
                 const cleanPart = encodeURIComponent(particularText || '');
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&particular=${cleanPart}&depotCode=${encodeURIComponent(depotCode)}`);
                 
                 if (res && res.success) {
@@ -2651,6 +2664,7 @@
             };
 
             try {
+                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -3254,7 +3268,7 @@
                         <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
                         <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
                         <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
-                        <div style="display: flex; justify-content: space-space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
                             <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>

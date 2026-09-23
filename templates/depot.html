@@ -1125,7 +1125,7 @@
                 const details = item.particular || item.details || (type === 'Staff Addition' ? `New Staff Request (${item.mobile || ''})` : '-');
                 const amt = Number(item.debit || item.credit || 0);
                 const isDebit = Number(item.debit || 0) > 0;
-                const amtStr = amt > 0 ? `₹${Math.round(amt)} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
+                const amtStr = amt > 0 ? `₹${amt} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
 
                 html += `<tr>
                     <td style="font-weight:700; color:${type==='Staff Addition'?'#b45309':'var(--sap-brand)'}; font-size:0.74rem;">${type}</td>
@@ -1510,7 +1510,7 @@
                     }
                 });
                 const net = totalCr - totalDr;
-                const cleanNet = Math.round(net);
+                const cleanNet = Math.round(net); // Removed decimals
                 return `₹${Math.abs(cleanNet)} ${cleanNet >= 0 ? '(Cr)' : '(Dr)'}`;
             } catch (e) { return '-'; }
         }
@@ -2519,11 +2519,12 @@
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
+                    const curRow = rIdx + 1;
                     const creditCol = XLSX.utils.encode_cell({ r: rIdx, c: 2 });
                     const debitCol = XLSX.utils.encode_cell({ r: rIdx, c: 3 });
                     
-                    // Simple and clean safe formula
-                    const formula = `=${prevBalCellRef}+N(${creditCol})-N(${debitCol})`;
+                    // Formula for Balance: =PREV_BAL + CREDIT - DEBIT
+                    const formula = `=(${prevBalCellRef}+IF(ISBLANK(${creditCol}),0,${creditCol})-IF(ISBLANK(${debitCol}),0,${debitCol}))`;
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
@@ -2538,9 +2539,9 @@
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
                 
-                const creditStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length, c: 2 });
+                const creditStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length - 1, c: 2 });
                 const creditEnd = XLSX.utils.encode_cell({ r: rIdx - 1, c: 2 });
-                const debitStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length, c: 3 });
+                const debitStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length - 1, c: 3 });
                 const debitEnd = XLSX.utils.encode_cell({ r: rIdx - 1, c: 3 });
                 const finalBalRef = XLSX.utils.encode_cell({ r: rIdx - 1, c: 4 });
 
@@ -2548,6 +2549,7 @@
                 setCell(rIdx, 3, `=SUM(${debitStart}:${debitEnd})`, STYLE_TOTAL, "#,##0");
                 setCell(rIdx, 4, `=${finalBalRef}`, STYLE_TOTAL, "#,##0");
 
+                // Update running balance for next month sequence
                 let monthDrTotal = 0; let monthCrTotal = 0;
                 rowsInMonth.forEach(r => {
                     monthDrTotal += Number(getField(r, 'Debit', 'debit') || 0);
@@ -2587,7 +2589,7 @@
             });
 
             if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
-            const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
+            const sortedYears = Array.from(yearsSet).sort((a, b) => b - a); // New to Old order
             const wb = XLSX.utils.book_new();
 
             sortedYears.forEach(startYear => {

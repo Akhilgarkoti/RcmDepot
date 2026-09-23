@@ -10,7 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <style>
-        /* --- SAP SIGNATURE THEME PALETTE --- */
         :root {
             --sap-brand: #0a6ed1;
             --sap-brand-hover: #0055b3;
@@ -36,7 +35,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: var(--sap-bg); color: var(--sap-text); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
-        /* SAP Signature Navbar Header */
         .navbar {
             background: #ffffff;
             border-bottom: 2px solid var(--sap-brand);
@@ -52,334 +50,79 @@
             flex-wrap: wrap;
         }
 
-        .nav-left-box {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-            flex-wrap: wrap;
-        }
-
-        .brand-section { 
-            display: flex; 
-            align-items: center; 
-            gap: 0.75rem; 
-        }
-
-        .depot-logo-box { 
-            width: 38px; 
-            height: 38px; 
-            border-radius: var(--sap-radius-sm); 
-            background: #f0f4f8; 
-            border: 1px solid var(--sap-border); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-            padding: 4px; 
-            flex-shrink: 0; 
-        }
+        .nav-left-box { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+        .brand-section { display: flex; align-items: center; gap: 0.75rem; }
+        .depot-logo-box { width: 38px; height: 38px; border-radius: var(--sap-radius-sm); background: #f0f4f8; border: 1px solid var(--sap-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px; flex-shrink: 0; }
         .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        .nav-actions-left { 
-            display: flex; 
-            align-items: center; 
-            gap: 0.5rem; 
-        }
-
-        .depot-center-section { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-end; 
-            justify-content: center; 
-            gap: 0.15rem; 
-            text-align: right; 
-            flex: 1; 
-        }
-
-        .company-logo-badge { 
-            width: 140px; 
-            height: 32px; 
-            border-radius: var(--sap-radius-sm); 
-            background: #ffffff; 
-            border: 1px solid var(--sap-border); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-            padding: 2px 6px; 
-        }
+        .nav-actions-left { display: flex; align-items: center; gap: 0.5rem; }
+        .depot-center-section { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 0.15rem; text-align: right; flex: 1; }
+        .company-logo-badge { width: 140px; height: 32px; border-radius: var(--sap-radius-sm); background: #ffffff; border: 1px solid var(--sap-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .depot-details-text {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            text-align: right;
-            line-height: 1.3;
-        }
+        .depot-details-text { display: flex; flex-direction: column; align-items: flex-end; text-align: right; line-height: 1.3; }
 
-        /* SAP Button Styles */
         .btn-action-nav { 
-            background: #ffffff; 
-            color: var(--sap-text); 
-            border: 1px solid var(--sap-border); 
-            padding: 0.42rem 0.85rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            font-size: 0.8rem; 
-            cursor: pointer; 
-            transition: all 0.15s ease; 
-            text-decoration: none; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 6px; 
+            background: #ffffff; color: var(--sap-text); border: 1px solid var(--sap-border); padding: 0.42rem 0.85rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.15s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; 
         }
-        .btn-action-nav:hover { 
-            background: #ebf5ff; 
-            border-color: var(--sap-brand); 
-            color: var(--sap-brand);
-        }
-        .btn-nav-logout { 
-            background: #fff5f5; 
-            border-color: #f5c6cb; 
-            color: var(--accent-dr); 
-        }
-        .btn-nav-logout:hover { 
-            background: #ffe3e3; 
-            border-color: #f1b0b7; 
-            color: #800; 
-        }
+        .btn-action-nav:hover { background: #ebf5ff; border-color: var(--sap-brand); color: var(--sap-brand); }
+        .btn-nav-logout { background: #fff5f5; border-color: #f5c6cb; color: var(--accent-dr); }
+        .btn-nav-logout:hover { background: #ffe3e3; border-color: #f1b0b7; color: #800; }
 
         .main-container { width: 100%; max-width: 1620px; margin: 1.25rem auto; padding: 0 1rem; }
 
-        /* SAP Navigation Tabs */
-        .depot-nav-tabs { 
-            display: flex; 
-            gap: 0.5rem; 
-            background: var(--sap-panel-bg); 
-            padding: 5px; 
-            border-radius: var(--sap-radius-md); 
-            margin-bottom: 1.25rem; 
-            align-items: center;
-            flex-wrap: wrap; 
-            border: 1px solid var(--sap-border);
-            box-shadow: var(--sap-shadow);
-        }
-        .tab-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--sap-text-muted); 
-            padding: 0.55rem 1.15rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            font-size: 0.82rem; 
-            cursor: pointer; 
-            transition: all 0.15s ease; 
-        }
-        .tab-btn:hover { 
-            background: #ebf5ff; 
-            color: var(--sap-brand); 
-        }
-        .tab-btn.active { 
-            background: var(--sap-brand); 
-            color: #ffffff; 
-            font-weight: 700; 
-            box-shadow: 0 2px 4px rgba(10, 110, 209, 0.2); 
-        }
+        .depot-nav-tabs { display: flex; gap: 0.5rem; background: var(--sap-panel-bg); padding: 5px; border-radius: var(--sap-radius-md); margin-bottom: 1.25rem; align-items: center; flex-wrap: wrap; border: 1px solid var(--sap-border); box-shadow: var(--sap-shadow); }
+        .tab-btn { background: transparent; border: none; color: var(--sap-text-muted); padding: 0.55rem 1.15rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.15s ease; }
+        .tab-btn:hover { background: #ebf5ff; color: var(--sap-brand); }
+        .tab-btn.active { background: var(--sap-brand); color: #ffffff; font-weight: 700; box-shadow: 0 2px 4px rgba(10, 110, 209, 0.2); }
 
-        /* SAP Surface Panels */
-        .comfort-panel { 
-            background: var(--sap-panel-bg); 
-            border: 1px solid var(--sap-border); 
-            border-radius: var(--sap-radius-md); 
-            padding: 1.5rem; 
-            box-shadow: var(--sap-shadow); 
-            margin-bottom: 1.25rem; 
-        }
-        .panel-header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 1rem; 
-            border-bottom: 1px solid var(--sap-border); 
-            padding-bottom: 0.6rem; 
-        }
-        .panel-header h3 { 
-            font-size: 1.05rem; 
-            font-weight: 700; 
-            color: var(--sap-text); 
-        }
+        .comfort-panel { background: var(--sap-panel-bg); border: 1px solid var(--sap-border); border-radius: var(--sap-radius-md); padding: 1.5rem; box-shadow: var(--sap-shadow); margin-bottom: 1.25rem; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--sap-border); padding-bottom: 0.6rem; }
+        .panel-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--sap-text); }
 
-        /* --- REDUCED TEXT SIZE & EXPANDED WIDTH FOR NON-FIRST TABS --- */
-        #recordsTab table.custom-table th,
-        #staffTab table.custom-table th,
-        #expensesTab table.custom-table th {
-            font-size: 0.7rem !important;
-            padding: 0.5rem 0.65rem !important;
-        }
-        #recordsTab table.custom-table td,
-        #staffTab table.custom-table td,
-        #expensesTab table.custom-table td {
-            font-size: 0.77rem !important;
-            padding: 0.45rem 0.65rem !important;
-        }
+        #recordsTab table.custom-table th, #staffTab table.custom-table th, #expensesTab table.custom-table th { font-size: 0.7rem !important; padding: 0.5rem 0.65rem !important; }
+        #recordsTab table.custom-table td, #staffTab table.custom-table td, #expensesTab table.custom-table td { font-size: 0.77rem !important; padding: 0.45rem 0.65rem !important; }
 
-        table.custom-table td:nth-child(3) {
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .row-opening-balance td:nth-child(3) {
-            color: var(--accent-bal) !important;
-            font-weight: 700 !important;
-        }
+        table.custom-table td:nth-child(3) { font-weight: 600; color: #1e293b; }
+        .row-opening-balance td:nth-child(3) { color: var(--accent-bal) !important; font-weight: 700 !important; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .form-group-full { grid-column: span 2; }
         .form-group { margin-bottom: 0.15rem; }
-        .form-group label { 
-            display: block; 
-            font-size: 0.78rem; 
-            font-weight: 600; 
-            color: var(--sap-text-sub); 
-            margin-bottom: 0.3rem; 
-        }
+        .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--sap-text-sub); margin-bottom: 0.3rem; }
         
-        .form-control { 
-            width: 100%; 
-            padding: 0.5rem 0.75rem; 
-            background: var(--sap-input-bg); 
-            border: 1px solid var(--sap-border); 
-            border-radius: var(--sap-radius-sm); 
-            color: var(--sap-text); 
-            font-size: 0.84rem; 
-            outline: none; 
-            transition: border-color 0.15s; 
-        }
-        .form-control:focus { 
-            border-color: var(--sap-border-focus); 
-            box-shadow: 0 0 0 2px rgba(10, 110, 209, 0.15); 
-        }
-        .form-control:read-only { 
-            background: var(--sap-readonly); 
-            color: var(--sap-text-muted); 
-            font-weight: 600; 
-        }
-        textarea.form-control { 
-            resize: vertical; 
-            min-height: 80px; 
-            font-family: 'JetBrains Mono', monospace; 
-        }
+        .form-control { width: 100%; padding: 0.5rem 0.75rem; background: var(--sap-input-bg); border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); color: var(--sap-text); font-size: 0.84rem; outline: none; transition: border-color 0.15s; }
+        .form-control:focus { border-color: var(--sap-border-focus); box-shadow: 0 0 0 2px rgba(10, 110, 209, 0.15); }
+        .form-control:read-only { background: var(--sap-readonly); color: var(--sap-text-muted); font-weight: 600; }
+        textarea.form-control { resize: vertical; min-height: 80px; font-family: 'JetBrains Mono', monospace; }
 
-        .btn-submit-dispatch { 
-            background: var(--sap-brand); 
-            color: #fff; 
-            border: none; 
-            padding: 0.6rem 1.5rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            font-size: 0.85rem; 
-            cursor: pointer; 
-            margin-top: 1rem; 
-            transition: background 0.15s; 
-        }
+        .btn-submit-dispatch { background: var(--sap-brand); color: #fff; border: none; padding: 0.6rem 1.5rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 1rem; transition: background 0.15s; }
         .btn-submit-dispatch:hover { background: var(--sap-brand-hover); }
 
         .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap; }
         .toolbar-left { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; flex: 1; }
         
-        .filter-select-box { 
-            padding: 0.4rem 0.75rem; 
-            background: #fff; 
-            border: 1px solid var(--sap-border); 
-            border-radius: var(--sap-radius-sm); 
-            color: var(--sap-text); 
-            font-size: 0.8rem; 
-            font-weight: 600; 
-            outline: none; 
-        }
+        .filter-select-box { padding: 0.4rem 0.75rem; background: #fff; border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); color: var(--sap-text); font-size: 0.8rem; font-weight: 600; outline: none; }
         .filter-select-box:focus { border-color: var(--sap-border-focus); }
         
         .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
-        .search-input { 
-            width: 100%; 
-            padding: 0.42rem 0.75rem 0.42rem 2.1rem; 
-            background: #fff; 
-            border: 1px solid var(--sap-border); 
-            border-radius: var(--sap-radius-sm); 
-            color: var(--sap-text); 
-            font-size: 0.82rem; 
-            outline: none; 
-        }
+        .search-input { width: 100%; padding: 0.42rem 0.75rem 0.42rem 2.1rem; background: #fff; border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); color: var(--sap-text); font-size: 0.82rem; outline: none; }
         .search-input:focus { border-color: var(--sap-border-focus); }
         .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--sap-text-muted); font-size: 0.8rem; pointer-events: none; }
 
-        .btn-tool { 
-            padding: 0.28rem 0.55rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            font-size: 0.74rem; 
-            cursor: pointer; 
-            border: 1px solid var(--sap-border); 
-            transition: background 0.15s; 
-        }
+        .btn-tool { padding: 0.28rem 0.55rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.74rem; cursor: pointer; border: 1px solid var(--sap-border); transition: background 0.15s; }
         .btn-tool:hover { background: #f0f0f0; }
         
-        .btn-action-ledger { 
-            background: #e1f0ff; 
-            color: #0055b3; 
-            border: 1px solid #b3d7ff; 
-            padding: 0.28rem 0.6rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            cursor: pointer; 
-            margin-right: 0.25rem; 
-        }
+        .btn-action-ledger { background: #e1f0ff; color: #0055b3; border: 1px solid #b3d7ff; padding: 0.28rem 0.6rem; border-radius: var(--sap-radius-sm); font-weight: 600; cursor: pointer; margin-right: 0.25rem; }
         .btn-action-ledger:hover { background: var(--sap-brand); color: #fff; }
         
-        .btn-action-trx { 
-            background: #fff8e1; 
-            color: #8f6b00; 
-            border: 1px solid #ffe0b2; 
-            padding: 0.28rem 0.6rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            cursor: pointer; 
-        }
+        .btn-action-trx { background: #fff8e1; color: #8f6b00; border: 1px solid #ffe0b2; padding: 0.28rem 0.6rem; border-radius: var(--sap-radius-sm); font-weight: 600; cursor: pointer; }
         .btn-action-trx:hover { background: #ffc107; color: #000; }
 
-        .table-responsive { 
-            width: 100%; 
-            max-height: 700px; 
-            min-height: 350px; 
-            overflow-y: auto; 
-            overflow-x: auto; 
-            border: 1px solid var(--sap-border); 
-            border-radius: var(--sap-radius-sm); 
-            background: #ffffff; 
-        }
+        .table-responsive { width: 100%; max-height: 700px; min-height: 350px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); background: #ffffff; }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.custom-table th { 
-            position: sticky; 
-            top: 0; 
-            z-index: 20; 
-            padding: 0.65rem 0.85rem; 
-            color: var(--sap-text-sub); 
-            font-size: 0.72rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            background: #edf2f7; 
-            border-bottom: 1px solid var(--sap-border); 
-            letter-spacing: 0.03em; 
-        }
-        table.custom-table td { 
-            padding: 0.6rem 0.85rem; 
-            font-size: 0.82rem; 
-            border-bottom: 1px solid #e9ecef; 
-            white-space: nowrap; 
-            vertical-align: middle; 
-            color: var(--sap-text); 
-        }
+        table.custom-table th { position: sticky; top: 0; z-index: 20; padding: 0.65rem 0.85rem; color: var(--sap-text-sub); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; background: #edf2f7; border-bottom: 1px solid var(--sap-border); letter-spacing: 0.03em; }
+        table.custom-table td { padding: 0.6rem 0.85rem; font-size: 0.82rem; border-bottom: 1px solid #e9ecef; white-space: nowrap; vertical-align: middle; color: var(--sap-text); }
         table.custom-table tr:hover { background-color: #f8fafc; }
         
         .row-duplicate { background-color: #fff5f5 !important; }
@@ -389,90 +132,22 @@
         .row-opening-balance td { border-bottom: 1px solid #b3d7ff !important; color: #0055b3 !important; }
 
         .load-more-bar { text-align: center; padding-top: 0.85rem; }
-        .btn-load-older { 
-            background: #e9ecef; 
-            color: var(--sap-text-sub); 
-            border: 1px solid var(--sap-border); 
-            padding: 0.4rem 1.1rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-weight: 600; 
-            font-size: 0.8rem; 
-            cursor: pointer; 
-        }
+        .btn-load-older { background: #e9ecef; color: var(--sap-text-sub); border: 1px solid var(--sap-border); padding: 0.4rem 1.1rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; }
         .btn-load-older:hover { background: #dde2e6; color: var(--sap-text); }
 
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 2000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0, 0, 0, 0.5); 
-            overflow-y: auto; 
-            padding: 1rem; 
-        }
-        .modal-box { 
-            background: #ffffff; 
-            margin: 2rem auto; 
-            width: 95%; 
-            max-width: 500px; 
-            border-radius: var(--sap-radius-md); 
-            border: 1px solid var(--sap-border); 
-            box-shadow: var(--sap-shadow-float); 
-            overflow: hidden; 
-        }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); overflow-y: auto; padding: 1rem; }
+        .modal-box { background: #ffffff; margin: 2rem auto; width: 95%; max-width: 500px; border-radius: var(--sap-radius-md); border: 1px solid var(--sap-border); box-shadow: var(--sap-shadow-float); overflow: hidden; }
         .modal-box-large { width: 98% !important; max-width: 1400px !important; margin: 1.2rem auto !important; }
         .modal-box-compact { max-width: 900px !important; width: 95% !important; }
         
-        .modal-top-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0.75rem 1.25rem; 
-            background: #edf2f7; 
-            border-bottom: 1px solid var(--sap-border); 
-        }
+        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; background: #edf2f7; border-bottom: 1px solid var(--sap-border); }
         .modal-top-bar span { font-weight: 700; font-size: 0.9rem; color: var(--sap-text); }
-        .modal-close-btn { 
-            background: transparent; 
-            border: none; 
-            color: var(--sap-text-muted); 
-            font-size: 1.25rem; 
-            cursor: pointer; 
-            line-height: 1; 
-        }
+        .modal-close-btn { background: transparent; border: none; color: var(--sap-text-muted); font-size: 1.25rem; cursor: pointer; line-height: 1; }
         .modal-close-btn:hover { color: var(--sap-text); }
         .modal-body { padding: 1.25rem; background: #ffffff; }
 
-        .toast-container { 
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            z-index: 999999; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-            pointer-events: none; 
-        }
-        .toast-msg { 
-            pointer-events: auto;
-            min-width: 280px; 
-            max-width: 360px;
-            padding: 0.8rem 1.1rem; 
-            border-radius: var(--sap-radius-sm); 
-            font-size: 0.82rem; 
-            font-weight: 600; 
-            background: #ffffff; 
-            color: var(--sap-text); 
-            box-shadow: var(--sap-shadow-float); 
-            border: 1px solid var(--sap-border);
-            border-left: 4px solid var(--sap-brand); 
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+        .toast-msg { pointer-events: auto; min-width: 280px; max-width: 360px; padding: 0.8rem 1.1rem; border-radius: var(--sap-radius-sm); font-size: 0.82rem; font-weight: 600; background: #ffffff; color: var(--sap-text); box-shadow: var(--sap-shadow-float); border: 1px solid var(--sap-border); border-left: 4px solid var(--sap-brand); display: flex; align-items: center; gap: 8px; }
 
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
@@ -481,54 +156,15 @@
             body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
             body * { visibility: hidden !important; }
             #printableReceipt, #printableReceipt * { visibility: visible !important; }
-            #printableReceipt { 
-                display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
-                width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; 
-                font-family: 'Courier New', monospace !important; font-size: 8pt !important; 
-            }
+            #printableReceipt { display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; font-family: 'Courier New', monospace !important; font-size: 8pt !important; }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        /* Loading Overlay with Fail-Safe Auto-Dismiss */
-        .global-loading-overlay {
-            display: flex;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(245, 246, 247, 0.92);
-            backdrop-filter: blur(4px);
-            z-index: 999999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .loader-card {
-            background: #ffffff;
-            padding: 2.25rem 3rem;
-            border-radius: var(--sap-radius-md);
-            box-shadow: var(--sap-shadow-float);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            border: 1px solid var(--sap-border);
-            min-width: 320px;
-        }
-
-        .loader-ring {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 3px solid #e9ecef;
-            border-top: 3px solid var(--sap-brand);
-            animation: spinRing 0.7s linear infinite;
-        }
-
+        .global-loading-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(245, 246, 247, 0.92); backdrop-filter: blur(4px); z-index: 999999; align-items: center; justify-content: center; }
+        .loader-card { background: #ffffff; padding: 2.25rem 3rem; border-radius: var(--sap-radius-md); box-shadow: var(--sap-shadow-float); display: flex; flex-direction: column; align-items: center; gap: 1rem; border: 1px solid var(--sap-border); min-width: 320px; }
+        .loader-ring { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #e9ecef; border-top: 3px solid var(--sap-brand); animation: spinRing 0.7s linear infinite; }
         .loader-brand { font-size: 0.8rem; font-weight: 700; color: var(--sap-brand); text-transform: uppercase; }
         .loader-text { color: var(--sap-text); font-size: 0.9rem; font-weight: 600; text-align: center; }
-
         @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .mobile-bottom-nav { display: none; }
@@ -546,31 +182,8 @@
             .table-responsive { max-height: 480px; }
             .search-box-wrap { min-width: 100%; }
             
-            .mobile-bottom-nav {
-                display: flex;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                background: #ffffff;
-                box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-                border-top: 1px solid var(--sap-border);
-                z-index: 3000;
-                justify-content: space-around;
-                padding: 6px 0 8px 0;
-            }
-            .bot-nav-btn {
-                background: transparent;
-                border: none;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                flex: 1;
-                color: var(--sap-text-muted);
-                cursor: pointer;
-                padding: 2px 0;
-            }
+            .mobile-bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); border-top: 1px solid var(--sap-border); z-index: 3000; justify-content: space-around; padding: 6px 0 8px 0; }
+            .bot-nav-btn { background: transparent; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: var(--sap-text-muted); cursor: pointer; padding: 2px 0; }
             .bot-nav-btn span { font-size: 1.15rem; line-height: 1; }
             .bot-nav-btn small { font-size: 0.65rem; font-weight: 600; margin-top: 2px; }
             .bot-nav-btn.active { color: var(--sap-brand); }
@@ -608,7 +221,6 @@
         </div>
     </div>
 
-    <!-- Fail-safe Loading Overlay -->
     <div id="globalLoadingOverlay" class="global-loading-overlay">
         <div class="loader-card">
             <div class="loader-brand">RCM Depot Portal</div>
@@ -680,7 +292,6 @@
             <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
         </div>
 
-        <!-- 1. Dispatch Entry Form -->
         <div id="dispatchTab" class="comfort-panel">
             <div class="panel-header"><h3>📦 Record Invoice Dispatch Entry</h3></div>
             <form id="invoiceDispatchForm">
@@ -720,7 +331,6 @@
             </form>
         </div>
 
-        <!-- 2. Records History -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatch History</h3>
@@ -785,7 +395,6 @@
             </div>
         </div>
 
-        <!-- 3. Staff & Ledger Tab -->
         <div id="staffTab" class="comfort-panel" style="display:none; max-width: 1400px; margin: 0 auto 1.25rem auto;">
             
             <div id="depotPendingApprovalsCard" style="background:#fffaf0; border:1px solid #feebc8; border-radius:var(--sap-radius-sm); padding:0.85rem; margin-bottom:1.25rem; box-shadow:var(--sap-shadow);">
@@ -833,7 +442,6 @@
             </div>
         </div>
 
-        <!-- 4. Depot Expenses Tab -->
         <div id="expensesTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>💰 Depot Expenses Management</h3>
@@ -1406,7 +1014,6 @@
 
             showScreenBlocker('Loading Depot Data... Please wait!');
             
-            // Fail-safe timeout timer (if network stalls for 6 seconds, hide blocker automatically)
             const timeoutTimer = setTimeout(() => {
                 hideScreenBlocker();
             }, 6000);
@@ -1903,7 +1510,8 @@
                     }
                 });
                 const net = totalCr - totalDr;
-                return `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
+                const cleanNet = Math.round(net); // Removed decimals
+                return `₹${Math.abs(cleanNet)} ${cleanNet >= 0 ? '(Cr)' : '(Dr)'}`;
             } catch (e) { return '-'; }
         }
 
@@ -2210,11 +1818,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
+            let opnBalFormatted = Math.round(Math.abs(openingBalance)).toString();
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:var(--sap-text);">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:var(--sap-text);">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? Math.round(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -2226,11 +1834,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = Math.abs(runningBal).toFixed(2);
+                const balFormatted = Math.round(Math.abs(runningBal)).toString();
 
                 annualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? Math.round(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? Math.round(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
@@ -2270,9 +1878,9 @@
                 <td><strong>01 ${monthName}</strong></td>
                 <td style="white-space:normal;min-width:300px;"><strong>Opening Balance</strong></td>
                 <td>-</td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + Math.round(opDr) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + Math.round(opCr) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
                 <td style="text-align:center;"><span style="display:inline-block;padding:2px 6px;border-radius:2px;font-size:0.7rem;font-weight:bold;background:#e1f0ff;color:#0055b3;">Opening</span></td>
             </tr>`;
 
@@ -2309,9 +1917,9 @@
                     <td><strong>${dt}</strong></td>
                     <td style="white-space:normal;min-width:300px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + Math.round(dr) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + Math.round(cr) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + Math.round(runningBal) : 'Pending'}</td>
                     <td style="text-align:center;"><span style="display:inline-block;padding:2px 6px;border-radius:2px;font-size:0.7rem;font-weight:bold;background:${isApproved ? '#f0fdf4;color:var(--accent-cr)' : '#fff8e1;color:#8f6b00'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
@@ -2378,9 +1986,9 @@
             html += `<tr style="font-weight:bold; background:#edf2f7;">
                 <td style="border:1px solid #000; padding:4px;">01-B/F</td>
                 <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? Math.round(opDr) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? Math.round(opCr) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -2395,9 +2003,9 @@
                     html += `<tr>
                         <td style="border:1px solid #000; padding:4px;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? Math.round(dr) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? Math.round(cr) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
                     </tr>`;
                 }
             });
@@ -2405,11 +2013,11 @@
             document.getElementById('rcptTableBody').innerHTML = html;
 
             const opBal = activeViewingMonthData.openingBal;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.round(Math.abs(opBal))} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${Math.round(activeViewingMonthData.totalDr)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${Math.round(activeViewingMonthData.totalCr)}`;
             const finalNet = activeViewingMonthData.closingBal;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.round(Math.abs(finalNet))} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
@@ -2464,7 +2072,7 @@
 
             let opCr = openingBalance > 0 ? openingBalance : 0;
             let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${Math.round(opDr)},${Math.round(opCr)},${Math.round(runningBal)},"Opening"\n`;
 
             currentFYRows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
@@ -2481,11 +2089,11 @@
                     runningBal += (cr - dr);
                 }
 
-                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
-                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+                const balStr = isApproved ? Math.round(runningBal).toString() : "Pending";
+                csvContent += `${dt},${part},${mode},${Math.round(dr)},${Math.round(cr)},${balStr},${appRaw}\n`;
             });
 
-            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            csvContent += `\nSUMMARY,,,"Total Debit: ${Math.round(totalDr)}","Total Credit: ${Math.round(totalCr)}","Net Balance: ${Math.abs(Math.round(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2721,11 +2329,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
+            let opnBalFormatted = Math.round(Math.abs(openingBalance)).toString();
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             expenseAnnualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:var(--sap-text);">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:var(--sap-text);">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? Math.round(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -2737,11 +2345,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = Math.abs(runningBal).toFixed(2);
+                const balFormatted = Math.round(Math.abs(runningBal)).toString();
 
                 expenseAnnualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? Math.round(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? Math.round(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
@@ -2780,9 +2388,9 @@
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
                 <td><strong>Opening Balance</strong></td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + Math.round(opDr) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + Math.round(opCr) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
             </tr>`;
 
             mData.rows.forEach((r, idx) => {
@@ -2813,9 +2421,9 @@
                     <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + Math.round(dr) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + Math.round(cr) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
                 </tr>`;
             });
 
@@ -2869,6 +2477,7 @@
                 const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
                 const cell = { v: val, s: style };
                 if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
+                else if (typeof val === 'string' && val.startsWith('=')) { cell.t = 'n'; if (numFmt) cell.z = numFmt; }
                 else { cell.t = 's'; }
                 ws[cellRef] = cell;
             }
@@ -2876,8 +2485,6 @@
             merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } });
             for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? `${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}` : "", STYLE_TITLE);
             rIdx += 2; 
-
-            let runningBal = openingBalance;
 
             fyMonthSequence.forEach(mIndex => {
                 const rowsInMonth = monthlyGroups[mIndex];
@@ -2893,38 +2500,63 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let monthDr = 0; let monthCr = 0;
-                let opCr = runningBal > 0 ? runningBal : 0;
-                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                let opCr = openingBalance > 0 ? openingBalance : 0;
+                let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+                let openingRowBal = openingBalance;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(0)) : "", STYLE_DATA, "#,##0");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(0)) : "", STYLE_DATA, "#,##0");
+                setCell(rIdx, 4, Number(openingRowBal.toFixed(0)), STYLE_DATA, "#,##0");
                 rIdx++;
 
-                rowsInMonth.forEach(r => {
+                let prevBalCellRef = XLSX.utils.encode_cell({ r: rIdx - 1, c: 4 });
+
+                rowsInMonth.forEach((r, idx) => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    monthDr += dr; monthCr += cr; runningBal += (cr - dr);
+                    const curRow = rIdx + 1;
+                    const creditCol = XLSX.utils.encode_cell({ r: rIdx, c: 2 });
+                    const debitCol = XLSX.utils.encode_cell({ r: rIdx, c: 3 });
+                    
+                    // Formula for Balance: =PREV_BAL + CREDIT - DEBIT
+                    const formula = `=(${prevBalCellRef}+IF(ISBLANK(${creditCol}),0,${creditCol})-IF(ISBLANK(${debitCol}),0,${debitCol}))`;
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(0)) : "", STYLE_DATA, "#,##0");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(0)) : "", STYLE_DATA, "#,##0");
+                    setCell(rIdx, 4, formula, STYLE_DATA, "#,##0");
+
+                    prevBalCellRef = XLSX.utils.encode_cell({ r: rIdx, c: 4 });
                     rIdx++;
                 });
 
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
-                setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
+                
+                const creditStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length - 1, c: 2 });
+                const creditEnd = XLSX.utils.encode_cell({ r: rIdx - 1, c: 2 });
+                const debitStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length - 1, c: 3 });
+                const debitEnd = XLSX.utils.encode_cell({ r: rIdx - 1, c: 3 });
+                const finalBalRef = XLSX.utils.encode_cell({ r: rIdx - 1, c: 4 });
+
+                setCell(rIdx, 2, `=SUM(${creditStart}:${creditEnd})`, STYLE_TOTAL, "#,##0");
+                setCell(rIdx, 3, `=SUM(${debitStart}:${debitEnd})`, STYLE_TOTAL, "#,##0");
+                setCell(rIdx, 4, `=${finalBalRef}`, STYLE_TOTAL, "#,##0");
+
+                // Update running balance for next month sequence
+                let monthDrTotal = 0; let monthCrTotal = 0;
+                rowsInMonth.forEach(r => {
+                    monthDrTotal += Number(getField(r, 'Debit', 'debit') || 0);
+                    monthCrTotal += Number(getField(r, 'Credit', 'credit') || 0);
+                });
+                openingBalance += (monthCrTotal - monthDrTotal);
+
                 rIdx += 2; 
             });
 
@@ -2957,7 +2589,7 @@
             });
 
             if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
-            const sortedYears = Array.from(yearsSet).sort((a, b) => a - b);
+            const sortedYears = Array.from(yearsSet).sort((a, b) => b - a); // New to Old order
             const wb = XLSX.utils.book_new();
 
             sortedYears.forEach(startYear => {
@@ -2967,7 +2599,7 @@
             });
 
             XLSX.writeFile(wb, `All_FY_Depot_Expenses_${depotNameStored}.xlsx`);
-            showToast('All FY Multi-Sheet Styled Excel downloaded!');
+            showToast('All FY Multi-Sheet Styled Excel downloaded (New to Old)!');
         }
 
         function downloadExpensePdfDirect() {
@@ -3013,9 +2645,9 @@
                 monthRowsHtml += `<tr>
                     <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
                     <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? Math.round(opCr) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? Math.round(opDr) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
                 </tr>`;
 
                 rowsInMonth.forEach(r => {
@@ -3031,9 +2663,9 @@
                     monthRowsHtml += `<tr>
                         <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? Math.round(cr) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? Math.round(dr) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
                     </tr>`;
                 });
 
@@ -3057,9 +2689,9 @@
                                 <tr style="background:#edf2f7; font-weight:bold;">
                                     <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
                                     <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + opCr).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthDr + opDr).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${runningBal.toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${Math.round(monthCr + opCr)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${Math.round(monthDr + opDr)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${Math.round(runningBal)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -3153,9 +2785,9 @@
             rowsHtml += `
                 <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
                     <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
-                    <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? Math.round(opDr) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? Math.round(opCr) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${Math.round(runningBal)}</td>
                 </tr>
             `;
 
@@ -3171,9 +2803,9 @@
                     <tr style="border-bottom: 1px dotted #ccc;">
                         <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
                         <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? Math.round(dr) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? Math.round(cr) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${Math.round(runningBal)}</td>
                     </tr>
                 `;
             });
@@ -3203,11 +2835,11 @@
                         <tbody>${rowsHtml}</tbody>
                     </table>
                     <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
-                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.round(Math.abs(openingBalance))} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${Math.round(totalDr)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${Math.round(totalCr)}</span></div>
                         <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
-                            <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
+                            <span>Net Balance:</span> <span>Rs. ${Math.round(Math.abs(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">*** Thank You ***</div>

@@ -17,7 +17,7 @@
         .table-container::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-        .min-w-custom { min-width: 1300px; }
+        .min-w-custom { min-width: 1500px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
@@ -25,13 +25,17 @@
     <!-- Header (Full Width & Compact) -->
     <header class="bg-indigo-900 text-white shadow-sm">
         <div class="w-full px-4 sm:px-6 py-2.5 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-3">
                 <div class="bg-indigo-700 p-2 rounded-lg">
                     <i class="fa-solid fa-boxes-stacked text-lg text-amber-400"></i>
                 </div>
                 <div>
                     <h1 class="text-sm font-bold tracking-wide">RCM Stock Audit Portal</h1>
                     <p class="text-[10px] text-indigo-200">Inventory & Audit Management</p>
+                </div>
+                <!-- Depot Code Display in Top Bar -->
+                <div id="topDepotBadge" class="hidden bg-amber-400 text-slate-900 font-bold text-[11px] px-2.5 py-0.5 rounded-md shadow-inner whitespace-nowrap">
+                    <i class="fa-solid fa-warehouse mr-1"></i> Depot: <span id="depotCodeText">-</span>
                 </div>
             </div>
 
@@ -43,9 +47,7 @@
                     </span>
                     <input type="text" id="globalSearchInput" onkeyup="filterTable()" placeholder="Global Search..." class="w-full pl-8 pr-3 py-1 border border-indigo-700 rounded-md text-xs bg-indigo-800 text-white placeholder-indigo-300 focus:outline-none focus:ring-1 focus:ring-amber-400">
                 </div>
-                <span id="depotBadge" class="hidden bg-indigo-800 text-indigo-100 text-[11px] px-2.5 py-1 rounded-full border border-indigo-600 font-medium whitespace-nowrap"></span>
-                <!-- Depot Portal Link Restored -->
-                <a href="depot" class="px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap flex items-center">
+                <a href="depot.html" class="px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap flex items-center">
                     <i class="fa-solid fa-arrow-left mr-1"></i> Depot Portal
                 </a>
                 <button onclick="resetPortal()" class="hidden id-reset-btn px-2.5 py-1 bg-indigo-800 hover:bg-indigo-700 text-white text-[11px] rounded transition border border-indigo-600 whitespace-nowrap">
@@ -92,12 +94,20 @@
                     <p class="text-[10px] text-slate-500 font-bold uppercase">Physical Stock</p>
                     <p id="sumPhyStock" class="text-base font-bold text-emerald-600 mt-0.5">0</p>
                 </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase">Discrepancy (Qty)</p>
-                    <p id="sumDiffStock" class="text-base font-bold text-rose-600 mt-0.5">0</p>
+                <!-- Clickable Not Filled / Total Phy 0 Card -->
+                <div onclick="openZeroPhyModal()" class="bg-white p-3 rounded-lg shadow-sm border border-rose-200 hover:border-rose-500 cursor-pointer transition group" title="Click to view items with 0 physical stock">
+                    <p class="text-[10px] text-rose-500 font-bold uppercase flex justify-between items-center">
+                        <span>Not Filled (Total Phy 0) <i class="fa-solid fa-circle-info text-[9px]"></i></span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-0 group-hover:opacity-100 transition"></i>
+                    </p>
+                    <p id="sumZeroPhy" class="text-base font-bold text-rose-600 mt-0.5">0</p>
                 </div>
-                <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 col-span-2 md:col-span-1">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase">Diff Amount</p>
+                <!-- Clickable Diff Amount Card -->
+                <div onclick="openDiffModal()" class="bg-white p-3 rounded-lg shadow-sm border border-indigo-200 hover:border-indigo-500 cursor-pointer transition col-span-2 md:col-span-1 group" title="Click to view discrepancy items list">
+                    <p class="text-[10px] text-indigo-500 font-bold uppercase flex justify-between items-center">
+                        <span>Diff Amount <i class="fa-solid fa-circle-info text-[9px]"></i></span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-0 group-hover:opacity-100 transition"></i>
+                    </p>
                     <p id="sumDiffAmt" class="text-base font-bold text-indigo-700 mt-0.5">₹0.00</p>
                 </div>
             </div>
@@ -123,11 +133,21 @@
                     <div class="flex items-center space-x-3">
                         <div>
                             <h3 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                            <p class="text-[11px] text-slate-500">Easily enter physical stock quantities below. (Auto-saved)</p>
+                            <p class="text-[11px] text-slate-500">Fast entry mode (Lag-free & Auto-saved).</p>
                         </div>
                     </div>
-                    <!-- Clear All & Search -->
-                    <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end">
+                    <!-- Clear All, Sorting & Search -->
+                    <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-end flex-wrap gap-y-2">
+                        <!-- Quick Diff Qty Sorting Dropdown -->
+                        <div class="flex items-center space-x-1 bg-white border border-indigo-300 rounded-md px-2 py-1">
+                            <span class="text-[10px] font-bold text-indigo-900"><i class="fa-solid fa-sort mr-1"></i> Diff Qty:</span>
+                            <select id="quickSortSelect" onchange="quickSortDiffQty(this.value)" class="text-xs font-semibold text-indigo-700 bg-transparent focus:outline-none cursor-pointer">
+                                <option value="default">Default Order</option>
+                                <option value="asc">Ascending (Low to High)</option>
+                                <option value="desc">Descending (High to Low)</option>
+                            </select>
+                        </div>
+
                         <button onclick="clearAllPhysicalQuantities()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded transition shadow-sm whitespace-nowrap flex items-center">
                             <i class="fa-solid fa-eraser mr-1"></i> Clear All Filled Qty
                         </button>
@@ -163,7 +183,7 @@
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="1"></div>
                                 </th>
-                                <th class="p-2.5 border-r border-slate-200 w-96">
+                                <th class="p-2.5 border-r border-slate-200 w-80">
                                     <div class="flex justify-between items-center">
                                         <span>Material Description</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
@@ -223,7 +243,7 @@
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="7"></div>
                                 </th>
-                                <th class="p-2.5 text-right font-bold bg-slate-100 w-32">
+                                <th class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-100 w-32">
                                     <div class="flex justify-between items-center">
                                         <span>Diff Amt</span>
                                         <div class="flex flex-col text-[8px] leading-none cursor-pointer font-bold px-1 bg-slate-200 rounded">
@@ -232,6 +252,10 @@
                                         </div>
                                     </div>
                                     <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="8"></div>
+                                </th>
+                                <th class="p-2.5 text-left font-bold bg-slate-100 w-48">
+                                    <span>Remark</span>
+                                    <div class="mt-1"><input type="text" onkeyup="filterTable()" placeholder="Filter..." class="live-col-filter w-full px-1 py-0.5 text-[11px] font-normal normal-case border border-slate-300 rounded bg-white" data-col="9"></div>
                                 </th>
                             </tr>
                         </thead>
@@ -583,11 +607,70 @@
 
     </main>
 
+    <!-- Modal Popup for Not Filled / Total Phy 0 Items -->
+    <div id="zeroPhyModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full overflow-hidden flex flex-col max-h-[80vh]">
+            <div class="p-4 bg-rose-900 text-white flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-triangle-exclamation mr-1.5 text-amber-400"></i> Not Filled Items List (Total Phy = 0)</h3>
+                <button onclick="closeZeroPhyModal()" class="text-white hover:text-amber-300 font-bold text-base px-2">&times;</button>
+            </div>
+            <div class="table-container overflow-y-auto p-4 flex-1">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200">
+                            <th class="p-2">Material Code</th>
+                            <th class="p-2">Material Description</th>
+                            <th class="p-2 text-right">Unstock Qty</th>
+                            <th class="p-2 text-right">Stock Amt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="zeroPhyModalBody" class="divide-y divide-slate-200">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3 bg-slate-100 border-t border-slate-200 flex justify-between items-center text-xs font-bold text-slate-800 px-4">
+                <span>Total Unfilled Items & Stock:</span>
+                <span id="zeroPhyModalTotal" class="text-rose-600 font-bold text-sm"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Popup for Discrepancy Items List (Diff Amount Click) -->
+    <div id="diffModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-lg max-w-2xl w-full overflow-hidden flex flex-col max-h-[80vh]">
+            <div class="p-4 bg-indigo-900 text-white flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-list mr-1.5 text-amber-400"></i> Discrepancy Items List (Difference Qty & Amount)</h3>
+                <button onclick="closeDiffModal()" class="text-white hover:text-amber-300 font-bold text-base px-2">&times;</button>
+            </div>
+            <div class="table-container overflow-y-auto p-4 flex-1">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 uppercase font-bold border-b border-slate-200">
+                            <th class="p-2">Material Code</th>
+                            <th class="p-2">Material Description</th>
+                            <th class="p-2 text-right">Diff Qty</th>
+                            <th class="p-2 text-right">Diff Amt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diffModalBody" class="divide-y divide-slate-200">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3 bg-slate-100 border-t border-slate-200 flex justify-between items-center text-xs font-bold text-slate-800 px-4">
+                <span>Total Difference Amount:</span>
+                <span id="diffModalTotal" class="text-indigo-700 font-bold text-sm"></span>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Logic -->
     <script>
         let processedData = [];
         let previewBulkData = [];
         let currentTab = 'live';
+        let debounceTimer = null;
 
         // Auto-load saved data from localStorage on page load
         window.onload = function() {
@@ -600,6 +683,11 @@
                         document.getElementById('dashboardSection').classList.remove('hidden');
                         document.getElementById('globalSearchWrapper').classList.remove('hidden');
                         document.querySelector('.id-reset-btn').classList.remove('hidden');
+                        
+                        const topDepotBadge = document.getElementById('topDepotBadge');
+                        topDepotBadge.classList.remove('hidden');
+                        document.getElementById('depotCodeText').textContent = processedData[0].plant || 'D121';
+
                         updateSummaryCards();
                         renderTables();
                     }
@@ -720,6 +808,7 @@
                 let unrestricted = parseFloat(String(row['unrestricted stock'] || row['unrestrictedstock'] || row['stock'] || 0).replace(/,/g, '')) || 0;
                 let returnQty = parseFloat(String(row['return'] || 0).replace(/,/g, '')) || 0;
                 let blocked = parseFloat(String(row['blocked stock'] || row['blockedstock'] || 0).replace(/,/g, '')) || 0;
+                let existingRemark = row['remark'] || '';
 
                 let fresh = '', damage = '', expiry = '';
                 for (let k in row) {
@@ -740,7 +829,7 @@
                         freshQty: cleanNum(fresh),
                         damageQty: cleanNum(damage),
                         expiryQty: cleanNum(expiry),
-                        remark: ''
+                        remark: existingRemark
                     });
                 }
 
@@ -757,6 +846,7 @@
                 if (!item.freshQty && cleanNum(fresh)) item.freshQty = cleanNum(fresh);
                 if (!item.damageQty && cleanNum(damage)) item.damageQty = cleanNum(damage);
                 if (!item.expiryQty && cleanNum(expiry)) item.expiryQty = cleanNum(expiry);
+                if (!item.remark && existingRemark) item.remark = existingRemark;
             });
 
             processedData = Array.from(groupedMap.values());
@@ -774,9 +864,9 @@
             document.getElementById('globalSearchWrapper').classList.remove('hidden');
             document.querySelector('.id-reset-btn').classList.remove('hidden');
             
-            const depotBadge = document.getElementById('depotBadge');
-            depotBadge.textContent = `Plant / Depot: ${processedData[0].plant}`;
-            depotBadge.classList.add('hidden');
+            const topDepotBadge = document.getElementById('topDepotBadge');
+            topDepotBadge.classList.remove('hidden');
+            document.getElementById('depotCodeText').textContent = processedData[0].plant || 'D121';
 
             updateSummaryCards();
             renderTables();
@@ -789,6 +879,111 @@
                 }
                 return b.unrestrictedStock - a.unrestrictedStock;
             });
+        }
+
+        function quickSortDiffQty(order) {
+            if (order === 'default') {
+                sortDataArray();
+            } else {
+                processedData.sort((a, b) => {
+                    let fA = parseVal(a.freshQty), dA = parseVal(a.damageQty), eA = parseVal(a.expiryQty);
+                    let diffA = (fA + dA + eA) - a.unrestrictedStock;
+
+                    let fB = parseVal(b.freshQty), dB = parseVal(b.damageQty), eB = parseVal(b.expiryQty);
+                    let diffB = (fB + dB + eB) - b.unrestrictedStock;
+
+                    if (order === 'asc') return diffA - diffB;
+                    return diffB - diffA;
+                });
+            }
+            renderTables();
+        }
+
+        function openZeroPhyModal() {
+            const tbody = document.getElementById('zeroPhyModalBody');
+            tbody.innerHTML = '';
+
+            let zeroItems = processedData.filter(item => {
+                let f = parseVal(item.freshQty);
+                let d = parseVal(item.damageQty);
+                let e = parseVal(item.expiryQty);
+                return (f + d + e) === 0;
+            });
+
+            let totalStockQty = 0;
+            let totalStockAmt = 0;
+
+            if (zeroItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">All items have physical stock filled!</td></tr>`;
+            } else {
+                zeroItems.forEach(item => {
+                    totalStockQty += item.unrestrictedStock;
+                    totalStockAmt += (item.unrestrictedStock * item.sp);
+
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50";
+                    tr.innerHTML = `
+                        <td class="p-2 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
+                        <td class="p-2 text-slate-800">${item.materialDescription}</td>
+                        <td class="p-2 text-right font-bold text-slate-700">${item.unrestrictedStock}</td>
+                        <td class="p-2 text-right font-bold text-slate-700">₹${(item.unrestrictedStock * item.sp).toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('zeroPhyModalTotal').textContent = `${zeroItems.length} Items | Qty: ${totalStockQty} | Amt: ₹${totalStockAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            document.getElementById('zeroPhyModal').classList.remove('hidden');
+        }
+
+        function closeZeroPhyModal() {
+            document.getElementById('zeroPhyModal').classList.add('hidden');
+        }
+
+        function openDiffModal() {
+            const tbody = document.getElementById('diffModalBody');
+            tbody.innerHTML = '';
+
+            let discrepancyItems = processedData.filter(item => {
+                let f = parseVal(item.freshQty);
+                let d = parseVal(item.damageQty);
+                let e = parseVal(item.expiryQty);
+                let total = f + d + e;
+                return total !== item.unrestrictedStock;
+            });
+
+            let totalDiffSumAmt = 0;
+
+            if (discrepancyItems.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-400 italic">No discrepancies found yet!</td></tr>`;
+            } else {
+                discrepancyItems.forEach(item => {
+                    let f = parseVal(item.freshQty);
+                    let d = parseVal(item.damageQty);
+                    let e = parseVal(item.expiryQty);
+                    let total = f + d + e;
+                    let diffQty = total - item.unrestrictedStock;
+                    let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+                    totalDiffSumAmt += diffAmt;
+
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50";
+                    tr.innerHTML = `
+                        <td class="p-2 font-mono font-semibold text-indigo-700">${item.materialCode}</td>
+                        <td class="p-2 text-slate-800">${item.materialDescription}</td>
+                        <td class="p-2 text-right font-bold ${diffQty < 0 ? 'text-rose-600' : 'text-emerald-600'}">${diffQty}</td>
+                        <td class="p-2 text-right font-bold ${diffAmt < 0 ? 'text-rose-600' : 'text-emerald-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('diffModalTotal').textContent = `₹${totalDiffSumAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            document.getElementById('diffModal').classList.remove('hidden');
+        }
+
+        function closeDiffModal() {
+            document.getElementById('diffModal').classList.add('hidden');
         }
 
         function sortLiveTableData(field, order) {
@@ -906,11 +1101,12 @@
                         let cDesc = cleanDescription(rawDesc);
                         if (!cDesc) return;
 
-                        let fresh = '', damage = '', expiry = '';
+                        let fresh = '', damage = '', expiry = '', remark = '';
                         for (let k in row) {
                             if ((k.includes('fresh') || k.includes('physcial')) && !k.includes('amt') && !k.includes('value')) fresh = row[k];
                             if (k.includes('damage') && !k.includes('amt') && !k.includes('value')) damage = row[k];
                             if (k.includes('expiry') && !k.includes('amt') && !k.includes('value')) expiry = row[k];
+                            if (k.includes('remark')) remark = row[k];
                         }
 
                         let targetItem = processedData.find(item => item.cleanDesc === cDesc);
@@ -922,7 +1118,8 @@
                                 sp: targetItem.sp,
                                 freshQty: cleanNum(fresh),
                                 damageQty: cleanNum(damage),
-                                expiryQty: cleanNum(expiry)
+                                expiryQty: cleanNum(expiry),
+                                remark: remark || targetItem.remark
                             });
                         }
                     });
@@ -985,6 +1182,7 @@
                     if (pItem.freshQty !== '') targetItem.freshQty = pItem.freshQty;
                     if (pItem.damageQty !== '') targetItem.damageQty = pItem.damageQty;
                     if (pItem.expiryQty !== '') targetItem.expiryQty = pItem.expiryQty;
+                    if (pItem.remark !== '') targetItem.remark = pItem.remark;
                 }
             });
 
@@ -1012,6 +1210,7 @@
                     item.freshQty = '';
                     item.damageQty = '';
                     item.expiryQty = '';
+                    item.remark = '';
                 });
                 saveToStorage();
                 updateSummaryCards();
@@ -1054,7 +1253,7 @@
             let totalItems = processedData.length;
             let sysStock = 0;
             let phyStock = 0;
-            let diffCount = 0;
+            let zeroPhyCount = 0;
             let totalDiffAmt = 0;
 
             processedData.forEach(item => {
@@ -1065,7 +1264,7 @@
                 
                 let total = f + d + e;
                 phyStock += total;
-                if (total !== item.unrestrictedStock) diffCount++;
+                if (total === 0) zeroPhyCount++;
                 let diffQty = total - item.unrestrictedStock;
                 let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
                 totalDiffAmt += diffAmt;
@@ -1074,7 +1273,7 @@
             document.getElementById('sumTotalItems').textContent = totalItems;
             document.getElementById('sumSysStock').textContent = sysStock;
             document.getElementById('sumPhyStock').textContent = phyStock;
-            document.getElementById('sumDiffStock').textContent = diffCount;
+            document.getElementById('sumZeroPhy').textContent = zeroPhyCount;
             document.getElementById('sumDiffAmt').textContent = `₹${totalDiffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         }
 
@@ -1101,6 +1300,64 @@
             }
         }
 
+        // Debounced update to fix typing lag
+        function updateQty(index, field, value) {
+            processedData[index][field] = value;
+            
+            // Immediate lightweight DOM update for current row totals/diffs without rebuilding full table
+            let item = processedData[index];
+            let fNum = parseVal(item.freshQty);
+            let dNum = parseVal(item.damageQty);
+            let eNum = parseVal(item.expiryQty);
+            let totalPhy = fNum + dNum + eNum;
+            let diffQty = totalPhy - item.unrestrictedStock;
+            let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
+
+            const desktopRows = document.querySelectorAll('#liveTableBody tr');
+            if (desktopRows[index]) {
+                let row = desktopRows[index];
+                row.querySelector('.cell-total').textContent = totalPhy;
+                let diffCell = row.querySelector('.cell-diff');
+                diffCell.textContent = diffQty;
+                diffCell.className = `p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+                let amtCell = row.querySelector('.cell-diffamt');
+                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                amtCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
+
+            const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
+            if (mobileCards[index]) {
+                let card = mobileCards[index];
+                card.querySelector('.cell-total').textContent = totalPhy;
+                let diffCell = card.querySelector('.cell-diff');
+                diffCell.textContent = diffQty;
+                diffCell.className = `live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+
+                let amtCell = card.querySelector('.cell-diffamt');
+                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+                amtCell.className = `live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
+            }
+
+            updateSummaryCards();
+
+            // Debounced background save and download table sync
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                saveToStorage();
+                renderDownloadTable();
+            }, 300);
+        }
+
+        function updateRemark(index, value) {
+            processedData[index].remark = value;
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                saveToStorage();
+                renderDownloadTable();
+            }, 300);
+        }
+
         function renderLiveTable() {
             const tbody = document.getElementById('liveTableBody');
             tbody.innerHTML = '';
@@ -1109,6 +1366,7 @@
                 let fresh = item.freshQty;
                 let damage = item.damageQty;
                 let expiry = item.expiryQty;
+                let remark = item.remark || '';
 
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
@@ -1123,7 +1381,7 @@
                 tr.innerHTML = `
                     <td class="p-2.5 border-r border-slate-200 font-mono font-semibold text-indigo-700 cell-code">${item.materialCode}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-indigo-50/50 cell-sys">${item.unrestrictedStock}</td>
-                    <td class="p-2.5 border-r border-slate-200 text-slate-800 cell-desc w-96 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-slate-800 cell-desc w-80 truncate" title="${item.materialDescription}">${item.materialDescription}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right bg-emerald-50/30 p-1">
                         <input type="text" value="${fresh}" oninput="updateQty(${index}, 'freshQty', this.value)" class="audit-input w-24 text-right p-1.5 border border-emerald-300 rounded bg-white focus:ring-1 focus:ring-emerald-500 text-xs cell-fresh">
                     </td>
@@ -1135,7 +1393,10 @@
                     </td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold text-slate-700 bg-slate-50 live-total-phy cell-total">${totalPhy}</td>
                     <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}">${diffQty}</td>
-                    <td class="p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                    <td class="p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}">₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</td>
+                    <td class="p-2.5 p-1">
+                        <input type="text" value="${remark}" oninput="updateRemark(${index}, this.value)" placeholder="Add remark..." class="w-full p-1.5 border border-slate-300 rounded bg-white text-xs cell-remark">
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1149,6 +1410,7 @@
                 let fresh = item.freshQty;
                 let damage = item.damageQty;
                 let expiry = item.expiryQty;
+                let remark = item.remark || '';
 
                 let fNum = parseVal(fresh);
                 let dNum = parseVal(damage);
@@ -1181,6 +1443,9 @@
                             <label class="block text-[9px] font-bold text-orange-700 mb-0.5">Expiry Qty</label>
                             <input type="text" value="${expiry}" oninput="updateQty(${index}, 'expiryQty', this.value)" class="audit-input w-full text-center p-1.5 border border-orange-300 rounded bg-orange-50/20 text-xs cell-expiry">
                         </div>
+                    </div>
+                    <div>
+                        <input type="text" value="${remark}" oninput="updateRemark(${index}, this.value)" placeholder="Add remark..." class="w-full p-1 border border-slate-300 rounded bg-slate-50 text-[11px] cell-remark">
                     </div>
                     <div class="flex justify-between items-center text-[10px] pt-1 text-slate-500 font-bold border-t border-slate-100 mt-1">
                         <span>Total: <span class="text-slate-800 live-total-phy cell-total">${totalPhy}</span></span>
@@ -1236,48 +1501,6 @@
             });
         }
 
-        function updateQty(index, field, value) {
-            processedData[index][field] = value;
-            saveToStorage();
-            let item = processedData[index];
-            
-            let fNum = parseVal(item.freshQty);
-            let dNum = parseVal(item.damageQty);
-            let eNum = parseVal(item.expiryQty);
-            let totalPhy = fNum + dNum + eNum;
-            let diffQty = totalPhy - item.unrestrictedStock;
-            let diffAmt = Math.round((diffQty * item.sp) * 100) / 100;
-
-            const desktopRows = document.querySelectorAll('#liveTableBody tr');
-            if (desktopRows[index]) {
-                let row = desktopRows[index];
-                row.querySelector('.cell-total').textContent = totalPhy;
-                let diffCell = row.querySelector('.cell-diff');
-                diffCell.textContent = diffQty;
-                diffCell.className = `p-2.5 border-r border-slate-200 text-right font-bold bg-slate-50 live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-
-                let amtCell = row.querySelector('.cell-diffamt');
-                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-                amtCell.className = `p-2.5 text-right font-bold bg-slate-50 live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-            }
-
-            const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
-            if (mobileCards[index]) {
-                let card = mobileCards[index];
-                card.querySelector('.cell-total').textContent = totalPhy;
-                let diffCell = card.querySelector('.cell-diff');
-                diffCell.textContent = diffQty;
-                diffCell.className = `live-diff-qty cell-diff ${diffQty < 0 ? 'text-rose-600' : diffQty > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-
-                let amtCell = card.querySelector('.cell-diffamt');
-                amtCell.textContent = `₹${diffAmt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
-                amtCell.className = `live-diff-amt cell-diffamt ${diffAmt < 0 ? 'text-rose-600' : diffAmt > 0 ? 'text-emerald-600' : 'text-slate-600'}`;
-            }
-
-            updateSummaryCards();
-            renderDownloadTable();
-        }
-
         function filterTable() {
             const globalQuery = (document.getElementById('globalSearchInput').value || document.getElementById('mobileSearchInput').value || '').toLowerCase();
             
@@ -1293,8 +1516,9 @@
                 const total = row.querySelector('.cell-total').textContent.toLowerCase();
                 const diff = row.querySelector('.cell-diff').textContent.toLowerCase();
                 const diffAmt = row.querySelector('.live-diff-amt') ? row.querySelector('.live-diff-amt').textContent.toLowerCase() : '';
+                const remark = row.querySelector('.cell-remark') ? row.querySelector('.cell-remark').value.toLowerCase() : '';
 
-                const rowValues = [code, sys, desc, fresh, damage, expiry, total, diff, diffAmt];
+                const rowValues = [code, sys, desc, fresh, damage, expiry, total, diff, diffAmt, remark];
 
                 let matchesAll = true;
                 liveFilters.forEach(input => {
@@ -1305,7 +1529,7 @@
                     }
                 });
 
-                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
+                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery) || remark.includes(globalQuery));
                 row.style.display = (matchGlobal && matchesAll) ? '' : 'none';
             });
 
@@ -1341,7 +1565,7 @@
                     }
                 });
 
-                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery));
+                const matchGlobal = (globalQuery === '' || code.includes(globalQuery) || desc.includes(globalQuery) || remark.includes(globalQuery));
                 row.style.display = (matchGlobal && matchesAll) ? '' : 'none';
             });
         }
@@ -1356,7 +1580,7 @@
                 document.getElementById('uploadSection').classList.remove('hidden');
                 document.getElementById('globalSearchWrapper').classList.add('hidden');
                 document.querySelector('.id-reset-btn').classList.add('hidden');
-                document.getElementById('depotBadge').classList.add('hidden');
+                document.getElementById('topDepotBadge').classList.add('hidden');
                 switchTab('live');
             }
         }

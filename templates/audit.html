@@ -133,7 +133,7 @@
                     <div class="flex items-center space-x-3">
                         <div>
                             <h3 class="font-bold text-slate-800 text-xs"><i class="fa-solid fa-table-cells mr-1.5 text-indigo-600"></i> Live Stock Entry Portal</h3>
-                            <p class="text-[11px] text-slate-500">Fast entry mode (Lag-free & Auto-saved).</p>
+                            <p class="text-[11px] text-slate-500">Fast entry mode (Strict numbers & math operators).</p>
                         </div>
                     </div>
                     <!-- Clear All, Sorting & Search -->
@@ -739,6 +739,18 @@
             return String(desc).trim().toLowerCase().replace(/\s+/g, ' ');
         }
 
+        // Strict validation to prevent standalone or multiple consecutive operators
+        function validateQtyInput(input) {
+            let val = input.value;
+            // Remove any characters other than digits and math operators
+            let sanitized = val.replace(/[^0-9+\-*/().]/g, '');
+            // Prevent multiple operators in sequence or starting weirdly (e.g., ++, --, *, /, etc.)
+            sanitized = sanitized.replace(/([+\-*/]){2,}/g, '$1');
+            if (val !== sanitized) {
+                input.value = sanitized;
+            }
+        }
+
         function cleanNum(val) {
             if (val === '' || val === null || val === undefined || val === '-') return '';
             let str = String(val).replace(/,/g, '').trim();
@@ -1300,11 +1312,13 @@
             }
         }
 
-        // Debounced update to fix typing lag
+        // Debounced update with strict validation to prevent malformed expressions like ++11
         function updateQty(index, field, value) {
-            processedData[index][field] = value;
+            let sanitized = value.replace(/[^0-9+\-*/().]/g, '');
+            sanitized = sanitized.replace(/([+\-*/]){2,}/g, '$1');
             
-            // Immediate lightweight DOM update for current row totals/diffs without rebuilding full table
+            processedData[index][field] = sanitized;
+            
             let item = processedData[index];
             let fNum = parseVal(item.freshQty);
             let dNum = parseVal(item.damageQty);
@@ -1316,6 +1330,8 @@
             const desktopRows = document.querySelectorAll('#liveTableBody tr');
             if (desktopRows[index]) {
                 let row = desktopRows[index];
+                let inputElem = row.querySelector(`.cell-${field.replace('Qty','')}`);
+                if (inputElem && inputElem.value !== sanitized) inputElem.value = sanitized;
                 row.querySelector('.cell-total').textContent = totalPhy;
                 let diffCell = row.querySelector('.cell-diff');
                 diffCell.textContent = diffQty;
@@ -1329,6 +1345,8 @@
             const mobileCards = document.querySelectorAll('#mobileCardContainer .live-row');
             if (mobileCards[index]) {
                 let card = mobileCards[index];
+                let inputElem = card.querySelector(`.cell-${field.replace('Qty','')}`);
+                if (inputElem && inputElem.value !== sanitized) inputElem.value = sanitized;
                 card.querySelector('.cell-total').textContent = totalPhy;
                 let diffCell = card.querySelector('.cell-diff');
                 diffCell.textContent = diffQty;
@@ -1341,7 +1359,6 @@
 
             updateSummaryCards();
 
-            // Debounced background save and download table sync
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 saveToStorage();

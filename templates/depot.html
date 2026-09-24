@@ -2,192 +2,668 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RCM Depot Manager Portal - SAP Signature Edition</title>
+   <meta name="viewport" content="width=device-width, initial-scale=0.65">
+    <title>RCM Depot Manager Portal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
     <style>
         :root {
-            --sap-brand: #0a6ed1;
-            --sap-brand-hover: #0055b3;
-            --sap-bg: #f5f6f7;
-            --sap-panel-bg: #ffffff;
-            --sap-border: #d9d9d9;
-            --sap-border-focus: #0a6ed1;
-            --sap-text: #32363a;
-            --sap-text-muted: #6a6d70;
-            --sap-text-sub: #55585b;
-            --sap-input-bg: #ffffff;
-            --sap-readonly: #eeeeee;
-            --accent-dr: #bb0000;
-            --accent-cr: #107e3e;
-            --accent-bal: #0064d9;
-            --sap-radius-sm: 3px;
-            --sap-radius-md: 6px;
-            --sap-radius-lg: 10px;
-            --sap-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --sap-shadow-float: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --theme-bg: #f8fafc;
+            --theme-panel-bg: #ffffff;
+            --theme-border: #e2e8f0;
+            --theme-border-focus: #3b82f6;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --text-sub: #475569;
+            --input-bg: #ffffff;
+            --input-readonly: #f1f5f9;
+            --accent-dr: #dc2626;
+            --accent-cr: #16a34a;
+            --accent-bal: #0284c7;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+            --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--sap-bg); color: var(--sap-text); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
+        body { background-color: var(--theme-bg); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; }
 
+        /* Modern Sleek Header */
         .navbar {
-            background: #ffffff;
-            border-bottom: 2px solid var(--sap-brand);
-            padding: 0.65rem 1.75rem;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--theme-border);
+            padding: 0.85rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 1rem;
-            box-shadow: var(--sap-shadow);
+            gap: 1.5rem;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
             position: sticky;
             top: 0;
             z-index: 1000;
             flex-wrap: wrap;
         }
 
-        .nav-left-box { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
-        .brand-section { display: flex; align-items: center; gap: 0.75rem; }
-        .depot-logo-box { width: 38px; height: 38px; border-radius: var(--sap-radius-sm); background: #f0f4f8; border: 1px solid var(--sap-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 4px; flex-shrink: 0; }
+        .nav-left-box {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .brand-section { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.85rem; 
+        }
+
+        .depot-logo-box { 
+            width: 44px; 
+            height: 44px; 
+            border-radius: var(--radius-md); 
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
+            border: 1px solid var(--theme-border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            padding: 6px; 
+            flex-shrink: 0; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03); 
+        }
         .depot-logo-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        .nav-actions-left { display: flex; align-items: center; gap: 0.5rem; }
-        .depot-center-section { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 0.15rem; text-align: right; flex: 1; }
-        .company-logo-badge { width: 140px; height: 32px; border-radius: var(--sap-radius-sm); background: #ffffff; border: 1px solid var(--sap-border); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 2px 6px; }
+        .nav-actions-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.65rem; 
+        }
+
+        .depot-center-section { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end; 
+            justify-content: center; 
+            gap: 0.25rem; 
+            text-align: right; 
+            flex: 1; 
+        }
+
+        .company-logo-badge { 
+            width: 160px; 
+            height: 38px; 
+            border-radius: var(--radius-sm); 
+            background: #ffffff; 
+            border: 1px solid var(--theme-border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            overflow: hidden; 
+            padding: 2px 8px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03); 
+        }
         .company-logo-badge img { width: 100%; height: 100%; object-fit: contain; }
 
-        .depot-details-text { display: flex; flex-direction: column; align-items: flex-end; text-align: right; line-height: 1.3; }
-
-        .btn-action-nav { 
-            background: #ffffff; color: var(--sap-text); border: 1px solid var(--sap-border); padding: 0.42rem 0.85rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.15s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; 
+        .depot-details-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            text-align: right;
+            line-height: 1.35;
         }
-        .btn-action-nav:hover { background: #ebf5ff; border-color: var(--sap-brand); color: var(--sap-brand); }
-        .btn-nav-logout { background: #fff5f5; border-color: #f5c6cb; color: var(--accent-dr); }
-        .btn-nav-logout:hover { background: #ffe3e3; border-color: #f1b0b7; color: #800; }
 
-        .main-container { width: 100%; max-width: 1620px; margin: 1.25rem auto; padding: 0 1rem; }
+        /* Buttons & Actions Styling */
+        .btn-action-nav { 
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
+            color: var(--text-dark); 
+            border: 1px solid #cbd5e1; 
+            padding: 0.5rem 1rem; 
+            border-radius: var(--radius-md); 
+            font-weight: 600; 
+            font-size: 0.82rem; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .btn-action-nav:hover { 
+            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%); 
+            border-color: var(--primary); 
+            color: var(--primary);
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px -3px rgba(37, 99, 235, 0.15);
+        }
+        .btn-action-nav:active { 
+            transform: translateY(0); 
+        }
+        .btn-nav-logout { 
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%); 
+            border-color: #fecaca; 
+            color: #dc2626; 
+        }
+        .btn-nav-logout:hover { 
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
+            border-color: #f87171; 
+            color: #b91c1c;
+            box-shadow: 0 6px 15px -3px rgba(220, 38, 38, 0.15);
+        }
 
-        .depot-nav-tabs { display: flex; gap: 0.5rem; background: var(--sap-panel-bg); padding: 5px; border-radius: var(--sap-radius-md); margin-bottom: 1.25rem; align-items: center; flex-wrap: wrap; border: 1px solid var(--sap-border); box-shadow: var(--sap-shadow); }
-        .tab-btn { background: transparent; border: none; color: var(--sap-text-muted); padding: 0.55rem 1.15rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.82rem; cursor: pointer; transition: all 0.15s ease; }
-        .tab-btn:hover { background: #ebf5ff; color: var(--sap-brand); }
-        .tab-btn.active { background: var(--sap-brand); color: #ffffff; font-weight: 700; box-shadow: 0 2px 4px rgba(10, 110, 209, 0.2); }
+        .main-container { width: 100%; max-width: 1540px; margin: 1.5rem auto; padding: 0 1.25rem; }
 
-        .comfort-panel { background: var(--sap-panel-bg); border: 1px solid var(--sap-border); border-radius: var(--sap-radius-md); padding: 1.5rem; box-shadow: var(--sap-shadow); margin-bottom: 1.25rem; }
-        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--sap-border); padding-bottom: 0.6rem; }
-        .panel-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--sap-text); }
+        /* Modern Segmented Navigation Tabs */
+        .depot-nav-tabs { 
+            display: flex; 
+            gap: 0.75rem; 
+            background: #ffffff; 
+            padding: 6px; 
+            border-radius: var(--radius-lg); 
+            margin-bottom: 1.5rem; 
+            align-items: center;
+            flex-wrap: wrap; 
+            border: 1px solid var(--theme-border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+        }
+        .tab-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            padding: 0.65rem 1.35rem; 
+            border-radius: var(--radius-md); 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            cursor: pointer; 
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .tab-btn:hover { 
+            background: var(--primary-light); 
+            color: var(--primary); 
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); 
+            color: #ffffff; 
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); 
+            font-weight: 700; 
+        }
 
-        #recordsTab table.custom-table th, #staffTab table.custom-table th, #expensesTab table.custom-table th { font-size: 0.7rem !important; padding: 0.5rem 0.65rem !important; }
-        #recordsTab table.custom-table td, #staffTab table.custom-table td, #expensesTab table.custom-table td { font-size: 0.77rem !important; padding: 0.45rem 0.65rem !important; }
+        /* Modern Surface Panels */
+        .comfort-panel { 
+            background: var(--theme-panel-bg); 
+            border: 1px solid var(--theme-border); 
+            border-radius: var(--radius-md); 
+            padding: 1.75rem; 
+            box-shadow: var(--shadow-card); 
+            margin-bottom: 1.5rem; 
+        }
+        .panel-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 1.25rem; 
+            border-bottom: 1px solid var(--theme-border); 
+            padding-bottom: 0.75rem; 
+        }
+        .panel-header h3 { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: var(--text-dark); 
+            letter-spacing: -0.01em; 
+        }
 
-        table.custom-table td:nth-child(3) { font-weight: 600; color: #1e293b; }
-        .row-opening-balance td:nth-child(3) { color: var(--accent-bal) !important; font-weight: 700 !important; }
+        /* Particular Column Typography */
+        table.custom-table td:nth-child(3) {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1e293b;
+            letter-spacing: 0.01em;
+            text-transform: capitalize;
+            line-height: 1.4;
+            white-space: normal;
+        }
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .row-opening-balance td:nth-child(3) {
+            color: #0284c7 !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.02em;
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         .form-group-full { grid-column: span 2; }
-        .form-group { margin-bottom: 0.15rem; }
-        .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--sap-text-sub); margin-bottom: 0.3rem; }
+        .form-group { margin-bottom: 0.2rem; }
+        .form-group label { 
+            display: block; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: var(--text-sub); 
+            margin-bottom: 0.35rem; 
+            letter-spacing: 0.01em; 
+        }
         
-        .form-control { width: 100%; padding: 0.5rem 0.75rem; background: var(--sap-input-bg); border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); color: var(--sap-text); font-size: 0.84rem; outline: none; transition: border-color 0.15s; }
-        .form-control:focus { border-color: var(--sap-border-focus); box-shadow: 0 0 0 2px rgba(10, 110, 209, 0.15); }
-        .form-control:read-only { background: var(--sap-readonly); color: var(--sap-text-muted); font-weight: 600; }
-        textarea.form-control { resize: vertical; min-height: 80px; font-family: 'JetBrains Mono', monospace; }
+        .form-control { 
+            width: 100%; 
+            padding: 0.6rem 0.85rem; 
+            background: var(--input-bg); 
+            border: 1px solid #cbd5e1; 
+            border-radius: var(--radius-sm); 
+            color: var(--text-dark); 
+            font-size: 0.875rem; 
+            outline: none; 
+            transition: all 0.15s ease-in-out; 
+        }
+        .form-control:focus { 
+            border-color: var(--theme-border-focus); 
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); 
+        }
+        .form-control:read-only { 
+            background: var(--input-readonly); 
+            color: var(--text-sub); 
+            font-weight: 600; 
+            border-style: solid; 
+            border-color: #e2e8f0; 
+        }
+        textarea.form-control { 
+            resize: vertical; 
+            min-height: 85px; 
+            font-family: 'JetBrains Mono', Consolas, monospace; 
+            line-height: 1.5; 
+        }
 
-        .btn-submit-dispatch { background: var(--sap-brand); color: #fff; border: none; padding: 0.6rem 1.5rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: 1rem; transition: background 0.15s; }
-        .btn-submit-dispatch:hover { background: var(--sap-brand-hover); }
+        .btn-submit-dispatch { 
+            background: var(--primary); 
+            color: #fff; 
+            border: 1px solid transparent; 
+            padding: 0.65rem 1.6rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            font-size: 0.875rem; 
+            cursor: pointer; 
+            margin-top: 1.25rem; 
+            box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3); 
+            transition: all 0.18s ease; 
+        }
+        .btn-submit-dispatch:hover { 
+            background: var(--primary-hover); 
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.35); 
+            transform: translateY(-1px); 
+        }
+        .btn-submit-dispatch:active { 
+            transform: translateY(0); 
+        }
 
-        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; flex-wrap: wrap; }
-        .toolbar-left { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; flex: 1; }
+        .table-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .toolbar-left { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; flex: 1; }
         
-        .filter-select-box { padding: 0.4rem 0.75rem; background: #fff; border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); color: var(--sap-text); font-size: 0.8rem; font-weight: 600; outline: none; }
-        .filter-select-box:focus { border-color: var(--sap-border-focus); }
+        .filter-select-box { 
+            padding: 0.45rem 0.85rem; 
+            background: #fff; 
+            border: 1px solid #cbd5e1; 
+            border-radius: var(--radius-sm); 
+            color: var(--text-dark); 
+            font-size: 0.82rem; 
+            font-weight: 600; 
+            outline: none; 
+            transition: border-color 0.15s; 
+        }
+        .filter-select-box:focus { border-color: var(--theme-border-focus); }
         
-        .search-box-wrap { position: relative; min-width: 220px; max-width: 320px; flex: 1; }
-        .search-input { width: 100%; padding: 0.42rem 0.75rem 0.42rem 2.1rem; background: #fff; border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); color: var(--sap-text); font-size: 0.82rem; outline: none; }
-        .search-input:focus { border-color: var(--sap-border-focus); }
-        .search-icon { position: absolute; left: 0.65rem; top: 50%; transform: translateY(-50%); color: var(--sap-text-muted); font-size: 0.8rem; pointer-events: none; }
+        .search-box-wrap { position: relative; min-width: 240px; max-width: 340px; flex: 1; }
+        .search-input { 
+            width: 100%; 
+            padding: 0.48rem 0.85rem 0.48rem 2.2rem; 
+            background: #fff; 
+            border: 1px solid #cbd5e1; 
+            border-radius: var(--radius-sm); 
+            color: var(--text-dark); 
+            font-size: 0.84rem; 
+            outline: none; 
+            transition: all 0.15s ease; 
+        }
+        .search-input:focus { border-color: var(--theme-border-focus); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        .search-icon { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; pointer-events: none; }
 
-        .btn-tool { padding: 0.28rem 0.55rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.74rem; cursor: pointer; border: 1px solid var(--sap-border); transition: background 0.15s; }
-        .btn-tool:hover { background: #f0f0f0; }
+        .btn-tool { 
+            padding: 0.32rem 0.65rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            font-size: 0.76rem; 
+            cursor: pointer; 
+            border: 1px solid var(--theme-border); 
+            transition: all 0.15s ease; 
+        }
+        .btn-tool:hover { filter: brightness(0.96); }
         
-        .btn-action-ledger { background: #e1f0ff; color: #0055b3; border: 1px solid #b3d7ff; padding: 0.28rem 0.6rem; border-radius: var(--sap-radius-sm); font-weight: 600; cursor: pointer; margin-right: 0.25rem; }
-        .btn-action-ledger:hover { background: var(--sap-brand); color: #fff; }
+        .btn-action-ledger { 
+            background: #eff6ff; 
+            color: #1d4ed8; 
+            border: 1px solid #bfdbfe; 
+            padding: 0.32rem 0.7rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-right: 0.3rem; 
+            transition: all 0.15s ease; 
+        }
+        .btn-action-ledger:hover { background: #2563eb; color: #fff; border-color: #2563eb; }
         
-        .btn-action-trx { background: #fff8e1; color: #8f6b00; border: 1px solid #ffe0b2; padding: 0.28rem 0.6rem; border-radius: var(--sap-radius-sm); font-weight: 600; cursor: pointer; }
-        .btn-action-trx:hover { background: #ffc107; color: #000; }
+        .btn-action-trx { 
+            background: #fefce8; 
+            color: #854d0e; 
+            border: 1px solid #fef08a; 
+            padding: 0.32rem 0.7rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.15s ease; 
+        }
+        .btn-action-trx:hover { background: #eab308; color: #fff; border-color: #eab308; }
 
-        .table-responsive { width: 100%; max-height: 700px; min-height: 350px; overflow-y: auto; overflow-x: auto; border: 1px solid var(--sap-border); border-radius: var(--sap-radius-sm); background: #ffffff; }
+        .table-responsive { 
+            width: 100%; 
+            max-height: 720px; 
+            min-height: 380px; 
+            overflow-y: auto; 
+            overflow-x: auto; 
+            border: 1px solid var(--theme-border); 
+            border-radius: var(--radius-md); 
+            background: #ffffff; 
+            box-shadow: var(--shadow-subtle); 
+            -webkit-overflow-scrolling: touch; 
+        }
         table.custom-table { width: 100%; border-collapse: collapse; text-align: left; }
-        table.custom-table th { position: sticky; top: 0; z-index: 20; padding: 0.65rem 0.85rem; color: var(--sap-text-sub); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; background: #edf2f7; border-bottom: 1px solid var(--sap-border); letter-spacing: 0.03em; }
-        table.custom-table td { padding: 0.6rem 0.85rem; font-size: 0.82rem; border-bottom: 1px solid #e9ecef; white-space: nowrap; vertical-align: middle; color: var(--sap-text); }
+        table.custom-table th { 
+            position: sticky; 
+            top: 0; 
+            z-index: 20; 
+            padding: 0.75rem 1rem; 
+            color: #475569; 
+            font-size: 0.74rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            background: #f8fafc; 
+            border-bottom: 1px solid #cbd5e1; 
+            letter-spacing: 0.05em; 
+        }
+        table.custom-table td { 
+            padding: 0.68rem 1rem; 
+            font-size: 0.84rem; 
+            border-bottom: 1px solid #f1f5f9; 
+            white-space: nowrap; 
+            vertical-align: middle; 
+            color: var(--text-dark); 
+        }
         table.custom-table tr:hover { background-color: #f8fafc; }
         
-        .row-duplicate { background-color: #fff5f5 !important; }
-        .row-duplicate td { border-bottom-color: #f5c6cb !important; }
+        .row-duplicate { background-color: #fff1f2 !important; }
+        .row-duplicate td { border-bottom-color: #fecdd3 !important; }
 
-        .row-opening-balance { background-color: #e1f0ff !important; font-weight: 600; }
-        .row-opening-balance td { border-bottom: 1px solid #b3d7ff !important; color: #0055b3 !important; }
+        .row-opening-balance { background-color: #eff6ff !important; font-weight: 600; }
+        .row-opening-balance td { border-bottom: 1px solid #bfdbfe !important; color: #1d4ed8 !important; }
 
-        .load-more-bar { text-align: center; padding-top: 0.85rem; }
-        .btn-load-older { background: #e9ecef; color: var(--sap-text-sub); border: 1px solid var(--sap-border); padding: 0.4rem 1.1rem; border-radius: var(--sap-radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; }
-        .btn-load-older:hover { background: #dde2e6; color: var(--sap-text); }
+        .load-more-bar { text-align: center; padding-top: 1rem; }
+        .btn-load-older { 
+            background: #f1f5f9; 
+            color: var(--text-sub); 
+            border: 1px solid #cbd5e1; 
+            padding: 0.45rem 1.25rem; 
+            border-radius: var(--radius-sm); 
+            font-weight: 600; 
+            font-size: 0.82rem; 
+            cursor: pointer; 
+            transition: all 0.15s ease; 
+        }
+        .btn-load-older:hover { background: #e2e8f0; color: var(--text-dark); }
 
-        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); overflow-y: auto; padding: 1rem; }
-        .modal-box { background: #ffffff; margin: 2rem auto; width: 95%; max-width: 500px; border-radius: var(--sap-radius-md); border: 1px solid var(--sap-border); box-shadow: var(--sap-shadow-float); overflow: hidden; }
-        .modal-box-large { width: 98% !important; max-width: 1400px !important; margin: 1.2rem auto !important; }
-        .modal-box-compact { max-width: 900px !important; width: 95% !important; }
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(15, 23, 42, 0.45); 
+            overflow-y: auto; 
+            padding: 1.2rem; 
+        }
+        .modal-box { 
+            background: #ffffff; 
+            margin: 2rem auto; 
+            width: 95%; 
+            max-width: 520px; 
+            border-radius: var(--radius-md); 
+            border: 1px solid var(--theme-border); 
+            box-shadow: var(--shadow-float); 
+            overflow: hidden; 
+            animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .modal-box-large { width: 98% !important; max-width: 1350px !important; margin: 1.5rem auto !important; }
+        .modal-box-compact { max-width: 940px !important; width: 96% !important; }
         
-        .modal-top-bar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; background: #edf2f7; border-bottom: 1px solid var(--sap-border); }
-        .modal-top-bar span { font-weight: 700; font-size: 0.9rem; color: var(--sap-text); }
-        .modal-close-btn { background: transparent; border: none; color: var(--sap-text-muted); font-size: 1.25rem; cursor: pointer; line-height: 1; }
-        .modal-close-btn:hover { color: var(--sap-text); }
-        .modal-body { padding: 1.25rem; background: #ffffff; }
+        .modal-top-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0.9rem 1.4rem; 
+            background: #ffffff; 
+            border-bottom: 1px solid var(--theme-border); 
+            color: var(--text-dark); 
+        }
+        .modal-top-bar span { font-weight: 700; font-size: 0.95rem; color: var(--text-dark); }
+        .modal-close-btn { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            font-size: 1.35rem; 
+            cursor: pointer; 
+            line-height: 1; 
+            padding: 0.2rem; 
+            border-radius: 4px; 
+            transition: color 0.15s; 
+        }
+        .modal-close-btn:hover { color: var(--text-dark); }
+        .modal-body { padding: 1.4rem; background: #ffffff; }
 
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 999999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
-        .toast-msg { pointer-events: auto; min-width: 280px; max-width: 360px; padding: 0.8rem 1.1rem; border-radius: var(--sap-radius-sm); font-size: 0.82rem; font-weight: 600; background: #ffffff; color: var(--sap-text); box-shadow: var(--sap-shadow-float); border: 1px solid var(--sap-border); border-left: 4px solid var(--sap-brand); display: flex; align-items: center; gap: 8px; }
+        @keyframes modalIn {
+            from { transform: scale(0.96) translateY(8px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Professional Toast Notifications */
+        .toast-container { 
+            position: fixed; 
+            top: 24px; 
+            right: 24px; 
+            z-index: 999999; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            pointer-events: none; 
+        }
+        .toast-msg { 
+            pointer-events: auto;
+            min-width: 290px; 
+            max-width: 380px;
+            padding: 0.9rem 1.25rem; 
+            border-radius: var(--radius-md); 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            background: #ffffff; 
+            color: var(--text-dark); 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1); 
+            border: 1px solid var(--theme-border);
+            border-left: 4px solid var(--primary); 
+            animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideInToast {
+            from { transform: translateX(110%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
 
         #printableReceipt { display: none !important; position: fixed; left: -9999px; top: -9999px; }
 
         @media print {
             @page { size: 80mm auto; margin: 2mm; }
-            body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+            body { background: #fff !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             body * { visibility: hidden !important; }
             #printableReceipt, #printableReceipt * { visibility: visible !important; }
-            #printableReceipt { display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; font-family: 'Courier New', monospace !important; font-size: 8pt !important; }
+            #printableReceipt { 
+                display: block !important; position: absolute !important; left: 0 !important; top: 0 !important; 
+                width: 78mm !important; max-width: 78mm !important; margin: 0 !important; padding: 2mm !important; 
+                font-family: 'Courier New', monospace, sans-serif !important; font-size: 8pt !important; line-height: 1.25 !important; 
+            }
             .modal, .modal-box, .navbar, .main-container { display: none !important; }
         }
 
-        .global-loading-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: rgba(245, 246, 247, 0.92); backdrop-filter: blur(4px); z-index: 999999; align-items: center; justify-content: center; }
-        .loader-card { background: #ffffff; padding: 2.25rem 3rem; border-radius: var(--sap-radius-md); box-shadow: var(--sap-shadow-float); display: flex; flex-direction: column; align-items: center; gap: 1rem; border: 1px solid var(--sap-border); min-width: 320px; }
-        .loader-ring { width: 44px; height: 44px; border-radius: 50%; border: 3px solid #e9ecef; border-top: 3px solid var(--sap-brand); animation: spinRing 0.7s linear infinite; }
-        .loader-brand { font-size: 0.8rem; font-weight: 700; color: var(--sap-brand); text-transform: uppercase; }
-        .loader-text { color: var(--sap-text); font-size: 0.9rem; font-weight: 600; text-align: center; }
-        @keyframes spinRing { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Stunning Premium Loading Screen */
+        .global-loading-overlay {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            cursor: wait;
+        }
 
-        .mobile-bottom-nav { display: none; }
+        .loader-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 2.75rem 3.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            min-width: 340px;
+            animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .loader-ring {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-right: 4px solid #60a5fa;
+            animation: spinRing 0.8s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+        }
+
+        .loader-brand {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .loader-text {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            text-align: center;
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- Professional Mobile Bottom Navigation Styles (Added Safely) --- */
+        .mobile-bottom-nav {
+            display: none;
+        }
 
         @media (max-width: 768px) {
-            .navbar { flex-direction: column; align-items: stretch; gap: 0.5rem; padding: 0.5rem 0.75rem; }
+            .navbar { flex-direction: column; align-items: stretch; gap: 0.75rem; padding: 0.65rem 0.85rem; }
             .nav-left-box { justify-content: space-between; width: 100%; }
-            .depot-center-section { align-items: center; text-align: center; width: 100%; border-top: 1px solid var(--sap-border); padding-top: 0.5rem; }
+            .depot-center-section { align-items: center; text-align: center; width: 100%; border-top: 1px solid var(--theme-border); padding-top: 0.6rem; }
             .depot-details-text { align-items: center; }
-            .main-container { padding: 0 0.5rem; margin: 0.5rem auto; }
-            .comfort-panel { padding: 1rem 0.75rem; }
-            .form-grid { grid-template-columns: 1fr; gap: 0.6rem; }
+            .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
+            .comfort-panel { padding: 1rem 0.85rem; }
+            .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
             .form-group-full { grid-column: span 1; }
             .depot-nav-tabs { display: none !important; }
-            .table-responsive { max-height: 480px; }
+            .table-responsive { max-height: 520px; }
             .search-box-wrap { min-width: 100%; }
+            .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
             
-            .mobile-bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; box-shadow: 0 -4px 12px rgba(0,0,0,0.1); border-top: 1px solid var(--sap-border); z-index: 3000; justify-content: space-around; padding: 6px 0 8px 0; }
-            .bot-nav-btn { background: transparent; border: none; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; color: var(--sap-text-muted); cursor: pointer; padding: 2px 0; }
-            .bot-nav-btn span { font-size: 1.15rem; line-height: 1; }
-            .bot-nav-btn small { font-size: 0.65rem; font-weight: 600; margin-top: 2px; }
-            .bot-nav-btn.active { color: var(--sap-brand); }
-            body { padding-bottom: 70px; }
+    /* Tables ko aur zyada compact aur zoom-out karne ke liye */
+    table.custom-table th {
+        padding: 0.4rem 0.5rem !important;
+        font-size: 0.62rem !important;
+    }
+    table.custom-table td {
+        padding: 0.35rem 0.5rem !important;
+        font-size: 0.72rem !important;
+    }
+
+    /* Agar form ke inputs aur buttons ko bhi chhota karna ho */
+    .form-control {
+        padding: 0.45rem 0.6rem !important;
+        font-size: 0.8rem !important;
+    }
+            /* Professional Bottom Bar */
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #ffffff;
+                box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--theme-border);
+                z-index: 3000;
+                justify-content: space-around;
+                padding: 8px 0 10px 0;
+            }
+            .bot-nav-btn {
+                background: transparent;
+                border: none;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                color: var(--text-muted);
+                cursor: pointer;
+                padding: 2px 0;
+                transition: color 0.2s ease;
+            }
+            .bot-nav-btn span { font-size: 1.25rem; line-height: 1; }
+            .bot-nav-btn small { font-size: 0.68rem; font-weight: 600; margin-top: 3px; font-family: 'Inter', sans-serif; }
+            .bot-nav-btn.active { color: var(--primary); }
+            body { padding-bottom: 75px; }
         }
     </style>
 </head>
@@ -197,26 +673,29 @@
         <div class="nav-left-box">
             <div class="brand-section">
                 <div class="depot-logo-box" id="depotLogoBox">
-                    <svg width="22" height="20" viewBox="0 0 24 24" fill="#0a6ed1"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+                    <svg width="28" height="24" viewBox="0 0 24 24" fill="#2563eb"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
                 </div>
                 <div>
-                    <h3 style="color:var(--sap-text);font-size:0.9rem;font-weight:700;line-height:1.2;">RCM DEPOT PORTAL</h3>
-                    <span style="font-size:0.7rem;color:var(--sap-text-muted);font-weight:600;">SAP Signature Interface</span>
+                    <h3 style="color:var(--text-dark);font-size:0.95rem;font-weight:800;line-height:1.2;letter-spacing:-0.01em;">RCM DEPOT PORTAL</h3>
+                    <span style="font-size:0.75rem;color:var(--text-muted);font-weight:700;">Easy To Manage Your Daily Depot Records </span>
                 </div>
             </div>
             
             <div class="nav-actions-left">
-                <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Password</button>
-                <a href="/" onclick="sessionStorage.clear(); localStorage.clear();" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <a href="audit" class="btn-action-nav" style="background: #fff8e1; border-color: #ffe0b2; color: #8f6b00;">📦 Audit</a>
+                <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
+                <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
+                <!-- Stock Audit Portal Link Button -->
+<a href="audit" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
+    📦 Stock Audit Portal
+</a>
             </div>
         </div>
 
         <div class="depot-center-section">
             <div class="company-logo-badge" id="companyLogoBox"></div>
             <div class="depot-details-text">
-                <h1 style="font-size:0.9rem;font-weight:700;color:var(--sap-text);margin:0;"><span id="headerDepotTitle">Depot Management</span></h1>
-                <div id="topDepotAddress" style="font-size:0.7rem;color:var(--sap-text-muted);margin:0;">Loading depot details...</div>
+                <h1 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;"><span id="headerDepotTitle">Depot Management</span></h1>
+                <div id="topDepotAddress" style="font-size:0.75rem;color:var(--text-muted);margin:0;">Loading depot details...</div>
             </div>
         </div>
     </div>
@@ -244,7 +723,7 @@
 
                 <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:8px;">
                     <thead>
-                        <tr style="background:#edf2f7;">
+                        <tr style="background:#e0f2fe;">
                             <th style="border:1px solid #000; padding:4px; width:15%;">Date</th>
                             <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">Particular / Description</th>
                             <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Debit</th>
@@ -271,10 +750,10 @@
                 <span>📄 Print Preview</span>
                 <button class="modal-close-btn" onclick="closePrintPreviewModal()">&times;</button>
             </div>
-            <div class="modal-body" style="background:#f5f6f7;">
-                <div style="background:#ffffff; border:1px solid var(--sap-border); padding:1.25rem; border-radius:4px; max-height:780px; overflow-y:auto;" id="previewSlipDisplay"></div>
-                <div style="margin-top:1rem; text-align:center;">
-                    <button class="btn-action-nav" style="width:100%; background:var(--sap-brand); color:#fff; border:none; padding:0.75rem; justify-content:center; font-size:0.9rem;" onclick="triggerDirectBrowserPrint()">🖨️ Print / Save as PDF</button>
+            <div class="modal-body" style="background:#f8fafc;">
+                <div style="background:#ffffff; border:1px solid #cbd5e1; padding:1.5rem; border-radius:6px; max-height:780px; overflow-y:auto;" id="previewSlipDisplay"></div>
+                <div style="margin-top:1.2rem; text-align:center;">
+                    <button class="btn-action-nav" style="width:100%; background:linear-gradient(180deg, #059669 0%, #047857 100%); color:#fff; border:none; padding:0.85rem; justify-content:center; font-size:1rem;" onclick="triggerDirectBrowserPrint()">🖨️ Print / Save as PDF</button>
                 </div>
             </div>
         </div>
@@ -292,6 +771,7 @@
             <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
         </div>
 
+        <!-- 1. Dispatch Entry Form -->
         <div id="dispatchTab" class="comfort-panel">
             <div class="panel-header"><h3>📦 Record Invoice Dispatch Entry</h3></div>
             <form id="invoiceDispatchForm">
@@ -299,12 +779,12 @@
                 <div class="form-grid">
                     <div class="form-group"><label>Date</label><input type="text" id="dispDate" class="form-control" readonly></div>
                     <div class="form-group"><label>Live Time (Running)</label><input type="text" id="dispTime" class="form-control" readonly style="color:#d97706;font-weight:bold;font-family:'JetBrains Mono',monospace;"></div>
-                    <div class="form-group"><label>INV First 5 Digits</label><input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:var(--sap-brand);font-weight:700;"></div>
+                    <div class="form-group"><label>INV First 5 Digits</label><input type="text" id="dispPrefixSeries" class="form-control" readonly style="color:#2563eb;font-weight:700;"></div>
                     <div class="form-group"><label>Vehicle Type</label><select id="dispVehicleType" class="form-control"><option value="Three Wheeler">Three Wheeler</option><option value="By Hand">By Hand</option><option value="Car">Car</option><option value="PickUp">PickUp</option><option value="Bike">Bike</option></select></div>
                     
                     <div class="form-group">
                         <label>Dispatch Through</label>
-                        <input type="text" id="dispThrough" class="form-control" required placeholder="Type name (e.g. Driver Name)" list="dispatchThroughList" oninput="handleThroughInput(this.value)">
+                        <input type="text" id="dispThrough" class="form-control" required placeholder="Type name (e.g. Puc Holder Name , Driver Name)" list="dispatchThroughList" oninput="handleThroughInput(this.value)">
                     </div>
                     
                     <div class="form-group">
@@ -331,12 +811,13 @@
             </form>
         </div>
 
+        <!-- 2. Records History -->
         <div id="recordsTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>📊 Dispatch History</h3>
-                <div style="display:flex; align-items:center; gap:0.75rem;">
-                    <button class="btn-action-nav" id="bulkDeleteDispatchBtn" style="display:none; background:#fff5f5; border-color:#f5c6cb; color:var(--accent-dr); padding:0.35rem 0.7rem;" onclick="deleteSelectedDispatches()">🗑️ Delete Selected (<span id="selectedCountBadge">0</span>)</button>
-                    <span id="dispCountBadge" style="color:var(--sap-text-muted);font-weight:600;font-size:0.8rem;">0 records</span>
+                <div style="display:flex; align-items:center; gap:0.8rem;">
+                    <button class="btn-action-nav" id="bulkDeleteDispatchBtn" style="display:none; background:#fef2f2; border-color:#fecaca; color:#dc2626; padding:0.4rem 0.8rem;" onclick="deleteSelectedDispatches()">🗑️ Delete Selected (<span id="selectedCountBadge">0</span>)</button>
+                    <span id="dispCountBadge" style="color:var(--text-muted);font-weight:600;font-size:0.85rem;">0 records</span>
                 </div>
             </div>
             <div class="table-toolbar">
@@ -346,11 +827,11 @@
                         <option value="ALL">🌐 All Records</option>
                     </select>
                     <div class="search-box-wrap" id="dispSearchWrap"><span class="search-icon">🔍</span><input type="text" id="historySearchInput" class="search-input" placeholder="Search invoices, driver, vehicle..." oninput="filterHistoryTable()"></div>
-                    <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:var(--accent-cr);padding:0.4rem 0.75rem;" onclick="exportDispatchToCSV()">📥 Export Excel</button>
+                    <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;padding:0.45rem 0.85rem;" onclick="exportDispatchToCSV()">📥 Export Excel</button>
                 </div>
             </div>
 
-            <div id="dispFySummaryContainer" class="table-responsive" style="display:none;">
+            <div id="dispFySummaryContainer" class="table-responsive" style="display:none; max-height: 640px;">
                 <table class="custom-table">
                     <thead>
                         <tr>
@@ -365,15 +846,15 @@
             </div>
 
             <div id="dispRawTableContainer">
-                <div id="dispMonthBackBar" style="display:none; margin-bottom:0.5rem; justify-content:space-between; align-items:center;">
-                    <h4 id="dispMonthBackTitle" style="font-size:0.88rem; font-weight:700; color:var(--sap-brand);">📅 Month Dispatch Records</h4>
-                    <button class="btn-tool" style="background:#e9ecef; color:var(--sap-text); font-weight:bold;" onclick="backToDispatchFySummary()">⬅️ Back to FY Summary</button>
+                <div id="dispMonthBackBar" style="display:none; margin-bottom:0.6rem; justify-content:space-between; align-items:center;">
+                    <h4 id="dispMonthBackTitle" style="font-size:0.92rem; font-weight:700; color:#0369a1;">📅 Month Dispatch Records</h4>
+                    <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="backToDispatchFySummary()">⬅️ Back to FY Summary</button>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive" style="max-height: 640px;">
                     <table class="custom-table" id="historyTable">
                         <thead>
                             <tr>
-                                <th style="width:35px; text-align:center;"><input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAllDispatches(this)"></th>
+                                <th style="width:40px; text-align:center;"><input type="checkbox" id="selectAllCheckbox" onclick="toggleSelectAllDispatches(this)"></th>
                                 <th>Date</th>
                                 <th>Invoice</th>
                                 <th>Vehicle</th>
@@ -395,46 +876,47 @@
             </div>
         </div>
 
-        <div id="staffTab" class="comfort-panel" style="display:none; max-width: 1400px; margin: 0 auto 1.25rem auto;">
+        <!-- 3. Staff & Ledger Tab -->
+        <div id="staffTab" class="comfort-panel" style="display:none; max-width: 960px; margin: 0 auto 1.5rem auto;">
             
-            <div id="depotPendingApprovalsCard" style="background:#fffaf0; border:1px solid #feebc8; border-radius:var(--sap-radius-sm); padding:0.85rem; margin-bottom:1.25rem; box-shadow:var(--sap-shadow);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; border-bottom:1px dashed #fbd38d; padding-bottom:0.35rem;">
-                    <h4 style="color:#744210; font-size:0.88rem; font-weight:700; display:flex; align-items:center; gap:6px;">
+            <div id="depotPendingApprovalsCard" style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:1rem; margin-bottom:1.5rem; box-shadow:var(--shadow-subtle);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; border-bottom:1px dashed #fcd34d; padding-bottom:0.4rem;">
+                    <h4 style="color:#92400e; font-size:0.92rem; font-weight:700; display:flex; align-items:center; gap:6px;">
                         ⏳ Staff Pending Approval Requests (Your Depot)
                     </h4>
-                    <span id="pendingCountBadge" style="background:#dd6b20; color:#fff; font-size:0.7rem; font-weight:bold; padding:2px 7px; border-radius:10px;">0 Pending</span>
+                    <span id="pendingCountBadge" style="background:#d97706; color:#fff; font-size:0.75rem; font-weight:bold; padding:2px 8px; border-radius:12px;">0 Pending</span>
                 </div>
-                <div class="table-responsive" style="max-height: 200px; min-height: auto; border: 1px solid #feebc8;">
+                <div class="table-responsive" style="max-height: 220px; min-height: auto; border: 1px solid #fef08a;">
                     <table class="custom-table" style="background:#fff;">
                         <thead>
-                            <tr style="background:#fffaf0;">
-                                <th style="font-size:0.68rem; padding:0.35rem 0.5rem;">Type</th>
-                                <th style="font-size:0.68rem; padding:0.35rem 0.5rem;">Staff</th>
-                                <th style="font-size:0.68rem; padding:0.35rem 0.5rem;">Details</th>
-                                <th style="font-size:0.68rem; padding:0.35rem 0.5rem; text-align:right;">Amount</th>
-                                <th style="font-size:0.68rem; padding:0.35rem 0.5rem; text-align:center;">Action</th>
+                            <tr style="background:#fefce8;">
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem;">Type</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem;">Staff</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem;">Details</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem; text-align:right;">Amount</th>
+                                <th style="font-size:0.72rem; padding:0.4rem 0.6rem; text-align:center;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="depotPendingListBody">
-                            <tr><td colspan="5" style="text-align:center; padding:0.7rem; color:#744210; font-size:0.78rem;">Checking pending approvals...</td></tr>
+                            <tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#92400e; font-size:0.8rem;">Checking pending approvals...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="panel-header" style="margin-bottom: 0.75rem;">
+            <div class="panel-header" style="margin-bottom: 0.8rem;">
                 <h3>👥 Assigned Staff and Ledger Details</h3>
-                <button class="btn-action-nav" style="background:#e1f0ff;border-color:#b3d7ff;color:#0055b3; padding:0.3rem 0.7rem;" onclick="openAddStaffModal()">➕ Request New Staff</button>
+                <button class="btn-action-nav" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8; padding:0.35rem 0.8rem;" onclick="openAddStaffModal()">➕ Request New Staff</button>
             </div>
-            <div class="table-responsive" style="max-height: 480px; min-height: auto;">
+            <div class="table-responsive" style="max-height: 480px; min-height: auto; border-radius: var(--radius-sm);">
                 <table class="custom-table">
                     <thead>
                         <tr>
-                            <th style="width: 140px; text-align: center;">Actions</th>
-                            <th style="width: 85px;">Code</th>
+                            <th style="width: 155px; text-align: center;">Actions</th>
+                            <th style="width: 95px;">Code</th>
                             <th>Name</th>
-                            <th style="text-align: right; width: 120px;">Balance</th>
-                            <th style="text-align: center; width: 80px;">Status</th>
+                            <th style="text-align: right; width: 130px;">Balance</th>
+                            <th style="text-align: center; width: 90px;">Status</th>
                         </tr>
                     </thead>
                     <tbody id="staffTableBody"></tbody>
@@ -442,27 +924,28 @@
             </div>
         </div>
 
+        <!-- 4. Depot Expenses Tab -->
         <div id="expensesTab" class="comfort-panel" style="display:none;">
             <div class="panel-header">
                 <h3>💰 Depot Expenses Management</h3>
             </div>
             
-            <div style="background:#ffffff; padding:0.65rem 0.85rem; border:1px solid var(--sap-border); border-radius:var(--sap-radius-sm); margin-bottom:0.85rem;">
-                <div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-                    <label style="font-weight:600; font-size:0.8rem; color:var(--sap-text-sub);">Financial Year:</label>
-                    <select id="expenseYearFilter" class="filter-select-box" style="padding:0.3rem 0.6rem; font-size:0.8rem; margin-right:0.3rem;" onchange="renderAnnualSummaryExpenses()"></select>
+            <div style="background:#ffffff; padding:0.75rem 1rem; border:1px solid #e2e8f0; border-radius:var(--radius-sm); margin-bottom:1rem;">
+                <div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:0.6rem;">
+                    <label style="font-weight:600; font-size:0.84rem; color:var(--text-sub);">Financial Year:</label>
+                    <select id="expenseYearFilter" class="filter-select-box" style="padding:0.35rem 0.7rem; font-size:0.82rem; margin-right:0.4rem;" onchange="renderAnnualSummaryExpenses()"></select>
                     
-                    <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:var(--accent-cr);padding:0.35rem 0.7rem;font-size:0.78rem;" onclick="exportCurrentFyExpensesToExcel()">📥 Export Current FY</button>
-                    <button class="btn-action-nav" style="background:#e1f0ff;border-color:#b3d7ff;color:#0055b3;padding:0.35rem 0.7rem;font-size:0.78rem;" onclick="exportAllFyExpensesToExcel()">📊 Export All FY</button>
-                    <button class="btn-action-nav" style="background:#fff8e1;border-color:#ffe0b2;color:#8f6b00;padding:0.35rem 0.7rem;font-size:0.78rem;" onclick="downloadExpensePdfDirect()">📄 Download PDF</button>
+                    <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="exportCurrentFyExpensesToExcel()">📥 Export Current FY</button>
+                    <button class="btn-action-nav" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8;padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="exportAllFyExpensesToExcel()">📊 Export All FY</button>
+                    <button class="btn-action-nav" style="background:#fefce8;border-color:#fef08a;color:#854d0e;padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="downloadExpensePdfDirect()">📄 Download PDF</button>
                 </div>
 
-                <div id="addExpBtnContainer" style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--sap-border); display: flex; align-items: center;">
-                    <button id="btnQuickAddExpense" class="btn-action-nav" style="background:#f0fdf4; border-color:#bbf7d0; color:var(--accent-cr); padding:0.4rem 0.85rem; font-size:0.8rem; font-weight:700;" onclick="openAddExpenseModal()">➕ Add New Depot EXP Entry</button>
+                <div id="addExpBtnContainer" style="margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px dashed #e2e8f0; display: flex; align-items: center;">
+                    <button id="btnQuickAddExpense" class="btn-action-nav" style="background:#f0fdf4; border-color:#86efac; color:#15803d; padding:0.45rem 1rem; font-size:0.84rem; font-weight:700; border-radius:var(--radius-sm);" onclick="openAddExpenseModal()">➕ Add New Depot EXP Entry</button>
                 </div>
             </div>
 
-            <div id="expenseSummaryContainer" class="table-responsive" style="max-height: 600px; min-height: 400px; background:#fff;">
+            <div id="expenseSummaryContainer" class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
                 <table class="custom-table">
                     <thead>
                         <tr>
@@ -478,23 +961,23 @@
                 </table>
             </div>
 
-            <div id="expenseDetailContainer" style="display:none; margin-top:0.4rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
-                    <h4 id="expenseDetailHeader" style="font-size:0.9rem; font-weight:700; color:var(--sap-brand);">📅 Detailed Expenses</h4>
+            <div id="expenseDetailContainer" style="display:none; margin-top:0.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem; flex-wrap:wrap; gap:0.6rem;">
+                    <h4 id="expenseDetailHeader" style="font-size:0.95rem; font-weight:700; color:#0369a1;">📅 Detailed Expenses</h4>
                     <div>
-                        <button class="btn-tool" style="background:#e9ecef; color:var(--sap-text); font-weight:bold;" onclick="hideExpenseMonthDetails()">⬅️ Back to Annual Summary</button>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold;" onclick="hideExpenseMonthDetails()">⬅️ Back to Annual Summary</button>
                     </div>
                 </div>
-                <div class="table-responsive" style="max-height: 600px; min-height: 400px; background:#fff;">
+                <div class="table-responsive" style="max-height: 620px; min-height: 440px; background:#fff;">
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th style="width:75px; text-align:center;">Action</th>
-                                <th style="width:100px;">Date</th>
-                                <th style="min-width:320px;">Particular</th>
-                                <th style="width:110px;text-align:right;">Debit (₹)</th>
-                                <th style="width:110px;text-align:right;">Credit (₹)</th>
-                                <th style="width:130px;text-align:right;">Balance (₹)</th>
+                                <th style="width:80px; text-align:center;">Action</th>
+                                <th style="width:110px;">Date</th>
+                                <th style="min-width:350px;">Particular</th>
+                                <th style="width:120px;text-align:right;">Debit (₹)</th>
+                                <th style="width:120px;text-align:right;">Credit (₹)</th>
+                                <th style="width:140px;text-align:right;">Balance (₹)</th>
                             </tr>
                         </thead>
                         <tbody id="expenseDetailTbody"></tbody>
@@ -513,7 +996,7 @@
             </div>
             <div class="modal-body">
                 <form id="requestStaffForm">
-                    <div class="form-group"><label>Auto-Generated Code (Locked)</label><input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:var(--sap-brand);font-weight:700;"></div>
+                    <div class="form-group"><label>Auto-Generated Code (Locked)</label><input type="text" id="newStaffCodeLocked" class="form-control" readonly style="color:#2563eb;font-weight:700;"></div>
                     <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" class="form-control" required placeholder="Enter full name"></div>
                     <div class="form-group"><label>Mobile Number</label><input type="tel" id="newStaffMobile" class="form-control" required placeholder="10-digit mobile"></div>
                     <div class="form-group"><label>Photo (Optional)</label><input type="file" class="form-control" accept="image/*" onchange="compressPhoto(this, 'newStaffPhotoBase64')"><input type="hidden" id="newStaffPhotoBase64"></div>
@@ -533,7 +1016,7 @@
                 <form id="requestTrxForm">
                     <input type="hidden" id="trxRowId">
                     <input type="hidden" id="trxStaffCode"><input type="hidden" id="trxStaffName">
-                    <div class="form-group"><label>Selected Staff</label><input type="text" id="trxStaffDisplay" class="form-control" readonly style="color:var(--sap-brand);font-weight:700;"></div>
+                    <div class="form-group"><label>Selected Staff</label><input type="text" id="trxStaffDisplay" class="form-control" readonly style="color:#2563eb;font-weight:700;"></div>
                     <div class="form-group"><label>Date</label><input type="date" id="trxDate" class="form-control" required></div>
                     <div class="form-group"><label>Particular / Purpose</label><input type="text" id="trxParticular" class="form-control" required placeholder="e.g. Advance, Salary, Unloading"></div>
                     <div class="form-group"><label>Payment Mode</label><select id="trxMode" class="form-control"><option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Transfer">Bank Transfer</option><option value="-">-</option></select></div>
@@ -553,19 +1036,19 @@
                 <span id="ledgerStaffTitle">📄 Staff Ledger</span>
                 <button class="modal-close-btn" onclick="closeStaffLedgerModal()">&times;</button>
             </div>
-            <div class="modal-body" style="padding: 1rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.5rem 0.75rem; border:1px solid var(--sap-border); border-radius:var(--sap-radius-sm); margin-bottom:0.75rem; flex-wrap:wrap; gap:0.5rem;">
+            <div class="modal-body" style="padding: 1.25rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; background:#ffffff; padding:0.6rem 0.8rem; border:1px solid #e2e8f0; border-radius:var(--radius-sm); margin-bottom:0.8rem; flex-wrap:wrap; gap:0.5rem;">
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <label style="font-weight:600; font-size:0.8rem; color:var(--sap-text-sub);">Financial Year:</label>
-                        <select id="ledgerYearFilter" class="filter-select-box" style="padding:0.25rem 0.5rem; font-size:0.78rem;" onchange="renderAnnualSummaryLedger()"></select>
+                        <label style="font-weight:600; font-size:0.82rem; color:var(--text-sub);">Financial Year:</label>
+                        <select id="ledgerYearFilter" class="filter-select-box" style="padding:0.3rem 0.6rem; font-size:0.8rem;" onchange="renderAnnualSummaryLedger()"></select>
                     </div>
                     <div>
-                        <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:var(--accent-cr);padding:0.3rem 0.6rem;font-size:0.78rem;margin-right:0.25rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export Detailed Excel</button>
-                        <button class="btn-action-nav" style="background:#fff8e1;border-color:#ffe0b2;color:#8f6b00;padding:0.3rem 0.7rem;font-size:0.78rem;" onclick="openThermalFyPrintPreview()">🖨️ Print Preview</button>
+                        <button class="btn-action-nav" style="background:#f0fdf4;border-color:#bbf7d0;color:#15803d;padding:0.35rem 0.7rem;font-size:0.8rem;margin-right:0.3rem;" onclick="exportFullDetailedLedgerToCSV()">📥 Export Detailed Excel</button>
+                        <button class="btn-action-nav" style="background:#fefce8;border-color:#fef08a;color:#854d0e;padding:0.35rem 0.8rem;font-size:0.8rem;" onclick="openThermalFyPrintPreview()">🖨️ Print Preview</button>
                     </div>
                 </div>
 
-                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 520px; min-height: 300px; background:#fff;">
+                <div id="annualSummaryContainer" class="table-responsive" style="max-height: 540px; min-height: 320px; background:#fff;">
                     <table class="custom-table" id="annualSummaryTable">
                         <thead>
                             <tr>
@@ -581,23 +1064,23 @@
                     </table>
                 </div>
 
-                <div id="monthDetailContainer" style="display:none; margin-top:0.35rem;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem; flex-wrap:wrap; gap:0.4rem;">
-                        <h4 id="monthDetailHeader" style="font-size:0.88rem; font-weight:700; color:var(--sap-brand);">📅 Detailed Transactions</h4>
-                        <button class="btn-tool" style="background:#e9ecef; color:var(--sap-text); font-weight:bold; padding:0.25rem 0.7rem; font-size:0.78rem;" onclick="hideMonthDetails()">⬅️ Back</button>
+                <div id="monthDetailContainer" style="display:none; margin-top:0.4rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.4rem;">
+                        <h4 id="monthDetailHeader" style="font-size:0.92rem; font-weight:700; color:#0369a1;">📅 Detailed Transactions</h4>
+                        <button class="btn-tool" style="background:#f1f5f9; color:#475569; font-weight:bold; padding:0.3rem 0.8rem; font-size:0.8rem;" onclick="hideMonthDetails()">⬅️ Back</button>
                     </div>
-                    <div class="table-responsive" style="max-height: 540px; min-height: 320px; background:#fff;">
+                    <div class="table-responsive" style="max-height: 560px; min-height: 340px; background:#fff;">
                         <table class="custom-table">
                             <thead>
                                 <tr>
-                                    <th style="width:85px; text-align:center;">Action</th>
-                                    <th style="width:100px;">Date</th>
-                                    <th style="min-width:300px;">Particular</th>
-                                    <th style="width:75px;">Mode</th>
-                                    <th style="width:100px;text-align:right;">Debit (₹)</th>
-                                    <th style="width:100px;text-align:right;">Credit (₹)</th>
-                                    <th style="width:120px;text-align:right;">Balance (₹)</th>
-                                    <th style="width:90px;text-align:center;">Status</th>
+                                    <th style="width:95px; text-align:center;">Action</th>
+                                    <th style="width:110px;">Date</th>
+                                    <th style="min-width:320px;">Particular</th>
+                                    <th style="width:80px;">Mode</th>
+                                    <th style="width:110px;text-align:right;">Debit (₹)</th>
+                                    <th style="width:110px;text-align:right;">Credit (₹)</th>
+                                    <th style="width:130px;text-align:right;">Balance (₹)</th>
+                                    <th style="width:100px;text-align:center;">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="monthDetailTbody"></tbody>
@@ -628,7 +1111,7 @@
                         </div>
                         <div class="form-group">
                             <label>Invoice Number</label>
-                            <input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:var(--sap-brand);">
+                            <input type="text" id="editDispInvoice" class="form-control" required style="font-weight:700; color:#2563eb;">
                         </div>
                         <div class="form-group">
                             <label>Vehicle Type</label>
@@ -638,6 +1121,7 @@
                                 <option value="Car">Car</option>
                                 <option value="PickUp">PickUp</option>
                                 <option value="Bike">Bike</option>
+                                
                             </select>
                         </div>
                         <div class="form-group">
@@ -657,7 +1141,7 @@
                             <input type="text" id="editDispRemarks" class="form-control">
                         </div>
                     </div>
-                    <button type="submit" id="btnUpdateDispatchSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1rem;">Update Dispatch Entry</button>
+                    <button type="submit" id="btnUpdateDispatchSubmit" class="btn-submit-dispatch" style="width:100%; justify-content:center; margin-top:1.2rem;">Update Dispatch Entry</button>
                 </form>
             </div>
         </div>
@@ -676,13 +1160,13 @@
                     <div class="form-group" style="position:relative;">
                         <label>Particular</label>
                         <input type="text" id="expParticular" class="form-control" required placeholder="e.g. Office Rent, Electricity" autocomplete="off" oninput="handleExpenseParticularInput(this.value)">
-                        <div id="expenseSuggestionsBox" style="position:absolute; top:100%; left:0; width:100%; background:#fff; border:1px solid var(--sap-border); border-radius:var(--sap-radius-sm); z-index:3000; display:none; max-height:160px; overflow-y:auto; box-shadow:var(--sap-shadow);"></div>
+                        <div id="expenseSuggestionsBox" style="position:absolute; top:100%; left:0; width:100%; background:#fff; border:1px solid #cbd5e1; border-radius:var(--radius-sm); z-index:3000; display:none; max-height:160px; overflow-y:auto; box-shadow:var(--shadow-card);"></div>
                     </div>
                     <div class="form-grid">
                         <div class="form-group"><label style="color:var(--accent-dr);">Debit (₹)</label><input type="number" id="expDebit" class="form-control" value="0" step="any"></div>
                         <div class="form-group"><label style="color:var(--accent-cr);">Credit (₹)</label><input type="number" id="expCredit" class="form-control" value="0" step="any"></div>
                     </div>
-                    <button type="submit" id="btnSaveExpense" class="btn-submit-dispatch" style="width:100%;justify-content:center;margin-top:0.85rem;">Save Expense Entry</button>
+                    <button type="submit" id="btnSaveExpense" class="btn-submit-dispatch" style="width:100%;justify-content:center;margin-top:1rem;">Save Expense Entry</button>
                 </form>
             </div>
         </div>
@@ -691,18 +1175,18 @@
     <div id="pwdModal" class="modal">
         <div class="modal-box modal-box-compact">
             <div class="modal-top-bar"><span>🔑 Change Depot Password</span><button class="modal-close-btn" onclick="closePasswordModal()">&times;</button></div>
-            <div style="padding:1.25rem;">
+            <div style="padding:1.4rem;">
                 <form id="depotPwdForm">
-                    <div style="margin-bottom:0.75rem;">
-                        <label style="display:block;font-size:0.78rem;color:var(--sap-text-sub);font-weight:600;margin-bottom:0.3rem;">Current Password</label>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">Current Password</label>
                         <input type="password" id="oldDepotPass" class="form-control" required placeholder="Enter current password">
                     </div>
-                    <div style="margin-bottom:0.75rem;">
-                        <label style="display:block;font-size:0.78rem;color:var(--sap-text-sub);font-weight:600;margin-bottom:0.3rem;">New Password</label>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">New Password</label>
                         <input type="password" id="newDepotPass" class="form-control" required placeholder="Enter new password">
                     </div>
-                    <div style="margin-bottom:0.75rem;">
-                        <label style="display:block;font-size:0.78rem;color:var(--sap-text-sub);font-weight:600;margin-bottom:0.3rem;">Confirm New Password</label>
+                    <div style="margin-bottom:0.8rem;">
+                        <label style="display:block;font-size:0.8rem;color:var(--text-sub);font-weight:600;margin-bottom:0.35rem;">Confirm New Password</label>
                         <input type="password" id="confirmDepotPass" class="form-control" required placeholder="Confirm new password">
                     </div>
                     <button type="submit" id="btnDepotPwdSubmit" class="btn-submit-dispatch" style="width:100%;">Update Password</button>
@@ -711,7 +1195,7 @@
         </div>
     </div>
 
-    <!-- Mobile Bottom Navigation Bar -->
+    <!-- Professional Mobile Bottom Navigation Bar (With Permission IDs) -->
     <div class="mobile-bottom-nav">
         <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
             <span>📦</span>
@@ -778,7 +1262,7 @@
             toast.innerHTML = `<span>💬</span> <div>${msg}</div>`;
             container.appendChild(toast);
             setTimeout(() => { 
-                toast.style.opacity = '0';
+                toast.style.animation = 'slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1) reverse forwards';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
@@ -985,6 +1469,7 @@
             if (tabStaff) tabStaff.style.display = canStaff ? 'inline-block' : 'none';
             if (tabExpenses) tabExpenses.style.display = canExpenses ? 'inline-block' : 'none';
 
+            // Mobile Bottom Navigation Bar Permission Check
             const botNavDispatch = document.getElementById('botNavDispatch');
             const botNavHistory = document.getElementById('botNavHistory');
             const botNavStaff = document.getElementById('botNavStaff');
@@ -997,107 +1482,73 @@
         }
 
         async function loadDepotData() {
-            const cacheKey = `rcm_depot_cache_${depotCode}`;
-            const cachedData = localStorage.getItem(cacheKey);
-            
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    processDepotPayload(parsed);
-                    hideScreenBlocker();
-                    fetchFreshDataInBackground(cacheKey);
-                    return;
-                } catch (e) {
-                    localStorage.removeItem(cacheKey);
-                }
-            }
-
             showScreenBlocker('Loading Depot Data... Please wait!');
-            
-            const timeoutTimer = setTimeout(() => {
-                hideScreenBlocker();
-            }, 6000);
-
             try {
                 const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
-                clearTimeout(timeoutTimer);
                 if (!res || !res.success) throw new Error("Failed to load initial data");
 
-                localStorage.setItem(cacheKey, JSON.stringify(res));
-                processDepotPayload(res);
+                const depot = res.depot || {};
+                depotGlobalInfo = depot;
+                loadedDispatches = res.dispatches || [];
+                loadedStaffList = res.staffMembers || [];
+                globalNextEmpCode = res.nextEmpCode || "EMP012";
+
+                globalInvoiceFrequencyMap = {};
+                loadedDispatches.forEach(r => {
+                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                    if (inv) {
+                        globalInvoiceFrequencyMap[inv] = (globalInvoiceFrequencyMap[inv] || 0) + 1;
+                    }
+                });
+
+                setSafeImage('companyLogoBox', res.companyLogo);
+                setSafeImage('depotLogoBox', res.depotLogo);
+
+                const dName = getField(depot, 'Depot Name') || depotNameStored;
+                const addr = getField(depot, 'Depot Address');
+                const dist = getField(depot, 'Dristric', 'District');
+                const state = getField(depot, 'State Name');
+                const pin = getField(depot, 'Pin Code', 'Pincode');
+                const mob = getField(depot, 'Mob. No.', 'Mobile', 'Mob');
+                const gstin = getField(depot, 'GSTIN', 'GST', 'Gst No');
+                const fssai = getField(depot, 'FSSAI', 'FSSAI No', 'Fssai');
+                depotPrefix = res.invSeries || getField(depot, 'Invoice No Series') || '76287';
+
+                const fullAddrText = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
+                
+                let contactParts = [];
+                if (mob && mob !== '-') contactParts.push(`Mob: ${mob}`);
+                if (gstin && gstin !== '-') contactParts.push(`GST: ${gstin}`);
+                if (fssai && fssai !== '-') contactParts.push(`FSSAI: ${fssai}`);
+
+                document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
+                document.getElementById('topDepotAddress').innerHTML = `
+                    <span>${fullAddrText}</span>
+                    ${contactParts.length > 0 ? `<br><span style="font-weight:600; color:#334155;">${contactParts.join(' | ')}</span>` : ''}
+                `;
+
+                document.getElementById('hiddenDepotCode').value = getField(depot, 'Depot Code') || depotCode;
+                document.getElementById('hiddenDepotName').value = dName;
+                document.getElementById('dispPrefixSeries').value = depotPrefix;
+
+                buildHistoricalDataLists(loadedDispatches);
+                populateHistoryMonthDropdown(loadedDispatches);
+                handleDispatchFilterChange();
+                renderStaffTable(loadedStaffList);
+
+                renderDepotPendingApprovalsUI(res.pendingList || []);
+                loadedDepotExpenses = res.expenses || [];
+                populateExpenseYearDropdown(loadedDepotExpenses);
+                renderAnnualSummaryExpenses();
+
+                applyTabPermissions(depot);
+
             } catch (err) { 
                 console.error(err); 
-                showToast('Error loading data! Using offline storage if available.');
+                showToast('Error loading data!');
             } finally {
                 hideScreenBlocker();
             }
-        }
-
-        async function fetchFreshDataInBackground(cacheKey) {
-            try {
-                const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
-                if (res && res.success) {
-                    localStorage.setItem(cacheKey, JSON.stringify(res));
-                }
-            } catch (e) {}
-        }
-
-        function processDepotPayload(res) {
-            const depot = res.depot || {};
-            depotGlobalInfo = depot;
-            loadedDispatches = res.dispatches || [];
-            loadedStaffList = res.staffMembers || [];
-            globalNextEmpCode = res.nextEmpCode || "EMP012";
-
-            globalInvoiceFrequencyMap = {};
-            loadedDispatches.forEach(r => {
-                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
-                if (inv) {
-                    globalInvoiceFrequencyMap[inv] = (globalInvoiceFrequencyMap[inv] || 0) + 1;
-                }
-            });
-
-            setSafeImage('companyLogoBox', res.companyLogo);
-            setSafeImage('depotLogoBox', res.depotLogo);
-
-            const dName = getField(depot, 'Depot Name') || depotNameStored;
-            const addr = getField(depot, 'Depot Address');
-            const dist = getField(depot, 'Dristric', 'District');
-            const state = getField(depot, 'State Name');
-            const pin = getField(depot, 'Pin Code', 'Pincode');
-            const mob = getField(depot, 'Mob. No.', 'Mobile', 'Mob');
-            const gstin = getField(depot, 'GSTIN', 'GST', 'Gst No');
-            const fssai = getField(depot, 'FSSAI', 'FSSAI No', 'Fssai');
-            depotPrefix = res.invSeries || getField(depot, 'Invoice No Series') || '76287';
-
-            const fullAddrText = `${addr ? addr + ', ' : ''}${dist ? dist + ', ' : ''}${state ? state : ''}${pin ? ' - ' + pin : ''}`;
-            
-            let contactParts = [];
-            if (mob && mob !== '-') contactParts.push(`Mob: ${mob}`);
-            if (gstin && gstin !== '-') contactParts.push(`GST: ${gstin}`);
-            if (fssai && fssai !== '-') contactParts.push(`FSSAI: ${fssai}`);
-
-            document.getElementById('headerDepotTitle').textContent = `${dName} Depot`;
-            document.getElementById('topDepotAddress').innerHTML = `
-                <span>${fullAddrText}</span>
-                ${contactParts.length > 0 ? `<br><span style="font-weight:600; color:#334155;">${contactParts.join(' | ')}</span>` : ''}
-            `;
-
-            document.getElementById('hiddenDepotCode').value = getField(depot, 'Depot Code') || depotCode;
-            document.getElementById('hiddenDepotName').value = dName;
-            document.getElementById('dispPrefixSeries').value = depotPrefix;
-
-            buildHistoricalDataLists(loadedDispatches);
-            populateHistoryMonthDropdown(loadedDispatches);
-            handleDispatchFilterChange();
-            renderStaffTable(loadedStaffList);
-
-            renderDepotPendingApprovalsUI(res.pendingList || []);
-            loadedDepotExpenses = res.expenses || [];
-            populateExpenseYearDropdown(loadedDepotExpenses);
-            renderAnnualSummaryExpenses();
-
-            applyTabPermissions(depot);
         }
 
         function renderDepotPendingApprovalsUI(pendingList) {
@@ -1112,7 +1563,7 @@
             badge.textContent = `${myPending.length} Pending`;
 
             if (myPending.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:0.7rem; color:var(--accent-cr); font-size:0.78rem; font-weight:600;">✨ No pending approval requests for this depot!</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:0.8rem; color:#15803d; font-size:0.82rem; font-weight:600;">✨ No pending approval requests for this depot!</td></tr>`;
                 return;
             }
 
@@ -1128,13 +1579,13 @@
                 const amtStr = amt > 0 ? `₹${amt} ${isDebit ? '(Dr)' : '(Cr)'}` : '-';
 
                 html += `<tr>
-                    <td style="font-weight:700; color:${type==='Staff Addition'?'#b45309':'var(--sap-brand)'}; font-size:0.74rem;">${type}</td>
-                    <td style="font-weight:600; font-size:0.76rem;">${sName} <span style="color:var(--sap-text-muted); font-size:0.68rem;">(${sCode})</span></td>
-                    <td style="font-size:0.74rem; max-width:220px; white-space:normal;">${details}</td>
-                    <td style="font-weight:700; text-align:right; font-size:0.76rem; color:${isDebit?'var(--accent-dr)':'var(--accent-cr)'};">${amtStr}</td>
+                    <td style="font-weight:700; color:${type==='Staff Addition'?'#854d0e':'#0369a1'}; font-size:0.78rem;">${type}</td>
+                    <td style="font-weight:600; font-size:0.8rem;">${sName} <span style="color:#64748b; font-size:0.72rem;">(${sCode})</span></td>
+                    <td style="font-size:0.78rem; max-width:240px; white-space:normal;">${details}</td>
+                    <td style="font-weight:700; text-align:right; font-size:0.8rem; color:${isDebit?'#dc2626':'#16a34a'};">${amtStr}</td>
                     <td style="text-align:center; white-space:nowrap;">
-                        <button class="btn-tool" style="background:#f0fdf4; color:var(--accent-cr); border-color:#bbf7d0; font-weight:700; padding:2px 6px; margin-right:2px;" onclick="processApprovalDirect('${id}', '${type}', 'Approved')">✔️ Approve</button>
-                        <button class="btn-tool" style="background:#fff5f5; color:var(--accent-dr); border-color:#f5c6cb; font-weight:700; padding:2px 6px;" onclick="processApprovalDirect('${id}', '${type}', 'Rejected')">✖️ Reject</button>
+                        <button class="btn-tool" style="background:#dcfce7; color:#15803d; border-color:#86efac; font-weight:700; padding:2px 8px; margin-right:3px;" onclick="processApprovalDirect('${id}', '${type}', 'Approved')">✔️ Approve</button>
+                        <button class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; font-weight:700; padding:2px 8px;" onclick="processApprovalDirect('${id}', '${type}', 'Rejected')">✖️ Reject</button>
                     </td>
                 </tr>`;
             });
@@ -1145,7 +1596,6 @@
             if (!confirm(`Are you sure you want to set status as "${statusDecision}"?`)) return;
             showScreenBlocker(`Processing ${statusDecision}...`);
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=updateApprovalStatus&id=${encodeURIComponent(rowId)}&type=${encodeURIComponent(type)}&status=${encodeURIComponent(statusDecision)}&depotCode=${encodeURIComponent(depotCode)}`);
                 showToast(res.message || `Request ${statusDecision}!`);
                 await loadDepotData();
@@ -1257,10 +1707,10 @@
 
                 dispatchFySummaryList.push({ monthIndex: mIndex, monthLabel: mLabel, year: actualYear, count: mData.count, topVType: topVType, rows: mData.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel} ${actualYear}</td><td style="text-align:right; font-weight:800; color:var(--sap-brand);">${mData.count}</td><td style="color:var(--sap-text-sub); font-weight:600;">${topVType}</td><td style="text-align:center;"><button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.76rem;" onclick="viewDispatchMonthDetails(${mIndex})">View</button></td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel} ${actualYear}</td><td style="text-align:right; font-weight:800; color:#0369a1;">${mData.count}</td><td style="color:#475569; font-weight:600;">${topVType}</td><td style="text-align:center;"><button class="btn-action-ledger" style="padding:0.25rem 0.75rem; font-size:0.8rem;" onclick="viewDispatchMonthDetails(${mIndex})">View</button></td></tr>`;
             });
 
-            document.getElementById('dispFySummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="4" class="text-center" style="padding:1.5rem;">No dispatch records found in this Financial Year.</td></tr>`;
+            document.getElementById('dispFySummaryTbody').innerHTML = tbodyHtml || `<tr><td colspan="4" class="text-center" style="padding:2rem;">No dispatch records found in this Financial Year.</td></tr>`;
             document.getElementById('dispCountBadge').textContent = `${totalFyCount} records (FY Summary)`;
         }
 
@@ -1312,7 +1762,7 @@
                 html += `<tr class="${isDup ? 'row-duplicate' : ''}">
                     <td style="text-align:center;"><input type="checkbox" class="dispatch-row-checkbox" value="${rId}" onclick="updateSelectedDispatchCount()"></td>
                     <td>${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}</td>
-                    <td style="color:${isDup ? 'var(--accent-dr)' : 'var(--sap-brand)'};font-weight:700;">${inv} ${isDup ? '<span style="font-size:0.65rem;background:#fff5f5;color:var(--accent-dr);padding:1px 4px;border-radius:2px;margin-left:3px;">⚠️ Repeated</span>' : ''}</td>
+                    <td style="color:${isDup ? '#dc2626' : '#2563eb'};font-weight:700;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
                     <td>${vType}</td>
                     <td>${through}</td>
                     <td>${dueExcess}</td>
@@ -1320,12 +1770,12 @@
                     <td>${time}</td>
                     <td>${remark}</td>
                     <td style="white-space:nowrap; text-align:center;">
-                        <button class="btn-tool" style="background:#e1f0ff;color:#0055b3;border-color:#b3d7ff;margin-right:3px;" title="Edit" onclick="openEditDispatchModal('${rId}')">✏️</button>
-                        <button class="btn-tool" style="background:#fff5f5;color:var(--accent-dr);border-color:#f5c6cb;" title="Delete" onclick="deleteDispatchRow('${rId}')">🗑️</button>
+                        <button class="btn-tool" style="background:#e0f2fe;color:#0369a1;border-color:#7dd3fc;margin-right:4px;" title="Edit" onclick="openEditDispatchModal('${rId}')">✏️</button>
+                        <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" title="Delete" onclick="deleteDispatchRow('${rId}')">🗑️</button>
                     </td>
                 </tr>`;
             });
-            tbody.innerHTML = html || `<tr><td colspan="10" class="text-center" style="padding:1.2rem;">No dispatches found.</td></tr>`;
+            tbody.innerHTML = html || `<tr><td colspan="10" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
             document.getElementById('selectAllCheckbox').checked = false;
             updateSelectedDispatchCount();
         }
@@ -1381,7 +1831,6 @@
             };
 
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -1422,7 +1871,6 @@
             const ids = Array.from(checked).map(cb => cb.value);
 
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(ids.join(','))}`);
                 showToast(res.message || "Selected records deleted successfully!");
                 await loadDepotData();
@@ -1510,8 +1958,7 @@
                     }
                 });
                 const net = totalCr - totalDr;
-                const cleanNet = Math.round(net); // Removed decimals
-                return `₹${Math.abs(cleanNet)} ${cleanNet >= 0 ? '(Cr)' : '(Dr)'}`;
+                return `₹${Math.abs(net)} ${net >= 0 ? '(Cr)' : '(Dr)'}`;
             } catch (e) { return '-'; }
         }
 
@@ -1524,17 +1971,17 @@
                 const st = getField(s, 'Status') || 'Active';
 
                 html += `<tr>
-                    <td style="text-align:center; white-space:nowrap; padding: 0.35rem 0.5rem;">
-                        <button class="btn-action-ledger" style="padding: 2px 6px; font-size: 0.7rem; margin-right: 2px;" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
-                        <button class="btn-action-trx" style="padding: 2px 6px; font-size: 0.7rem;" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
+                    <td style="text-align:center; white-space:nowrap; padding: 0.4rem 0.5rem;">
+                        <button class="btn-action-ledger" style="padding: 2px 7px; font-size: 0.72rem; margin-right: 2px;" onclick="openStaffLedger('${code}', '${name}')">📄 Ledger</button>
+                        <button class="btn-action-trx" style="padding: 2px 7px; font-size: 0.72rem;" onclick="openAddTrxModal('${code}', '${name}')">➕ Add Trx</button>
                     </td>
-                    <td style="color:var(--sap-brand); font-weight:700; font-size:0.78rem;">${code}</td>
-                    <td style="font-weight:600; font-size:0.8rem;">${name}</td>
-                    <td id="bal-${code}" style="color:var(--sap-brand); font-weight:bold; text-align:right; font-size:0.8rem;">Loading...</td>
-                    <td style="text-align:center; font-size:0.75rem; color:${st.toLowerCase()==='active'?'var(--accent-cr)':'var(--accent-dr)'}; font-weight:bold;">${st}</td>
+                    <td style="color:#2563eb; font-weight:700; font-size:0.82rem;">${code}</td>
+                    <td style="font-weight:600; font-size:0.85rem;">${name}</td>
+                    <td id="bal-${code}" style="color:#0f766e; font-weight:bold; text-align:right; font-size:0.85rem;">Loading...</td>
+                    <td style="text-align:center; font-size:0.8rem; color:${st.toLowerCase()==='active'?'#16a34a':'#dc2626'}; font-weight:bold;">${st}</td>
                 </tr>`;
             });
-            tbody.innerHTML = html || `<tr><td colspan="5" class="text-center" style="padding:1rem;">No staff found.</td></tr>`;
+            tbody.innerHTML = html || `<tr><td colspan="5" class="text-center" style="padding:1.2rem;">No staff found.</td></tr>`;
 
             list.forEach(async (s) => {
                 const code = getField(s, 'Staff Code');
@@ -1542,8 +1989,8 @@
                 const el = document.getElementById(`bal-${code}`);
                 if (el) {
                     el.textContent = bal;
-                    if (bal.includes('(Dr)')) el.style.color = 'var(--accent-dr)';
-                    else if (bal.includes('(Cr)')) el.style.color = 'var(--accent-cr)';
+                    if (bal.includes('(Dr)')) el.style.color = '#dc2626';
+                    else if (bal.includes('(Cr)')) el.style.color = '#16a34a';
                 }
             });
         }
@@ -1561,7 +2008,7 @@
             const btn = document.getElementById('btnReqStaffSubmit');
             btn.disabled = true;
             btn.textContent = 'Sending Request...';
-            showScreenBlocker('Login ID Is (EMP Id),Pass-1010 , First Approve This Staff');
+            showScreenBlocker('Login ID Is (EMP Id),Pass-1010 ,  Frist Approve This Staff');
 
             const payload = {
                 action: 'requestNewStaff',
@@ -1574,7 +2021,6 @@
             };
 
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -1625,7 +2071,6 @@
             if (!confirm("Are you sure you want to delete this Staff Transaction entry?")) return;
             showScreenBlocker('Deleting transaction...');
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteStaffTransaction&id=${encodeURIComponent(rowId)}&staffCode=${encodeURIComponent(currentActiveStaffCode)}&depotCode=${encodeURIComponent(depotCode)}`);
                 showToast(res.message || "Transaction deleted!");
                 await openStaffLedger(currentActiveStaffCode, currentActiveStaffName);
@@ -1664,7 +2109,6 @@
             };
 
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -1715,7 +2159,6 @@
             };
 
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -1741,7 +2184,6 @@
             if (!confirm(`Delete dispatch record ${rowId}?`)) return;
             showScreenBlocker('Deleting dispatch record...');
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDispatch&ids=${encodeURIComponent(rowId)}`);
                 showToast(res.message || "Deleted");
                 await loadDepotData();
@@ -1818,11 +2260,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = Math.round(Math.abs(openingBalance)).toString();
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             annualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:var(--sap-text);">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? Math.round(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -1834,11 +2276,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = Math.round(Math.abs(runningBal)).toString();
+                const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 annualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? Math.round(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? Math.round(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('annualSummaryTbody').innerHTML = tbodyHtml;
@@ -1876,12 +2318,12 @@
             html += `<tr class="row-opening-balance">
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
-                <td style="white-space:normal;min-width:300px;"><strong>Opening Balance</strong></td>
+                <td style="white-space:normal;min-width:320px;"><strong>Opening Balance</strong></td>
                 <td>-</td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + Math.round(opDr) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + Math.round(opCr) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
-                <td style="text-align:center;"><span style="display:inline-block;padding:2px 6px;border-radius:2px;font-size:0.7rem;font-weight:bold;background:#e1f0ff;color:#0055b3;">Opening</span></td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:#dbeafe;color:#1e40af;">Opening</span></td>
             </tr>`;
 
             mData.rows.forEach(r => {
@@ -1911,16 +2353,16 @@
 
                 html += `<tr>
                     <td style="text-align:center; white-space:nowrap;">
-                        <button type="button" class="btn-tool" style="background:#e1f0ff; color:#0055b3; border-color:#b3d7ff; padding:2px 5px; margin-right:2px;" title="Edit" onclick="openEditTrxModal('${safeId}', '${currentActiveStaffCode}', '${currentActiveStaffName}', '${isoDate}', decodeURIComponent('${safePart}'), decodeURIComponent('${safeMode}'), ${dr}, ${cr})">✏️</button>
-                        <button type="button" class="btn-tool" style="background:#fff5f5; color:var(--accent-dr); border-color:#f5c6cb; padding:2px 5px;" title="Delete" onclick="deleteStaffLedgerRow('${safeId}')">🗑️</button>
+                        <button type="button" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:3px;" title="Edit" onclick="openEditTrxModal('${safeId}', '${currentActiveStaffCode}', '${currentActiveStaffName}', '${isoDate}', decodeURIComponent('${safePart}'), decodeURIComponent('${safeMode}'), ${dr}, ${cr})">✏️</button>
+                        <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteStaffLedgerRow('${safeId}')">🗑️</button>
                     </td>
                     <td><strong>${dt}</strong></td>
-                    <td style="white-space:normal;min-width:300px;">${part}</td>
+                    <td style="white-space:normal;min-width:320px;">${part}</td>
                     <td>${mode}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + Math.round(dr) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + Math.round(cr) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + Math.round(runningBal) : 'Pending'}</td>
-                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 6px;border-radius:2px;font-size:0.7rem;font-weight:bold;background:${isApproved ? '#f0fdf4;color:var(--accent-cr)' : '#fff8e1;color:#8f6b00'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">${isApproved ? '₹' + runningBal.toFixed(2) : 'Pending'}</td>
+                    <td style="text-align:center;"><span style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:0.75rem;font-weight:bold;background:${isApproved ? '#dcfce7;color:#15803d' : '#fef3c7;color:#b45309'};">${isApproved ? 'Approved' : 'Pending'}</span></td>
                 </tr>`;
             });
 
@@ -1939,7 +2381,7 @@
             currentActiveStaffCode = code;
             currentActiveStaffName = name;
             document.getElementById('ledgerStaffTitle').textContent = `📄 Staff Ledger: ${name} (${code})`;
-            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2rem;"><div class="loader-ring" style="width:30px; height:30px; margin:0 auto 8px auto; border-width:2px;"></div><div style="font-weight:600; color:var(--sap-text-muted); font-size:0.8rem;">Reading ledger records...</div></td></tr>`;
+            document.getElementById('annualSummaryTbody').innerHTML = `<tr><td colspan="6" style="text-align:center; padding:2.5rem;"><div class="loader-ring" style="width:34px; height:34px; margin:0 auto 10px auto; border-width:3px;"></div><div style="font-weight:600; color:#64748b; font-size:0.85rem;">Reading ledger records from database...</div></td></tr>`;
             document.getElementById('staffLedgerModal').style.display = 'block';
 
             try {
@@ -1983,12 +2425,12 @@
             let opCr = runningBal > 0 ? runningBal : 0;
             let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
-            html += `<tr style="font-weight:bold; background:#edf2f7;">
+            html += `<tr style="font-weight:bold; background:#f8fafc;">
                 <td style="border:1px solid #000; padding:4px;">01-B/F</td>
                 <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? Math.round(opDr) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? Math.round(opCr) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -2003,9 +2445,9 @@
                     html += `<tr>
                         <td style="border:1px solid #000; padding:4px;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? Math.round(dr) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? Math.round(cr) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
             });
@@ -2013,11 +2455,11 @@
             document.getElementById('rcptTableBody').innerHTML = html;
 
             const opBal = activeViewingMonthData.openingBal;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.round(Math.abs(opBal))} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${Math.round(activeViewingMonthData.totalDr)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${Math.round(activeViewingMonthData.totalCr)}`;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
             const finalNet = activeViewingMonthData.closingBal;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.round(Math.abs(finalNet))} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
@@ -2072,7 +2514,7 @@
 
             let opCr = openingBalance > 0 ? openingBalance : 0;
             let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${Math.round(opDr)},${Math.round(opCr)},${Math.round(runningBal)},"Opening"\n`;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
 
             currentFYRows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
@@ -2089,11 +2531,11 @@
                     runningBal += (cr - dr);
                 }
 
-                const balStr = isApproved ? Math.round(runningBal).toString() : "Pending";
-                csvContent += `${dt},${part},${mode},${Math.round(dr)},${Math.round(cr)},${balStr},${appRaw}\n`;
+                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
+                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
             });
 
-            csvContent += `\nSUMMARY,,,"Total Debit: ${Math.round(totalDr)}","Total Credit: ${Math.round(totalCr)}","Net Balance: ${Math.abs(Math.round(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2138,7 +2580,6 @@
             try {
                 const cleanId = String(rowId || '').trim();
                 const cleanPart = encodeURIComponent(particularText || '');
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const res = await jsonp(`${SCRIPT_URL}?action=deleteDepotExpense&id=${encodeURIComponent(cleanId)}&particular=${cleanPart}&depotCode=${encodeURIComponent(depotCode)}`);
                 
                 if (res && res.success) {
@@ -2210,7 +2651,6 @@
             };
 
             try {
-                localStorage.removeItem(`rcm_depot_cache_${depotCode}`);
                 const queryStr = Object.keys(payload).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(payload[k])}`).join('&');
                 const res = await jsonp(`${SCRIPT_URL}?${queryStr}`);
                 if (res && res.success) {
@@ -2245,7 +2685,7 @@
 
             if (matches.length > 0) {
                 let html = '';
-                matches.forEach(m => { html += `<div style="padding:0.4rem 0.7rem; cursor:pointer; font-size:0.82rem; border-bottom:1px solid #f1f5f9;" onmousedown="selectExpenseParticular('${m.replace(/'/g, "\\'")}')">${m}</div>`; });
+                matches.forEach(m => { html += `<div style="padding:0.5rem 0.8rem; cursor:pointer; font-size:0.86rem; border-bottom:1px solid #f1f5f9;" onmousedown="selectExpenseParticular('${m.replace(/'/g, "\\'")}')">${m}</div>`; });
                 box.innerHTML = html;
                 box.style.display = 'block';
             } else { box.style.display = 'none'; box.innerHTML = ''; }
@@ -2329,11 +2769,11 @@
             let runningBal = openingBalance;
             let tbodyHtml = '';
 
-            let opnBalFormatted = Math.round(Math.abs(openingBalance)).toString();
+            let opnBalFormatted = Math.abs(openingBalance).toFixed(2);
             let opnType = openingBalance >= 0 ? 'CR' : 'DR';
             expenseAnnualSummaryData.push({ monthLabel: 'OPN', debit: 0, credit: openingBalance > 0 ? openingBalance : 0, balance: runningBal, type: opnType, rows: [] });
 
-            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:var(--sap-text);">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? Math.round(openingBalance) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
+            tbodyHtml += `<tr style="background:#ffffff; font-weight:700;"><td style="color:#0f172a;">OPN</td><td style="text-align:right;">0</td><td style="text-align:right; color:var(--accent-cr);">${openingBalance > 0 ? openingBalance.toFixed(2) : '0'}</td><td style="text-align:right; color:var(--accent-bal);">${opnBalFormatted}</td><td style="text-align:center; font-weight:800; color:${opnType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${opnType}</td><td style="text-align:center;">-</td></tr>`;
 
             fyMonthSequence.forEach(mIndex => {
                 const mObj = monthlyData[mIndex];
@@ -2345,11 +2785,11 @@
 
                 runningBal += (mCr - mDr);
                 const balType = runningBal >= 0 ? 'CR' : 'DR';
-                const balFormatted = Math.round(Math.abs(runningBal)).toString();
+                const balFormatted = Math.abs(runningBal).toFixed(2);
 
                 expenseAnnualSummaryData.push({ monthLabel: mLabel, monthIndex: mIndex, year: (mIndex >= 3) ? startYear : startYear + 1, debit: mDr, credit: mCr, balance: runningBal, type: balType, rows: mObj.rows });
 
-                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:var(--sap-text);">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? Math.round(mDr) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? Math.round(mCr) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.2rem 0.6rem; font-size:0.75rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
+                tbodyHtml += `<tr style="background:#ffffff;"><td style="font-weight:700; color:#1e293b;">${mLabel}</td><td style="text-align:right; color:${mDr > 0 ? 'var(--accent-dr)' : '#64748b'}; font-weight:${mDr > 0 ? '700' : '400'};">${mDr > 0 ? mDr.toFixed(2) : '0'}</td><td style="text-align:right; color:${mCr > 0 ? 'var(--accent-cr)' : '#64748b'}; font-weight:${mCr > 0 ? '700' : '400'};">${mCr > 0 ? mCr.toFixed(2) : '0'}</td><td style="text-align:right; font-weight:700; color:var(--accent-bal);">${balFormatted}</td><td style="text-align:center; font-weight:800; color:${balType === 'CR' ? 'var(--accent-cr)' : 'var(--accent-dr)'};">${balType}</td><td style="text-align:center;">${mObj.rows.length > 0 ? `<button class="btn-action-ledger" style="padding:0.25rem 0.65rem; font-size:0.78rem;" onclick="viewExpenseMonthDetails(${mIndex})">View</button>` : '-'}</td></tr>`;
             });
 
             document.getElementById('expenseSummaryTbody').innerHTML = tbodyHtml;
@@ -2388,9 +2828,9 @@
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
                 <td><strong>Opening Balance</strong></td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + Math.round(opDr) : '-'}</td>
-                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + Math.round(opCr) : '-'}</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
+                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
             </tr>`;
 
             mData.rows.forEach((r, idx) => {
@@ -2412,8 +2852,8 @@
                     const safePart = encodeURIComponent(part);
 
                     actionBtn = `
-                        <button type="button" class="btn-tool" style="background:#e1f0ff; color:#0055b3; border-color:#b3d7ff; padding:2px 5px; margin-right:3px;" title="Edit" onclick="triggerExpenseEdit('${safeId}', '${isoDate}', '${safePart}', ${dr}, ${cr})">✏️</button>
-                        <button type="button" class="btn-tool" style="background:#fff5f5; color:var(--accent-dr); border-color:#f5c6cb; padding:2px 5px;" title="Delete" onclick="deleteExpenseEntry('${safeId}', decodeURIComponent('${safePart}'))">🗑️</button>
+                        <button type="button" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#7dd3fc; padding:2px 6px; margin-right:4px;" title="Edit" onclick="triggerExpenseEdit('${safeId}', '${isoDate}', '${safePart}', ${dr}, ${cr})">✏️</button>
+                        <button type="button" class="btn-tool" style="background:#fee2e2; color:#b91c1c; border-color:#fca5a5; padding:2px 6px;" title="Delete" onclick="deleteExpenseEntry('${safeId}', decodeURIComponent('${safePart}'))">🗑️</button>
                     `;
                 }
 
@@ -2421,9 +2861,9 @@
                     <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + Math.round(dr) : '-'}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : 'var(--sap-text-muted)'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + Math.round(cr) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 </tr>`;
             });
 
@@ -2477,7 +2917,6 @@
                 const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
                 const cell = { v: val, s: style };
                 if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
-                else if (typeof val === 'string' && val.startsWith('=')) { cell.t = 'n'; if (numFmt) cell.z = numFmt; }
                 else { cell.t = 's'; }
                 ws[cellRef] = cell;
             }
@@ -2485,6 +2924,8 @@
             merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } });
             for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? `${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}` : "", STYLE_TITLE);
             rIdx += 2; 
+
+            let runningBal = openingBalance;
 
             fyMonthSequence.forEach(mIndex => {
                 const rowsInMonth = monthlyGroups[mIndex];
@@ -2500,63 +2941,38 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let opCr = openingBalance > 0 ? openingBalance : 0;
-                let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-                let openingRowBal = openingBalance;
+                let monthDr = 0; let monthCr = 0;
+                let opCr = runningBal > 0 ? runningBal : 0;
+                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(0)) : "", STYLE_DATA, "#,##0");
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(0)) : "", STYLE_DATA, "#,##0");
-                setCell(rIdx, 4, Number(openingRowBal.toFixed(0)), STYLE_DATA, "#,##0");
+                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                 rIdx++;
 
-                let prevBalCellRef = XLSX.utils.encode_cell({ r: rIdx - 1, c: 4 });
-
-                rowsInMonth.forEach((r, idx) => {
+                rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     const dt = formatCleanDate(getField(r, 'Date', 'date'));
                     const part = getField(r, 'Particular', 'particular');
 
-                    const curRow = rIdx + 1;
-                    const creditCol = XLSX.utils.encode_cell({ r: rIdx, c: 2 });
-                    const debitCol = XLSX.utils.encode_cell({ r: rIdx, c: 3 });
-                    
-                    // Formula for Balance: =PREV_BAL + CREDIT - DEBIT
-                    const formula = `=(${prevBalCellRef}+IF(ISBLANK(${creditCol}),0,${creditCol})-IF(ISBLANK(${debitCol}),0,${debitCol}))`;
+                    monthDr += dr; monthCr += cr; runningBal += (cr - dr);
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(0)) : "", STYLE_DATA, "#,##0");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(0)) : "", STYLE_DATA, "#,##0");
-                    setCell(rIdx, 4, formula, STYLE_DATA, "#,##0");
-
-                    prevBalCellRef = XLSX.utils.encode_cell({ r: rIdx, c: 4 });
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
+                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                     rIdx++;
                 });
 
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                
-                const creditStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length - 1, c: 2 });
-                const creditEnd = XLSX.utils.encode_cell({ r: rIdx - 1, c: 2 });
-                const debitStart = XLSX.utils.encode_cell({ r: rIdx - rowsInMonth.length - 1, c: 3 });
-                const debitEnd = XLSX.utils.encode_cell({ r: rIdx - 1, c: 3 });
-                const finalBalRef = XLSX.utils.encode_cell({ r: rIdx - 1, c: 4 });
-
-                setCell(rIdx, 2, `=SUM(${creditStart}:${creditEnd})`, STYLE_TOTAL, "#,##0");
-                setCell(rIdx, 3, `=SUM(${debitStart}:${debitEnd})`, STYLE_TOTAL, "#,##0");
-                setCell(rIdx, 4, `=${finalBalRef}`, STYLE_TOTAL, "#,##0");
-
-                // Update running balance for next month sequence
-                let monthDrTotal = 0; let monthCrTotal = 0;
-                rowsInMonth.forEach(r => {
-                    monthDrTotal += Number(getField(r, 'Debit', 'debit') || 0);
-                    monthCrTotal += Number(getField(r, 'Credit', 'credit') || 0);
-                });
-                openingBalance += (monthCrTotal - monthDrTotal);
-
+                setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
                 rIdx += 2; 
             });
 
@@ -2589,7 +3005,7 @@
             });
 
             if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
-            const sortedYears = Array.from(yearsSet).sort((a, b) => b - a); // New to Old order
+            const sortedYears = Array.from(yearsSet).sort((a, b) => a - b);
             const wb = XLSX.utils.book_new();
 
             sortedYears.forEach(startYear => {
@@ -2599,7 +3015,7 @@
             });
 
             XLSX.writeFile(wb, `All_FY_Depot_Expenses_${depotNameStored}.xlsx`);
-            showToast('All FY Multi-Sheet Styled Excel downloaded (New to Old)!');
+            showToast('All FY Multi-Sheet Styled Excel downloaded!');
         }
 
         function downloadExpensePdfDirect() {
@@ -2645,9 +3061,9 @@
                 monthRowsHtml += `<tr>
                     <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
                     <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? Math.round(opCr) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? Math.round(opDr) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                 </tr>`;
 
                 rowsInMonth.forEach(r => {
@@ -2663,9 +3079,9 @@
                     monthRowsHtml += `<tr>
                         <td style="border:1px solid #000; padding:4px; text-align:center;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? Math.round(cr) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? Math.round(dr) : ''}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : ''}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 });
 
@@ -2673,10 +3089,10 @@
                     <div style="margin-bottom: 20px;">
                         <table style="width:100%; border-collapse:collapse; font-size:9pt; border:2px solid #000;">
                             <thead>
-                                <tr style="background:#edf2f7; text-align:center;">
+                                <tr style="background:#e0f2fe; text-align:center;">
                                     <th colspan="5" style="border:1px solid #000; padding:5px; font-weight:bold; font-size:10pt; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                                 </tr>
-                                <tr style="background:#edf2f7; text-align:center;">
+                                <tr style="background:#e0f2fe; text-align:center;">
                                     <th style="border:1px solid #000; padding:4px; width:15%; color:#0369a1;">DATE</th>
                                     <th style="border:1px solid #000; padding:4px; text-align:left; width:45%; color:#0369a1;">PARTICULAR</th>
                                     <th style="border:1px solid #000; padding:4px; width:13%; color:#0369a1;">CREDIT</th>
@@ -2686,12 +3102,12 @@
                             </thead>
                             <tbody>${monthRowsHtml}</tbody>
                             <tfoot>
-                                <tr style="background:#edf2f7; font-weight:bold;">
+                                <tr style="background:#e0f2fe; font-weight:bold;">
                                     <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
                                     <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${Math.round(monthCr + opCr)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${Math.round(monthDr + opDr)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${Math.round(runningBal)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + opCr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthDr + opDr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${runningBal.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -2704,7 +3120,7 @@
             exportNode.style.background = '#ffffff';
             exportNode.style.color = '#000000';
             exportNode.innerHTML = `
-                <div style="text-align:center; font-weight:bold; background:#0a6ed1; color:#fff; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
+                <div style="text-align:center; font-weight:bold; background:#32567f; color:#fff; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
                     ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
                 </div>
                 ${fullHtmlBlocks}
@@ -2785,9 +3201,9 @@
             rowsHtml += `
                 <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
                     <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? Math.round(opDr) : '-'}</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? Math.round(opCr) : '-'}</td>
-                    <td style="padding: 3px 1px; text-align: right;">${Math.round(runningBal)}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
                 </tr>
             `;
 
@@ -2803,9 +3219,9 @@
                     <tr style="border-bottom: 1px dotted #ccc;">
                         <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
                         <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? Math.round(dr) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? Math.round(cr) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${Math.round(runningBal)}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
                     </tr>
                 `;
             });
@@ -2835,11 +3251,11 @@
                         <tbody>${rowsHtml}</tbody>
                     </table>
                     <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
-                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.round(Math.abs(openingBalance))} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${Math.round(totalDr)}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${Math.round(totalCr)}</span></div>
-                        <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
-                            <span>Net Balance:</span> <span>Rs. ${Math.round(Math.abs(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
+                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
+                            <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">*** Thank You ***</div>

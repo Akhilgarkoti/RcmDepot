@@ -2,47 +2,62 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import sheets
 
 app = Flask(__name__)
-app.secret_key = "rcm_depot_secret_key"
+app.secret_key = "rcm_depot_secure_app_key_2026"
 
 @app.route('/')
 def home():
+    # Yahan se auto-redirect hata diya hai taaki infinite loop (gol-gol ghoomna) band ho jaye
     return render_template('index.html')
 
+# Frontend JavaScript se aane wali session request ko handle karne ke liye
 @app.route('/login', methods=['POST'])
-def login():
+def login_session():
     try:
-        data = request.get_json(silent=True) or request.form
+        data = request.get_json(silent=True) or {}
         username = data.get('username')
         
         if username:
-            session['user'] = str(username).strip()
-            if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return jsonify({"success": True})
-            return redirect(url_for('depot'))
+            clean_user = str(username).strip()
+            session['user'] = clean_user
             
-        if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({"success": False, "message": "Invalid credentials"})
-        return redirect(url_for('home'))
-        
+            # Role decide karna
+            lower_user = clean_user.lower()
+            if 'admin' in lower_user:
+                session['role'] = 'admin'
+            elif lower_user.startswith('emp') or lower_user.startswith('stf'):
+                session['role'] = 'staff'
+            else:
+                session['role'] = 'depot'
+                
+            return jsonify({"success": True})
+        return jsonify({"success": False})
     except Exception as e:
-        if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({"success": False, "message": str(e)})
-        return redirect(url_for('home'))
+        return jsonify({"success": False, "message": str(e)})
 
 @app.route('/admin')
 def admin():
+    # Strict Security: Sirf aur sirf 'admin' role wale hi admin khol sakte hain
+    if session.get('role') != 'admin':
+        return redirect(url_for('home'))
     return render_template('admin.html')
 
 @app.route('/depot')
 def depot():
+    # Strict Security: Bina login ke ya agar galat role ho toh home par bhej dega
+    if 'user' not in session or session.get('role') != 'depot':
+        return redirect(url_for('home'))
     return render_template('depot.html')
 
 @app.route('/staff')
 def staff():
+    # Strict Security: Sirf staff role wale hi access kar sakte hain
+    if 'user' not in session or session.get('role') != 'staff':
+        return redirect(url_for('home'))
     return render_template('staff.html')
 
 @app.route('/audit')
 def audit():
+    # Audit bina login ke khul sakta hai
     return render_template('audit.html')
 
 @app.route('/logout')

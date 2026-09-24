@@ -2896,6 +2896,24 @@
         const STYLE_DATA = { font: { name: "Calibri", sz: 10 }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
         const STYLE_TOTAL = { fill: { fgColor: { rgb: "FFFEF08A" } }, font: { name: "Calibri", sz: 10, bold: true, color: { rgb: "FFDC2626" } }, border: { top: { style: "thin", color: { rgb: "FF000000" } }, bottom: { style: "thin", color: { rgb: "FF000000" } }, left: { style: "thin", color: { rgb: "FF000000" } }, right: { style: "thin", color: { rgb: "FF000000" } } } };
 
+        function setCell(r, c, val, style, numFmt, formula) {
+            const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
+            const cell = { v: val, s: style };
+            if (formula) {
+                cell.f = formula;
+                cell.t = 'n';
+                if (numFmt) cell.z = numFmt;
+            } else if (typeof val === 'number') { 
+                cell.t = 'n'; 
+                if (numFmt) cell.z = numFmt; 
+            } else { 
+                cell.t = 's'; 
+            }
+            ws[cellRef] = cell;
+        }
+
+        let ws = {}; // Declared globally inside buildStyledWorksheet context block via object reference or let reassignment
+
         function buildStyledWorksheet(startYear) {
             const fyStartDate = new Date(startYear, 3, 1);
             const fyEndDate = new Date(startYear + 1, 2, 31, 23, 59, 59);
@@ -2922,17 +2940,9 @@
                 if (d && d >= fyStartDate && d <= fyEndDate) { monthlyGroups[d.getMonth()].push(r); }
             });
 
-            const ws = {};
+            ws = {};
             const merges = [];
             let rIdx = 0;
-
-            function setCell(r, c, val, style, numFmt) {
-                const cellRef = XLSX.utils.encode_cell({ r: r, c: c });
-                const cell = { v: val, s: style };
-                if (typeof val === 'number') { cell.t = 'n'; if (numFmt) cell.z = numFmt; } 
-                else { cell.t = 's'; }
-                ws[cellRef] = cell;
-            }
 
             merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } });
             for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? `${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}` : "", STYLE_TITLE);
@@ -2965,6 +2975,8 @@
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
                 rIdx++;
 
+                let lastTxnRowIndex = 0;
+
                 rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
@@ -2972,12 +2984,17 @@
                     const part = getField(r, 'Particular', 'particular');
 
                     monthDr += dr; monthCr += cr; runningBal += (cr - dr);
+                    
+                    let currentRowNum = rIdx + 1;
+                    let prevRowNum = currentRowNum - 1;
 
                     setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
                     setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "0.00");
                     setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "0.00");
-                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00");
+                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "0.00", `E${prevRowNum}+C${currentRowNum}-D${currentRowNum}`);
+                    
+                    lastTxnRowIndex = currentRowNum;
                     rIdx++;
                 });
 
@@ -2985,7 +3002,7 @@
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
                 setCell(rIdx, 2, Number((monthCr + opCr).toFixed(2)), STYLE_TOTAL, "0.00");
                 setCell(rIdx, 3, Number((monthDr + opDr).toFixed(2)), STYLE_TOTAL, "0.00");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00");
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "0.00", `E${lastTxnRowIndex}`);
                 rIdx += 2; 
             });
 
@@ -2999,9 +3016,9 @@
         function exportCurrentFyExpensesToExcel() {
             if (typeof XLSX === 'undefined') { showToast('Excel Library loading, please try again.'); return; }
             const startYear = parseInt(document.getElementById('expenseYearFilter').value, 10);
-            const ws = buildStyledWorksheet(startYear);
+            const wsSheet = buildStyledWorksheet(startYear);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, `FY ${startYear}-${String(startYear + 1).slice(2)}`);
+            XLSX.utils.book_append_sheet(wb, wsSheet, `FY ${startYear}-${String(startYear + 1).slice(2)}`);
             XLSX.writeFile(wb, `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.xlsx`);
             showToast('Current FY Styled Excel downloaded!');
         }
@@ -3022,9 +3039,9 @@
             const wb = XLSX.utils.book_new();
 
             sortedYears.forEach(startYear => {
-                const ws = buildStyledWorksheet(startYear);
+                const wsSheet = buildStyledWorksheet(startYear);
                 const sheetName = `FY ${startYear}-${String(startYear + 1).slice(2)}`;
-                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+                XLSX.utils.book_append_sheet(wb, wsSheet, sheetName);
             });
 
             XLSX.writeFile(wb, `All_FY_Depot_Expenses_${depotNameStored}.xlsx`);

@@ -1,95 +1,93 @@
-from flask import Flask, render_template, request, session, redirect, url_for
-import sheets  # आपके द्वारा दी गई sheets.py फ़ाइल
+from flask import Flask, render_template, redirect, url_for, session, request, jsonify
+from functools import wraps
 
 app = Flask(__name__)
-# Vercel पर सत्र (sessions) सुरक्षित रखने के लिए secret_key ज़रूरी है
-app.secret_key = 'rcm_depot_secure_session_key_vercel'
+app.secret_key = "rcm_depot_secure_app_key"
+
+# सामान्य लॉगिन चेक
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# केवल Admin के लिए सुरक्षा चेक
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session or session.get('role') != 'admin':
+            return redirect(url_for('home'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/')
-def index():
+def home():
     # अगर यूजर पहले से लॉग इन है, तो उसे उसके रोल के अनुसार सही पेज पर भेजें
-    if session.get('logged_in'):
+    if 'user' in session:
         role = session.get('role')
         if role == 'admin':
-            return redirect(url_for('admin_page'))
-        elif role == 'depot':
-            return redirect(url_for('depot_page'))
+            return redirect(url_for('admin'))
         elif role == 'staff':
-            return redirect(url_for('staff_page'))
+            return redirect(url_for('staff'))
+        else:
+            return redirect(url_for('depot'))
     return render_template('index.html')
 
+# Frontend से लॉगिन होने के बाद यूजर और उसका रोल सेट करें
 @app.route('/login', methods=['POST'])
-def login():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    
-    if not username or not password:
-        return render_template('index.html', error="कृपया यूजरनेम और पासवर्ड दर्ज करें।")
-    
-    # 1. पहले एडमिन या स्पेशल यूजर के लिए डायरेक्ट चेक (यदि आप रखना चाहें)
-    if username.strip().lower() == 'admin' and password == 'admin123': # अपनी जरूरत के मुताबिक एडमिन पासवर्ड सेट करें
-        session['logged_in'] = True
-        session['username'] = username
-        session['role'] = 'admin'
-        return redirect(url_for('admin_page'))
-
-    # 2. Google Sheet से डेटा फेच करके लॉगिन वेरीफाई करना
-    # मान लीजिए आपकी शीट में "Users" या "Depot" नाम की worksheet है जहाँ यूजरनेम/पासवर्ड सेव हैं
-    sheet_response = sheets.get_depot_data("Users") # अपनी सही Worksheet का नाम यहाँ लिखें (जैसे 'Login', 'Users' आदि)
-    
-    if sheet_response.get("status") == "success":
-        users_data = sheet_response.get("data", [])
+def login_session():
+    try:
+        data = request.get_json(silent=True) or {}
+        user_code = data.get('username')
         
-        for user in users_data:
-            # मान लेते हैं शीट में कॉलम के नाम 'username', 'password', और 'role' हैं
-            if str(user.get('username')).strip() == username.strip() and str(user.get('password')).strip() == password.strip():
-                session['logged_in'] = True
-                session['username'] = username
-                user_role = str(user.get('role', 'depot')).strip().lower()
-                session['role'] = user_role
+        if user_code:
+            clean_user = str(user_code).strip()
+            session['user'] = clean_user
+            
+            # यहाँ तय करें कि यूजर का रोल क्या है (आप इसे अपनी शीट या डेटाबेस से भी मिला सकते हैं)
+            if clean_user.lower() == 'admin' or 'admin' in clean_user.lower():
+                session['role'] = 'admin'
+            elif 'staff' in clean_user.lower():
+                session['role'] = 'staff'
+            else:
+                session['role'] = 'depot'
                 
-                if user_role == 'admin':
-                    return redirect(url_for('admin_page'))
-                elif user_role == 'staff':
-                    return redirect(url_for('staff_page'))
-                else:
-                    return redirect(url_for('depot_page'))
-                    
-    # अगर लॉगिन फेल हो जाता है
-    return render_template('index.html', error="गलत यूजरनेम या पासवर्ड!")
+            return jsonify({"success": True})
+        return jsonify({"success": False})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)})
 
+# Admin पेज - यहाँ सिर्फ Admin ही आ सकता है
 @app.route('/admin')
-def admin_page():
-    # सुरक्षा जाँच: केवल 'admin' ही देख सकता है
-    if not session.get('logged_in') or session.get('role') != 'admin':
-        return redirect(url_for('index'))
+@admin_required
+def admin():
     return render_template('admin.html')
 
+# Depot पेज - यहाँ Login यूजर आ सकता है
 @app.route('/depot')
-def depot_page():
-    # सुरक्षा जाँच: 'admin' या 'depot' वाले ही देख सकते हैं
-    if not session.get('logged_in') or session.get('role') not in ['admin', 'depot']:
-        return redirect(url_for('index'))
+@login_required
+def depot():
+    # अगर कोई एडमिन डिपो पेज खोलना चाहे तो रोक भी सकते हैं या अनुमति दे सकते हैं
     return render_template('depot.html')
 
+# Staff पेज - यहाँ Login यूजर आ सकता है
 @app.route('/staff')
-def staff_page():
-    # सुरक्षा जाँच: 'admin' या 'staff' वाले ही देख सकते हैं
-    if not session.get('logged_in') or session.get('role') not in ['admin', 'staff']:
-        return redirect(url_for('index'))
+@login_required
+def staff():
     return render_template('staff.html')
 
+# Audit पेज - केवल Admin के लिए
 @app.route('/audit')
-def audit_page():
-    # केवल एडमिन के लिए
-    if not session.get('logged_in') or session.get('role') != 'admin':
-        return redirect(url_for('index'))
+@admin_required
+def audit():
     return render_template('audit.html')
 
 @app.route('/logout')
 def logout():
-    session.clear()  # सत्र साफ़ करें ताकि डेटा सुरक्षित रहे
-    return redirect(url_for('index'))
+    session.clear()
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)

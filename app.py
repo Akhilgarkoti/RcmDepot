@@ -1,58 +1,78 @@
-from flask import Flask, render_template, redirect, url_for, session, request, jsonify
-from functools import wraps
+from flask import Flask, render_template, request, session, redirect, url_for
+from sheets import get_user_role_from_sheet # Assuming sheets.py mein role verify karne ka function hai
 
 app = Flask(__name__)
-app.secret_key = "rcm_depot_secure_app_key"
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user' not in session:
-            return redirect(url_for('home'))
-        return f(*args, **kwargs)
-    return decorated_function
+# Vercel ya production ke liye ek secure secret key zaroori hai sessions ke liye
+app.secret_key = 'rcm_depot_secure_random_secret_key_2026'
 
 @app.route('/')
-def home():
+def index():
+    # Agar user pehle se logged in hai toh uske role ke hisaab se redirect karein
+    if 'logged_in' in session:
+        role = session.get('role')
+        if role == 'admin':
+            return redirect(url_for('admin_page'))
+        elif role == 'depot':
+            return redirect(url_for('depot_page'))
+        elif role == 'staff':
+            return redirect(url_for('staff_page'))
     return render_template('index.html')
 
-# Ye route frontend se login hone ke baad server session set karega
 @app.route('/login', methods=['POST'])
-def login_session():
-    try:
-        data = request.get_json(silent=True) or {}
-        user_code = data.get('username')
-        if user_code:
-            session['user'] = str(user_code).strip()
-            return jsonify({"success": True})
-        return jsonify({"success": False})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    
+    # Google Sheet ya database se user ka role check karein
+    # Yeh function aapke sheets.py ke logic ke anusaar kaam karega
+    user_role = get_user_role_from_sheet(username, password)
+    
+    if user_role:
+        session['logged_in'] = True
+        session['username'] = username
+        session['role'] = user_role  # Role: 'admin', 'depot', ya 'staff'
+        
+        if user_role == 'admin':
+            return redirect(url_for('admin_page'))
+        elif user_role == 'depot':
+            return redirect(url_for('depot_page'))
+        elif user_role == 'staff':
+            return redirect(url_for('staff_page'))
+    
+    return render_template('index.html', error="Invalid username or password")
 
 @app.route('/admin')
-@login_required
-def admin():
+def admin_page():
+    # Security Check: Kewal 'admin' role wale hi access kar sakte hain
+    if not session.get('logged_in') or session.get('role') != 'admin':
+        return redirect(url_for('index'))
     return render_template('admin.html')
 
 @app.route('/depot')
-@login_required
-def depot():
+def depot_page():
+    # Security Check: 'admin' ya 'depot' role wale access kar sakte hain
+    if not session.get('logged_in') or session.get('role') not in ['admin', 'depot']:
+        return redirect(url_for('index'))
     return render_template('depot.html')
 
 @app.route('/staff')
-@login_required
-def staff():
+def staff_page():
+    # Security Check: 'admin' ya 'staff' role wale access kar sakte hain
+    if not session.get('logged_in') or session.get('role') not in ['admin', 'staff']:
+        return redirect(url_for('index'))
     return render_template('staff.html')
 
 @app.route('/audit')
-@login_required
-def audit():
+def audit_page():
+    # Security Check: Kewal admin ke liye audit page
+    if not session.get('logged_in') or session.get('role') != 'admin':
+        return redirect(url_for('index'))
     return render_template('audit.html')
 
 @app.route('/logout')
 def logout():
-    session.clear()
-    return redirect(url_for('home'))
+    session.clear()  # Session clear karke logout kar dein
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

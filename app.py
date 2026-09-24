@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session, request
+from flask import Flask, render_template, redirect, url_for, session, request, jsonify
 from functools import wraps
 import sheets
 
@@ -36,52 +36,50 @@ def home():
             return redirect(url_for('depot'))
     return render_template('index.html')
 
-# Standard Form Login Route
+# JSON / AJAX Login Route (Jisse frontend ka "Verifying credentials..." aage badh sake)
 @app.route('/login', methods=['POST'])
-def login():
-    username = request.form.get('username')
-    
-    if not username:
-        return redirect(url_for('home'))
-
-    clean_user = str(username).strip()
-    user_role = "depot"
-    found = False
-
+def login_session():
     try:
-        # Google Sheet se verify karna
-        sheet_response = sheets.get_depot_data("Users") # Agar worksheet ka naam kuch aur hai toh yahan badal lein
-        if sheet_response.get("status") == "success":
-            records = sheet_response.get("data", [])
-            for row in records:
-                sheet_username = str(row.get('username') or row.get('User') or '').strip()
-                if sheet_username.lower() == clean_user.lower():
-                    found = True
-                    r = str(row.get('role') or row.get('Role') or '').strip().lower()
-                    if r:
-                        user_role = r
-                    break
-    except Exception as e:
-        print("Sheet Error:", e)
-
-    # Emergency Admin fallback
-    if clean_user.lower() == 'admin':
-        found = True
-        user_role = 'admin'
-
-    if found:
-        session['user'] = clean_user
-        session['role'] = user_role
+        data = request.get_json(silent=True) or {}
+        user_code = data.get('username') or request.form.get('username')
         
-        if user_role == 'admin':
-            return redirect(url_for('admin'))
-        elif user_role == 'staff':
-            return redirect(url_for('staff'))
+        if not user_code:
+            return jsonify({"success": False, "message": "Username missing"})
+
+        clean_user = str(user_code).strip()
+        user_role = "depot"
+        found = False
+
+        # Google Sheet se verify karna
+        try:
+            sheet_response = sheets.get_depot_data("Users") # Agar worksheet ka naam kuch aur hai toh yahan badal lein[cite: 1]
+            if sheet_response.get("status") == "success":
+                records = sheet_response.get("data", [])
+                for row in records:
+                    sheet_username = str(row.get('username') or row.get('User') or '').strip()
+                    if sheet_username.lower() == clean_user.lower():
+                        found = True
+                        r = str(row.get('role') or row.get('Role') or '').strip().lower()
+                        if r:
+                            user_role = r
+                        break
+        except Exception as e:
+            print("Sheet Error:", e)
+
+        # Emergency Admin fallback
+        if clean_user.lower() == 'admin':
+            found = True
+            user_role = 'admin'
+
+        if found:
+            session['user'] = clean_user
+            session['role'] = user_role
+            return jsonify({"success": True, "role": user_role})
         else:
-            return redirect(url_for('depot'))
-    else:
-        # Agar galat username ho toh wapas home par bhej dein
-        return redirect(url_for('home'))
+            return jsonify({"success": False, "message": "Invalid Username"})
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)})
 
 @app.route('/admin')
 @admin_required

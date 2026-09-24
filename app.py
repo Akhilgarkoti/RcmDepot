@@ -18,10 +18,11 @@ def login():
             clean_user = str(username).strip()
             session['user'] = clean_user
             
-            # User ka role set karna
-            if clean_user.lower() == 'admin' or 'admin' in clean_user.lower():
+            # Yahan apne admin ya staff ka exact username set karein
+            # Jaise agar aapka admin username 'admin' ya kuch aur hai:
+            if clean_user.lower() == 'admin':  # Apne admin ID yahan match karein
                 session['role'] = 'admin'
-            elif 'staff' in clean_user.lower():
+            elif 'staff' in clean_user.lower():  # Agar staff id me 'staff' aata hai
                 session['role'] = 'staff'
             else:
                 session['role'] = 'depot'
@@ -41,28 +42,28 @@ def login():
 
 @app.route('/admin')
 def admin():
-    # Sirf Admin hi access kar sakega, URL change karne par bhi block ho jayega
+    # Sirf aur sirf Admin hi access kar sakta hai
     if session.get('role') != 'admin':
         return redirect(url_for('home'))
     return render_template('admin.html')
 
 @app.route('/depot')
 def depot():
-    # Bina login ke depot page nahi khulega, aur agar admin URL se aane ki koshషే karega toh rok sakte hain
-    if 'user' not in session:
+    # Bina login ke depot nahi khulega, aur agar role match nahi hai toh block
+    if 'user' not in session or session.get('role') == 'staff':
         return redirect(url_for('home'))
     return render_template('depot.html')
 
 @app.route('/staff')
 def staff():
-    # Bina login ke staff page nahi khulega
-    if 'user' not in session:
+    # Sirf Staff ya Admin hi staff page dekh sakta hai
+    if 'user' not in session or session.get('role') not in ['staff', 'admin']:
         return redirect(url_for('home'))
     return render_template('staff.html')
 
 @app.route('/audit')
 def audit():
-    # Jaisa aapne kaha, audit bina login ke khul sakta hai
+    # Audit bina login ke khul sakta hai (jaisa aapne bataya tha)
     return render_template('audit.html')
 
 @app.route('/logout')

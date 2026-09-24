@@ -1,103 +1,50 @@
-from flask import Flask, render_template, redirect, url_for, session, request, jsonify
-from functools import wraps
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import sheets
 
 app = Flask(__name__)
-app.secret_key = "rcm_depot_secure_app_key_2026"
-
-# 1. Normal Login Check Decorator
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user' not in session:
-            return redirect(url_for('home'))
-        return f(*args, **kwargs)
-    return decorated_function
-
-# 2. Strict Admin Only Decorator
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user' not in session or session.get('role') != 'admin':
-            return redirect(url_for('home'))
-        return f(*args, **kwargs)
-    return decorated_function
+app.secret_key = "rcm_depot_secret_key"
 
 @app.route('/')
 def home():
-    # Agar user pehle se logged in hai toh uske role ke mutabiq sahi page par bhej dein
-    if 'user' in session:
-        role = session.get('role')
-        if role == 'admin':
-            return redirect(url_for('admin'))
-        elif role == 'staff':
-            return redirect(url_for('staff'))
-        else:
-            return redirect(url_for('depot'))
     return render_template('index.html')
 
-# JSON / AJAX Login Route (Jisse frontend ka "Verifying credentials..." aage badh sake)
 @app.route('/login', methods=['POST'])
-def login_session():
+def login():
     try:
-        data = request.get_json(silent=True) or {}
-        user_code = data.get('username') or request.form.get('username')
+        # Frontend se aane wale data ko handle karna
+        data = request.get_json(silent=True) or request.form
+        username = data.get('username')
+        password = data.get('password')
         
-        if not user_code:
-            return jsonify({"success": False, "message": "Username missing"})
-
-        clean_user = str(user_code).strip()
-        user_role = "depot"
-        found = False
-
-        # Google Sheet se verify karna
-        try:
-            sheet_response = sheets.get_depot_data("Users") # Agar worksheet ka naam kuch aur hai toh yahan badal lein[cite: 1]
-            if sheet_response.get("status") == "success":
-                records = sheet_response.get("data", [])
-                for row in records:
-                    sheet_username = str(row.get('username') or row.get('User') or '').strip()
-                    if sheet_username.lower() == clean_user.lower():
-                        found = True
-                        r = str(row.get('role') or row.get('Role') or '').strip().lower()
-                        if r:
-                            user_role = r
-                        break
-        except Exception as e:
-            print("Sheet Error:", e)
-
-        # Emergency Admin fallback
-        if clean_user.lower() == 'admin':
-            found = True
-            user_role = 'admin'
-
-        if found:
-            session['user'] = clean_user
-            session['role'] = user_role
-            return jsonify({"success": True, "role": user_role})
-        else:
-            return jsonify({"success": False, "message": "Invalid Username"})
-
+        if username:
+            session['user'] = str(username).strip()
+            # Agar AJAX/JSON request hai toh JSON return karein, warna redirect
+            if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({"success": True})
+            return redirect(url_for('depot'))
+            
+        if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({"success": False, "message": "Invalid credentials"})
+        return redirect(url_for('home'))
+        
     except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
+        if request.is_json or request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({"success": False, "message": str(e)})
+        return redirect(url_for('home'))
 
 @app.route('/admin')
-@admin_required
 def admin():
     return render_template('admin.html')
 
 @app.route('/depot')
-@login_required
 def depot():
     return render_template('depot.html')
 
 @app.route('/staff')
-@login_required
 def staff():
     return render_template('staff.html')
 
 @app.route('/audit')
-@admin_required
 def audit():
     return render_template('audit.html')
 

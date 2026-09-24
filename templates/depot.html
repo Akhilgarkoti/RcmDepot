@@ -155,7 +155,7 @@
             color: #dc2626; 
         }
         .btn-nav-logout:hover { 
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); 
+            background: linear-gradient(135deg, #fef2f2 100%, #fee2e2 100%); 
             border-color: #f87171; 
             color: #b91c1c;
             box-shadow: 0 6px 15px -3px rgba(220, 38, 38, 0.15);
@@ -684,8 +684,8 @@
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
                 <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <!-- Stock Audit Portal Link Button -->
-<a href="audit" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
+                <!-- Stock Audit Portal Link Button (Target Blank Added) -->
+<a href="audit" target="_blank" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
     📦 Stock Audit Portal
 </a>
             </div>

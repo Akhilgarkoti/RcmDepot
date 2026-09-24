@@ -3268,5 +3268,41 @@
 
         window.onload = () => { startLiveClock(); loadDepotData(); };
     </script>
+
+    <!-- अमाउंट से .00 हटाने के लिए सुरक्षित जावास्क्रिप्ट पैच -->
+    <script>
+    (function() {
+        function removeDecimalZeros(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                let updatedText = node.nodeValue.replace(/(\d+)\.00\b/g, '$1');
+                if (updatedText !== node.nodeValue) {
+                    node.nodeValue = updatedText;
+                }
+            } else {
+                if (node.tagName === 'INPUT' && node.type === 'text' && node.value) {
+                    let updatedVal = node.value.replace(/(\d+)\.00\b/g, '$1');
+                    if (updatedVal !== node.value) {
+                        node.value = updatedVal;
+                    }
+                }
+                for (let child of node.childNodes) {
+                    removeDecimalZeros(child);
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            removeDecimalZeros(document.body);
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        removeDecimalZeros(node);
+                    });
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        });
+    })();
+    </script>
 </body>
 </html>

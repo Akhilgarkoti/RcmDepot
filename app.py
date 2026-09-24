@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-import sheets  # आपके प्रोजेक्ट की sheets.py फाइल का उपयोग
+import sheets  # आपके द्वारा दी गई sheets.py फ़ाइल
 
 app = Flask(__name__)
 # Vercel पर सत्र (sessions) सुरक्षित रखने के लिए secret_key ज़रूरी है
@@ -20,30 +20,43 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-    # जैसा आपके ओरिजिनल प्रोजेक्ट में फॉर्म से डेटा लिया जाता है
     username = request.form.get('username')
     password = request.form.get('password')
     
-    # यहाँ हम sheets.py या आपके तय किए गए लॉजिक से यूजर को वेरीफाई करेंगे
-    # (आप चाहें तो अपनी पुरानी app.py का लॉगिन वाला हिस्सा यहाँ रख सकते हैं)
+    if not username or not password:
+        return render_template('index.html', error="कृपया यूजरनेम और पासवर्ड दर्ज करें।")
     
-    # उदाहरण के लिए सुरक्षा जाँच:
-    if username:
+    # 1. पहले एडमिन या स्पेशल यूजर के लिए डायरेक्ट चेक (यदि आप रखना चाहें)
+    if username.strip().lower() == 'admin' and password == 'admin123': # अपनी जरूरत के मुताबिक एडमिन पासवर्ड सेट करें
         session['logged_in'] = True
         session['username'] = username
+        session['role'] = 'admin'
+        return redirect(url_for('admin_page'))
+
+    # 2. Google Sheet से डेटा फेच करके लॉगिन वेरीफाई करना
+    # मान लीजिए आपकी शीट में "Users" या "Depot" नाम की worksheet है जहाँ यूजरनेम/पासवर्ड सेव हैं
+    sheet_response = sheets.get_depot_data("Users") # अपनी सही Worksheet का नाम यहाँ लिखें (जैसे 'Login', 'Users' आदि)
+    
+    if sheet_response.get("status") == "success":
+        users_data = sheet_response.get("data", [])
         
-        # तय करें कि यूजर एडमिन है या डिपो स्टाफ
-        if username.lower() == 'admin' or 'admin' in username.lower():
-            session['role'] = 'admin'
-            return redirect(url_for('admin_page'))
-        elif 'staff' in username.lower():
-            session['role'] = 'staff'
-            return redirect(url_for('staff_page'))
-        else:
-            session['role'] = 'depot'
-            return redirect(url_for('depot_page'))
-            
-    return render_template('index.html', error="Invalid Credentials")
+        for user in users_data:
+            # मान लेते हैं शीट में कॉलम के नाम 'username', 'password', और 'role' हैं
+            if str(user.get('username')).strip() == username.strip() and str(user.get('password')).strip() == password.strip():
+                session['logged_in'] = True
+                session['username'] = username
+                user_role = str(user.get('role', 'depot')).strip().lower()
+                session['role'] = user_role
+                
+                if user_role == 'admin':
+                    return redirect(url_for('admin_page'))
+                elif user_role == 'staff':
+                    return redirect(url_for('staff_page'))
+                else:
+                    return redirect(url_for('depot_page'))
+                    
+    # अगर लॉगिन फेल हो जाता है
+    return render_template('index.html', error="गलत यूजरनेम या पासवर्ड!")
 
 @app.route('/admin')
 def admin_page():

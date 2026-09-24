@@ -48,10 +48,11 @@ def staff():
 def audit():
     return render_template('audit.html')
 
+# Jab bhi user logout karega ya role switch karega, session clear hoke seedha index/home par aayega
 @app.route('/logout')
 def logout():
-    session.clear()
-    return redirect(url_for('home'))
+    session.clear()  # Purana session saaf kar diya
+    return redirect(url_for('home'))  # Seedha index.html par bhej diya
 
 if __name__ == '__main__':
     app.run(debug=True)

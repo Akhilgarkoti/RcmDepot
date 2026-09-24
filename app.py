@@ -13,15 +13,16 @@ def login():
     try:
         data = request.get_json(silent=True) or request.form
         username = data.get('username')
-        password = data.get('password')
         
         if username:
             clean_user = str(username).strip()
             session['user'] = clean_user
             
-            # Yahan check kar rahe hain ki user admin hai ya depot user
+            # User ka role set karna
             if clean_user.lower() == 'admin' or 'admin' in clean_user.lower():
                 session['role'] = 'admin'
+            elif 'staff' in clean_user.lower():
+                session['role'] = 'staff'
             else:
                 session['role'] = 'depot'
             
@@ -40,29 +41,28 @@ def login():
 
 @app.route('/admin')
 def admin():
-    # Security Check: Agar session mein role 'admin' nahi hai, toh admin page nahi khulega!
+    # Sirf Admin hi access kar sakega, URL change karne par bhi block ho jayega
     if session.get('role') != 'admin':
         return redirect(url_for('home'))
     return render_template('admin.html')
 
 @app.route('/depot')
 def depot():
-    # Security Check: Bina login ke depot page bhi nahi khulega
+    # Bina login ke depot page nahi khulega, aur agar admin URL se aane ki koshషే karega toh rok sakte hain
     if 'user' not in session:
         return redirect(url_for('home'))
     return render_template('depot.html')
 
 @app.route('/staff')
 def staff():
+    # Bina login ke staff page nahi khulega
     if 'user' not in session:
         return redirect(url_for('home'))
     return render_template('staff.html')
 
 @app.route('/audit')
 def audit():
-    # Security Check: Sirf admin ke liye
-    if session.get('role') != 'admin':
-        return redirect(url_for('home'))
+    # Jaisa aapne kaha, audit bina login ke khul sakta hai
     return render_template('audit.html')
 
 @app.route('/logout')

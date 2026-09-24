@@ -599,7 +599,7 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* --- Professional Mobile Bottom Navigation Styles (Added Safely) --- */
+        /* --- Professional Mobile Layout Fixes for Tables & Panels --- */
         .mobile-bottom-nav {
             display: none;
         }
@@ -609,30 +609,43 @@
             .nav-left-box { justify-content: space-between; width: 100%; }
             .depot-center-section { align-items: center; text-align: center; width: 100%; border-top: 1px solid var(--theme-border); padding-top: 0.6rem; }
             .depot-details-text { align-items: center; }
-            .main-container { padding: 0 0.65rem; margin: 0.75rem auto; }
-            .comfort-panel { padding: 1rem 0.85rem; }
+            .main-container { padding: 0 0.5rem; margin: 0.5rem auto; }
+            .comfort-panel { padding: 0.85rem 0.6rem; }
             .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
             .form-group-full { grid-column: span 1; }
             .depot-nav-tabs { display: none !important; }
-            .table-responsive { max-height: 520px; }
-            .search-box-wrap { min-width: 100%; }
-            .modal-box-large { width: 98% !important; margin: 0.5rem auto !important; }
             
-    /* Tables ko aur zyada compact aur zoom-out karne ke liye */
-    table.custom-table th {
-        padding: 0.4rem 0.5rem !important;
-        font-size: 0.62rem !important;
-    }
-    table.custom-table td {
-        padding: 0.35rem 0.5rem !important;
-        font-size: 0.72rem !important;
-    }
+            /* Table Responsive & Zoom Fixes for Mobile */
+            .table-responsive { 
+                max-height: 480px; 
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch;
+                border: 1px solid var(--theme-border);
+            }
+            table.custom-table {
+                min-width: 580px; /* Table ko mobile par sikudne se bachane ke liye */
+            }
+            table.custom-table th {
+                padding: 0.5rem 0.6rem !important;
+                font-size: 0.7rem !important;
+            }
+            table.custom-table td {
+                padding: 0.45rem 0.6rem !important;
+                font-size: 0.78rem !important;
+            }
 
-    /* Agar form ke inputs aur buttons ko bhi chhota karna ho */
-    .form-control {
-        padding: 0.45rem 0.6rem !important;
-        font-size: 0.8rem !important;
-    }
+            .search-box-wrap { min-width: 100%; }
+            .modal-box, .modal-box-large, .modal-box-compact { 
+                width: 98% !important; 
+                margin: 0.5rem auto !important; 
+                max-width: 100% !important; 
+            }
+            
+            .form-control {
+                padding: 0.45rem 0.6rem !important;
+                font-size: 0.8rem !important;
+            }
+
             /* Professional Bottom Bar */
             .mobile-bottom-nav {
                 display: flex;
@@ -684,10 +697,10 @@
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
                 <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <!-- Stock Audit Portal Link Button (Target Blank Added) -->
-<a href="audit" target="_blank" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
-    📦 Stock Audit Portal
-</a>
+                <!-- Stock Audit Portal Link Button (Opens in New Tab) -->
+                <a href="audit" target="_blank" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
+                    📦 Stock Audit Portal
+                </a>
             </div>
         </div>
 

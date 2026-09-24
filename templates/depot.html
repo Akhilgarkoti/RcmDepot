@@ -777,11 +777,19 @@
     <datalist id="vehicleNoList"></datalist>
 
     <div class="main-container">
-        <div class="depot-nav-tabs">
+        <!-- Navigation Tabs Container -->
+        <div class="depot-nav-tabs" id="depotNavTabsContainer">
             <button class="tab-btn active" id="tabBtnDispatch" onclick="switchTab('dispatchTab', this)">📦 New Invoice Dispatch</button>
             <button class="tab-btn" id="tabBtnRecords" onclick="switchTab('recordsTab', this)">📊 Dispatch History</button>
             <button class="tab-btn" id="tabBtnStaff" onclick="switchTab('staffTab', this)">👥 Assigned Staff and Ledger Details</button>
             <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
+        </div>
+
+        <!-- No Access Warning Message Box -->
+        <div id="noAccessMessageCard" style="display:none; background:#ffffff; border:1px solid #cbd5e1; border-radius:var(--radius-lg); padding:3rem 2rem; text-align:center; box-shadow:var(--shadow-card); margin-top:2rem;">
+            <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
+            <h2 style="font-size:1.5rem; font-weight:800; color:var(--text-dark); margin-bottom:0.75rem;">Welcome to depot portal</h2>
+            <p style="font-size:1rem; color:var(--text-muted); max-width:500px; margin:0 auto; line-height:1.5;">Portal ko access karne ke liye portal admin se sampark kare.</p>
         </div>
 
         <!-- 1. Dispatch Entry Form -->
@@ -1492,6 +1500,23 @@
             if (botNavHistory) botNavHistory.style.display = canHistory ? 'flex' : 'none';
             if (botNavStaff) botNavStaff.style.display = canStaff ? 'flex' : 'none';
             if (botNavExpenses) botNavExpenses.style.display = canExpenses ? 'flex' : 'none';
+
+            // Agar sabhi 4 tabs me 'No' ho toh warning message show karein[cite: 1]
+            const noAccessCard = document.getElementById('noAccessMessageCard');
+            const navTabsContainer = document.querySelector('.depot-nav-tabs');
+
+            if (!canDispatch && !canHistory && !canStaff && !canExpenses) {
+                if (navTabsContainer) navTabsContainer.style.display = 'none';
+                if (noAccessCard) noAccessCard.style.display = 'block';
+
+                document.getElementById('dispatchTab').style.display = 'none';
+                document.getElementById('recordsTab').style.display = 'none';
+                document.getElementById('staffTab').style.display = 'none';
+                document.getElementById('expensesTab').style.display = 'none';
+            } else {
+                if (navTabsContainer) navTabsContainer.style.display = 'flex';
+                if (noAccessCard) noAccessCard.style.display = 'none';
+            }
         }
 
         async function loadDepotData() {
@@ -2045,7 +2070,7 @@
                 }
             } catch (err) { showToast('Error submitting staff request.'); }
             finally { 
-                hideScreenBlocker();
+                hideScreenBlocker(); 
                 btn.disabled = false; 
                 btn.textContent = ' Request Send '; 
             }
@@ -2136,7 +2161,7 @@
                 }
             } catch (err) { showToast('Error submitting transaction.'); }
             finally { 
-                hideScreenBlocker();
+                hideScreenBlocker(); 
                 btn.disabled = false; 
                 btn.textContent = 'Send Transaction Request'; 
             }

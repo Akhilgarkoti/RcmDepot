@@ -785,7 +785,7 @@
             <button class="tab-btn" id="tabBtnExpenses" onclick="switchTab('expensesTab', this)">💰 Depot Expenses</button>
         </div>
 
-        <!-- No Access Warning Message Box -->
+        <!-- No Access Warning Message Box (Strictly English as requested) -->
         <div id="noAccessMessageCard" style="display:none; background:#ffffff; border:1px solid #cbd5e1; border-radius:var(--radius-lg); padding:3rem 2rem; text-align:center; box-shadow:var(--shadow-card); margin-top:2rem;">
             <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
             <h2 style="font-size:1.5rem; font-weight:800; color:var(--text-dark); margin-bottom:0.75rem;">Welcome to depot portal</h2>
@@ -1142,7 +1142,6 @@
                                 <option value="Car">Car</option>
                                 <option value="PickUp">PickUp</option>
                                 <option value="Bike">Bike</option>
-                                
                             </select>
                         </div>
                         <div class="form-group">
@@ -1216,7 +1215,7 @@
         </div>
     </div>
 
-    <!-- Professional Mobile Bottom Navigation Bar (With Permission IDs) -->
+    <!-- Professional Mobile Bottom Navigation Bar -->
     <div class="mobile-bottom-nav">
         <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
             <span>📦</span>
@@ -1475,6 +1474,7 @@
                 return s === 'yes' || s === 'true' || s === '1' || s === 'y';
             };
 
+            // Strictly checking using Depot Login ID field mapping from backend
             const canDispatch = checkPerm(getField(depotData, 'Can_Dispatch', 'can_dispatch'));
             const canHistory = checkPerm(getField(depotData, 'Can_History', 'can_history'));
             const canStaff = checkPerm(getField(depotData, 'Can_Staff', 'can_staff'));
@@ -1501,9 +1501,9 @@
             if (botNavStaff) botNavStaff.style.display = canStaff ? 'flex' : 'none';
             if (botNavExpenses) botNavExpenses.style.display = canExpenses ? 'flex' : 'none';
 
-            // Agar sabhi 4 tabs me 'No' ho toh warning message show karein[cite: 1]
+            // Agar sabhi 4 tabs me 'No' ho toh warning message show karein
             const noAccessCard = document.getElementById('noAccessMessageCard');
-            const navTabsContainer = document.querySelector('.depot-nav-tabs');
+            const navTabsContainer = document.getElementById('depotNavTabsContainer');
 
             if (!canDispatch && !canHistory && !canStaff && !canExpenses) {
                 if (navTabsContainer) navTabsContainer.style.display = 'none';
@@ -1522,6 +1522,7 @@
         async function loadDepotData() {
             showScreenBlocker('Loading Depot Data... Please wait!');
             try {
+                // Yahan depotCode aapka session variable hai jo Login ID ke roop me pass hota hai
                 const res = await jsonp(`${SCRIPT_URL}?action=getInitialData&depotCode=${encodeURIComponent(depotCode)}`);
                 if (!res || !res.success) throw new Error("Failed to load initial data");
 
@@ -1579,6 +1580,7 @@
                 populateExpenseYearDropdown(loadedDepotExpenses);
                 renderAnnualSummaryExpenses();
 
+                // Apply permissions mapped via Login ID
                 applyTabPermissions(depot);
 
             } catch (err) { 
@@ -2999,7 +3001,7 @@
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0");
                 rIdx++;
 
-                let firstTxnRowIndex = rIdx; // 1-based row index for SUM start
+                let firstTxnRowIndex = rIdx; 
                 let lastTxnRowIndex = 0;
 
                 rowsInMonth.forEach(r => {
@@ -3026,11 +3028,8 @@
                 let totalRowNum = rIdx + 1;
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                // Total Credit formula (SUM from first transaction row to last transaction row including old balance row if needed or transaction rows)
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
-                // Total Debit formula (SUM)
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
-                // Closing balance reference formula
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `E${lastTxnRowIndex}`);
                 rIdx += 2; 
             });
@@ -3064,7 +3063,6 @@
             });
 
             if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
-            // Sort years in descending order (New to Old: e.g., 2026-27 first, then 2025-26, etc.)
             const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
             const wb = XLSX.utils.book_new();
 

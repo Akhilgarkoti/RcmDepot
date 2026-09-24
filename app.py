@@ -6,15 +6,7 @@ app.secret_key = "rcm_depot_secure_app_key_2026"
 
 @app.route('/')
 def home():
-    # Agar user pehle se logged in hai, toh use seedha uske sahi page par bhej dein
-    if 'user' in session:
-        role = session.get('role', 'depot')
-        if role == 'admin':
-            return redirect(url_for('admin'))
-        elif role == 'staff':
-            return redirect(url_for('staff'))
-        else:
-            return redirect(url_for('depot'))
+    # Yahan se auto-redirect hata diya hai taaki infinite loop (gol-gol ghoomna) band ho jaye
     return render_template('index.html')
 
 # Frontend JavaScript se aane wali session request ko handle karne ke liye
@@ -28,7 +20,7 @@ def login_session():
             clean_user = str(username).strip()
             session['user'] = clean_user
             
-            # Role decide karna jo frontend se match kare
+            # Role decide karna
             lower_user = clean_user.lower()
             if 'admin' in lower_user:
                 session['role'] = 'admin'
@@ -44,14 +36,14 @@ def login_session():
 
 @app.route('/admin')
 def admin():
-    # Strict Security: Sirf aur sirf 'admin' role wale hi admin khol sakte hain, URL change karne par block ho jayega
+    # Strict Security: Sirf aur sirf 'admin' role wale hi admin khol sakte hain
     if session.get('role') != 'admin':
         return redirect(url_for('home'))
     return render_template('admin.html')
 
 @app.route('/depot')
 def depot():
-    # Strict Security: Bina login ke ya agar staff/admin URL se aaye toh depot block ho jayega
+    # Strict Security: Bina login ke ya agar galat role ho toh home par bhej dega
     if 'user' not in session or session.get('role') != 'depot':
         return redirect(url_for('home'))
     return render_template('depot.html')
@@ -65,7 +57,7 @@ def staff():
 
 @app.route('/audit')
 def audit():
-    # Jaisa aapne kaha tha, audit bina login ke khul sakta hai
+    # Audit bina login ke khul sakta hai
     return render_template('audit.html')
 
 @app.route('/logout')

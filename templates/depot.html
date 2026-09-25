@@ -2138,7 +2138,7 @@
             finally { 
                 hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'Send Transaction Request'; 
+                btn.textContent = 'SendTransaction Request'; 
             }
         });
 
@@ -2964,17 +2964,20 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let opCr = runningBal > 0 ? runningBal : 0;
-                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                // **UPDATED LOGIC FOR OLD MONTH BALANCE MIGRATION**
+                // Old closing balance (runningBal) ko next month ke credit column (Col 2) mein daalna hai.
+                // Agar runningBal Debit (negative < 0) hai toh credit column mein minus (-) ke sath aayega.
+                // Agar runningBal Credit (positive >= 0) hai toh bhi credit column mein aayega.
+                let oldMonthCreditVal = runningBal;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, opCr > 0 ? Number(opCr.toFixed(2)) : "", STYLE_DATA, "#,##0");
-                setCell(rIdx, 3, opDr > 0 ? Number(opDr.toFixed(2)) : "", STYLE_DATA, "#,##0");
+                setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); // Credit column mein minus (-) ke sath ya positive value
+                setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); // Debit column khali rahega
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0");
                 rIdx++;
 
-                let firstTxnRowIndex = rIdx; // 1-based row index for SUM start
+                let firstTxnRowIndex = rIdx; 
                 let lastTxnRowIndex = 0;
 
                 rowsInMonth.forEach(r => {
@@ -3001,11 +3004,8 @@
                 let totalRowNum = rIdx + 1;
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                // Total Credit formula (SUM from first transaction row to last transaction row including old balance row if needed or transaction rows)
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
-                // Total Debit formula (SUM)
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
-                // Closing balance reference formula
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `E${lastTxnRowIndex}`);
                 rIdx += 2; 
             });
@@ -3039,7 +3039,6 @@
             });
 
             if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
-            // Sort years in descending order (New to Old: e.g., 2026-27 first, then 2025-26, etc.)
             const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
             const wb = XLSX.utils.book_new();
 

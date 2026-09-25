@@ -2138,7 +2138,7 @@
             finally { 
                 hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'SendTransaction Request'; 
+                btn.textContent = 'Send Transaction Request'; 
             }
         });
 
@@ -2964,16 +2964,12 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                // **UPDATED LOGIC FOR OLD MONTH BALANCE MIGRATION**
-                // Old closing balance (runningBal) ko next month ke credit column (Col 2) mein daalna hai.
-                // Agar runningBal Debit (negative < 0) hai toh credit column mein minus (-) ke sath aayega.
-                // Agar runningBal Credit (positive >= 0) hai toh bhi credit column mein aayega.
                 let oldMonthCreditVal = runningBal;
 
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); // Credit column mein minus (-) ke sath ya positive value
-                setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); // Debit column khali rahega
+                setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); 
+                setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); 
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0");
                 rIdx++;
 
@@ -3004,9 +3000,19 @@
                 let totalRowNum = rIdx + 1;
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
+                
+                // Formulas for Total Credit and Total Debit
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `E${lastTxnRowIndex}`);
+                
+                // UPDATED: Closing balance column gets proper formula (Total Credit - Total Debit / or referencing the last balance cell properly via SUM or formula)
+                let creditSumColRef = `C${totalRowNum}`;
+                let debitSumColRef = `D${totalRowNum}`;
+                let oldBalanceCellRef = `C${firstTxnRowIndex - 1}`; // OLD MONTH BALANCE row (Col C)
+                
+                // Formula: OLD BALANCE + Total Credit - Total Debit
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `${oldBalanceCellRef}+${creditSumColRef}-${debitSumColRef}`);
+                
                 rIdx += 2; 
             });
 

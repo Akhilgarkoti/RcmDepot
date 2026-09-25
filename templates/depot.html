@@ -623,7 +623,7 @@
                 border: 1px solid var(--theme-border);
             }
             table.custom-table {
-                min-width: 580px; /* Table ko mobile par sikudne se bachane ke liye */
+                min-width: 580px;
             }
             table.custom-table th {
                 padding: 0.5rem 0.6rem !important;
@@ -697,7 +697,6 @@
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
                 <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <!-- Stock Audit Portal Link Button (Opens in New Tab) -->
                 <a href="audit" target="_blank" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
                     📦 Stock Audit Portal
                 </a>
@@ -1134,7 +1133,6 @@
                                 <option value="Car">Car</option>
                                 <option value="PickUp">PickUp</option>
                                 <option value="Bike">Bike</option>
-                                
                             </select>
                         </div>
                         <div class="form-group">
@@ -1208,7 +1206,7 @@
         </div>
     </div>
 
-    <!-- Professional Mobile Bottom Navigation Bar (With Permission IDs) -->
+    <!-- Professional Mobile Bottom Navigation Bar -->
     <div class="mobile-bottom-nav">
         <button id="botNavDispatch" class="bot-nav-btn active" onclick="switchTab('dispatchTab', null); updateBottomNavActive(this);">
             <span>📦</span>
@@ -1482,7 +1480,6 @@
             if (tabStaff) tabStaff.style.display = canStaff ? 'inline-block' : 'none';
             if (tabExpenses) tabExpenses.style.display = canExpenses ? 'inline-block' : 'none';
 
-            // Mobile Bottom Navigation Bar Permission Check
             const botNavDispatch = document.getElementById('botNavDispatch');
             const botNavHistory = document.getElementById('botNavHistory');
             const botNavStaff = document.getElementById('botNavStaff');
@@ -2974,7 +2971,7 @@
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0");
                 rIdx++;
 
-                let firstTxnRowIndex = rIdx; // 1-based row index for SUM start
+                let firstTxnRowIndex = rIdx; 
                 let lastTxnRowIndex = 0;
 
                 rowsInMonth.forEach(r => {
@@ -3001,11 +2998,8 @@
                 let totalRowNum = rIdx + 1;
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
-                // Total Credit formula (SUM from first transaction row to last transaction row including old balance row if needed or transaction rows)
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
-                // Total Debit formula (SUM)
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
-                // Closing balance reference formula
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `E${lastTxnRowIndex}`);
                 rIdx += 2; 
             });
@@ -3039,7 +3033,6 @@
             });
 
             if (yearsSet.size === 0) { showToast('No expense records found.'); return; }
-            // Sort years in descending order (New to Old: e.g., 2026-27 first, then 2025-26, etc.)
             const sortedYears = Array.from(yearsSet).sort((a, b) => b - a);
             const wb = XLSX.utils.book_new();
 
@@ -3302,42 +3295,6 @@
         }
 
         window.onload = () => { startLiveClock(); loadDepotData(); };
-    </script>
-
-    <!-- अमाउंट से .00 हटाने के लिए सुरक्षित जावास्क्रिप्ट पैच -->
-    <script>
-    (function() {
-        function removeDecimalZeros(node) {
-            if (node.nodeType === Node.TEXT_NODE) {
-                let updatedText = node.nodeValue.replace(/(\d+)\.00\b/g, '$1');
-                if (updatedText !== node.nodeValue) {
-                    node.nodeValue = updatedText;
-                }
-            } else {
-                if (node.tagName === 'INPUT' && node.type === 'text' && node.value) {
-                    let updatedVal = node.value.replace(/(\d+)\.00\b/g, '$1');
-                    if (updatedVal !== node.value) {
-                        node.value = updatedVal;
-                    }
-                }
-                for (let child of node.childNodes) {
-                    removeDecimalZeros(child);
-                }
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            removeDecimalZeros(document.body);
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        removeDecimalZeros(node);
-                    });
-                });
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
-        });
-    })();
     </script>
 </body>
 </html>

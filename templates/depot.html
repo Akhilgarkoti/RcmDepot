@@ -3001,17 +3001,13 @@
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
                 
-                // Formulas for Total Credit and Total Debit
+                // Credit Total (SUM) and Debit Total (SUM)
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
                 
-                // UPDATED: Closing balance column gets proper formula (Total Credit - Total Debit / or referencing the last balance cell properly via SUM or formula)
-                let creditSumColRef = `C${totalRowNum}`;
-                let debitSumColRef = `D${totalRowNum}`;
-                let oldBalanceCellRef = `C${firstTxnRowIndex - 1}`; // OLD MONTH BALANCE row (Col C)
-                
-                // Formula: OLD BALANCE + Total Credit - Total Debit
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `${oldBalanceCellRef}+${creditSumColRef}-${debitSumColRef}`);
+                // FIX: Balance column in TOTAL row should directly reference the last running balance cell (`E${lastTxnRowIndex}`)
+                let lastBalanceCellRef = `E${lastTxnRowIndex}`;
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", lastBalanceCellRef);
                 
                 rIdx += 2; 
             });

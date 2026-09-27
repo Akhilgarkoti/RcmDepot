@@ -2966,7 +2966,18 @@
 
                 let oldMonthCreditVal = runningBal;
 
-                setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
+                // OLD MONTH BALANCE ke liye proper Excel date serial number banana
+let firstDateObj = new Date(mIndex >= 3 ? startYear : startYear + 1, mIndex, 1);
+let excelEpoch = new Date(1899, 11, 30);
+let firstDateSerial = Math.floor((firstDateObj - excelEpoch) / (1000 * 60 * 60 * 24));
+
+const cellRefOld = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
+ws[cellRefOld] = { 
+    v: firstDateSerial, 
+    t: 'n', 
+    z: 'dd-mmm-yy', 
+    s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) 
+};
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); 
                 setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); 

@@ -2438,9 +2438,14 @@
             let opCr = runningBal > 0 ? runningBal : 0;
             let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
 
+            // FIX: Print preview me bhi opening balance wali date ko us mahine ki 1st date par set kiya gaya hai
+            let activeMonthIndex = monthNames.findIndex(m => period.includes(m));
+            let activeMonthYear = period.split(' ')[1] || '2026';
+            let printFirstDate = `01-${monthNames[activeMonthIndex]}-${String(activeMonthYear).slice(2)}`;
+
             html += `<tr style="font-weight:bold; background:#f8fafc;">
-                <td style="border:1px solid #000; padding:4px;">01-B/F</td>
-                <td style="border:1px solid #000; padding:4px;">Opening Balance</td>
+                <td style="border:1px solid #000; padding:4px;">${printFirstDate}</td>
+                <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
                 <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
                 <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
                 <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
@@ -2837,6 +2842,7 @@
             let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
             let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
 
+            // FIX: UI ke Detailed View me bhi Opening Balance ki date ko us mahine ki 1st date (`01 Month`) kar diya gaya hai
             html += `<tr class="row-opening-balance">
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
@@ -2966,18 +2972,20 @@
 
                 let oldMonthCreditVal = runningBal;
 
-                // OLD MONTH BALANCE ke liye proper Excel date serial number banana
-let firstDateObj = new Date(mIndex >= 3 ? startYear : startYear + 1, mIndex, 1);
-let excelEpoch = new Date(1899, 11, 30);
-let firstDateSerial = Math.floor((firstDateObj - excelEpoch) / (1000 * 60 * 60 * 24));
+                // FIX: OLD MONTH BALANCE date ko ab us current mahine ki 1st date (e.g. 01-May-26) par set kar diya gaya hai
+                let targetYear = (mIndex >= 3) ? startYear : startYear + 1;
+                let firstDateObj = new Date(Date.UTC(targetYear, mIndex, 1));
+                let excelEpoch = new Date(Date.UTC(1899, 11, 30));
+                let firstDateSerial = Math.floor((firstDateObj - excelEpoch) / (1000 * 60 * 60 * 24));
 
-const cellRefOld = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
-ws[cellRefOld] = { 
-    v: firstDateSerial, 
-    t: 'n', 
-    z: 'dd-mmm-yy', 
-    s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) 
-};
+                const cellRefOld = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
+                ws[cellRefOld] = { 
+                    v: firstDateSerial, 
+                    t: 'n', 
+                    z: 'dd-mmm-yy', 
+                    s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) 
+                };
+
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); 
                 setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); 
@@ -2996,9 +3004,9 @@ ws[cellRefOld] = {
                     let cellNumFmt = "dd-mmm-yy";
 
                     if (rawDateObj && !isNaN(rawDateObj.getTime())) {
-                        // Excel date serial number calculation for proper date handling
-                        const excelEpoch = new Date(1899, 11, 30);
-                        cellValue = Math.floor((rawDateObj - excelEpoch) / (1000 * 60 * 60 * 24));
+                        let utcDate = new Date(Date.UTC(rawDateObj.getFullYear(), rawDateObj.getMonth(), rawDateObj.getDate()));
+                        let excelEpoch = new Date(Date.UTC(1899, 11, 30));
+                        cellValue = Math.floor((utcDate - excelEpoch) / (1000 * 60 * 60 * 24));
                     } else {
                         cellValue = formatCleanDate(getField(r, 'Date', 'date'));
                         cellNumFmt = undefined;
@@ -3011,7 +3019,6 @@ ws[cellRefOld] = {
                     let currentRowNum = rIdx + 1;
                     let prevRowNum = currentRowNum - 1;
 
-                    // Setting date cell with proper Excel date type ('n' with number serial or fallback)
                     const cellRef = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
                     if (typeof cellValue === 'number') {
                         ws[cellRef] = { v: cellValue, t: 'n', z: cellNumFmt, s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) };

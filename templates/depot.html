@@ -739,8 +739,8 @@
                         <tr style="background:#e0f2fe;">
                             <th style="border:1px solid #000; padding:4px; width:15%;">Date</th>
                             <th style="border:1px solid #000; padding:4px; text-align:left; width:45%;">Particular / Description</th>
-                            <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Debit</th>
                             <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Credit</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right; width:13%;">Debit</th>
                             <th style="border:1px solid #000; padding:4px; text-align:right; width:14%;">Balance</th>
                         </tr>
                     </thead>
@@ -2435,10 +2435,9 @@
             let html = '';
             let runningBal = activeViewingMonthData.openingBal;
 
-            let opCr = runningBal > 0 ? runningBal : 0;
-            let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+            // FIX: Print preview me bhi old month balance hamesha Credit column me rahega
+            let opCrPrint = runningBal !== 0 ? Math.abs(runningBal) : 0;
 
-            // FIX: Print preview me bhi opening balance wali date ko us mahine ki 1st date par set kiya gaya hai
             let activeMonthIndex = monthNames.findIndex(m => period.includes(m));
             let activeMonthYear = period.split(' ')[1] || '2026';
             let printFirstDate = `01-${monthNames[activeMonthIndex]}-${String(activeMonthYear).slice(2)}`;
@@ -2446,8 +2445,8 @@
             html += `<tr style="font-weight:bold; background:#f8fafc;">
                 <td style="border:1px solid #000; padding:4px;">${printFirstDate}</td>
                 <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCrPrint !== 0 ? opCrPrint.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">-</td>
                 <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
             </tr>`;
 
@@ -2463,8 +2462,8 @@
                     html += `<tr>
                         <td style="border:1px solid #000; padding:4px;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
                         <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
                         <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                     </tr>`;
                 }
@@ -2525,14 +2524,13 @@
             let csvContent = "data:text/csv;charset=utf-8,";
             csvContent += `Staff Name,${currentActiveStaffName},Staff Code,${currentActiveStaffCode}\n`;
             csvContent += `Depot,${depotNameStored},Period,FY ${startYear}-${startYear + 1}\n\n`;
-            csvContent += "Date,Particular / Transaction Description,Payment Mode,Debit (INR),Credit (INR),Running Balance (INR),Approval Status\n";
+            csvContent += "Date,Particular / Transaction Description,Payment Mode,Credit (INR),Debit (INR),Running Balance (INR),Approval Status\n";
 
             let runningBal = openingBalance;
             let totalDr = 0, totalCr = 0;
 
-            let opCr = openingBalance > 0 ? openingBalance : 0;
-            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opDr.toFixed(2)},${opCr.toFixed(2)},${runningBal.toFixed(2)},"Opening"\n`;
+            let opCrCsv = openingBalance !== 0 ? Math.abs(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opCrCsv.toFixed(2)},0.00,${runningBal.toFixed(2)},"Opening"\n`;
 
             currentFYRows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
@@ -2550,10 +2548,10 @@
                 }
 
                 const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
-                csvContent += `${dt},${part},${mode},${dr.toFixed(2)},${cr.toFixed(2)},${balStr},${appRaw}\n`;
+                csvContent += `${dt},${part},${mode},${cr.toFixed(2)},${dr.toFixed(2)},${balStr},${appRaw}\n`;
             });
 
-            csvContent += `\nSUMMARY,,,"Total Debit: ${totalDr.toFixed(2)}","Total Credit: ${totalCr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            csvContent += `\nSUMMARY,,,"Total Credit: ${totalCr.toFixed(2)}","Total Debit: ${totalDr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2839,16 +2837,14 @@
             let runningBal = opnBalMonth;
             let html = '';
 
-            let opCr = opnBalMonth > 0 ? opnBalMonth : 0;
-            let opDr = opnBalMonth < 0 ? Math.abs(opnBalMonth) : 0;
+            let opCr = opnBalMonth !== 0 ? Math.abs(opnBalMonth) : 0;
 
-            // FIX: UI ke Detailed View me bhi Opening Balance ki date ko us mahine ki 1st date (`01 Month`) kar diya gaya hai
             html += `<tr class="row-opening-balance">
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
-                <td><strong>Opening Balance</strong></td>
-                <td style="color:${opDr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opDr > 0 ? '₹' + opDr.toFixed(2) : '-'}</td>
+                <td><strong>OLD MONTH BALANCE</strong></td>
                 <td style="color:${opCr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${opCr > 0 ? '₹' + opCr.toFixed(2) : '-'}</td>
+                <td style="color:#94a3b8;text-align:right;">-</td>
                 <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
             </tr>`;
 
@@ -2880,8 +2876,8 @@
                     <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
                     <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
                     <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
                 </tr>`;
             });
@@ -2966,20 +2962,20 @@
                 for (let c = 0; c < 5; c++) setCell(rIdx, c, c === 0 ? mLabel : "", STYLE_MONTH);
                 rIdx++;
 
+                // FIX: Column Order -> DATE, PARTICULAR, CREDIT, DEBIT, BALANCE (jaise aapne kaha ki Old Month Balance hamesha Credit column me aaye)
                 const headers = ["DATE", "PARTICULAR", "CREDIT", "DEBIT", "BALANCE"];
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let oldMonthCreditVal = runningBal;
+                let oldMonthCreditVal = runningBal !== 0 ? Math.abs(runningBal) : 0;
 
-                // FIX: OLD MONTH BALANCE date ko ab us current mahine ki 1st date (e.g. 01-May-26) par set kar diya gaya hai
                 let targetYear = (mIndex >= 3) ? startYear : startYear + 1;
                 let firstDateObj = new Date(Date.UTC(targetYear, mIndex, 1));
                 let excelEpoch = new Date(Date.UTC(1899, 11, 30));
                 let firstDateSerial = Math.floor((firstDateObj - excelEpoch) / (1000 * 60 * 60 * 24));
 
-                const cellRefOld = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
-                ws[cellRefOld] = { 
+                const cellRefOldDate = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
+                ws[cellRefOldDate] = { 
                     v: firstDateSerial, 
                     t: 'n', 
                     z: 'dd-mmm-yy', 
@@ -2987,9 +2983,9 @@
                 };
 
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); 
-                setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); 
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0");
+                setCell(rIdx, 2, oldMonthCreditVal > 0 ? Number(oldMonthCreditVal.toFixed(2)) : "", STYLE_DATA, "#,##0"); // Credit Column
+                setCell(rIdx, 3, "", STYLE_DATA, "#,##0"); // Debit Column (Blank)
+                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0"); // Balance Column
                 rIdx++;
 
                 let firstTxnRowIndex = rIdx; 
@@ -3027,8 +3023,10 @@
                     }
 
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "#,##0");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "#,##0");
+                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "#,##0"); // Credit
+                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "#,##0"); // Debit
+                    
+                    // Balance formula: Previous Balance + Credit - Debit (C is Credit, D is Debit)
                     setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0", `E${prevRowNum}+N(C${currentRowNum})-N(D${currentRowNum})`);
                     
                     lastTxnRowIndex = currentRowNum;
@@ -3045,6 +3043,7 @@
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
                 
+                // Total Balance formula: Total Credit - Total Debit
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `${creditSumColRef}-${debitSumColRef}`);
                 
                 rIdx += 2; 
@@ -3129,14 +3128,14 @@
                 let monthCr = 0;
                 let monthRowsHtml = '';
 
-                let opCr = runningBal > 0 ? runningBal : 0;
-                let opDr = runningBal < 0 ? Math.abs(runningBal) : 0;
+                let opCrPdf = runningBal !== 0 ? Math.abs(runningBal) : 0;
+                let firstDateStr = `01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
 
                 monthRowsHtml += `<tr>
-                    <td style="border:1px solid #000; padding:4px; text-align:center;">01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:center;">${firstDateStr}</td>
                     <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCr !== 0 ? opCr.toFixed(2) : ''}</td>
-                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opDr !== 0 ? opDr.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;">${opCrPdf !== 0 ? opCrPdf.toFixed(2) : ''}</td>
+                    <td style="border:1px solid #000; padding:4px; text-align:right;"></td>
                     <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
                 </tr>`;
 
@@ -3160,11 +3159,11 @@
                 });
 
                 fullHtmlBlocks += `
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: 25px; page-break-inside: avoid;">
                         <table style="width:100%; border-collapse:collapse; font-size:9pt; border:2px solid #000;">
                             <thead>
                                 <tr style="background:#e0f2fe; text-align:center;">
-                                    <th colspan="5" style="border:1px solid #000; padding:5px; font-weight:bold; font-size:10pt; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
+                                    <th colspan="5" style="border:1px solid #000; padding:6px; font-weight:bold; font-size:11pt; color:#0369a1;">${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}</th>
                                 </tr>
                                 <tr style="background:#e0f2fe; text-align:center;">
                                     <th style="border:1px solid #000; padding:4px; width:15%; color:#0369a1;">DATE</th>
@@ -3178,9 +3177,9 @@
                             <tfoot>
                                 <tr style="background:#e0f2fe; font-weight:bold;">
                                     <td style="border:1px solid #000; padding:4px; text-align:center; color:#0369a1;">TOTAL</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing blance</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + opCr).toFixed(2)}</td>
-                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthDr + opDr).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:left; color:#0369a1;">closing balance</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${(monthCr + opCrPdf).toFixed(2)}</td>
+                                    <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${monthDr.toFixed(2)}</td>
                                     <td style="border:1px solid #000; padding:4px; text-align:right; color:#0369a1;">${runningBal.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
@@ -3190,19 +3189,19 @@
             });
 
             const exportNode = document.createElement('div');
-            exportNode.style.padding = '10px';
+            exportNode.style.padding = '15px';
             exportNode.style.background = '#ffffff';
             exportNode.style.color = '#000000';
             exportNode.innerHTML = `
-                <div style="text-align:center; font-weight:bold; background:#32567f; color:#fff; padding:8px; border:2px solid #000; margin-bottom:12px; font-size:11pt;">
-                    ${depotNameStored} (${depotCode}) Exp. Repot FY ${startYear}-${startYear + 1}
+                <div style="text-align:center; font-weight:bold; background:#2563eb; color:#fff; padding:10px; border:2px solid #000; margin-bottom:15px; font-size:12pt;">
+                    ${depotNameStored} (${depotCode}) Exp. Report FY ${startYear}-${startYear + 1}
                 </div>
                 ${fullHtmlBlocks}
             `;
 
-            showScreenBlocker('Generating PDF... Please wait!');
+            showScreenBlocker('Generating Clean PDF... Please wait!');
             const opt = {
-                margin: 8, filename: `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.pdf`,
+                margin: 10, filename: `Depot_Expenses_${depotNameStored}_FY_${startYear}-${startYear + 1}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
@@ -3269,14 +3268,13 @@
             let runningBal = openingBalance;
             let totalDr = 0; let totalCr = 0;
             let rowsHtml = '';
-            let opCr = openingBalance > 0 ? openingBalance : 0;
-            let opDr = openingBalance < 0 ? Math.abs(openingBalance) : 0;
+            let opCr = openingBalance !== 0 ? Math.abs(openingBalance) : 0;
 
             rowsHtml += `
                 <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
                     <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opDr > 0 ? opDr.toFixed(2) : '-'}</td>
                     <td style="padding: 3px 1px; text-align: right;">${opCr > 0 ? opCr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">-</td>
                     <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
                 </tr>
             `;
@@ -3293,8 +3291,8 @@
                     <tr style="border-bottom: 1px dotted #ccc;">
                         <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
                         <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
                         <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
                         <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
                     </tr>
                 `;
@@ -3317,8 +3315,8 @@
                             <tr style="border-bottom: 1px solid #000;">
                                 <th style="text-align: left; padding: 2px 1px; width: 16%;">Date</th>
                                 <th style="text-align: left; padding: 2px 1px; width: 38%;">Particular</th>
-                                <th style="text-align: right; padding: 2px 1px; width: 15%;">Dr</th>
                                 <th style="text-align: right; padding: 2px 1px; width: 15%;">Cr</th>
+                                <th style="text-align: right; padding: 2px 1px; width: 15%;">Dr</th>
                                 <th style="text-align: right; padding: 2px 1px; width: 16%;">Bal</th>
                             </tr>
                         </thead>
@@ -3326,9 +3324,9 @@
                     </table>
                     <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
                         <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
                         <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
-                        <div style="display: flex; justify-content: space-space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
+                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
                             <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>

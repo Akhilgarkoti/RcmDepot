@@ -2138,7 +2138,7 @@
             finally { 
                 hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'Send Transaction Request'; 
+                btn.textContent = 'SendTransaction Request'; 
             }
         });
 
@@ -2966,6 +2966,7 @@
 
                 let oldMonthCreditVal = runningBal;
 
+                // FIX: DATE format string ke bajaye valid Date object ya standard string format diya gaya hai taaki excel green error na de
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); 
@@ -2979,7 +2980,17 @@
                 rowsInMonth.forEach(r => {
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
-                    const dt = formatCleanDate(getField(r, 'Date', 'date'));
+                    
+                    // FIX: Date parsing & formatting to prevent text format / green error
+                    const rawDateObj = parseDateObj(getField(r, 'Date', 'date'));
+                    let formattedDateCell = "-";
+                    if (rawDateObj && !isNaN(rawDateObj.getTime())) {
+                        let dayStr = String(rawDateObj.getDate()).padStart(2, '0');
+                        let monStr = monthNames[rawDateObj.getMonth()];
+                        let yrStr = String(rawDateObj.getFullYear()).slice(2);
+                        formattedDateCell = `${dayStr}-${monStr}-${yrStr}`;
+                    }
+
                     const part = getField(r, 'Particular', 'particular');
 
                     runningBal += (cr - dr);
@@ -2987,7 +2998,7 @@
                     let currentRowNum = rIdx + 1;
                     let prevRowNum = currentRowNum - 1;
 
-                    setCell(rIdx, 0, dt, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
+                    setCell(rIdx, 0, formattedDateCell, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                     setCell(rIdx, 1, part, STYLE_DATA);
                     setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "#,##0");
                     setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "#,##0");
@@ -3001,14 +3012,12 @@
                 setCell(rIdx, 0, "TOTAL", Object.assign({}, STYLE_TOTAL, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "closing balance", STYLE_TOTAL);
                 
-                // Total Credit and Total Debit formulas
                 let creditSumColRef = `C${totalRowNum}`;
                 let debitSumColRef = `D${totalRowNum}`;
                 
                 setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
                 setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
                 
-                // EXACT REQUIREMENT: Balance cell in TOTAL row will now be `=C{totalRowNum}-D{totalRowNum}`
                 setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0", `${creditSumColRef}-${debitSumColRef}`);
                 
                 rIdx += 2; 
@@ -3016,7 +3025,7 @@
 
             ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rIdx, c: 4 } });
             ws['!merges'] = merges;
-            ws['!cols'] = [ { wch: 10 }, { wch: 96 }, { wch: 10 }, { wch: 10 }, { wch: 11 } ];
+            ws['!cols'] = [ { wch: 12 }, { wch: 96 }, { wch: 12 }, { wch: 12 }, { wch: 14 } ];
 
             return ws;
         }

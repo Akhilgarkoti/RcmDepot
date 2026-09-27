@@ -2138,7 +2138,7 @@
             finally { 
                 hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'SendTransaction Request'; 
+                btn.textContent = 'Send Transaction Request'; 
             }
         });
 
@@ -2966,7 +2966,6 @@
 
                 let oldMonthCreditVal = runningBal;
 
-                // FIX: DATE format string ke bajaye valid Date object ya standard string format diya gaya hai taaki excel green error na de
                 setCell(rIdx, 0, `01-${mLabel}`, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
                 setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_DATA, "#,##0"); 
@@ -2981,14 +2980,17 @@
                     const dr = Number(getField(r, 'Debit', 'debit') || 0);
                     const cr = Number(getField(r, 'Credit', 'credit') || 0);
                     
-                    // FIX: Date parsing & formatting to prevent text format / green error
                     const rawDateObj = parseDateObj(getField(r, 'Date', 'date'));
-                    let formattedDateCell = "-";
+                    let cellValue = "";
+                    let cellNumFmt = "dd-mmm-yy";
+
                     if (rawDateObj && !isNaN(rawDateObj.getTime())) {
-                        let dayStr = String(rawDateObj.getDate()).padStart(2, '0');
-                        let monStr = monthNames[rawDateObj.getMonth()];
-                        let yrStr = String(rawDateObj.getFullYear()).slice(2);
-                        formattedDateCell = `${dayStr}-${monStr}-${yrStr}`;
+                        // Excel date serial number calculation for proper date handling
+                        const excelEpoch = new Date(1899, 11, 30);
+                        cellValue = Math.floor((rawDateObj - excelEpoch) / (1000 * 60 * 60 * 24));
+                    } else {
+                        cellValue = formatCleanDate(getField(r, 'Date', 'date'));
+                        cellNumFmt = undefined;
                     }
 
                     const part = getField(r, 'Particular', 'particular');
@@ -2998,7 +3000,14 @@
                     let currentRowNum = rIdx + 1;
                     let prevRowNum = currentRowNum - 1;
 
-                    setCell(rIdx, 0, formattedDateCell, Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }));
+                    // Setting date cell with proper Excel date type ('n' with number serial or fallback)
+                    const cellRef = XLSX.utils.encode_cell({ r: rIdx, c: 0 });
+                    if (typeof cellValue === 'number') {
+                        ws[cellRef] = { v: cellValue, t: 'n', z: cellNumFmt, s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) };
+                    } else {
+                        ws[cellRef] = { v: cellValue, t: 's', s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) };
+                    }
+
                     setCell(rIdx, 1, part, STYLE_DATA);
                     setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "#,##0");
                     setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "#,##0");

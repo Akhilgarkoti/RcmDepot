@@ -2435,7 +2435,8 @@
             let html = '';
             let runningBal = activeViewingMonthData.openingBal;
 
-            let opCrPrint = runningBal !== 0 ? Math.abs(runningBal) : 0;
+            let opValPrint = runningBal;
+            let opColorPrint = opValPrint < 0 ? '#dc2626' : '#16a34a';
 
             let activeMonthIndex = monthNames.findIndex(m => period.includes(m));
             let activeMonthYear = period.split(' ')[1] || '2026';
@@ -2444,9 +2445,9 @@
             html += `<tr style="font-weight:bold; background:#f8fafc;">
                 <td style="border:1px solid #000; padding:4px;">${printFirstDate}</td>
                 <td style="border:1px solid #000; padding:4px;">OLD MONTH BALANCE</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${opCrPrint > 0 ? opCrPrint.toFixed(2) : '-'}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right; color:${opColorPrint};">${opValPrint !== 0 ? Math.round(opValPrint) : '-'}</td>
                 <td style="border:1px solid #000; padding:4px; text-align:right;">-</td>
-                <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
             </tr>`;
 
             activeViewingMonthData.rows.forEach(r => {
@@ -2461,9 +2462,9 @@
                     html += `<tr>
                         <td style="border:1px solid #000; padding:4px;">${dt}</td>
                         <td style="border:1px solid #000; padding:4px; word-break:break-word;">${part}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td style="border:1px solid #000; padding:4px; text-align:right;">${runningBal.toFixed(2)}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${cr > 0 ? Math.round(cr) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${dr > 0 ? Math.round(dr) : '-'}</td>
+                        <td style="border:1px solid #000; padding:4px; text-align:right;">${Math.round(runningBal)}</td>
                     </tr>`;
                 }
             });
@@ -2471,11 +2472,11 @@
             document.getElementById('rcptTableBody').innerHTML = html;
 
             const opBal = activeViewingMonthData.openingBal;
-            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(opBal).toFixed(2)} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
-            document.getElementById('rcptTotalDebit').textContent = `Rs.${activeViewingMonthData.totalDr.toFixed(2)}`;
-            document.getElementById('rcptTotalCredit').textContent = `Rs.${activeViewingMonthData.totalCr.toFixed(2)}`;
+            document.getElementById('rcptOpeningBalance').textContent = `Rs.${Math.abs(Math.round(opBal))} ${opBal >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptTotalDebit').textContent = `Rs.${Math.round(activeViewingMonthData.totalDr)}`;
+            document.getElementById('rcptTotalCredit').textContent = `Rs.${Math.round(activeViewingMonthData.totalCr)}`;
             const finalNet = activeViewingMonthData.closingBal;
-            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(finalNet).toFixed(2)} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
+            document.getElementById('rcptNetBalance').textContent = `Rs.${Math.abs(Math.round(finalNet))} ${finalNet >= 0 ? '(Cr)' : '(Dr)'}`;
 
             document.getElementById('previewSlipDisplay').innerHTML = document.getElementById('printableReceipt').innerHTML;
             document.getElementById('printPreviewModal').style.display = 'block';
@@ -2528,8 +2529,8 @@
             let runningBal = openingBalance;
             let totalDr = 0, totalCr = 0;
 
-            let opCrCsv = openingBalance !== 0 ? Math.abs(openingBalance) : 0;
-            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opCrCsv.toFixed(2)},0.00,${runningBal.toFixed(2)},"Opening"\n`;
+            let opCrCsv = openingBalance !== 0 ? Math.round(openingBalance) : 0;
+            csvContent += `"01-Apr-${String(startYear).slice(2)}","Opening Balance b/f","-",${opCrCsv},0,${Math.round(runningBal)},"Opening"\n`;
 
             currentFYRows.forEach(r => {
                 const dt = `"${formatCleanDate(getField(r, 'Transaction Date', 'date'))}"`;
@@ -2546,11 +2547,11 @@
                     runningBal += (cr - dr);
                 }
 
-                const balStr = isApproved ? runningBal.toFixed(2) : "Pending";
-                csvContent += `${dt},${part},${mode},${cr.toFixed(2)},${dr.toFixed(2)},${balStr},${appRaw}\n`;
+                const balStr = isApproved ? Math.round(runningBal) : "Pending";
+                csvContent += `${dt},${part},${mode},${Math.round(cr)},${Math.round(dr)},${balStr},${appRaw}\n`;
             });
 
-            csvContent += `\nSUMMARY,,,"Total Credit: ${totalCr.toFixed(2)}","Total Debit: ${totalDr.toFixed(2)}","Net Balance: ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
+            csvContent += `\nSUMMARY,,,"Total Credit: ${Math.round(totalCr)}","Total Debit: ${Math.round(totalDr)}","Net Balance: ${Math.abs(Math.round(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}",\n`;
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
@@ -2836,18 +2837,16 @@
             let runningBal = opnBalMonth;
             let html = '';
 
-            let opCr = opnBalMonth !== 0 ? Math.abs(opnBalMonth) : 0;
-
-            // FIX: UI ke Detailed View me bhi Opening balance color coding (Negative -> Red, Positive -> Green)
-            let opColorClass = opnBalMonth < 0 ? 'var(--accent-dr)' : 'var(--accent-cr)';
+            let opVal = opnBalMonth;
+            let opColorClass = opVal < 0 ? 'var(--accent-dr)' : 'var(--accent-cr)';
 
             html += `<tr class="row-opening-balance">
                 <td style="text-align:center;">-</td>
                 <td><strong>01 ${monthName}</strong></td>
                 <td><strong>OLD MONTH BALANCE</strong></td>
-                <td style="color:${opColorClass};font-weight:bold;text-align:right;">${opnBalMonth !== 0 ? '₹' + opnBalMonth.toFixed(2) : '-'}</td>
+                <td style="color:${opColorClass};font-weight:bold;text-align:right;">${opVal !== 0 ? '₹' + Math.round(opVal) : '-'}</td>
                 <td style="color:#94a3b8;text-align:right;">-</td>
-                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
             </tr>`;
 
             mData.rows.forEach((r, idx) => {
@@ -2878,9 +2877,9 @@
                     <td style="text-align:center; white-space:nowrap;">${actionBtn}</td>
                     <td><strong>${dt}</strong></td>
                     <td>${part}</td>
-                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + cr.toFixed(2) : '-'}</td>
-                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + dr.toFixed(2) : '-'}</td>
-                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${runningBal.toFixed(2)}</td>
+                    <td style="color:${cr > 0 ? 'var(--accent-cr)' : '#94a3b8'};font-weight:bold;text-align:right;">${cr > 0 ? '₹' + Math.round(cr) : '-'}</td>
+                    <td style="color:${dr > 0 ? 'var(--accent-dr)' : '#94a3b8'};font-weight:bold;text-align:right;">${dr > 0 ? '₹' + Math.round(dr) : '-'}</td>
+                    <td style="color:var(--accent-bal);font-weight:bold;text-align:right;">₹${Math.round(runningBal)}</td>
                 </tr>`;
             });
 
@@ -2968,7 +2967,7 @@
                 headers.forEach((h, c) => setCell(rIdx, c, h, STYLE_HEADER));
                 rIdx++;
 
-                let oldMonthCreditVal = runningBal; // Can be negative or positive
+                let oldMonthCreditVal = runningBal;
 
                 let targetYear = (mIndex >= 3) ? startYear : startYear + 1;
                 let firstDateObj = new Date(Date.UTC(targetYear, mIndex, 1));
@@ -2983,14 +2982,13 @@
                     s: Object.assign({}, STYLE_DATA, { alignment: { horizontal: "center" } }) 
                 };
 
-                // FIX: Excel me bhi negative hone par red text style ya value pass hogi
                 let oldValColor = oldMonthCreditVal < 0 ? { rgb: "FFDC2626" } : { rgb: "FF16A34A" };
                 const STYLE_OLD_VAL = Object.assign({}, STYLE_DATA, { font: { name: "Calibri", sz: 10, bold: true, color: oldValColor } });
 
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, Number(oldMonthCreditVal.toFixed(2)), STYLE_OLD_VAL, "#,##0.00");
-                setCell(rIdx, 3, "", STYLE_DATA, "#,##0.00");
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0.00");
+                setCell(rIdx, 2, Number(oldMonthCreditVal), STYLE_OLD_VAL, "#,##0"); // FIX: No decimals in Excel
+                setCell(rIdx, 3, "", STYLE_DATA, "#,##0");
+                setCell(rIdx, 4, Number(runningBal), STYLE_DATA, "#,##0");
                 rIdx++;
 
                 let firstTxnRowIndex = rIdx; 
@@ -3028,9 +3026,9 @@
                     }
 
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr.toFixed(2)) : "", STYLE_DATA, "#,##0.00");
-                    setCell(rIdx, 3, dr > 0 ? Number(dr.toFixed(2)) : "", STYLE_DATA, "#,##0.00");
-                    setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_DATA, "#,##0.00", `E${prevRowNum}+N(C${currentRowNum})-N(D${currentRowNum})`);
+                    setCell(rIdx, 2, cr > 0 ? Number(cr) : "", STYLE_DATA, "#,##0"); // FIX: No decimals
+                    setCell(rIdx, 3, dr > 0 ? Number(dr) : "", STYLE_DATA, "#,##0"); // FIX: No decimals
+                    setCell(rIdx, 4, Number(runningBal), STYLE_DATA, "#,##0", `E${prevRowNum}+N(C${currentRowNum})-N(D${currentRowNum})`);
                     
                     lastTxnRowIndex = currentRowNum;
                     rIdx++;
@@ -3043,16 +3041,16 @@
                 let creditSumColRef = `C${totalRowNum}`;
                 let debitSumColRef = `D${totalRowNum}`;
                 
-                setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0.00", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
-                setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0.00", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
-                setCell(rIdx, 4, Number(runningBal.toFixed(2)), STYLE_TOTAL, "#,##0.00", `${creditSumColRef}-${debitSumColRef}`);
+                setCell(rIdx, 2, 0, STYLE_TOTAL, "#,##0", `SUM(C${firstTxnRowIndex}:C${lastTxnRowIndex})`);
+                setCell(rIdx, 3, 0, STYLE_TOTAL, "#,##0", `SUM(D${firstTxnRowIndex}:D${lastTxnRowIndex})`);
+                setCell(rIdx, 4, Number(runningBal), STYLE_TOTAL, "#,##0", `${creditSumColRef}-${debitSumColRef}`);
                 
                 rIdx += 2; 
             });
 
             ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: rIdx, c: 4 } });
             ws['!merges'] = merges;
-            ws['!cols'] = [ { wch: 8 }, { wch: 96 }, { wch: 8 }, { wch: 8 }, { wch: 12 } ];
+            ws['!cols'] = [ { wch: 10 }, { wch: 96 }, { wch: 10 }, { wch: 10 }, { wch: 12 } ];
 
             return ws;
         }
@@ -3139,7 +3137,7 @@
                 let monthCr = 0;
                 let monthRowsHtml = '';
 
-                let opValPdf = runningBal; // Can be negative or positive
+                let opValPdf = runningBal; 
                 let opColorPdf = opValPdf < 0 ? '#dc2626' : '#16a34a'; // Red for minus, Green for plus
                 let firstDateStr = `01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
 
@@ -3147,9 +3145,9 @@
                     <tr>
                         <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: center; font-size: 8.5pt;">${firstDateStr}</td>
                         <td style="border: 1px solid #cbd5e1; padding: 5px 8px; font-weight: 600; font-size: 8.5pt;">OLD MONTH BALANCE</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: ${opColorPdf}; font-weight: 700; font-size: 8.5pt;">${opValPdf !== 0 ? opValPdf.toFixed(2) : '-'}</td>
+                        <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: ${opColorPdf}; font-weight: 700; font-size: 8.5pt;">${opValPdf !== 0 ? Math.round(opValPdf) : '-'}</td>
                         <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: #64748b; font-size: 8.5pt;">-</td>
-                        <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; font-weight: 600; color: #0284c7; font-size: 8.5pt;">${runningBal.toFixed(2)}</td>
+                        <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; font-weight: 600; color: #0284c7; font-size: 8.5pt;">${Math.round(runningBal)}</td>
                     </tr>
                 `;
 
@@ -3167,9 +3165,9 @@
                         <tr>
                             <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: center; font-size: 8.5pt;">${dt}</td>
                             <td style="border: 1px solid #cbd5e1; padding: 5px 8px; font-size: 8.5pt;">${part}</td>
-                            <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: ${cr > 0 ? '#16a34a' : '#64748b'}; font-size: 8.5pt;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                            <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: ${dr > 0 ? '#dc2626' : '#64748b'}; font-size: 8.5pt;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                            <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; font-weight: 600; color: #0284c7; font-size: 8.5pt;">${runningBal.toFixed(2)}</td>
+                            <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: ${cr > 0 ? '#16a34a' : '#64748b'}; font-size: 8.5pt;">${cr > 0 ? Math.round(cr) : '-'}</td>
+                            <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; color: ${dr > 0 ? '#dc2626' : '#64748b'}; font-size: 8.5pt;">${dr > 0 ? Math.round(dr) : '-'}</td>
+                            <td style="border: 1px solid #cbd5e1; padding: 5px 8px; text-align: right; font-weight: 600; color: #0284c7; font-size: 8.5pt;">${Math.round(runningBal)}</td>
                         </tr>
                     `;
                 });
@@ -3193,9 +3191,9 @@
                             <tfoot>
                                 <tr style="background:#f8fafc; font-weight:700;">
                                     <td colspan="2" style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; font-size: 8.5pt;">TOTAL / CLOSING BALANCE:</td>
-                                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; color: #16a34a; font-size: 8.5pt;">${(monthCr + opValPdf).toFixed(2)}</td>
-                                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; color: #dc2626; font-size: 8.5pt;">${monthDr.toFixed(2)}</td>
-                                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; color: #0284c7; font-size: 8.5pt;">${runningBal.toFixed(2)}</td>
+                                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; color: #16a34a; font-size: 8.5pt;">${Math.round(monthCr + opValPdf)}</td>
+                                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; color: #dc2626; font-size: 8.5pt;">${Math.round(monthDr)}</td>
+                                    <td style="border: 1px solid #cbd5e1; padding: 6px 8px; text-align: right; color: #0284c7; font-size: 8.5pt;">${Math.round(runningBal)}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -3297,9 +3295,9 @@
             rowsHtml += `
                 <tr style="border-bottom: 1px dashed #000; font-weight: bold;">
                     <td style="padding: 3px 1px;">01-Apr</td><td style="padding: 3px 1px;">Opening Balance</td>
-                    <td style="padding: 3px 1px; text-align: right;">${opCr !== 0 ? opCr.toFixed(2) : '-'}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${opCr !== 0 ? Math.round(opCr) : '-'}</td>
                     <td style="padding: 3px 1px; text-align: right;">-</td>
-                    <td style="padding: 3px 1px; text-align: right;">${runningBal.toFixed(2)}</td>
+                    <td style="padding: 3px 1px; text-align: right;">${Math.round(runningBal)}</td>
                 </tr>
             `;
 
@@ -3315,9 +3313,9 @@
                     <tr style="border-bottom: 1px dotted #ccc;">
                         <td style="padding: 2px 1px; vertical-align: top;">${dt}</td>
                         <td style="padding: 2px 1px; word-break: break-word;">${part}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? cr.toFixed(2) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? dr.toFixed(2) : '-'}</td>
-                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${runningBal.toFixed(2)}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${cr > 0 ? Math.round(cr) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${dr > 0 ? Math.round(dr) : '-'}</td>
+                        <td style="padding: 2px 1px; text-align: right; vertical-align: top;">${Math.round(runningBal)}</td>
                     </tr>
                 `;
             });
@@ -3347,11 +3345,11 @@
                         <tbody>${rowsHtml}</tbody>
                     </table>
                     <div style="border-top: 1px dashed #000; margin-top: 6px; padding-top: 4px; font-size: 8pt; line-height: 1.4;">
-                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(openingBalance).toFixed(2)} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${totalCr.toFixed(2)}</span></div>
-                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${totalDr.toFixed(2)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Opening Bal:</span> <span>Rs. ${Math.abs(Math.round(openingBalance))} ${openingBalance >= 0 ? '(Cr)' : '(Dr)'}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Credit:</span> <span>Rs. ${Math.round(totalCr)}</span></div>
+                        <div style="display: flex; justify-content: space-between;"><span>Total Debit:</span> <span>Rs. ${Math.round(totalDr)}</span></div>
                         <div style="display: flex; justify-content: space-between; font-weight: bold; border-top: 1px solid #000; margin-top: 2px; padding-top: 2px;">
-                            <span>Net Balance:</span> <span>Rs. ${Math.abs(runningBal).toFixed(2)} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
+                            <span>Net Balance:</span> <span>Rs. ${Math.abs(Math.round(runningBal))} ${runningBal >= 0 ? '(Cr)' : '(Dr)'}</span>
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 10px; font-size: 7.5pt; border-top: 1px dotted #888; padding-top: 4px;">*** Thank You ***</div>
@@ -3363,42 +3361,6 @@
         }
 
         window.onload = () => { startLiveClock(); loadDepotData(); };
-    </script>
-
-    <!-- अमाउंट से .00 हटाने के लिए सुरक्षित जावास्क्रिप्ट पैच -->
-    <script>
-    (function() {
-        function removeDecimalZeros(node) {
-            if (node.nodeType === Node.TEXT_NODE) {
-                let updatedText = node.nodeValue.replace(/(\d+)\.00\b/g, '$1');
-                if (updatedText !== node.nodeValue) {
-                    node.nodeValue = updatedText;
-                }
-            } else {
-                if (node.tagName === 'INPUT' && node.type === 'text' && node.value) {
-                    let updatedVal = node.value.replace(/(\d+)\.00\b/g, '$1');
-                    if (updatedVal !== node.value) {
-                        node.value = updatedVal;
-                    }
-                }
-                for (let child of node.childNodes) {
-                    removeDecimalZeros(child);
-                }
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            removeDecimalZeros(document.body);
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
-                        removeDecimalZeros(node);
-                    });
-                });
-            });
-            observer.observe(document.body, { childList: true, subtree: true });
-        });
-    })();
     </script>
 </body>
 </html>

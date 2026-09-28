@@ -623,7 +623,7 @@
                 border: 1px solid var(--theme-border);
             }
             table.custom-table {
-                min-width: 580px; /* Table ko mobile par sikudne se bachane ke liye */
+                min-width: 580px;
             }
             table.custom-table th {
                 padding: 0.5rem 0.6rem !important;
@@ -697,7 +697,6 @@
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
                 <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <!-- Stock Audit Portal Link Button (Opens in New Tab) -->
                 <a href="audit" target="_blank" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
                     📦 Stock Audit Portal
                 </a>
@@ -1508,9 +1507,14 @@
 
                 globalInvoiceFrequencyMap = {};
                 loadedDispatches.forEach(r => {
-                    const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
-                    if (inv) {
-                        globalInvoiceFrequencyMap[inv] = (globalInvoiceFrequencyMap[inv] || 0) + 1;
+                    const invRaw = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                    if (invRaw) {
+                        invRaw.split(',').forEach(inv => {
+                            const clean = inv.trim();
+                            if (clean) {
+                                globalInvoiceFrequencyMap[clean] = (globalInvoiceFrequencyMap[clean] || 0) + 1;
+                            }
+                        });
                     }
                 });
 
@@ -1743,16 +1747,23 @@
             handleDispatchFilterChange();
         }
 
+        // --- UPDATED HISTORY TABLE RENDER LOGIC (SPLITTING COMMA-SEPARATED INVOICES) ---
         function renderDispatchTable(list) {
             const tbody = document.getElementById('dispatchTableBody');
-            document.getElementById('dispCountBadge').textContent = `${list.length} records`;
+            let totalRenderedRows = 0;
 
             const duplicates = [];
             const regulars = [];
 
             list.slice().reverse().forEach(r => {
-                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
-                const isGlobalDuplicate = (globalInvoiceFrequencyMap[inv] || 0) > 1;
+                const invRaw = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                const invoicesArray = invRaw ? invRaw.split(',').map(item => item.trim()).filter(Boolean) : [];
+                
+                let isGlobalDuplicate = false;
+                invoicesArray.forEach(inv => {
+                    if ((globalInvoiceFrequencyMap[inv] || 0) > 1) isGlobalDuplicate = true;
+                });
+
                 if (isGlobalDuplicate) duplicates.push(r);
                 else regulars.push(r);
             });
@@ -1762,8 +1773,9 @@
 
             let html = '';
             sortedList.forEach(r => {
-                const inv = getField(r, 'Inoice No. Last Digit', 'Invoice No');
-                const isDup = (globalInvoiceFrequencyMap[inv] || 0) > 1;
+                const invRaw = getField(r, 'Inoice No. Last Digit', 'Invoice No');
+                const invoicesArray = invRaw ? invRaw.split(',').map(item => item.trim()).filter(Boolean) : ['-'];
+
                 const rId = getField(r, 'ID', 'id');
                 const vType = getField(r, 'Vehicle Type');
                 const through = getField(r, 'Dispatch Throuch', 'Dispatch Through');
@@ -1772,23 +1784,30 @@
                 const time = getField(r, 'Entry Time');
                 const remark = getField(r, 'Remark If Any') || '-';
 
-                html += `<tr class="${isDup ? 'row-duplicate' : ''}">
-                    <td style="text-align:center;"><input type="checkbox" class="dispatch-row-checkbox" value="${rId}" onclick="updateSelectedDispatchCount()"></td>
-                    <td>${formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date'))}</td>
-                    <td style="color:${isDup ? '#dc2626' : '#2563eb'};font-weight:700;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
-                    <td>${vType}</td>
-                    <td>${through}</td>
-                    <td>${dueExcess}</td>
-                    <td>${vNo}</td>
-                    <td>${time}</td>
-                    <td>${remark}</td>
-                    <td style="white-space:nowrap; text-align:center;">
-                        <button class="btn-tool" style="background:#e0f2fe;color:#0369a1;border-color:#7dd3fc;margin-right:4px;" title="Edit" onclick="openEditDispatchModal('${rId}')">✏️</button>
-                        <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" title="Delete" onclick="deleteDispatchRow('${rId}')">🗑️</button>
-                    </td>
-                </tr>`;
+                invoicesArray.forEach((inv, index) => {
+                    totalRenderedRows++;
+                    const isDup = (globalInvoiceFrequencyMap[inv] || 0) > 1;
+                    
+                    html += `<tr class="${isDup ? 'row-duplicate' : ''}">
+                        <td style="text-align:center;">${index === 0 ? `<input type="checkbox" class="dispatch-row-checkbox" value="${rId}" onclick="updateSelectedDispatchCount()">` : ''}</td>
+                        <td>${index === 0 ? formatCleanDate(getField(r, 'Invoice Dispatch Date', 'Date')) : ''}</td>
+                        <td style="color:${isDup ? '#dc2626' : '#2563eb'};font-weight:700;">${inv} ${isDup ? '<span style="font-size:0.7rem;background:#fee2e2;color:#dc2626;padding:1px 5px;border-radius:3px;margin-left:4px;">⚠️ Repeated</span>' : ''}</td>
+                        <td>${index === 0 ? vType : ''}</td>
+                        <td>${index === 0 ? through : ''}</td>
+                        <td>${index === 0 ? dueExcess : ''}</td>
+                        <td>${index === 0 ? vNo : ''}</td>
+                        <td>${index === 0 ? time : ''}</td>
+                        <td>${index === 0 ? remark : ''}</td>
+                        <td style="white-space:nowrap; text-align:center;">
+                            ${index === 0 ? `<button class="btn-tool" style="background:#e0f2fe;color:#0369a1;border-color:#7dd3fc;margin-right:4px;" title="Edit" onclick="openEditDispatchModal('${rId}')">✏️</button>
+                            <button class="btn-tool" style="background:#fee2e2;color:#b91c1c;border-color:#fca5a5;" title="Delete" onclick="deleteDispatchRow('${rId}')">🗑️</button>` : ''}
+                        </td>
+                    </tr>`;
+                });
             });
+
             tbody.innerHTML = html || `<tr><td colspan="10" class="text-center" style="padding:1.5rem;">No dispatches found.</td></tr>`;
+            document.getElementById('dispCountBadge').textContent = `${totalRenderedRows} records`;
             document.getElementById('selectAllCheckbox').checked = false;
             updateSelectedDispatchCount();
         }
@@ -2138,10 +2157,11 @@
             finally { 
                 hideScreenBlocker();
                 btn.disabled = false; 
-                btn.textContent = 'Send Transaction Request'; 
+                btn.textContent = 'SendTransaction Request'; 
             }
         });
 
+        // --- UPDATED SUBMIT LOGIC (COMBINING INVOICES INTO 1 COMMA-SEPARATED STRING) ---
         document.getElementById('invoiceDispatchForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const rawInput = document.getElementById('dispInvoiceDigits').value.trim();
@@ -2154,9 +2174,11 @@
 
             const btn = document.getElementById('btnSaveDispatchMain');
             btn.disabled = true;
-            showScreenBlocker(`Saving ${rawList.length} dispatch entry(s)...`);
+            showScreenBlocker(`Saving dispatch entry with ${rawList.length} invoice(s)...`);
 
-            const finalizedInvoices = rawList.map(num => `${depotPrefix}${num}`);
+            // Har ek last 5 digits ko depotPrefix ke sath jodkar comma-separated string banana
+            const combinedInvoicesString = rawList.map(num => `${depotPrefix}${num}`).join(', ');
+
             const payload = {
                 action: 'saveInvoiceDispatch',
                 depotCode: document.getElementById('hiddenDepotCode').value,
@@ -2167,7 +2189,7 @@
                 vehicleNo: document.getElementById('dispVehicleNo').value,
                 dispatchThrough: document.getElementById('dispThrough').value,
                 dueExcess: document.getElementById('dispDueExcess').value,
-                invoiceList: JSON.stringify(finalizedInvoices),
+                invoiceList: combinedInvoicesString, // Ab yeh ek hi row mein comma-separated save hoga
                 remarks: document.getElementById('dispRemarks').value
             };
 
@@ -2986,7 +3008,7 @@
                 const STYLE_OLD_VAL = Object.assign({}, STYLE_DATA, { font: { name: "Calibri", sz: 10, bold: true, color: oldValColor } });
 
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, Number(oldMonthCreditVal), STYLE_OLD_VAL, "#,##0"); // FIX: No decimals in Excel
+                setCell(rIdx, 2, Number(oldMonthCreditVal), STYLE_OLD_VAL, "#,##0");
                 setCell(rIdx, 3, "", STYLE_DATA, "#,##0");
                 setCell(rIdx, 4, Number(runningBal), STYLE_DATA, "#,##0");
                 rIdx++;
@@ -3026,8 +3048,8 @@
                     }
 
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr) : "", STYLE_DATA, "#,##0"); // FIX: No decimals
-                    setCell(rIdx, 3, dr > 0 ? Number(dr) : "", STYLE_DATA, "#,##0"); // FIX: No decimals
+                    setCell(rIdx, 2, cr > 0 ? Number(cr) : "", STYLE_DATA, "#,##0");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr) : "", STYLE_DATA, "#,##0");
                     setCell(rIdx, 4, Number(runningBal), STYLE_DATA, "#,##0", `E${prevRowNum}+N(C${currentRowNum})-N(D${currentRowNum})`);
                     
                     lastTxnRowIndex = currentRowNum;
@@ -3138,7 +3160,7 @@
                 let monthRowsHtml = '';
 
                 let opValPdf = runningBal; 
-                let opColorPdf = opValPdf < 0 ? '#dc2626' : '#16a34a'; // Red for minus, Green for plus
+                let opColorPdf = opValPdf < 0 ? '#dc2626' : '#16a34a';
                 let firstDateStr = `01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
 
                 monthRowsHtml += `

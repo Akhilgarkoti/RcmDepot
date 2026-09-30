@@ -16,15 +16,17 @@ def login_session():
         
         if username:
             clean_user = str(username).strip()
+            session['user'] = clean_user
             
-            user_role = None # Role initially None rakhenge jab tak confirm na ho
+            user_role = 'depot' # Default role
             
-            # 1. Admin Master sheet check
+            # 1. Aapke Admin Master sheet ke columns ke mutabiq direct check
             try:
                 admin_response = sheets.get_depot_data("Admin Master")
                 if admin_response.get("status") == "success":
                     records = admin_response.get("data", [])
                     for row in records:
+                        # Sheet ke saare possible admin keys check kar rahe hain
                         admin_id = str(row.get('Admin Login ID') or row.get('Admin Name') or '').strip()
                         if admin_id.lower() == clean_user.lower():
                             user_role = 'admin'
@@ -32,38 +34,16 @@ def login_session():
             except Exception as e:
                 print("Admin Sheet Error:", e)
             
-            # Hardcoded admin fallback
-            if not user_role and clean_user.lower() in ['akhil', 'adm001', 'admin']:
+            # 2. Hardcoded fallback taaki agar sheet fetch na ho toh bhi admin login na ruke
+            if clean_user.lower() in ['akhil', 'adm001', 'admin']:
                 user_role = 'admin'
-            
-            # 2. Staff check
-            if not user_role and (clean_user.lower().startswith('emp') or clean_user.lower().startswith('stf')):
+            elif clean_user.lower().startswith('emp') or clean_user.lower().startswith('stf'):
                 user_role = 'staff'
             
-            # 3. Depot Master check (Depot Code se login rokne ke liye sirf 'Depot Login ID' check karenge)
-            if not user_role:
-                try:
-                    depot_response = sheets.get_depot_data("Depot Master")
-                    if depot_response.get("status") == "success":
-                        depot_records = depot_response.get("data", [])
-                        for row in depot_records:
-                            depot_login_id = str(row.get('Depot Login ID') or '').strip()
-                            # Yahan sirf Depot Login ID match karwa rahe hain, Depot Code match nahi hoga
-                            if depot_login_id and depot_login_id.lower() == clean_user.lower():
-                                user_role = 'depot'
-                                break
-                except Exception as e:
-                    print("Depot Sheet Error:", e)
-            
-            # Agar kisi bhi valid list me match nahi mila
-            if not user_role:
-                return jsonify({"success": False, "message": "Invalid Login ID"})
-            
-            session['user'] = clean_user
             session['role'] = user_role
             return jsonify({"success": True, "role": user_role})
             
-        return jsonify({"success": False, "message": "Empty username"})
+        return jsonify({"success": False})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
 

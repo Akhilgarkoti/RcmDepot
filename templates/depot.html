@@ -623,7 +623,7 @@
                 border: 1px solid var(--theme-border);
             }
             table.custom-table {
-                min-width: 580px; /* Table ko mobile par sikudne se bachane ke liye */
+                min-width: 580px;
             }
             table.custom-table th {
                 padding: 0.5rem 0.6rem !important;
@@ -697,7 +697,6 @@
             <div class="nav-actions-left">
                 <button class="btn-action-nav" onclick="openPasswordModal()">🔑 Change Password</button>
                 <a href="/" onclick="sessionStorage.clear()" class="btn-action-nav btn-nav-logout">🚪 Logout</a>
-                <!-- Stock Audit Portal Link Button (Opens in New Tab) -->
                 <a href="audit" target="_blank" class="btn-action-nav" style="background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%); border-color: #fde047; color: #854d0e;">
                     📦 Stock Audit Portal
                 </a>
@@ -2149,7 +2148,7 @@
             if (rawList.length === 0) { showToast('No valid invoice numbers entered.'); return; }
 
             for (let num of rawList) {
-                if (num.length !== 5) { showToast(`⚠️ Error: "${num}" is not 5 digits! Each invoice must be exactly 5 digits.`); return; }
+                if (num.length !== 5) { showToast(`⚠️️ Error: "${num}" is not 5 digits! Each invoice must be exactly 5 digits.`); return; }
             }
 
             const btn = document.getElementById('btnSaveDispatchMain');
@@ -2986,7 +2985,7 @@
                 const STYLE_OLD_VAL = Object.assign({}, STYLE_DATA, { font: { name: "Calibri", sz: 10, bold: true, color: oldValColor } });
 
                 setCell(rIdx, 1, "OLD MONTH BALANCE", STYLE_DATA);
-                setCell(rIdx, 2, Number(oldMonthCreditVal), STYLE_OLD_VAL, "#,##0"); // FIX: No decimals in Excel
+                setCell(rIdx, 2, Number(oldMonthCreditVal), STYLE_OLD_VAL, "#,##0");
                 setCell(rIdx, 3, "", STYLE_DATA, "#,##0");
                 setCell(rIdx, 4, Number(runningBal), STYLE_DATA, "#,##0");
                 rIdx++;
@@ -3026,8 +3025,8 @@
                     }
 
                     setCell(rIdx, 1, part, STYLE_DATA);
-                    setCell(rIdx, 2, cr > 0 ? Number(cr) : "", STYLE_DATA, "#,##0"); // FIX: No decimals
-                    setCell(rIdx, 3, dr > 0 ? Number(dr) : "", STYLE_DATA, "#,##0"); // FIX: No decimals
+                    setCell(rIdx, 2, cr > 0 ? Number(cr) : "", STYLE_DATA, "#,##0");
+                    setCell(rIdx, 3, dr > 0 ? Number(dr) : "", STYLE_DATA, "#,##0");
                     setCell(rIdx, 4, Number(runningBal), STYLE_DATA, "#,##0", `E${prevRowNum}+N(C${currentRowNum})-N(D${currentRowNum})`);
                     
                     lastTxnRowIndex = currentRowNum;
@@ -3138,7 +3137,7 @@
                 let monthRowsHtml = '';
 
                 let opValPdf = runningBal; 
-                let opColorPdf = opValPdf < 0 ? '#dc2626' : '#16a34a'; // Red for minus, Green for plus
+                let opColorPdf = opValPdf < 0 ? '#dc2626' : '#16a34a';
                 let firstDateStr = `01-${monthNames[mIndex]}-${String((mIndex >= 3 ? startYear : startYear + 1)).slice(2)}`;
 
                 monthRowsHtml += `
